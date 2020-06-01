@@ -28,8 +28,8 @@ class CampaignFormRequest extends FormRequest
             'description'=>'required',
             'datefrom'=>'required|date|before:dateto',
             'dateto'=>'required|date|after:datefrom',
-            'companies'=>'required_without:vertical',
-            'vertical'=>'required_without:companies',
+            /*'companies'=>'required_without:vertical',
+            'vertical'=>'required_without:companies',*/
            
             'serviceline'=>'required',
         ];

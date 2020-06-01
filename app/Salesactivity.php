@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
+class Salesactivity extends Model 
 {
     public $table='salesactivity';
     public $fillable=['datefrom','dateto','title','description'];

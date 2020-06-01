@@ -74,7 +74,7 @@ class CampaignController extends Controller
             ->with('author', 'manager', 'companies', 'vertical')
             ->withCount('branches')
             ->get();
-        $calendar = \Calendar::addEvents($campaigns);
+        $calendar = [];
         return response()->view('campaigns.index', compact('campaigns', 'calendar'));
     }
 
@@ -452,6 +452,7 @@ class CampaignController extends Controller
     }
     private function _getBranchAssignableSummary(Campaign $campaign, $result)
     {
+        $data = [];
         $addresses = $result->flatten()->pluck('id')->toArray();
         $assignable = $campaign->getAssignableLocationsofCampaign($addresses, $count = true);
         foreach ($assignable as $branch) {

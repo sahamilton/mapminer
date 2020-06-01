@@ -62,6 +62,14 @@ class NewDashboardController extends Controller
      */
     public function index()
     {
+        // check role to determine
+        //      1.  Admin - All Branches
+        //      2.  NAM - All branches with associated companies associated 
+        //      3.  Campaign Manager - All branches in associated campaigns
+        //      4.  Other - All associated branches
+        //      
+        //      End result is either 
+
         $roles = auth()->user()->roles->pluck('name')->toArray();
    
         switch($roles[0]) {
@@ -85,14 +93,15 @@ class NewDashboardController extends Controller
             break; 
 
         default:
-           
+            
             // does person have any managers reporting to them
-            dd($this->person->find(auth()->user()->person->id)->get()->descendants()->get());
+            $this->person = $this->person->find(auth()->user()->person->id);
+            $team = $this->person->descendants()->get();
             if ($team->count() >1) {
-
+                dd('gotta team!');
             } else {
-
-
+                $branches = $this->branch->whereIn('id', $this->person->getMyBranches())->get();
+                dd($this->showBranch($branches->first()));
             }
             
             break;     
@@ -122,7 +131,8 @@ class NewDashboardController extends Controller
     {
        
         if ($this->_isValidBranch($branch)) {
-            return $this->_getBranchDashboard($branch->id);
+            $fields = [];
+            return $this->_getBranchDashboard($branch, $fields);
         } 
         return redirect()->back()->withError('You are not assigned to ' . $branch->branchname. ' branch');
         
@@ -280,9 +290,10 @@ class NewDashboardController extends Controller
         return redirect()->back();
     }
 
-    private function _isValidBranch()
+    private function _isValidBranch(Branch $branch)
     {
-
+        return in_array($branch->id, array_keys($this->person->myBranches()));
+        
     }
 
     private function _isValidManager(Person $person)
@@ -301,11 +312,12 @@ class NewDashboardController extends Controller
         return $this->person->inMyAccounts($company);
     }
 
-    private function _getBranchDashboard(Branch $branch)
+    private function _getBranchDashboard(Branch $branch, array $fields)
     {
-        $this->perdiod = $this->getPeriod();
+        $this->period = $this->getPeriod();
         return $this->branch
-            ->SummaryStats($this->period)
+        // get charts
+            ->SummaryStats($this->period, $fields)
             ->with('manager', 'manager.reportsTo', 'upcomingActivities')
             
             ->whereIn('id', [$branch->id])

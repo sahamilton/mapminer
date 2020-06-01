@@ -5,6 +5,7 @@ use App\Presenters\LocationPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
+
 class Person extends NodeModel implements HasPresenter
 {
     use Geocode, Filters, SoftDeletes, FullTextSearch;
@@ -169,7 +170,16 @@ class Person extends NodeModel implements HasPresenter
             );
         return array_unique($branches->flatten()->toArray());
     }
+    public function getMyAccounts()
+    {
+        if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
+            return Company::all()->pluck('id')->toArray();
+        }
+        return $this->managesAccount->pluck('id')->toArray();
+        
 
+
+    }
     /**
      * [branchesManaged description]
      * 
@@ -936,9 +946,9 @@ class Person extends NodeModel implements HasPresenter
             ->withTimeStamps();
     }
 
-    public function scopeWithPrimaryRole()
+    public function scopeWithPrimaryRole($query)
     {
-        return $this->userdetails->roles->first();
+        return $query->userdetails->roles->first();
     }
     /**
      * [getCapoDiCapo id the top of the sales org
@@ -968,4 +978,6 @@ class Person extends NodeModel implements HasPresenter
         return auth()->user()->person->managesAccount->contains('id', $company->id);
 
     }
+
+    
 }

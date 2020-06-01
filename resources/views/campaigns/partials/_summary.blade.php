@@ -68,8 +68,8 @@
                 </tbody>
                 <tfoot>
                     <th>Totals</th>
-                    <td>{{$totals['unassigned']}}</td>
-                    <td>{{$totals['assigned']}}</td>
+                    <td>{{isset($totals) ? $totals['unassigned'] : 0 }}</td>
+                    <td>{{isset($totals) ? $totals['assigned'] :0}}</td>
 
                 </tfoot>
             </table>

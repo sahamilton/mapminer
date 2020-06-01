@@ -8,7 +8,7 @@ use \Carbon\Carbon;
 
 class Branch extends Model implements HasPresenter
 {
-    use GeoCode, PeriodSelector;
+    use GeoCode, PeriodSelector, \Awobaz\Compoships\Compoships;
     public $table ='branches';
     protected $hidden = ['created_at','updated_at','position'];
     protected $primaryKey = 'id'; // or null
@@ -239,7 +239,8 @@ class Branch extends Model implements HasPresenter
     public function closedOpportunities()
     {
  
-        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 1);
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')
+            ->where('closed', '=', 1);
     }
 
     public function staleOpportunities()
@@ -786,7 +787,7 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]               [description]
      */
-    public function scopeGetActivitiesByType($query,$period,$activitytype=null)
+    public function scopeGetActivitiesByType($query, array $period,$activitytype=null)
     {
 
         if ($activitytype) {
@@ -1913,24 +1914,19 @@ class Branch extends Model implements HasPresenter
         if (! $fields) {
             $fields = $this->activityFields;
         }
-
         $this->period = $period;
-        $this->fields = $fields;
-        
+
         return $query->with(
             [
                 'activities'=>function ($q) {
-                    $q->whereHas(
-                        'type', function ($q1) {
-                            $q1->whereIn('activity', $this->fields);
-                        }
-                    )->completed()
+                    $q->completed()
                         ->periodActivities($this->period)
                         ->typeCount();
                 }
             ]
         );
     }
+
     
 
 
@@ -2142,5 +2138,21 @@ class Branch extends Model implements HasPresenter
             },
             ]
         );
+    }
+
+    public function scopeActivitiesTypeCount($query, $period=null)
+    {
+      return $query->with(['activities'=>function ($q) use ($period) {
+            $q->periodActivities($period)
+                ->completed()
+                ->selectRaw("branch_id, activity_type.activity,count(activities.id) as activities")
+                ->join('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
+               
+                ->groupBy(['branch_id', 'activity_type.activity']);
+
+            }
+        ]
+        );
+       
     }
 }

@@ -90,15 +90,10 @@ class Company extends NodeModel
     {
         return $this->belongsTo(AccountType::class, 'accounttypes_id');
     }
-    /**
-     * [locations description]
-     * 
-     * @return [type] [description]
-     */
+    
     public function locations()
     {
-                                
-            return $this->hasMany(Address::class);
+        return $this->hasMany(Address::class);
     }
 
     
@@ -718,29 +713,22 @@ class Company extends NodeModel
 
 
     }
-    public function scopeActivitySummary($query, array $period, array $fields=null)
+    public function scopeActivitiesTypeCount($query, $period)
     {
-        if (! $fields) {
-            $fields = $this->activityFields;
-        }
-        $this->period = $period;
-        $this->fields = $fields;
-        return $query->with(
-            [
-                'activities'=>function ($q) {
-                    $q->whereHas(
-                        'type', function ($q1) {
-                            $q1->whereIn('activity', $this->fields);
-                        }
-                    )->completed()
-                        ->periodActivities($this->period)
-                        ->typeCount();
-                }
-            ]
+      return $query->with(['activities'=>function ($q) use ($period) {
+            $q->periodActivities($period)
+                ->completed()
+                ->selectRaw("addresses.company_id, activity_type.activity,count(activities.id) as activities")
+                ->join('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
+               
+                ->groupBy(['addresses.company_id', 'activity_type.activity']);
+
+            }
+        ]
         );
+       
     }
-    
-    
+       
 
     public function scopePipeline($query, $period=null)
     {

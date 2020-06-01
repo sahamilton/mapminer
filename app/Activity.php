@@ -233,12 +233,11 @@ class Activity extends Model
         return $query->selectRaw("activity_type.activity,count(activities.id) as activities")
             ->leftJoin('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
            
-            ->groupBy(['activity_type.activity'])
-            ->orderBy('activitytype_id');
+            ->groupBy(['activity_type.activity']);
 
     }
 
-    
+
 
     /**
      * [scopeSevenDayTypeCount description]

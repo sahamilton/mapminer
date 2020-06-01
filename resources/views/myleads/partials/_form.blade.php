@@ -140,3 +140,23 @@
     </div>
 </div>
 
+<!-- campaign -->
+@if (isset($campaigns))
+<div class="form-group row{{ $errors->has('campaign') ? ' has-error' : '' }}">
+    <label for="campaign" class="col-md-2 control-label">Addd to Campaign: </label>
+     <div class="col-sm-8">
+        <select
+        class="form-control" 
+        name='campaign' 
+        description="campaign">
+        </select>
+        @foreach ($campaigns as $campaign)
+            <option value="{{$campaign->id}}">{{$campaign->title}}</option>
+        @endforeach
+        <span class="help-block">
+            <strong>{{ $errors->has('campaign') ? $errors->first('campaing') : ''}}</strong>
+        </span>
+    </div>
+</div>
+@endif
+

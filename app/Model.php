@@ -38,6 +38,12 @@ class Model extends \Eloquent
         return $query->whereHas($relation, $constraint)
             ->withCount([$relation => $constraint]);
     }
+    /**
+     * [getTableColumns description]
+     * @param  [type]     $table [description]
+     * @param  array|null $skip  [description]
+     * @return [type]            [description]
+     */
     public function getTableColumns($table, array $skip = null)
     {
         $query = "SHOW COLUMNS FROM ".$table;
@@ -46,7 +52,11 @@ class Model extends \Eloquent
         }
         return \DB::select(\DB::raw($query));
     }
-
+    /**
+     * [isValid description]
+     * @param  [type]  $data [description]
+     * @return boolean       [description]
+     */
     public function isValid($data)
     {
             $validation = Validator::make($data, static::$rules);
@@ -58,7 +68,11 @@ class Model extends \Eloquent
             $this->errors = $validation->messages();
             return false;
     }
-        
+    /**
+     * [checkImportFileType description]
+     * @param  [type] $rules [description]
+     * @return [type]        [description]
+     */
     public function checkImportFileType($rules)
     {
         // Make sure we have a file
@@ -71,6 +85,11 @@ class Model extends \Eloquent
         }
             return $file;
     }
+    /**
+     * [checkImportFileStructure description]
+     * @param  [type] $filename [description]
+     * @return [type]           [description]
+     */
     public function checkImportFileStructure($filename)
     {
         // map the file to the fields
@@ -80,13 +99,22 @@ class Model extends \Eloquent
             
         return $data;
     }
-            
+    /**
+     * [fullAddress description]
+     * @return [type] [description]
+     */
     public function fullAddress()
     {
         return $this->street.' ' .$this->address2.' ' .$this->city.' ' .$this->state.' ' .$this->zip;
     }
     
-    
+    /**
+     * [rawQuery description]
+     * @param  [type] $query [description]
+     * @param  [type] $error [description]
+     * @param  [type] $type  [description]
+     * @return [type]        [description]
+     */
     public function rawQuery($query, $error, $type)
     {
         $result = [];
@@ -231,6 +259,12 @@ class Model extends \Eloquent
     
           return $results;
     }
+    /**
+     * [scopeServiceLine description]
+     * 
+     * @param  [type] $query [description]
+     * @return [type]        [description]
+     */
     public function scopeServiceLine($query)
     {
         $servicelines = $this->getUserServiceLines();
@@ -240,7 +274,10 @@ class Model extends \Eloquent
         });
     }
 
-    
+    /**
+     * [getUserServiceLines description]
+     * @return [type] [description]
+     */
     public function getUserServiceLines()
     {
         
@@ -249,7 +286,11 @@ class Model extends \Eloquent
         session()->put('user.servicelines', $this->userServicelines) ;
         return $this->userServicelines;
     }
-
+    /**
+     * [scopeFiltered description]
+     * @param  [type] $query [description]
+     * @return [type]        [description]
+     */
     public function scopeFiltered($query)
     {
         if (!$keys= $this->getSearchKeys(['companies'], ['vertical'])) {
@@ -257,14 +298,20 @@ class Model extends \Eloquent
         }
         return $query->whereIn('vertical', $keys);
     }
-
+    /**
+     * [getUserVerticals description]
+     * @return [type] [description]
+     */
     public function getUserVerticals()
     {
         $this->userVerticals= auth()->user()->person->industryfocus()->pluck('search_filter_id')->toArray();
         session()->put('user.verticals', $this->userVerticals) ;
         return $this->userVerticals;
     }
-
+    /**
+     * [getUserRoles description]
+     * @return [type] [description]
+     */
     public function getUserRoles()
     {
         $this->userRoles= auth()->user()->roles->pluck('id')->toArray();
@@ -291,7 +338,15 @@ class Model extends \Eloquent
         }
         return $mywatchlist;*/
     }
-
+    /**
+     * [manyThroughMany description]
+     * @param  [type] $related   [description]
+     * @param  [type] $through   [description]
+     * @param  [type] $firstKey  [description]
+     * @param  [type] $secondKey [description]
+     * @param  [type] $pivotKey  [description]
+     * @return [type]            [description]
+     */
     public function manyThroughMany($related, $through, $firstKey, $secondKey, $pivotKey)
     {
         $model = new $related;
@@ -304,7 +359,11 @@ class Model extends \Eloquent
            ->select($table . '.*')
            ->where($pivot . '.' . $firstKey, '=', $this->id);
     }
-
+    /**
+     * [removeNullsFromSelect description]
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
     public function removeNullsFromSelect($data)
     {
         
@@ -315,7 +374,11 @@ class Model extends \Eloquent
         }
         return $data;
     }
-
+    /**
+     * [array_empty description]
+     * @param  [type] $mixed [description]
+     * @return [type]        [description]
+     */
     public function array_empty($mixed)
     {
         if (is_array($mixed)) {
@@ -329,7 +392,11 @@ class Model extends \Eloquent
         }
         return true;
     }
-
+    /**
+     * [createOldColors description]
+     * @param  [type] $num [description]
+     * @return [type]      [description]
+     */
     public function createOldColors($num)
     {
         $colors=[];
@@ -353,6 +420,11 @@ class Model extends \Eloquent
         }
         return $colors;
     }
+    /**
+     * [decToHex description]
+     * @param  [type] $value [description]
+     * @return [type]        [description]
+     */
     private function decToHex($value)
     {
         if (strlen(dechex($value))<2) {
@@ -361,23 +433,27 @@ class Model extends \Eloquent
             return dechex($value);
         }
     }
-
-  public function createColors($len)
-  {
-    $frequency = .3;
-
-    
-
-    for ($i = 0; $i < $len; $i = ++$i)
+    /**
+     * [createColors description]
+     * @param  [type] $len [description]
+     * @return [type]      [description]
+     */
+    public function createColors($len)
     {
-       $red = $this->decToHex((sin($frequency*$i + 0) * 127) + 128);
-       $grn = $this->decToHex((sin($frequency*$i + 2) * 127) + 128);
-       
-       $blu = $this->decToHex((sin($frequency*$i + 4) * 127) + 128);
-       
+      $frequency = .3;
 
-       $color[]="#".$red.$grn.$blu;
+      
+
+      for ($i = 0; $i < $len; $i = ++$i)
+      {
+         $red = $this->decToHex((sin($frequency*$i + 0) * 127) + 128);
+         $grn = $this->decToHex((sin($frequency*$i + 2) * 127) + 128);
+         
+         $blu = $this->decToHex((sin($frequency*$i + 4) * 127) + 128);
+         
+
+         $color[]="#".$red.$grn.$blu;
+      }
+      return $color;
     }
-    return $color;
-  }
 }
