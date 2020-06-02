@@ -12,6 +12,7 @@ use App\Note;
 use App\Person;
 use App\Howtofield;
 use App\ActivityType;
+use App\Campaign;
 use App\Http\Requests\MergeAddressFormRequest;
 
 
@@ -84,7 +85,7 @@ class AddressController extends BaseController
         
         
         $location = $address->load(
-            'contacts',
+           
             'contacts.relatedActivities',
             'activities.type',
             'activities.relatedContact',
@@ -129,8 +130,20 @@ class AddressController extends BaseController
         //}
        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
-        
-        return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
+        $campaigns = Campaign::active()->get();
+        return response()->view('addresses.show', compact(
+            'location', 
+            'branches', 
+            'rankingstatuses', 
+            'people', 
+            'myBranches', 
+            'ranked', 
+            'notes', 
+            'owned', 
+            'fields',
+            'campaigns'
+            )
+        );
     }
 
     /**
