@@ -55,6 +55,6 @@ class PersonSearchController extends Controller
             $salesrepmarkers = $this->person->jsonify($person->directReports);
         }
 
-        return response()->view('persons.details', compact('person', 'track', 'branches', 'branchmarkers', 'salesrepmarkers', 'user'));
+        return response()->view('persons.details', compact('person','branches', 'branchmarkers',  'user'));
     }
 }

@@ -12,6 +12,7 @@ use App\Note;
 use App\Person;
 use App\Howtofield;
 use App\ActivityType;
+use App\Campaign;
 use App\Http\Requests\MergeAddressFormRequest;
 
 
@@ -129,8 +130,17 @@ class AddressController extends BaseController
         //}
        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
-        
-        return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
+        $campaigns = Campaign::active()->select('id', 'title')->get();
+        return response()->view('addresses.show', compact('location', 
+            'branches', 
+            'rankingstatuses', 
+            'people', 
+            'myBranches', 
+            'ranked', 
+            'notes', 
+            'owned', 
+            'fields', 
+            'campaigns'));
     }
 
     /**
@@ -165,6 +175,11 @@ class AddressController extends BaseController
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
 
         $address->update($data);
+        if (request()->has('campaign')) {
+            $address->campaigns()->attach(request('campaign'));
+        } else {
+             $address->campaigns()->detach(request('campaign'));
+        }
         return redirect()->route('address.show', $address->id)->withMessage('Location updated');
     }
 

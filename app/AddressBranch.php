@@ -43,9 +43,19 @@ class AddressBranch extends Model
      */
     public function activities()
     {
-        return $this->hasMany(Activity::class, 'address_id', 'address_id');
+        return $this->hasMany(Activity::class);
     }
 
+
+    /**
+     * [activities description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class);
+    }
     /**
      * [activities description]
      * 

@@ -85,13 +85,33 @@
         </div>
     </div>
 <!-- / Industry verticals -->
+<!-- Campaigns -->
 
-<!-- Sales process Steps -->
+    <div class="form-group{{ $errors->has('campaigns') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label" for="campaigns">Campaigns</label>
+        <div >
+            <select
+                class="form-control"
+                name="campaigns[]"
+                multiple
+                >
+                <option></option>
+                @foreach ($campaigns as $campaign)
+                    <option value="{{$campaign->id}}">{{$campaign->title}}</option>
+                @endforeach
+        </select>
+            <span class="help-block{{ $errors->has('campaigns') ? ' has-error' : '' }}">
+                <strong>{{$errors->has('campaigns') ? $errors->first('campaigns')  : ''}}</strong>
+            </span>
+        </div>
+    </div>
+<!-- / Industry verticals -->
+<!-- Sales process Steps 
 <legend>Sales Process Steps</legend>
     <div class="form-group{{ $errors->has('salesprocess') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label" for="salesprocess">Sales Process Steps</label>
         <div class="input-group input-group-lg ">
-            @include('documents.partials._salesprocess') 
+           
             <span class="help-block{{ $errors->has('salesprocess') ? ' has-error' : '' }}">
                 <strong>{{$errors->has('salesprocess') ? $errors->first('salesprocess')  : ''}}</strong>
             </span>

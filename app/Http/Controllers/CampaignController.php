@@ -419,9 +419,11 @@ class CampaignController extends Controller
     private function _getCampaignSummaryData(Campaign $campaign)
     {
         $data = $this->_getCampaignData($campaign);
+        // open campaigns do not have pre-assigned locations.
+        if ($campaign->type != 'open') {
+            $data['locations'] = $this->_getSummaryLocations($campaign, $data['companies']);
+        }
         
-        $data['locations'] = $this->_getSummaryLocations($campaign, $data['companies']);
- 
         return $data;
     }
     /**
@@ -433,7 +435,7 @@ class CampaignController extends Controller
      */
     private function _getSummaryLocations(Campaign $campaign, $data)
     {
-       
+        dd(436, $campaign);
         $result['unassigned'] = $data->map(
             function ($company) {
                 return $company->unassigned;
@@ -452,6 +454,7 @@ class CampaignController extends Controller
     }
     private function _getBranchAssignableSummary(Campaign $campaign, $result)
     {
+        dd($result);
         $addresses = $result->flatten()->pluck('id')->toArray();
         $assignable = $campaign->getAssignableLocationsofCampaign($addresses, $count = true);
         foreach ($assignable as $branch) {

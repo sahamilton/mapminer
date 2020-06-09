@@ -155,6 +155,17 @@ class Branch extends Model implements HasPresenter
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
     }
+
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
+    public function branchActivities()
+    {
+ 
+        return $this->hasManyThrough(Activity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
+    }
     /**
      * [openOpportunities description]
      * 
@@ -397,7 +408,10 @@ class Branch extends Model implements HasPresenter
             ->whereIn('status_id', [2]); 
 
     }
-
+    public function associatedLocations()
+    {
+        return $this->hasMany(AddressBranch::class);
+    }
     
 
 
@@ -505,6 +519,75 @@ class Branch extends Model implements HasPresenter
     public function campaigns()
     {
         return $this->belongsToMany(Campaign::class);
+    }
+
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaignLeads()
+    {
+        return $this->hasManyThrough(Campaign::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
+    }
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function scopeWithCampaignLeads($query, Campaign $campaign)
+    {
+        return  $query->with(
+            [
+                'locations'=>function ($q) use($campaign) {
+                    $q->whereHas(
+                        'campaignLeads', function ($q1) use ($campaign) {
+                            $q1->where('campaign_id', $campaign->id);
+                        }
+                    );
+                }
+            ]
+        );
+           
+    }
+
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function activeCampaigns()
+    {
+        return $this->belongsToMany(Campaign::class)
+            ->where('status', 'launched')
+            ->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
+    }
+
+    public function scopeCampaignLocations($query, array $campaigns)
+    {
+        
+        return $query->with(
+            ['locations'=>function ($q) use ($campaigns) { 
+                $q->whereHas('campaigns', function ($q1) use($campaigns) { 
+                    $q1->whereIn('campaigns.id', $campaigns); });
+                }
+            ]
+        );
+
+    }
+
+    public function scopeCampaignActivities($query, array $campaigns)
+    {
+        
+        return $query->with(
+            ['activities'=>function ($q) use ($campaigns) { 
+                $q->whereHas('campaigns', function ($q1) use($campaigns) { 
+                    $q1->whereIn('campaigns.id', $campaigns); });
+                }
+            ]
+        );
+
     }
     /**
      * [makeNearbyBranchXML   Generate Mapping xml file from branches results]

@@ -9,11 +9,13 @@ use App\Document;
 use Carbon\Carbon;
 use App\DocumentReader;
 use App\SalesProcess;
+use App\Campaign;
 use App\SearchFilter;
 use App\Http\Requests\DocumentFormRequest;
 
 class DocumentsController extends BaseController
 {
+    public $campaign;
     public $document;
     public $process;
     public $vertical;
@@ -26,11 +28,13 @@ class DocumentsController extends BaseController
      * @param SearchFilter $vertical [description]
      */
     public function __construct(
+        Campaign $campaign,
         Document $document, 
         DocumentReader $reader,
         SalesProcess $process, 
         SearchFilter $vertical
     ) {
+        $this->campaign = $campaign;
         $this->document = $document;
         $this->reader = $reader;
         $this->process = $process;
@@ -56,9 +60,9 @@ class DocumentsController extends BaseController
     public function create()
     {
         $verticals = $this->vertical->industrysegments();
-
-        $process = $this->process->pluck('step', 'id');
-        return response()->view('documents.create', compact('verticals', 'process'));
+        $campaigns = $this->campaign->where('dateto', '>=', now())->get();
+        //$process = $this->process->pluck('step', 'id');
+        return response()->view('documents.create', compact('verticals', 'campaigns'));
     }
 
     /**
@@ -77,7 +81,7 @@ class DocumentsController extends BaseController
         $document = $this->document->create($data);
 
         $document->vertical()->attach(request('vertical'));
-        $document->process()->attach(request('salesprocess'));
+        $document->campaigns()->attach(request('campaigns'));
 
         if ($data['plaintext']=='') {
             return redirect()->route('documents.index')->with('warning', 'Document added but full text is not included in search. Possibly a secured document.');

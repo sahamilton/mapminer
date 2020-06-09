@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
     use GeoCode;
-    public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];
+    public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status', 'type'];
     
     public $dates =['datefrom', 'dateto'];
     // Methods for Calendar
@@ -386,7 +386,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function documents()
     {
-        return $this->hasMany(CampaignDocuments::class);
+        return $this->belongsToMany(Documents::class);
     }
 
     
