@@ -1484,13 +1484,27 @@ class Branch extends Model implements HasPresenter
 
         return $query->withCount(       
             [ 
-                'addresses as campaignleads'=>function ($q) {
+                'addresses as campaign_leads'=>function ($q) {
                     $q->whereHas(
                         'campaigns', function ($q) {
                             $q->where('campaign_id', $this->campaign->id);
                         }
                     )->where('address_branch.created_at', '<=', $this->period['to']);
                         
+                },
+                'addresses as touched_leads'=>function ($q) {
+                    $q->whereHas(
+                        'campaigns', function ($q) {
+                            $q->where('campaign_id', $this->campaign->id);
+                        }
+                    )
+                    ->wherehas(
+                        'activities',function ($q) {
+                            $q->where('completed', 1)
+                            ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
+                        }
+                    )->where('address_branch.created_at', '<=', $this->period['to']);
+
                 },
                 'activities'=>function ($q) {
                 
@@ -1511,7 +1525,24 @@ class Branch extends Model implements HasPresenter
                 },
                 'opportunities as new_opportunities'=>function ($q) {
                     $q->whereBetween(
-                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                                
+                        }
+                    );
+                },
+                'opportunities as open_opportunities'=>function ($q) {
+                
+                    $q->whereClosed(0)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
                     )
                     ->whereHas(
                         'location' , function ($q) {
@@ -1610,6 +1641,69 @@ class Branch extends Model implements HasPresenter
                 $q->whereHas(
                     'relatesToAddress', function ($q1) {
                             $q1->whereIn('company_id', $this->company_ids);
+                    }  
+                );
+            },
+            ]
+        );
+    }
+        /**
+     * [scopeCampaignDetail description]
+     * 
+     * @param [type]   $query    [description]
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function scopeOpenCampaignDetail($query,Campaign $campaign)
+    {
+     
+        $period['from'] = $campaign->datefrom;
+        $period['to'] = $campaign->dateto;
+        $this->campaign = $campaign;
+        $this->setPeriod($period);;
+        
+        return $query->with(       
+            ['offeredLeads'=>function ($q) {
+               $q->whereHas(
+                    'campaigns', function ($q) {
+                        $q->where('campaign_id', $this->campaign->id);
+                    }
+                );    
+            },
+            'untouchedLeads'=>function ($q) {
+                 $q->whereHas(
+                    'campaigns', function ($q) {
+                        $q->where('campaign_id', $this->campaign->id);
+                    }
+                ); 
+            },
+            'workedLeads'=>function ($q) {
+                 $q->whereHas(
+                    'campaigns', function ($q) {
+                        $q->where('campaign_id', $this->campaign->id);
+                    }
+                ); 
+            },
+            'opportunitiesClosingThisWeek'=>function ($q) {
+                $q->whereHas(
+                    'address.address', function ($q1) {
+                        $q1->whereHas(
+                            'campaigns', function ($q) {
+                                $q->where('campaign_id', $this->campaign->id);
+                            }
+                        );
+                    }  
+                );
+            },
+            'upcomingActivities'=>function ($q) {
+                $q->whereHas(
+                    'relatesToAddress', function ($q1) {
+                        $q1->whereHas(
+                            'campaigns', function ($q) {
+                                $q->where('campaign_id', $this->campaign->id);
+                            }
+                        );
                     }  
                 );
             },

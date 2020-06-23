@@ -25,7 +25,17 @@ class BranchCampaignController extends Controller
                     "won_value",
                     "open_value",
                 ];
-    
+    public $openfields = [
+                    
+                    "campaign_leads",
+     
+                    "touched_leads",
+                    "new_opportunities",
+                    "won_opportunities",
+                    "open_opportunities",
+                    "won_value",
+                    "open_value",
+                ];
     /**
      * [__construct description]
      * 
@@ -74,12 +84,23 @@ class BranchCampaignController extends Controller
         $branch_ids = $myBranches->pluck('id')->toArray();
         $branches = $this->branch
             ->whereIn('id', $branch_ids)
-            ->summaryCampaignStats($campaign)
+            ->when(
+                $campaign->type === 'open', function ($q) use($campaign) {
+                    $q->summaryOpenCampaignStats($campaign);
+                }, function ($q) use($campaign) {
+                    $q->summaryCampaignStats($campaign);
+                }
+            )
             ->get();
       
         $servicelines = $campaign->getServicelines();
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
-        $fields=$this->fields;
+        if($campaign->type === 'open') {
+            $fields=$this->openfields;
+        } else {
+            $fields=$this->fields;
+        }
+        
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields'));
     }
     /**
@@ -128,8 +149,13 @@ class BranchCampaignController extends Controller
         $campaign->load('companies', 'branches');
                 
         $branch = $this->branch
-            ->campaignDetail($campaign)
-            ->findOrFail($branch->id);
+            ->when(
+                $campaign->type === 'open', function ($q) use($campaign) {
+                    $q->openCampaignDetail($campaign);
+                }, function ($q) use($campaign) {
+                    $q->campaignDetail($campaign);
+                }
+            )->findOrFail($branch->id);
        
         $views = [
             'offeredLeads'=>['title'=>"New Sales Initiative Leads", 'detail'=>'These leads have been offered to your branch.  You must either accept or decline them before you can record any activities or opportunities on them'],
