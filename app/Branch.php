@@ -1466,7 +1466,104 @@ class Branch extends Model implements HasPresenter
             }]
         );
     }
+     /**
+     * [scopeSummaryOpenCampaignStats description]
+     * 
+     * @param [type] $query    [description]
+     * @param [type] $campaign [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSummaryOpenCampaignStats($query,Campaign $campaign)
+    {
+        $this->period['from'] = $campaign->datefrom;
+        $this->period['to'] = $campaign->dateto;
+        
+        $this->campaign = $campaign;
+        
 
+        return $query->withCount(       
+            [ 
+                'addresses as campaignleads'=>function ($q) {
+                    $q->whereHas(
+                        'campaigns', function ($q) {
+                            $q->where('campaign_id', $this->campaign->id);
+                        }
+                    )->where('address_branch.created_at', '<=', $this->period['to']);
+                        
+                },
+                'activities'=>function ($q) {
+                
+                    $q->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )
+                    ->where('completed', 1)
+                    ->whereHas(
+                        'relatesToAddress', function ($q1) {
+                            $q1->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                        }
+
+                    );
+                },
+                'opportunities as new_opportunities'=>function ($q) {
+                    $q->whereBetween(
+                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                                
+                        }
+                    );
+                },
+                'opportunities as won_opportunities'=>function ($q) {
+                
+                    $q->whereClosed(1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                                
+                        }
+                    );
+                },
+                'opportunities as won_value' => function ($q) {
+                
+                $q->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->where('closed', 1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                                
+                        }
+                    );
+                },
+                
+
+            ]
+        );
+    }
     /**
      * [scopeCampaignDetail description]
      * 

@@ -386,7 +386,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function documents()
     {
-        return $this->belongsToMany(Documents::class);
+        return $this->belongsToMany(Document::class);
     }
 
     
