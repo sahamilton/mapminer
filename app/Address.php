@@ -105,9 +105,13 @@ class Address extends Model
      * 
      * @return [type] [description]
      */
-    public function campaigns()
+   
+
+    public function currentcampaigns()
     {
-        return $this->belongsToMany(Campaign::class);
+        return $this->belongsToMany(Campaign::class)
+            ->where('datefrom','<=', now()->startOfDay())
+            ->where('dateto','>=', now()->endOfDay());
     }
     /**
      * [project description]
@@ -415,11 +419,11 @@ class Address extends Model
      * 
      * @return [type] [description]
      */
-    /*public function campaigns()
+    public function campaigns()
     {
  
-        return $this->belongsToMany(Salesactivity::class);
-    }*/
+        return $this->belongsToMany(Campaign::class);
+    }
 
 
     /**

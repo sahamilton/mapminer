@@ -253,7 +253,7 @@ Route::group(
         //     Branch Sales Campaigns
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
 
-       // Route::get('branchcampaigns/add/{campaign}/{address}', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@add']);
+       Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
 
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 

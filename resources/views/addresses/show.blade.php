@@ -15,6 +15,7 @@
 
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
+
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
 
@@ -214,13 +215,14 @@
 
   </div>
 
-
+@include('addresses.partials._addresscampaignmodal')
 @include('partials._modal')
 @include('opportunities.partials._closemodal')
 @include('addresses.partials._reassignlead')
 @include('addresses.partials._rateaddressform')
 @include('partials._scripts')
 @include('addresses.partials.map')
+
 
 
 @endsection

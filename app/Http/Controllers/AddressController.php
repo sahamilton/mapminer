@@ -94,6 +94,7 @@ class AddressController extends BaseController
             'opportunities',
             'industryVertical',
             'relatedNotes',
+            'currentcampaigns',
             'orders.branch',
             'watchedBy.person',
             'ranking',

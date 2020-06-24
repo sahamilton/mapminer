@@ -349,9 +349,7 @@ class Branch extends Model implements HasPresenter
      */
     public function leads()
     {
-        return $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
-            ->whereDoesntHave('opportunities')
-            ->whereIn('status_id', [2]);  
+        return $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id');  
 
     }
     /**
@@ -1790,7 +1788,7 @@ class Branch extends Model implements HasPresenter
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
         $this->campaign = $campaign;
-        $this->setPeriod($period);;
+        $this->period = $period;
         
         return $query->with(       
             ['leads'=>function ($q) {

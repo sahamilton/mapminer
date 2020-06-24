@@ -74,13 +74,22 @@
             @endif
         </td>
         <td>
-            @foreach ($campaign_ids as $title=>$companies)
-                @if(in_array($lead->company_id, $companies))
-                    {{$title}}<br />
-                @else
-                <i class="text-success fas fa-plus-circle"></i> Add to {{$title}} campaign
-                @endif
+            @foreach ($lead->currentcampaigns as $campaign)
+               
+                   <li>{{$campaign->title}}</li>
+               
             @endforeach
+            @if ($lead->currentcampaigns->count() ==0 )
+            <a 
+            data-pk="{{$lead->id}}"
+            data-id="{{$lead->id}}"
+            data-toggle="modal" 
+            data-target="#addtocampaign" 
+            data-title = "" 
+            href="#">
+                <i class="text-success fas fa-plus-circle"></i> Add to current campaign
+            </a>
+           @endif
         </td>
         <td>
             @if($lead->lastActivity)
@@ -110,5 +119,6 @@
 </table>
  
 @include('branchleads.partials._branchleadmodal')
+@include('branchleads.partials._branchcampaignmodal')
 @include('partials._scripts')
 @endsection

@@ -6,12 +6,17 @@ use Illuminate\Http\Request;
 use App\Campaign;
 use App\Branch;
 use App\Person;
+use App\Address;
+use App\AddressCampaign;
 use Carbon\Carbon;
 
 class BranchCampaignController extends Controller
 {
+    
+
     public $branch;
     public $campaign;
+    public $addresscampaign;
     public $person;
     public $fields = [
                     "supplied_leads",
@@ -45,11 +50,13 @@ class BranchCampaignController extends Controller
     public function __construct(
         Branch $branch, 
         Campaign $campaign,
-        Person $person
+        Person $person,
+        AddressCampaign $addresscampaign
     ) {
         $this->branch = $branch;
         $this->campaign = $campaign;
         $this->person = $person;
+        $this->addresscampaign = $addresscampaign;
     }
     /**
      * Display a listing of the resource.
@@ -104,10 +111,15 @@ class BranchCampaignController extends Controller
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields'));
     }
 
-    /*public function add(Campaign $campaign, Address $address)
+    public function store(Request $request)
     {
-        dd($campaign, $address);
-    }*/
+        foreach (request('campaign') as $campaign_id) {
+           
+            $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+        }
+       
+        return redirect()->back()->withMessage('Lead added to campaigns');
+    }
     /**
      * [change description]
      * 

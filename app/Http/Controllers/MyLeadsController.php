@@ -57,10 +57,10 @@ class MyLeadsController extends BaseController
         session(['branch'=>$branch_id]);
 
         $branch = $this->_getBranchLeadData($branch_id);
-        
-        $campaign_ids = $this->_getCurrentCampaignCompanies($branch_id);
-        
-        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids'));
+
+        $campaigns = $this->_getCurrentCampaigns($branch_id);
+      
+        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaigns'));
         
     }
 
@@ -94,7 +94,7 @@ class MyLeadsController extends BaseController
         }
         session(['branch'=>$branch_id]);
         $branch = $this->_getBranchLeadData($branch_id);
-        $campaign_ids = $this->_getCurrentCampaignCompanies($branch_id);
+        $campaign_ids = $this->_getCurrentCampaigns($branch_id);
         
         return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids'));
     }
@@ -201,25 +201,21 @@ class MyLeadsController extends BaseController
             ->with(
                 ['leads'=>function ($query) {
                     $query->withLastActivityId();
-                },'leads.lastActivity','leads.leadsource']
+                },'leads.lastActivity','leads.leadsource','leads.currentcampaigns']
             )->find($branch_id);
     }
     /**
-     * [_getCurrentCampaignCompanies 
+     * [_getCurrentCampaigns 
      * Get the company ids in each current campaign]
      * 
      * @param string $branch_id [description]
      * 
      * @return array            [description]
      */
-    private function _getCurrentCampaignCompanies($branch_id)
+    private function _getCurrentCampaigns($branch_id)
     {
-        $campaigns = Campaign::current([$branch_id])->with('companies')->get();
-        $campaign_ids = [];
-        foreach ($campaigns as $campaign) {
-            $campaign_ids[$campaign->title] = $campaign->companies->pluck('id')->toArray();
-        }
-        return $campaign_ids;
+        return Campaign::current([$branch_id])->with('companies')->get();
+        
     }
     /**
      * [_cleanseInput description]

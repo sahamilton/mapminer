@@ -1,5 +1,4 @@
 @if ($owned)
-
       @if($branch->pivot->status_id == 1)
         <div class="col-sm-6">
         <form class='form-inline'
@@ -35,7 +34,8 @@
        
         @include('addresses.partials._declinemodal')
         @elseif ($branch->pivot->status_id == 2)
-         
+          @include('addresses.partials._campaigns')
+          
             <div class="col-sm-6">
               @foreach ($location->assignedToBranch as $branch)
                 <p><strong>{{$statuses[$branch->pivot->status_id]}}</strong>
