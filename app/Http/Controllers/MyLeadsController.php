@@ -59,7 +59,7 @@ class MyLeadsController extends BaseController
         $branch = $this->_getBranchLeadData($branch_id);
         
         $campaign_ids = $this->_getCurrentCampaignCompanies($branch_id);
-
+        
         return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids'));
         
     }

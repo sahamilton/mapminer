@@ -1664,12 +1664,14 @@ class Branch extends Model implements HasPresenter
         $this->setPeriod($period);;
         
         return $query->with(       
-            ['offeredLeads'=>function ($q) {
+            ['leads'=>function ($q) {
                $q->whereHas(
                     'campaigns', function ($q) {
                         $q->where('campaign_id', $this->campaign->id);
                     }
-                );    
+                )
+               ->where('lead_source_id',4)
+               ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);    
             },
             'untouchedLeads'=>function ($q) {
                  $q->whereHas(
@@ -1683,7 +1685,7 @@ class Branch extends Model implements HasPresenter
                     'campaigns', function ($q) {
                         $q->where('campaign_id', $this->campaign->id);
                     }
-                ); 
+                )->where('address_branch.created_at','<',$this->period['to']); ; 
             },
             'opportunitiesClosingThisWeek'=>function ($q) {
                 $q->whereHas(
