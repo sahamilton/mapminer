@@ -130,9 +130,8 @@ class AddressController extends BaseController
         //}
        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
-        $campaigns = Campaign::active()->get();
-        return response()->view('addresses.show', compact(
-            'location', 
+        $campaigns = Campaign::active()->select('id', 'title')->get();
+        return response()->view('addresses.show', compact('location', 
             'branches', 
             'rankingstatuses', 
             'people', 
@@ -140,10 +139,8 @@ class AddressController extends BaseController
             'ranked', 
             'notes', 
             'owned', 
-            'fields',
-            'campaigns'
-            )
-        );
+            'fields', 
+            'campaigns'));
     }
 
     /**
@@ -178,6 +175,11 @@ class AddressController extends BaseController
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
 
         $address->update($data);
+        if (request()->has('campaign')) {
+            $address->campaigns()->attach(request('campaign'));
+        } else {
+             $address->campaigns()->detach(request('campaign'));
+        }
         return redirect()->route('address.show', $address->id)->withMessage('Location updated');
     }
 

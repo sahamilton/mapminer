@@ -24,57 +24,69 @@
     
     <p><strong>Active From:</strong>{{$campaign->datefrom ? $campaign->datefrom->format('l jS M Y') : ''}}</p>
     <p><strong>Expires:</strong>{{$campaign->dateto ? $campaign->dateto->format('l jS M Y') : ''}}</p>
-    @if(isset($data)) 
-        <p><strong>Branches:</strong> <em>(that can service)</em>
-                {{$data['branches']->count()}}
-        </p>
-       <p> <strong>Total Assignable Locations:</strong>{{$data['locations']['unassigned']}}</p>
+    @if($campaign->type != 'open')
+        @if(isset($data)) 
+            <p><strong>Branches:</strong> <em>(that can service)</em>
+                    {{$data['branches']->count()}}
+            </p>
        
-       <p> <strong>Total Previously Assigned Locations:</strong>{{$data['locations']['assigned']}}</p>
-    @endif
+           <p> <strong>Total Assignable Locations:</strong>{{$data['locations']['unassigned']}}</p>
+           
+           <p> <strong>Total Previously Assigned Locations:</strong>{{$data['locations']['assigned']}}</p>
 
-    
-    <p>
-        @if($campaign->verticals)
-            <strong>Verticals:</strong>
-            @foreach ($campaign->verticals as $vertical)
-                <li>{{$vertical->filter}}</li>
-            @endforeach
+        @endif
+
+        
+        <p>
+
+            @if($campaign->verticals)
+                <strong>Verticals:</strong>
+                @foreach ($campaign->verticals as $vertical)
+                    <li>{{$vertical->filter}}</li>
+                @endforeach
+            @else
+
+                <strong>Companies:</strong>
+                <div class="row">
+                    <table id="sorttable2" class="table table->striped col-sm-6">
+                        <thead>
+                            <th>Company</th>
+                            <th>Assignable Locations</th>
+                            <th>Assigned Locations</th>
+                        </thead>
+                        <tbody>
+                        @foreach ($data['companies'] as $company)
+                        <tr>
+                            <td>{{$company->companyname}}</td>
+                            <td>
+                                {{$company->unassigned->count()}}
+                                @php $totals['unassigned'] = isset($totals['unassigned']) ? $totals['unassigned'] + $company->unassigned->count() : $company->unassigned->count()  @endphp
+                            </td>
+                            <td>
+                                {{$company->assigned->count()}}
+                                @php $totals['assigned'] = isset($totals['assigned']) ? $totals['assigned'] + $company->assigned->count() : $company->assigned->count()  @endphp
+                            </td>
+                            
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    @if(isset($totals))
+                    <tfoot>
+                        <th>Totals</th>
+                        <td>{{$totals['unassigned']}}</td>
+                        <td>{{$totals['assigned']}}</td>
+
+                    </tfoot>
+                    @endif
+                </table>
+            </div>
+              
+           @endif
         @else
+            <p><strong>Branches:</strong> <em>(in campaign)</em>
+                    {{$data['branches']->count()}}
+            </p>
 
-            <strong>Companies:</strong>
-            <div class="row">
-                <table id="sorttable2" class="table table->striped col-sm-6">
-                    <thead>
-                        <th>Company</th>
-                        <th>Assignable Locations</th>
-                        <th>Assigned Locations</th>
-                    </thead>
-                    <tbody>
-                    @foreach ($data['companies'] as $company)
-                    <tr>
-                        <td>{{$company->companyname}}</td>
-                        <td>
-                            {{$company->unassigned->count()}}
-                            @php $totals['unassigned'] = isset($totals['unassigned']) ? $totals['unassigned'] + $company->unassigned->count() : $company->unassigned->count()  @endphp
-                        </td>
-                        <td>
-                            {{$company->assigned->count()}}
-                            @php $totals['assigned'] = isset($totals['assigned']) ? $totals['assigned'] + $company->assigned->count() : $company->assigned->count()  @endphp
-                        </td>
-                        
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <th>Totals</th>
-                    <td>{{isset($totals) ? $totals['unassigned'] : 0 }}</td>
-                    <td>{{isset($totals) ? $totals['assigned'] :0}}</td>
-
-                </tfoot>
-            </table>
-        </div>
-          
-       @endif
+        @endif
     </p>
 </div>

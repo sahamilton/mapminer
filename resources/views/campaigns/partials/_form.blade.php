@@ -63,6 +63,20 @@
     @if ($errors->has('dateto')) <p class="help-block">{{ $errors->first('dateto') }}</p> @endif
 
 </div>
+<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="type">Campaign Type</label>
+    <select required 
+    name="type"
+    class="form-control"
+    >
+        <option selected value="open">Open</option>
+        <option value="restricted">Restricted</option>
+    </select>
+
+         <span class="help-block{{ $errors->has('type') ? ' has-error' : '' }}">
+                <strong>{{$errors->has('type') ? $errors->first('type')  : ''}}</strong>
+            </span>
+</div> 
 
 <legend>Industry / Company</legend>
 	<div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">

@@ -77,6 +77,8 @@
             @foreach ($campaign_ids as $title=>$companies)
                 @if(in_array($lead->company_id, $companies))
                     {{$title}}<br />
+                @else
+                <i class="text-success fas fa-plus-circle"></i> Add to {{$title}} campaign
                 @endif
             @endforeach
         </td>

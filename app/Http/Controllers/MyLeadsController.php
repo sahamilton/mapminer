@@ -59,7 +59,7 @@ class MyLeadsController extends BaseController
         $branch = $this->_getBranchLeadData($branch_id);
         
         $campaign_ids = $this->_getCurrentCampaignCompanies($branch_id);
-
+        
         return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids'));
         
     }
@@ -121,8 +121,8 @@ class MyLeadsController extends BaseController
         $address = $this->lead->create($data['lead']);
         
         $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
-        if (isset($data['campaign'])) {
-            $address->campaigns()->attach($data['campaign']);
+        if (request()->has('campaign')) {
+            $address->campaigns()->attach(request('campaign'));
         }
         $dupes = $this->_getDuplicateLeads($data);
       

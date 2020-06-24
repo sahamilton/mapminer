@@ -196,6 +196,17 @@ class Branch extends Model implements HasPresenter
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
     }
+
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
+    public function branchActivities()
+    {
+ 
+        return $this->hasManyThrough(Activity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
+    }
     /**
      * [openOpportunities description]
      * 
@@ -439,7 +450,10 @@ class Branch extends Model implements HasPresenter
             ->whereIn('status_id', [2]); 
 
     }
-
+    public function associatedLocations()
+    {
+        return $this->hasMany(AddressBranch::class);
+    }
     
 
 
@@ -547,6 +561,75 @@ class Branch extends Model implements HasPresenter
     public function campaigns()
     {
         return $this->belongsToMany(Campaign::class);
+    }
+
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaignLeads()
+    {
+        return $this->hasManyThrough(Campaign::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
+    }
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function scopeWithCampaignLeads($query, Campaign $campaign)
+    {
+        return  $query->with(
+            [
+                'locations'=>function ($q) use($campaign) {
+                    $q->whereHas(
+                        'campaignLeads', function ($q1) use ($campaign) {
+                            $q1->where('campaign_id', $campaign->id);
+                        }
+                    );
+                }
+            ]
+        );
+           
+    }
+
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function activeCampaigns()
+    {
+        return $this->belongsToMany(Campaign::class)
+            ->where('status', 'launched')
+            ->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
+    }
+
+    public function scopeCampaignLocations($query, array $campaigns)
+    {
+        
+        return $query->with(
+            ['locations'=>function ($q) use ($campaigns) { 
+                $q->whereHas('campaigns', function ($q1) use($campaigns) { 
+                    $q1->whereIn('campaigns.id', $campaigns); });
+                }
+            ]
+        );
+
+    }
+
+    public function scopeCampaignActivities($query, array $campaigns)
+    {
+        
+        return $query->with(
+            ['activities'=>function ($q) use ($campaigns) { 
+                $q->whereHas('campaigns', function ($q1) use($campaigns) { 
+                    $q1->whereIn('campaigns.id', $campaigns); });
+                }
+            ]
+        );
+
     }
     /**
      * [makeNearbyBranchXML   Generate Mapping xml file from branches results]
@@ -1512,535 +1595,133 @@ class Branch extends Model implements HasPresenter
             }]
         );
     }
-    
-    /**
-     * [scopeSummaryCompanyStats description]
+     /**
+     * [scopeSummaryOpenCampaignStats description]
      * 
-     * @param [query] $query     [description]
-     * @param [array] $period    [description]
-     * @param [array] $companies [description]
+     * @param [type] $query    [description]
+     * @param [type] $campaign [description]
      * 
      * @return [type]         [description]
      */
-    
-    public function scopeCompanyLeadSummary($query, array $period, array $company_ids, array $fields = null)
+    public function scopeSummaryOpenCampaignStats($query,Campaign $campaign)
     {
-
-        if (! $fields) {
-            $fields = $this->leadFields;
-        }
-        $this->fields = $fields;
-        $this->period = $period;
-        $this->company_ids = $company_ids;
+        $this->period['from'] = $campaign->datefrom;
+        $this->period['to'] = $campaign->dateto;
         
-        return $query->when(
-            in_array('top_25leads', $this->fields), function ($q) {
+        $this->campaign = $campaign;
+        
 
-                $q->withCount(       
-                    [
-                        'locations as top_25leads'=>function ($query) {
-
-                            $query->whereHas(
-                                'location', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('address_branch.top50',  1);
-                               
+        return $query->withCount(       
+            [ 
+                'addresses as campaign_leads'=>function ($q) {
+                    $q->whereHas(
+                        'campaigns', function ($q) {
+                            $q->where('campaign_id', $this->campaign->id);
                         }
-                    ]
-                );
-            }
-        )
-
-        ->when(
-            in_array('new_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as new_leads'=>function ($query) {
-
-                            $query->whereHas(
-                                'location', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->whereBetween('address_branch.created_at',  [$this->period['to'], $this->period['from']]);
-                        }
-                    ]
-                );
-            }
-        )
-        ->when(
-            in_array('supplied_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as supplied_leads'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('address_branch.created_at', '<=', $this->period['to']);
-                                
-                        }
-                    ]
-                );
-            }
-        )
-        ->when(
-            in_array('open_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as open_leads'=>function ($query) {
-                            $query->whereIn('company_id', $this->company_ids)
-                                ->where('address_branch.status_id', 2);
-                                    
-                        }   
-                    ]
-                );
-            }
-        )
-        ->when(
-            in_array('offered_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as offered_leads'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('address_branch.status_id', 1)
-                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
-                                
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('worked_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as worked_leads'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('address_branch.status_id', 2)
-                                 ->where('address_branch.created_at', '<=', $this->period['to']);
-                                
-                        }
-                    ]
-                );
-            }
-        )
-
-        ->when(
-            // note that this and touched leads should return the same
-            // consider merging.
-            in_array('active_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as active_leads'=>function ($query) {
-                            $query->whereIn('company_id', $this->company_ids)
-                                ->where('address_branch.status_id', 2)
-                                ->whereHas(
-                                    'activities', function ($q1) {
-                                        $q1->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-                                            ->where('completed', 1);
-                                    }
-                                );
-                                    
+                    )->where('address_branch.created_at', '<=', $this->period['to']);
                         
-                           
+                },
+                'addresses as touched_leads'=>function ($q) {
+                    $q->whereHas(
+                        'campaigns', function ($q) {
+                            $q->where('campaign_id', $this->campaign->id);
                         }
-                    ]
-                );
-            }
-        )
-        ->when(
-            in_array('rejected_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as rejected_leads'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('address_branch.status_id', 4)
-                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
-                            ->whereDoesntHave('opportunities')
-                            ->whereDoesntHave('activities');
-                                
-                            
+                    )
+                    ->wherehas(
+                        'activities',function ($q) {
+                            $q->where('completed', 1)
+                            ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
                         }
-                    ]
-                );
-            }
-        );
+                    )->where('address_branch.created_at', '<=', $this->period['to']);
 
-        
-    }
-
-    public function scopeCompanyOpportunitySummary($query, $period, $fields = null)
-    {
-        if (! $fields) {
-            $fields = $this->opportunityFields;
-        }
-        $this->fields = $fields;
-        return $query->when(
-            in_array('new_opportunities', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as new_opportunities'=>function ($q1) {
+                },
+                'activities'=>function ($q) {
                 
+                    $q->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )
+                    ->where('completed', 1)
+                    ->whereHas(
+                        'relatesToAddress', function ($q1) {
                             $q1->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
                                 }
-                            )
-                            ->whereBetween(
-                                'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                            );
+                        }
+
+                    );
+                },
+                'opportunities as new_opportunities'=>function ($q) {
+                    $q->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
                             );
                                 
                         }
-                    ]
-                );
-            }
-        )->when(
-            in_array('won_opportunities', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as won_opportunities'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )
-                            ->whereClosed(1)
-                                ->whereBetween(
-                                    'actual_close', [$this->period['from'],$this->period['to']]
-                                );
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('lost_opportunities', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as lost_opportunities'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )
-                            ->whereClosed(2)        
-                                
-                                ->whereBetween(
-                                    'opportunities.actual_close', [$this->period['from'], $this->period['to']]
-                                );
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('open_opportunities', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as open_opportunities'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )
-                            ->whereClosed(0)        
-                                ->OrWhere(
-                                    function ($q) {
-                                        $q->where('actual_close', '>', $this->period['to'])
-                                            ->orwhereNull('actual_close');
-                                    }
-                                )
-                                ->where('opportunities.created_at', '<=', $this->period['to']);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('active_opportunities', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as active_opportunities'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )
-                            ->whereClosed(0)        
-                                ->OrWhere(
-                                    function ($q) {
-                                        $q->where('actual_close', '>', $this->period['to'])
-                                            ->orwhereNull('actual_close');
-                                    }
-                                )->has('currentlyActive')
-                                
-                                ->where('opportunities.created_at', '<=', $this->period['to']);
-                        }
-                    ]
-                );
-            }
-        )
-        ->when(
-            in_array('active_value', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as active_value'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )->activeValue($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('top_25opportunities', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as top_25opportunities'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )->top25($this->period);
-                           
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('Top25value', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as Top25value'=>function ($query) {
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )->top25Value($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('won_value', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as won_value'=>function ($query) {
+                    );
+                },
+                'opportunities as open_opportunities'=>function ($q) {
                 
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )->wonValue($this->period);
-                                
-                           
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('lost_value', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as won_value'=>function ($query) {
-                
-                            $query->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
-                                }
-                            )->lostValue($this->period);
-                                
-                           
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('open_value', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'opportunities as open_value' => function ($q) {
+                    $q->whereClosed(0)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
                             $q->whereHas(
-                                'location', function ($q1) {
-
-                                    $q1->whereIn('company_id', $this->company_ids);
-
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
                                 }
-                            )->openValue($this->period);
+                            );
+                                
                         }
-                    ]
-                );
-            }
-        );
+                    );
+                },
+                'opportunities as won_opportunities'=>function ($q) {
+                
+                    $q->whereClosed(1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                                
+                        }
+                    );
+                },
+                'opportunities as won_value' => function ($q) {
+                
+                $q->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->where('closed', 1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereHas(
+                        'location' , function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                                
+                        }
+                    );
+                },
+                
 
-    }
-
-    public function scopeActivitySummary($query, array $period, array $fields=null)
-    {
-        if (! $fields) {
-            $fields = $this->activityFields;
-        }
-        $this->period = $period;
-
-        return $query->with(
-            [
-                'activities'=>function ($q) {
-                    $q->completed()
-                        ->periodActivities($this->period)
-                        ->typeCount();
-                }
             ]
-        );
-    }
-
-    
-
-
-    public function scopeCompanyActivitySummary($query, array $period, array $fields=null)
-    {
-        if (! $fields) {
-            $fields = $this->_setActivityFields();
-        }
-        $this->period = $period;
-        $this->fields = $fields;
-        return $query->when(
-            in_array('Sales_Appointment', $this->fields), function ($q) {
-                $q->withCount(
-                    [
-                        'activities as Sales_Appointment'=>function ($q1) {
-
-                            $q1->whereHas(
-                                'relatesToAddress', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('completed', 1)
-                                ->where('activitytype_id', 4)
-                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('Stop_By', $this->fields), function ($q) {
-                $q->withCount(
-                    [
-                        'activities as Stop_By'=>function ($q1) {
-                            $q1->whereHas(
-                                'relatesToAddress', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('completed', 1)
-                                ->where('activitytype_id', 5)
-                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                        
-                    ]
-                );
-            }
-        )->when(
-            in_array('Proposal', $this->fields), function ($q) {
-                $q->withCount(
-                    [
-                        'activities as Proposal'=>function ($q1) {
-                            $q1->whereHas(
-                                'relatesToAddress', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('completed', 1)
-                                ->where('activitytype_id', 7)
-                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('Site_Visit', $this->fields), function ($q) {
-                $q->withCount(
-                    [
-                        'activities as Site_Visit'=>function ($q1) {
-                            $q1->whereHas(
-                                'relatesToAddress', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('completed', 1)
-                                ->where('activitytype_id', 10)
-                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('Log_a_call', $this->fields), function ($q) {
-                $q->withCount(
-                    [
-                        'activities as Log_a_call'=>function ($q1) {
-                            $q1->whereHas(
-                                'relatesToAddress', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('completed', 1)
-                                ->where('activitytype_id', 13)
-                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('In_Person', $this->fields), function ($q) {
-                $q->withCount(
-                    [
-                        'activities as In_Person'=>function ($q1) {
-                            $q1->whereHas(
-                                'relatesToAddress', function ($q1) {
-                                    $q1->whereIn('company_id', $this->company_ids);
-                                }
-                            )
-                            ->where('completed', 1)
-                                ->where('activitytype_id', 14)
-                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    ]
-                );
-            }
         );
     }
     /**
@@ -2095,8 +1776,7 @@ class Branch extends Model implements HasPresenter
             ]
         );
     }
-
-    /**
+        /**
      * [scopeCampaignDetail description]
      * 
      * @param [type]   $query    [description]
@@ -2104,55 +1784,61 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]             [description]
      */
-    public function scopeCompanyDetail($query,Company $company, array $period=null)
+    public function scopeOpenCampaignDetail($query,Campaign $campaign)
     {
      
-        if (! $period) {
-            $period = $this->getPeriod();
-        }
-        $this->company_ids = [$company->id];
+        $period['from'] = $campaign->datefrom;
+        $period['to'] = $campaign->dateto;
+        $this->campaign = $campaign;
+        $this->setPeriod($period);;
+        
         return $query->with(       
-            ['offeredLeads'=>function ($q) {
-                $q->whereIn('company_id', $this->company_ids);
-                    
+            ['leads'=>function ($q) {
+               $q->whereHas(
+                    'campaigns', function ($q) {
+                        $q->where('campaign_id', $this->campaign->id);
+                    }
+                )
+               ->where('lead_source_id',4)
+               ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);    
             },
             'untouchedLeads'=>function ($q) {
-                 $q->whereIn('company_id', $this->company_ids);
+                 $q->whereHas(
+                    'campaigns', function ($q) {
+                        $q->where('campaign_id', $this->campaign->id);
+                    }
+                ); 
             },
             'workedLeads'=>function ($q) {
-                 $q->whereIn('company_id', $this->company_ids);
+                 $q->whereHas(
+                    'campaigns', function ($q) {
+                        $q->where('campaign_id', $this->campaign->id);
+                    }
+                )->where('address_branch.created_at','<',$this->period['to']); ; 
             },
             'opportunitiesClosingThisWeek'=>function ($q) {
                 $q->whereHas(
                     'address.address', function ($q1) {
-                            $q1->whereIn('company_id', $this->company_ids);
+                        $q1->whereHas(
+                            'campaigns', function ($q) {
+                                $q->where('campaign_id', $this->campaign->id);
+                            }
+                        );
                     }  
                 );
             },
             'upcomingActivities'=>function ($q) {
                 $q->whereHas(
                     'relatesToAddress', function ($q1) {
-                            $q1->whereIn('company_id', $this->company_ids);
+                        $q1->whereHas(
+                            'campaigns', function ($q) {
+                                $q->where('campaign_id', $this->campaign->id);
+                            }
+                        );
                     }  
                 );
             },
             ]
         );
-    }
-
-    public function scopeActivitiesTypeCount($query, $period=null)
-    {
-      return $query->with(['activities'=>function ($q) use ($period) {
-            $q->periodActivities($period)
-                ->completed()
-                ->selectRaw("branch_id, activity_type.activity,count(activities.id) as activities")
-                ->join('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
-               
-                ->groupBy(['branch_id', 'activity_type.activity']);
-
-            }
-        ]
-        );
-       
     }
 }

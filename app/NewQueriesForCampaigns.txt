@@ -1,0 +1,6 @@
+insert into address_campaign (address_branch_id, campaign_id) select address_branch.id, campaign_company.campaign_id from address_branch, campaign_company, addresses, branch_campaign where campaign_company.company_id = addresses.company_id and addresses.id = address_branch.address_id and campaign_company.campaign_id = branch_campaign.campaign_id and branch_campaign.branch_id = address_branch.branch_id
+
+update activities, address_branch
+set activities.address_branch_id = address_branch.id
+where activities.address_id = address_branch.address_id
+and activities.branch_id = address_branch.branch_id
