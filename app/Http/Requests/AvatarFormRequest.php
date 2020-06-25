@@ -25,7 +25,7 @@ class AvatarFormRequest extends FormRequest
     {
        return [
         'avatar' => 'mimes:jpeg,png',
-        'avatar' => 'image|size:1024',
+        'avatar' => 'image',
    
         ];
     }
