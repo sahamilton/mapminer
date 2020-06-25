@@ -95,14 +95,15 @@ class BranchDashboardController extends DashboardController
             
             $branch = session('branch');
 
-            return redirect()->route('dashboard.show', $branch);
+            return redirect()->route('branchdashboard.show', $branch);
         } else {
            
             $this->myBranches = $this->_getBranches();
             
             if (count($this->myBranches) > 0) {
                 $branch = array_keys($this->myBranches);
-                return redirect()->route('dashboard.show', $branch[0]);
+
+                return redirect()->route('branchdashboard.show', $branch[0]);
             } else {
                 return redirect()->route('user.show', auth()->user()->id)
                     ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
