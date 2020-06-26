@@ -56,7 +56,7 @@ class MyLeadsController extends BaseController
         $branch_id = reset($branch_ids);
         session(['branch'=>$branch_id]);
 
-        $branch = $this->_getBranchLeadData($branch_id);
+        $branch = $this->branch->findOrFail($branch_id);
 
         $campaigns = $this->_getCurrentCampaigns($branch_id);
       
