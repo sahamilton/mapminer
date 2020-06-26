@@ -121,8 +121,8 @@ class BranchDashboardController extends DashboardController
      */
     public function setPeriod(Request $request)
     {
-      
-        $this->period = $this->activity->setPeriod(request('period'));
+        
+        $this->period = $this->activity->setPeriod($request);
     
 
         return redirect()->back();

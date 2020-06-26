@@ -7,7 +7,7 @@ use App\Transformers\EventTransformer;
 use App\Activity;
 use Illuminate\Http\Request;
 use Redirect,Response;
-
+use Carbon\Carbon;
    
 class CalendarController extends Controller
 {
@@ -24,10 +24,10 @@ class CalendarController extends Controller
      */
     public function index(Request $request)
     {
-       
+        
         if (request()->has('start') && request()->has('end')) {
-            $period['from'] = $request('start');
-            $period['to'] = $request('end');
+            $period['from'] = Carbon::parse(request('start'));
+            $period['to'] = Carbon::parse(request('end'));
         } else {
             $period = $this->activity->getPeriod();
             $period['from'] = $period['from']->startOfWeek();
@@ -50,15 +50,16 @@ class CalendarController extends Controller
      */
     public function create(Request $request)
     {  
+        
         $insertArr = [ 'title' => $request->title,
                        'activity_date' => $request->start
                     ];
-        $event = Event::insert($insertArr);   
+        $event = Activity::insert($insertArr);   
         return Response::json($event);
     }
     public function getCalPeriod($period)
     {
-        
+        dd($period);
         $calperiod = $this->activity->getPeriod($period);
 
         return $this->_getEventsToJson($calperiod);

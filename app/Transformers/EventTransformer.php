@@ -1,19 +1,34 @@
 <?php
 
-namespace App\Transfomers;
+namespace App\Transformers;
 
 use App\Activity;
-use Illuminate\Database\Eloquent\Model;
-use League\Fractal;
+use League\Fractal\TransformerAbstract;
 
-class EventTransformer extends  Fractal\TransformerAbstract
+class EventTransformer extends TransformerAbstract
 {
     /**
-     * [transform description]
-     * 
-     * @param  Activity  $activity [description]
-     * 
-     * @return [type]        [description]
+     * List of resources to automatically include
+     *
+     * @var array
+     */
+    protected $defaultIncludes = [
+        //
+    ];
+    
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [
+        //
+    ];
+    
+    /**
+     * A Fractal transformer.
+     *
+     * @return array
      */
     public function transform(Activity $activity)
     {

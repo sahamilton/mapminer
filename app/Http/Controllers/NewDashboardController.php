@@ -100,8 +100,9 @@ class NewDashboardController extends Controller
             if ($team->count() >1) {
                 dd('gotta team!');
             } else {
-                $branches = $this->branch->whereIn('id', $this->person->getMyBranches())->get();
-                dd($this->showBranch($branches->first()));
+                $branches = $this->branch->whereIn('id', $this->person->getMyBranches())->first();
+               
+                return redirect()->route('branchdashboard.show', $branches->id);
             }
             
             break;     

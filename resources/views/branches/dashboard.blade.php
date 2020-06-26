@@ -52,10 +52,7 @@
 			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">Upcoming Activities</a></p>
 		</div>
 
-		<div id="calendar"  class="card-body" >
-	
-			
-		</div>
+		<div id="calendar"  class="card-body" ></div>
 	</div>
 	 
 	<div class="row" style="margin-bottom:100px">

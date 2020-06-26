@@ -10,7 +10,7 @@
  
         var calendar = $('#calendar').fullCalendar({
             eventLimit: true,
-            events: "{{route('cal.month',$data['period']['period'])}}",
+            events: "{{route('calendar.index',$data['period']['period'])}}",
             displayEventTime: true,
             editable: true,
             eventRender: function (event, element, view) {
