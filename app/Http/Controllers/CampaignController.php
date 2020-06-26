@@ -435,7 +435,7 @@ class CampaignController extends Controller
      */
     private function _getSummaryLocations(Campaign $campaign, $data)
     {
-        dd(436, $campaign);
+     
        
         $result['unassigned'] = $data->map(
             function ($company) {
