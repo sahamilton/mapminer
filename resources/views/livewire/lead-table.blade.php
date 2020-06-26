@@ -23,6 +23,7 @@
                             Business
                             @include('includes._sort-icon', ['field' => 'businessname'])
                         </a>
+
                     </th>
                     <th>
                         <a wire:click.prevent="sortBy('street')" role="button" href="#">
@@ -42,14 +43,29 @@
                             @include('includes._sort-icon', ['field' => 'state'])
                         </a>
                     </th>
-                    <th>Open Opportunities</th>
+                    <th>
+                        <a wire:click.prevent="sortBy('state')" role="button" href="#">
+                            Source
+                            @include('includes._sort-icon', ['field' => 'lead_source_id'])
+                        </a>
+                       
+                    </th>
+                    @if($branch->currentcampaigns->count())
+                        <th>Campaign</th>
+                    @endif
                     <th>Last activity</th>
+                    <th>
+                     <a wire:click.prevent="sortBy('street')" role="button" href="#">
+                            Open Opportunities
+                            @include('includes._sort-icon', ['field' => 'open_opportunities_count'])
+                        </a>
+                    </th>
 
                     
                 </tr>
             </thead>
             <tbody>
-                @include('addresses.partials._table')
+                @include('leads.partials._table')
             </tbody>
         </table>
     </div>

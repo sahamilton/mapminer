@@ -566,6 +566,16 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type] [description]
      */
+    public function currentcampaigns()
+    {
+        return $this->belongsToMany(Campaign::class)->where('datefrom', '<=',now()->startOfDay())->where('dateto', '>=', now()->endOfDay());
+    }
+
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
     public function campaignLeads()
     {
         return $this->hasManyThrough(Campaign::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');

@@ -33,12 +33,10 @@
 
 
 
-@include('branchleads.partials._mylead') 
+    @include('branchleads.partials._mylead') 
 
 
-
-
-    @livewire('lead-table')
+    @livewire('lead-table', ['branch'=>$branch->id])
  
 @include('branchleads.partials._branchleadmodal')
 @include('branchleads.partials._branchcampaignmodal')
