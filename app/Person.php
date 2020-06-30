@@ -142,7 +142,9 @@ class Person extends NodeModel implements HasPresenter
      */
     public function getMyBranches(Array $servicelines=null)
     {
+        
         if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
+
             return Branch::when(
                 $servicelines, function ($q1) use ($servicelines) {
                     $q1->whereIn('servicelines.id', $servicelines);
@@ -210,10 +212,10 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
-        
+           
         if (! $person ) {
             $user = $this->_getPersonFromAuth();
-            
+           
             $person = $user->person;
             if ($user->hasRole(['admin', 'sales_operations'])) {
                 return $this->_getBranchesInServicelines($user->serviceline);
@@ -221,7 +223,10 @@ class Person extends NodeModel implements HasPresenter
                 return $this->_getBranchesFromTeam($person); 
             }
         } else {
-            
+            $person->load('userdetails');
+            if($person->userdetails->hasRole(['admin', 'sales_operations'])) {
+                return $this->_getBranchesInServicelines($person->userdetails->serviceline);
+            }
             return $this->_getBranchesFromTeam($person);
         }
     }  

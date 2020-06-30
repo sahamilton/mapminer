@@ -151,7 +151,7 @@ class BranchCampaignController extends Controller
         
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $myBranches = $this->person->myBranches($person);
-        
+      
         if (! in_array($branch->id, array_keys($myBranches))) {
             return redirect()->back()->withError('That is not one of your branches');
         }
