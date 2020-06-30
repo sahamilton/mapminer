@@ -14,7 +14,7 @@ var activityTypeChart = new Chart(ctb,
       labels: ['{!!  $data['team']['activitytypechart']['labels'] !!}'],
       datasets: [
        @foreach ($data['team']['activitytypechart']['data'] as $key=>$value) 
-       
+        {{dd($data['team']['activitytypechart']['data'] ,$key, $value)}}
         {
           
           label: '{!! $key !!}',

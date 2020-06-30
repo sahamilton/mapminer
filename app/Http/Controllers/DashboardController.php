@@ -138,7 +138,7 @@ class DashboardController extends Controller
         return $this->branch
             ->SummaryStats($this->period)
             ->with('manager', 'manager.reportsTo')
-            ->getActivitiesByType($this->period)
+            //->getActivitiesByType($this->period)
             ->whereIn('id', $this->myBranches)
             ->get(); 
 

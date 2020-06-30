@@ -36,7 +36,7 @@ class Chart extends Model
      */
     public function getTeamActivityByTypeChart(array $data)
     {
-       
+   
         // Initialize
         $fullabels = $data['team']->map(
             function ($person) {
@@ -50,29 +50,15 @@ class Chart extends Model
         $chart= array();
         // Build array by team member of all activities by type
         $result = []; 
-        
+       
         foreach ($data['team'] as $team) {
-            
+         
             if (isset($data['data'][$team->id]['activitiestype'])) {
-                foreach ($data['data'][$team->id]['activitiestype'] as  $activity) {
-                    
-                    if (count($activity)>0) {
-                        ksort($activity);
-                        foreach ($activity as $key=>$act) {
-                            // set key to activity name
-                            $type = $activitytypes->where('id', $key)->first()->activity;
-                            if (isset($result[$team->id][$type])) {
-                                $result[$team->id][$type] += count($act);   
-                            } else {
-                                $result[$team->id][$type] = count($act);
-                            }    
-                        } 
-                    }
-                }  
+                $result[$fullabels[$team->id]] = $data['data'][$team->id]['activitiestype'];
             }
         }
-        
-        // fill array with necessary blank team members
+
+        /*// fill array with necessary blank team members
         foreach (array_diff($data['team']->pluck('id')->toArray(), array_keys($result)) as $missing) {
             $result[$missing] = [];
         }
@@ -86,19 +72,31 @@ class Chart extends Model
                 $filled[$key][$missing] = 0;
             }
             ksort($filled[$key]);
-        }
-        if ($filled) {
+        }*/
+        if ($result) {
+            $colors = $this->_getActivityTypeColors();
+            $chart['labels'] = implode("','",array_keys(reset($result)));
             // fill chart array by type, color, labels and data
-            foreach ($this->_transpose($filled) as $key=>$result) {
-                $color = $activitytypes->where('activity', $key)->first()->color;
-                $chart[$key]['color']= "#" . $color;
-                $chart[$key]['labels']=$labels; 
-                $chart[$key]['data'] = implode(",", $result);
-                
+            foreach ($result as $key=>$res) {
+                $chart['data'][$key]['labels']=array_keys($res);
+                $chart['data'][$key]['data'] = implode(",", $res);
+                foreach ($res as $k=>$item) {
+                    $chart['data'][$key]['color']= "#" . $colors[$k];
+                     
+                    
+                }
             }
         }
-       
         return $chart;
+    }
+
+    private function _getActivityTypeColors()
+    {
+        $colors = ActivityType::select('activity','color')->get();
+        foreach ($colors as $color) {
+            $data[str_replace(" ", "",strtolower($color->activity))] = $color->color;
+        }
+        return $data;
     }
     /**
      * Transpose array
@@ -216,6 +214,7 @@ class Chart extends Model
      */
     private function _getChartData($chart)
     {
+        
         $data['chart']['keys'] = "'" . implode("','", array_keys($chart))."'";
         $data['chart']['data'] = implode(",", $chart);
         return $data;

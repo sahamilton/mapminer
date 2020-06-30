@@ -1294,11 +1294,23 @@ class Branch extends Model implements HasPresenter
                 $query->where('completed', 0)->orWhereNull('completed');
                     
             },
-            'activities as salesappts'=>function ($query) {
+            'activities as salesappointments'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )->where('completed', 1)
-                    ->where('activitytype_id', 4);
+                ->where('activitytype_id', 4);
+            },
+            'activities as stopby'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )->where('completed', 1)
+                ->where('activitytype_id', 5);
+            },
+            'activities as proposals'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )->where('completed', 1)
+                ->where('activitytype_id', 7);
             },
             'activities as sitevisits'=>function ($query) {
                 $query->whereBetween(
@@ -1313,19 +1325,13 @@ class Branch extends Model implements HasPresenter
                     ->where('completed', 1)
                     ->where('activitytype_id', 13);
             },
-            'activities as proposals'=>function ($query) {
+            
+            'activities as inperson'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
                     ->where('completed', 1)
-                    ->where('activitytype_id', 7);
-            },
-            'activities as sitevists'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )
-                    ->where('completed', 1)
-                    ->where('activitytype_id', 13);
+                    ->where('activitytype_id', 14);
             },
             'activities as salesapptsscheduled'=>function ($query) {
                 $query->whereBetween(

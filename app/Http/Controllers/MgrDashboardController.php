@@ -221,6 +221,7 @@ class MgrDashboardController extends DashboardController
         
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
+      
         $data['team']= $this->_myTeamsOpportunities($data['branches']);
 
         // this should go away and incorparte in charts
@@ -283,7 +284,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _myTeamsOpportunities(Collection $branchdata)
     {
-       
+ 
         $stats = ['leads',
                 'opportunities',
                 'Top25',
@@ -322,46 +323,51 @@ class MgrDashboardController extends DashboardController
             );
             
             $branches = $branches->flatten();
-              
-            if ($data['branchteam']->count() > 0 ) {
-                $data['data'][$team->id]['leads'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('leads_count');
-                
-                $data['data'][$team->id]['activities'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->where('completed', 1)
-                      ->sum('activities_count');
 
-                $data['data'][$team->id]['activitiestype'] = $branchdata
+            $mybranchdata = $branchdata->filter(function ($branch) use ($branches) {
+                return in_array($branch->id, $branches->toArray());
+            });
+           
+
+            if ($data['branchteam']->count() > 0 ) {
+                $data['data'][$team->id]['leads'] = $mybranchdata->sum('leads_count');
+                
+                $data['data'][$team->id]['activities'] = $mybranchdata->sum('activities_count');
+                $data['data'][$team->id]['activitiestype'] = $this->_getSummaryBranchActivitiesByType($mybranchdata);       
+               /* $data['data'][$team->id]['activitiestype'] = $branchdata
                     ->whereIn('id', $branches)
                     ->map(
                         function ($branch) {
                               return $branch->activities->groupBy('activitytype_id')->toArray();
                         }
                     );
+                */
 
-                $data['data'][$team->id]['won'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('won');
+                $data['data'][$team->id]['won'] = $mybranchdata->sum('won');
 
-                $data['data'][$team->id]['lost'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('lost');
+                $data['data'][$team->id]['lost'] = $mybranchdata->sum('lost');
 
-                $data['data'][$team->id]['Top25'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('Top25');
+                $data['data'][$team->id]['Top25'] = $mybranchdata->sum('Top25');
 
-                $data['data'][$team->id]['open'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('open');
-
+                $data['data'][$team->id]['open'] = $mybranchdata->sum('open');
+                
             }
         }
     
         $data = $this->_getCharts($data);
 
+        return $data;
+    }
+
+    private function _getSummaryBranchActivitiesByType(Collection $mybranchdata)
+    {
+        $types =$mybranchdata->first()->activityFields;
+        foreach ($types as $type) {
+            $type=str_replace(" ", "",strtolower($type));
+            $data[$type] = $mybranchdata->sum($type);
+
+
+        }
         return $data;
     }
     /**
@@ -373,13 +379,13 @@ class MgrDashboardController extends DashboardController
      */
     private function _getCharts(array $data) 
     {
-
+        
         $data['activities'] = $this->chart->getTeamActivityChart($data);
         $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
         $data['Top25chart'] = $this->chart->getTeamTop25Chart($data);
         $data['winratiochart'] = $this->chart->getWinRatioChart($data);
         $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
-        //$data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
+        $data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
         
         return $data;
     }
