@@ -379,7 +379,7 @@ class MgrDashboardController extends DashboardController
         $data['Top25chart'] = $this->chart->getTeamTop25Chart($data);
         $data['winratiochart'] = $this->chart->getWinRatioChart($data);
         $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
-        $data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
+        //$data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
         
         return $data;
     }
@@ -429,7 +429,7 @@ class MgrDashboardController extends DashboardController
                 ]
             )
             ->get();
-        dd($track->first());
+        
         return $track->map(
             function ($person) {
          

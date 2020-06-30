@@ -52,7 +52,7 @@ class OldDashboardController extends Controller
             return response()->view('dashboard.select', compact('managers'));
             break;
 
-        case 'default':
+        default:
             return redirect()->route('mgrdashboard.index');
             break;
 
@@ -89,7 +89,7 @@ class OldDashboardController extends Controller
             return response()->view('dashboard.select', compact('managers'));
             break;
 
-        case 'default':
+        default:
             return redirect()->route('mgrdashboard.index');
             break;
 

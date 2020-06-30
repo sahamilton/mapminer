@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Dashboard;
 use App\Person;
 use App\Branch;
+use App\Role;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -33,11 +34,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        
         $myRoles = auth()->user()->roles->pluck('name')->toArray();
-        $roles = ['national_account_manager', 'admin', 'branch_manager'];
-        $role = array_intersect($myRoles, $roles);
+       
 
-        switch ($role[0]) {
+        switch ($myRoles[0]) {
 
         case 'national_account_manager':
             return redirect()->route('namdashboard.index');
@@ -52,7 +53,8 @@ class DashboardController extends Controller
             return response()->view('dashboard.select', compact('managers'));
             break;
 
-        case 'default':
+        default:
+            
             return redirect()->route('mgrdashboard.index');
             break;
 
@@ -89,7 +91,7 @@ class DashboardController extends Controller
             return response()->view('dashboard.select', compact('managers'));
             break;
 
-        case 'default':
+        default:
             return redirect()->route('mgrdashboard.index');
             break;
 
