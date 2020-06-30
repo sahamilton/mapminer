@@ -68,12 +68,16 @@
 	<div class="col-sm-6 float-right" style="margin-top:10px">
 		<div class="card-header">
 			<h4>Activities</h4>
-		</div>
+		</div>@if(count($data['activitychart']) >0)
 		<div class="card-body">
 				  <canvas id="ctb" width="450" height="400" ></canvas>
-				  {{dd($data['activitychart'])}}
-				@include('charts._branchactivitiestype')
+				 
+					@include('charts._branchactivitiestype')
+
 		</div>
+		@else
+			<p class="text-warning">No Activities in this period</p>
+		@endif
 	</div>
 </div>
 </div>
