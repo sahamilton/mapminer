@@ -71,6 +71,7 @@
 		</div>
 		<div class="card-body">
 				  <canvas id="ctb" width="450" height="400" ></canvas>
+				  {{dd($data['activitychart'])}}
 				@include('charts._branchactivitiestype')
 		</div>
 	</div>
