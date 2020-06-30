@@ -56,9 +56,12 @@
 <div class="tab-content" id="nav-tabContent">
     <div id="summary" class="tab-pane show active">
     	<h2>Recent Completed Activities by Activity Type</h2>
+        @if(count($data['activitychart']) >0)
     	<canvas id="ctb" width="500" height="300" ></canvas>
 			@include('charts._branchactivitiestype')
-		
+		@else
+        <p class="text-warning">No Activities in this period</p>
+        @endif
 	</div>
 
 	<div id="upcoming" class="tab-pane fade">
