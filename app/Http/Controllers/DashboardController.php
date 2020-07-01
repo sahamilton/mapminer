@@ -134,11 +134,25 @@ class DashboardController extends Controller
      */
     protected function getSummaryBranchData() 
     {
-      
-        return $this->branch
-            ->SummaryStats($this->period)
+       
+        
+        $leadFields = [
+            'leads',
+        ];
+        $opportunityFields =[
+            "lost_opportunities",
+            "open_opportunities",
+            "top25_opportunities",
+            "won_opportunities",
+            "active_value",
+            "lost_value",
+            "won_value",
+        ];
+        return $this->branch->select('id', 'branchname')
+            ->SummaryLeadStats($this->period, $leadFields)
+            ->SummaryOpportunities($this->period, $opportunityFields)
+            ->SummaryActivities($this->period)
             ->with('manager', 'manager.reportsTo')
-            //->getActivitiesByType($this->period)
             ->whereIn('id', $this->myBranches)
             ->get(); 
 

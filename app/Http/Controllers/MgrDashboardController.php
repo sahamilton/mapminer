@@ -102,8 +102,10 @@ class MgrDashboardController extends DashboardController
         if (count($this->myBranches) < 2) {
                     return $this->_checkBranches();
 
-        } else {   
+        } else {  
+
             $data = $this->_getDashBoardData();
+            
             $reports = \App\Report::publicReports()->get();
             $managers = $this->manager->load('directReports')->directReports;
             
@@ -221,12 +223,12 @@ class MgrDashboardController extends DashboardController
         
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
-      
+    
         $data['team']= $this->_myTeamsOpportunities($data['branches']);
-
+      
         // this should go away and incorparte in charts
         $data['chart'] = $this->_getChartData($data['branches']);
-        
+     
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
@@ -343,13 +345,13 @@ class MgrDashboardController extends DashboardController
                     );
                 */
 
-                $data['data'][$team->id]['won'] = $mybranchdata->sum('won');
+                $data['data'][$team->id]['won'] = $mybranchdata->sum('won_opportunities');
 
-                $data['data'][$team->id]['lost'] = $mybranchdata->sum('lost');
+                $data['data'][$team->id]['lost'] = $mybranchdata->sum('lost_opportunities');
 
-                $data['data'][$team->id]['Top25'] = $mybranchdata->sum('Top25');
+                $data['data'][$team->id]['Top25'] = $mybranchdata->sum('top25_opportunities');
 
-                $data['data'][$team->id]['open'] = $mybranchdata->sum('open');
+                $data['data'][$team->id]['open'] = $mybranchdata->sum('open_opportunities');
                 
             }
         }
@@ -363,7 +365,7 @@ class MgrDashboardController extends DashboardController
     {
         $types =$mybranchdata->first()->activityFields;
         foreach ($types as $type) {
-            $type=str_replace(" ", "",strtolower($type));
+            $type=str_replace(" ", "_",strtolower($type));
             $data[$type] = $mybranchdata->sum($type);
 
 
@@ -407,8 +409,8 @@ class MgrDashboardController extends DashboardController
         $string = '';
 
         foreach ($results as $branch) {
-          
-            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->salesappts .",  ".$branch->won.", ". ($branch->wonvalue ? $branch->wonvalue : 0) ."],";
+           
+            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
          
         }
      

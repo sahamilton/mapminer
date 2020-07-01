@@ -61,6 +61,14 @@ class Branch extends Model implements HasPresenter
 
     ];
     public $leadFields = [
+            'leads',
+            'stale_leads',
+            'active_leads',
+
+            
+        ];
+    public $campaignLeadFields =[
+            'leads',
             'open_leads',
             'active_leads',
             "supplied_leads",
@@ -68,7 +76,7 @@ class Branch extends Model implements HasPresenter
             "worked_leads",
             "rejected_leads",
             "touched_leads",
-            
+
         ];
     public $opportunityFields = [
                 "active_opportunities",
@@ -1241,19 +1249,115 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
-     * [scopeSummaryStats description]
+     * [scopeSummaryActivities description]
      * 
      * @param [type] $query  [description]
      * @param [type] $period [description]
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryStats($query,$period)
+    public function scopeSummaryActivities($query, $period)
     {
         $this->period = $period;
-     
+        foreach ($this->activityFields as $key=>$field) {
+            $label = str_replace(" ", "_",strtolower($field));
+            $query->withCount(
+                [
+                    'activities as '.$label=>function ($query) use($key) {
+                        $query->whereBetween(
+                            'activity_date', [$this->period['from'],$this->period['to']]
+                        )->where('completed', 1)
+                        ->where('activitytype_id', $key);
+                    }
+                ]
+            );
+        }
+
+    }
+
+    public function scopeSummaryLeadStats($query,$period, $fields = null)
+    {
+        $this->period = $period;
+        if (! $fields) {
+            $fields = $this->leadFields;
+        }
+        $this->fields = $fields;
+        /*
+            'leads',
+            'stale_leads'
+            'active_leads',
+           
+         */
+         return $query
+            ->when(
+                in_array('leads', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'leads'=>function ($query) {
+                                $query->where('address_branch.created_at', '<=', $this->period['to'])
+                                    ->where(
+                                        function ($q) {
+                                            $q->whereDoesntHave('opportunities')
+                                                ->orWhereHas(
+                                                    'opportunities', function ($q1) {
+                                                        $q1->where(
+                                                            'opportunities.created_at', '>', $this->period['to']
+                                                        );
+                                                    }
+                                                );
+                                        }
+                                    );
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('stale_leads', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                           'addresses as active_leads'=>function ($q) {
+                                $q->whereDoesntHave(
+                                    'activities',function ($q) {
+                                        $q->where('completed', 1)
+                                        ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
+                                    }
+                                )
+                                ->where('address_branch.created_at', '<=', $this->period['to']);
+                            }
+
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('active_leads', $this->fields), function ($q) {
+                    $q->withCount(
+                        [
+                            'addresses as active_leads'=>function ($q) {
+                                $q->wherehas(
+                                    'activities',function ($q) {
+                                        $q->where('completed', 1)
+                                        ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
+                                    }
+                                )
+                                ->where('address_branch.created_at', '<=', $this->period['to']);
+                            }
+
+
+                        ]
+                    );
+
+                }
+            );
+
+    }
+    public function scopeSummaryStats($query,$period, $fields = null)
+    {
+
         return $query->withCount(       
-            ['leads'=>function ($query) {
+            [
+                'leads'=>function ($query) {
                 $query->where('address_branch.created_at', '<=', $this->period['to'])
                     ->where(
                         function ($q) {
@@ -1294,45 +1398,7 @@ class Branch extends Model implements HasPresenter
                 $query->where('completed', 0)->orWhereNull('completed');
                     
             },
-            'activities as salesappointments'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('completed', 1)
-                ->where('activitytype_id', 4);
-            },
-            'activities as stopby'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('completed', 1)
-                ->where('activitytype_id', 5);
-            },
-            'activities as proposals'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('completed', 1)
-                ->where('activitytype_id', 7);
-            },
-            'activities as sitevisits'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('completed', 1)
-                    ->where('activitytype_id', 10);
-            },
-            'activities as logacall'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )
-                    ->where('completed', 1)
-                    ->where('activitytype_id', 13);
-            },
             
-            'activities as inperson'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )
-                    ->where('completed', 1)
-                    ->where('activitytype_id', 14);
-            },
             'activities as salesapptsscheduled'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
@@ -1449,7 +1515,7 @@ class Branch extends Model implements HasPresenter
         );
     }
     /**
-     * [scopeSummaryStats description]
+     * [scopeSummaryCampaignStats description]
      * 
      * @param [type] $query    [description]
      * @param [type] $campaign [description]

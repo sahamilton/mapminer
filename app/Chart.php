@@ -36,58 +36,33 @@ class Chart extends Model
      */
     public function getTeamActivityByTypeChart(array $data)
     {
-   
+        $full = ActivityType::all()->pluck('activity', 'color')->toArray();
+       
+        $team = $data['team']->filter(
+                function ($person) use($data) { 
+                    return in_array($person->id, array_keys($data['data']));
+                }
+            );
+        
+    
         // Initialize
-        $fullabels = $data['team']->map(
+        $labels = $team->map(
             function ($person) {
                 return ['pid'=>$person->id,'name'=>$person->postName()];
             }
         );
-        $fullabels = $fullabels->pluck('name', 'pid')->toArray();
-        $labels = implode("','", $fullabels);
-        $activitytypes = ActivityType::all();
-        $types = $activitytypes->pluck('activity')->toArray();
-        $chart= array();
-        // Build array by team member of all activities by type
-        $result = []; 
-       
-        foreach ($data['team'] as $team) {
-         
-            if (isset($data['data'][$team->id]['activitiestype'])) {
-                $result[$fullabels[$team->id]] = $data['data'][$team->id]['activitiestype'];
-            }
+        $activitydata = collect($data['data'])->pluck('activitiestype');      
+        $labels = implode("','",$labels->pluck('name')->toArray());
+        $chart['labels'] = $labels;
+        foreach($full as $color=>$activity) {
+            $chart['data'][$activity]['color']=$color;
+            $chart['data'][$activity]['labels']=$labels;
+            $type = str_replace(" ", "_",strtolower($activity));
+            $chart['data'][$activity]['data'] = implode(",",$activitydata->pluck($type)->toArray());
         }
-
-        /*// fill array with necessary blank team members
-        foreach (array_diff($data['team']->pluck('id')->toArray(), array_keys($result)) as $missing) {
-            $result[$missing] = [];
-        }
-        ksort($result);
         
-        $filled = array();
-        // fill complete team array with missing activity types
-        foreach ($result as $key=>$res) {
-            $filled[$key] = $res;
-            foreach (array_diff($types, array_keys($res)) as $missing) {
-                $filled[$key][$missing] = 0;
-            }
-            ksort($filled[$key]);
-        }*/
-        if ($result) {
-            $colors = $this->_getActivityTypeColors();
-            $chart['labels'] = implode("','",array_keys(reset($result)));
-            // fill chart array by type, color, labels and data
-            foreach ($result as $key=>$res) {
-                $chart['data'][$key]['labels']=array_keys($res);
-                $chart['data'][$key]['data'] = implode(",", $res);
-                foreach ($res as $k=>$item) {
-                    $chart['data'][$key]['color']= "#" . $colors[$k];
-                     
-                    
-                }
-            }
-        }
         return $chart;
+        
     }
 
     private function _getActivityTypeColors()
@@ -167,21 +142,33 @@ class Chart extends Model
      */
     public function getWinRatioChart(array $data)
     {
-      
+    
         $chart= array();
         foreach ($data['team'] as $team) {
-         
-            if (isset($data['data'][$team->id]) 
-                && ($data['data'][$team->id]['won'] + $data['data'][$team->id]['lost'] > 0)
+            if (isset($data['data'][$team->id])) {
+                $won = $data['data'][$team->id]['won'];
+                $lost = $data['data'][$team->id]['lost'];
+                $both = $won + $lost;
+                if($both > 0) {
+
+                    $chart[$team->postName()] 
+                        = ( $won / $both) * 100;
+                } else {
+                   $chart[$team->postName()] = 0; 
+                }
+            }
+            
+            /*if (isset($data['data'][$team->id]) 
+                && ($data['data'][$team->id]['won_opportunities'] + $data['data'][$team->id]['lost_opportunities'] > 0)
             ) {
                 $chart[$team->postName()] 
-                    =  $data['data'][$team->id]['won'] 
-                        / ($data['data'][$team->id]['won'] + $data['data'][$team->id]['lost']) * 100;
+                    =  $data['data'][$team->id]->sum('won_opportunities')
+                        / ($data['data'][$team->id]['won_opportunities'] + $data['data'][$team->id]['lost_opportunities']) * 100;
             } else {
-                $chart[$team->postName()] = 0;
-            }
+                
+            }*/
         }
-        
+       
         return $this->_getChartData($chart);
     }
     /**
