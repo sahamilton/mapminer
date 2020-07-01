@@ -17,14 +17,14 @@ return [
          Chain::class => [
             GoogleMaps::class => [
                 'en-US',
-                env('GOOGLE_MAPS_API_KEY'),
+                env('GOOGLE_MAPS_GEOCODE_API_KEY'),
             ],
            
          ],
         
          GoogleMaps::class => [
             'us',
-            env('GOOGLE_MAPS_API_KEY'),
+            env('GOOGLE_MAPS_GEOCODE_API_KEY'),
          ],
     ],
     'adapter'  => Client::class,
