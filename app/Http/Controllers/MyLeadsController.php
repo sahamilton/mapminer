@@ -58,7 +58,7 @@ class MyLeadsController extends BaseController
 
         $branch = $this->branch->findOrFail($branch_id);
 
-        $campaigns = $this->_getCurrentCampaigns($branch_id);
+        $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
       
         return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaigns'));
         
@@ -212,9 +212,9 @@ class MyLeadsController extends BaseController
      * 
      * @return array            [description]
      */
-    private function _getCurrentCampaigns($branch_id)
+    private function _getCurrentOpenCampaigns($branch_id)
     {
-        return Campaign::current([$branch_id])->with('companies')->get();
+        return Campaign::currentOpen([$branch_id])->get();
         
     }
     /**

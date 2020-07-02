@@ -380,6 +380,31 @@ class Campaign extends Model
         return $query;
     }
     
+
+    /**
+     * [scopeCurrentOpen description]
+     * 
+     * @param [type]     $query    [description]
+     * @param Array|null $branches [description]
+     * 
+     * @return [type]               [description]
+     */
+    public function scopeCurrentOpen($query, Array $branches =null)
+    {
+        
+        $query = $query->active()->whereTyep('open')
+            ->when(
+                $branches, function ($q) use ($branches) {
+                    return $q->wherehas(
+                        'branches', function ($q) use ($branches) {
+                            $q->whereIn('branches.id', $branches);
+                        }
+                    );
+                }
+            );
+        
+        return $query;
+    }
     /**
      * [documents description]
      * 
