@@ -90,7 +90,7 @@ class OpportunityController extends BaseController
             $data = $this->_getBranchData([session('branch')]);
             return response()->view(
                 'opportunities.index', 
-                compact('data', 'activityTypes', 'myBranches', 'period')
+                compact('data', 'activityTypes', 'myBranches')
             );
 
         } else {
