@@ -1825,8 +1825,12 @@ class Branch extends Model implements HasPresenter
         
         
         $this->location_ids = $campaign->getLocations();
+        $period = new Request([
+            'period'   => $period,
+            ]
+        );
 
-        $this->setPeriod($period);;
+        $this->setPeriod($period);
         
         return $query->with(       
             ['offeredLeads'=>function ($q) {

@@ -392,7 +392,7 @@ class Campaign extends Model
     public function scopeCurrentOpen($query, Array $branches =null)
     {
         
-        $query = $query->active()->whereTyep('open')
+        $query = $query->active()->whereType('open')
             ->when(
                 $branches, function ($q) use ($branches) {
                     return $q->wherehas(
