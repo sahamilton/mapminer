@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>{{$branch->branchname . " leads"}}</h1>
-<p><a href="{{route('dashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
+<p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
 @if(count($myBranches) > 1)
     <div class="col-sm-4">

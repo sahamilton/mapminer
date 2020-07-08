@@ -84,13 +84,13 @@ class OpportunityController extends BaseController
         }
         session(['branch'=>array_keys($myBranches)[0]]);
         $data['period'] = $this->period;
-
+        $period = $data['period'];
         if (count($myBranches) == 1 ) {
             
             $data = $this->_getBranchData([session('branch')]);
             return response()->view(
                 'opportunities.index', 
-                compact('data', 'activityTypes', 'myBranches')
+                compact('data', 'activityTypes', 'myBranches','period')
             );
 
         } else {
