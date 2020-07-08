@@ -558,7 +558,9 @@ class Address extends Model
 
     public function scopeSearch($query, $search)
     { 
-        return  $query->where('businessname', 'like', "%{$search}%");
+        return  $query->where('businessname', 'like', "%{$search}%")
+                    ->Orwhere('street', 'like', "%{$search}%")
+                    ->Orwhere('city', 'like', "%{$search}%");
     }
     /**
      * [scopeStaleLeads description]
