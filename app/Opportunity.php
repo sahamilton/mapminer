@@ -368,7 +368,7 @@ class Opportunity extends Model
     }
     public function scopeSearch($query, $search)
     { 
-        /* description, invoice, date, client */
+        
         return  $query->wherehas('address.address', function ($q) use ($search) {
                 $q->where('addresses.businessname', 'like', "%{$search}%");
                 }
