@@ -40,7 +40,6 @@
                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
             @endif
         </td>
-        <td>{{$lead->open_opportunities_count}}</td>
 
 
     </tr>

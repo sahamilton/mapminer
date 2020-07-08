@@ -54,13 +54,7 @@
                         <th>Campaign</th>
                     @endif
                     <th>Last activity</th>
-                    <th>
-                     <a wire:click.prevent="sortBy('street')" role="button" href="#">
-                            Open Opportunities
-                            @include('includes._sort-icon', ['field' => 'open_opportunities_count'])
-                        </a>
-                    </th>
-
+                    
                     
                 </tr>
             </thead>
