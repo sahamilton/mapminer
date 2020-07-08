@@ -36,6 +36,7 @@ class EventTransformer extends TransformerAbstract
         return [
             'id'      => (int) $activity->id,
             'title'   => $activity->relatesToAddress ? $activity->relatesToAddress->businessname : 'No Name',
+            'url' => route('address.show',$activity->address_id),
             'type'    => $activity->type ? $activity->type->activity : 'Unknown',
             'start'   => $activity->activity_date,
             'completed' => $activity->completed ? '1' : '0',

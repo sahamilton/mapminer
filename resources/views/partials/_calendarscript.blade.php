@@ -19,13 +19,16 @@
                 } else {
                     element.allDay = false;
                 }
-                if (event.completed == 1) {
-                    element.addClass('blue-background');
+                if (event.completed === '1') {
+                    
+                     element.css("background-color", "#E77C22");
                    
                 } else {
-                    element.addClass('red-background');
+                     element.css("background-color", "#3B3B62");
+                     element.css("color", "#FFFFFF");
                     
                 }
+                event.eventClick = event.route;
 
                      
             },

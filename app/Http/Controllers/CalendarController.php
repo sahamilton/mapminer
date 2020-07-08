@@ -59,7 +59,7 @@ class CalendarController extends Controller
     }
     public function getCalPeriod($period)
     {
-        dd($period);
+   
         $calperiod = $this->activity->getPeriod($period);
 
         return $this->_getEventsToJson($calperiod);
@@ -105,7 +105,7 @@ class CalendarController extends Controller
         
         $activities = Activity::with('relatesToAddress', 'type')
             ->whereBetween('activity_date', [$period['from'], $period['to']])
-            ->where('branch_id', 1527)
+            ->where('branch_id', session('branch'))
             ->get();
         $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
          return json_encode($activities['data']);
