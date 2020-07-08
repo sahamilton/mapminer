@@ -555,6 +555,11 @@ class Address extends Model
             return 'prospect';
         }
     }
+
+    public function scopeSearch($query, $search)
+    { 
+        return  $query->where('businessname', 'like', "%{$search}%");
+    }
     /**
      * [scopeStaleLeads description]
      * 

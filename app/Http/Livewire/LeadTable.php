@@ -37,6 +37,7 @@ class LeadTable extends Component
         
         return view('livewire.lead-table', [
             'leads' => Address::query()
+                ->search($this->search)
                 ->select(['id', 'businessname', 'street', 'city','state'])
                 ->whereHas(
                 'assignedToBranch', function ($q)  {
