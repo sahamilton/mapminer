@@ -1,4 +1,4 @@
-$camapignbranch = AddressBranch::whereHas(
+$campaignbranch = AddressBranch::whereHas(
     'campaigns', function ($q) use ($f) { 
             $q->whereIn('campaign_id',$f->pluck('id')->toArray());
         }

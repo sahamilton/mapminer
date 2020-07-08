@@ -180,7 +180,7 @@ class BranchDashboardController extends DashboardController
 
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-    
+        
         return response()->view('branches.dashboard', compact('data', 'branch'));
 
     }

@@ -34,10 +34,10 @@
 		</thead>
 		<tbody>
 			<td class="text-center">
-				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->Top25}}</a></td>
-			<td class="text-center">{{$data['summary']->first()->open}}</td>
-			<td class="text-center">{{$data['summary']->first()->won}}</td>
-			<td class="text-center">{{$data['summary']->first()->lost}}</td>
+				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->top25_opportunities}}</a></td>
+			<td class="text-center">{{$data['summary']->first()->open_opportunities}}</td>
+			<td class="text-center">{{$data['summary']->first()->won_opportunities}}</td>
+			<td class="text-center">{{$data['summary']->first()->lost_opportunities}}</td>
 			<td class="text-center">
 				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
 			<td class="text-center">
