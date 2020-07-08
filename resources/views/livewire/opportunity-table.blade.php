@@ -27,21 +27,32 @@
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Date Opened</th>
+                    <th>
+                        <a wire:click.prevent="sortBy('created_at')" role="button" href="#">
+                        Date Opened
+                        @include('includes._sort-icon', ['field' => 'created_at'])
+                        </a>
+                        
+                    </th>
                     <th>Days Open</th>
                     <th>Status</th>
-                    <th>
-                        <a wire:click.prevent="sortBy('businessname')" role="button" href="#">
-                        Business
-                        @include('includes._sort-icon', ['field' => 'businessname'])
-                        </a>
-                    </th>
+                    <th>Business</th>
                     <th>Address</th>
                     <th>Top 25</th>
                     <th>Potential Headcount</th>
                     <th>Potential Duration (mos)</th>
-                    <th>Potential $$</th>
-                    <th>Expected Close</th>
+                    <th>
+                        <a wire:click.prevent="sortBy('value')" role="button" href="#">
+                            Potential $$
+                            @include('includes._sort-icon', ['field' => 'value'])
+                        </a>
+                    </th>
+                    <th>
+                    <a wire:click.prevent="sortBy('expected_close')" role="button" href="#">
+                            Expected Close
+                            @include('includes._sort-icon', ['field' => 'expected_close'])
+                        </a>
+                    </th>
                     <th>Last Activity</th>
                     <th>Activities</th>
                 </tr>

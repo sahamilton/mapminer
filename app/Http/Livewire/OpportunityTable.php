@@ -11,7 +11,7 @@ class OpportunityTable extends Component
     use WithPagination;
 
     public $perPage = 10;
-    public $sortField = 'branch_id';
+    public $sortField = 'created_at';
     public $sortAsc = true;
     public $search = '';
     public $branch;
@@ -40,6 +40,7 @@ class OpportunityTable extends Component
         
         return view('livewire.opportunity-table', [
             'opportunities' => Opportunity::query()
+                ->search($this->search)
                 ->where('branch_id', $this->branch->id)
                 ->where('closed', $this->filter)
                 ->with(
