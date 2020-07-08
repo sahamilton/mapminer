@@ -40,7 +40,8 @@ class LeadTable extends Component
                 ->select(['id', 'businessname', 'street', 'city','state'])
                 ->whereHas(
                 'assignedToBranch', function ($q)  {
-                    $q->where('branch_id', $this->branch->id);
+                    $q->where('branch_id', $this->branch->id)
+                    ->where('status_id',2);
                 }
             )
             ->withLastActivityId()
