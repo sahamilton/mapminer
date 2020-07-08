@@ -1,9 +1,10 @@
 @extends('site.layouts.default')
 @section('content')
 <div class="container">
-<h2>{{$data['branches']->first()->branchname}} Branch Opportunities</h2>
 
-<p><a href="{{route('branchdashboard.show', $data['branches']->first()->id)}}">Return To Branch Dashboard</a></p>
+<h2>{{reset($myBranches)}} Branch Opportunities</h2>
+
+<p><a href="">Return To Branch Dashboard</a></p>
 @include('dashboards.partials._periodselector')
 @php $activityTypes = \App\ActivityType::all(); @endphp
 @if(count($myBranches)>1)
@@ -14,7 +15,7 @@
 
     <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
           @foreach ($myBranches as $key=>$branch)
-                <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branch}}</option>
+                <option value="{{$key}}">{{$branch}}</option>
           @endforeach 
     </select>
 
@@ -23,7 +24,7 @@
 @endif
     <div class="row">
 
-    @livewire('opportunity-table', ['branch'=>$data['branches']->first()->id])
+    @livewire('opportunity-table', ['branch'=>array_keys($myBranches)[0]])
 
     </div>
 </div>

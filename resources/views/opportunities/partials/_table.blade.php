@@ -23,12 +23,12 @@
       <td>
 
         {{$statuses[$opportunity->closed]}}
-        
+        @if($opportunity->closed == 0)
         <button class="btn btn-danger" 
                 data-href="{{route('opportunity.close',$opportunity->id)}}"
                 data-toggle="modal" 
                 data-target="#closeopportunity">Close</button>
-        
+        @endif
       </td>
       <td>
         <a href= "{{route('address.show',$opportunity->address->address->id)}}">{{$opportunity->address->address->businessname}}</a>
@@ -39,6 +39,9 @@
         <input 
           type="checkbox" 
           class="Top25" 
+          @if($opportunity->closed !=0)
+          disabled
+          @endif
           value="{{$opportunity->id}}" 
           @if($opportunity->Top25)
             checked
