@@ -34,8 +34,9 @@
        
         @include('addresses.partials._declinemodal')
         @elseif ($branch->pivot->status_id == 2)
+          @if($campaigns->count() >0)
           @include('addresses.partials._campaigns')
-          
+          @endif
             <div class="col-sm-6">
               @foreach ($location->assignedToBranch as $branch)
                 <p><strong>{{$statuses[$branch->pivot->status_id]}}</strong>
