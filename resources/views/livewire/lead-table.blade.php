@@ -53,7 +53,14 @@
                     @if($branch->currentcampaigns->count())
                         <th>Campaign</th>
                     @endif
-                    <th>Last activity</th>
+                    <th>
+                    <a wire:click.prevent="sortBy('last_activity_id')" role="button" href="#">
+                            Last activity
+                            @include('includes._sort-icon', ['field' => 'last_activity_id'])
+                        </a>
+
+                    
+                </th>
                     
                     
                 </tr>
