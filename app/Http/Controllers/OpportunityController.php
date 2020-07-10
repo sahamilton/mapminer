@@ -394,7 +394,9 @@ class OpportunityController extends BaseController
      */
     public function edit(Opportunity $opportunity)
     {
-       
+        if (! in_array($opportunity->branch_id, array_keys($this->person->myBranches()))) {
+            return redirect()->back()->withError("That is not one of your opportunities'");
+        }
         return response()->view('opportunities.edit', compact('opportunity'));
     }
 
