@@ -67,7 +67,7 @@ class BranchCampaignController extends Controller
     {
         if (! session('manager')) {
             $manager = $this->person->findOrFail(auth()->user()->person->id);
-            session(['manager'=>$person->id]);
+            session(['manager'=>$manager->id]);
         } else {
             $manager = $this->person->findOrFail(session('manager'));
         }
@@ -193,6 +193,11 @@ class BranchCampaignController extends Controller
 
     public function setManager(Campaign $campaign, Request $request)
     {
+        
+        if (! request()->filled('manager_id')) {
+            session()->forget('manager');
+            return $this->index();
+        }
         
         // check if this is one of the logged in persons reports
         $myTeam = $this->person->myTeam()->get()->pluck('id')->toArray();
