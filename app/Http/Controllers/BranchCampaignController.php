@@ -67,8 +67,8 @@ class BranchCampaignController extends Controller
     {
 
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
-   
-        $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
+        $branch_ids = $myBranches->pluck('id')->toArray();
+        $campaigns = $this->campaign->current($branch_ids)->get();
         
        
         if (! $campaigns->count()) {
@@ -88,7 +88,7 @@ class BranchCampaignController extends Controller
             return $this->show($campaign, $myBranches->first());
         } 
 
-        $branch_ids = $myBranches->pluck('id')->toArray();
+        
         $branches = $this->branch
             ->whereIn('id', $branch_ids)
             ->when(
@@ -99,15 +99,17 @@ class BranchCampaignController extends Controller
                 }
             ) 
             ->get();
-      
+
         $servicelines = $campaign->getServicelines();
-        $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
+        $myTeam = $this->person->myTeam()->get();
+        $campaignTeam = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
         if($campaign->type === 'open') {
             $fields=$this->openfields;
         } else {
             $fields=$this->fields;
         }
-        
+        $team = $myTeam->intersect($campaignTeam);
+
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields'));
     }
 
@@ -252,5 +254,10 @@ class BranchCampaignController extends Controller
             'upcomingActivities'=>['title'=>"Upcoming Activities", 'detail'=>'Activities for campaign leads that are due this week'],
              
         ];
+    }
+
+    private function _getTeamForCampaign()
+    {
+
     }
 }

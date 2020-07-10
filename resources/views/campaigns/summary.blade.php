@@ -20,8 +20,9 @@
         <p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-warning">Relaunch Campaign</a></p>
     @endif
     @php $route = 'campaigns.report'; @endphp
-    @include('campaigns.partials._teamselector')
-
+    @if($team->count()>1)
+        @include('campaigns.partials._teamselector')
+    @endif
     @include('campaigns.partials._campaignselector')
     @include('campaigns.partials._campaignsummarytable')
     
