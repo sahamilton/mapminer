@@ -280,10 +280,10 @@ class Campaign extends Model
      * 
      * @return [type]              [description]
      */
-    public function getSalesTeamFromManager($manager_id, $serviceline)
+    public function getSalesTeamFromManager()
     {
         
-        return Person::whereId([$manager_id])->firstOrFail()
+        return Person::whereId([$this->manager_id])->firstOrFail()
             ->descendantsAndSelf()
      
             ->whereHas(
@@ -292,10 +292,10 @@ class Campaign extends Model
                 }
             )
             ->with(
-                ['branchesServiced'=>function ($q) use ($serviceline) {
+                ['branchesServiced'=>function ($q)  {
                     $q->whereHas(
-                        'servicelines', function ($q1) use ($serviceline) {
-                            $q1->whereIn('id', $serviceline);
+                        'servicelines', function ($q1){
+                            $q1->whereIn('id', $this->servicelines->pluck('id')->toarray());
                         }
                     );
                 }
@@ -306,7 +306,7 @@ class Campaign extends Model
             ->get();
     }
     /**
-     * [getCampaignServiceLines description]
+     * [author description]
      * 
      * @return [type] [description]
      */

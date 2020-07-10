@@ -257,7 +257,8 @@ Route::group(
 
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 
-        
+        Route::post('branchcampaigns/{campaign}/setmgr',['as'=>'branchcampaign.manager','uses'=>'BranchCampaignController@setManager']);
+
         Route::resource('branchcampaigns', 'BranchCampaignController');
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         

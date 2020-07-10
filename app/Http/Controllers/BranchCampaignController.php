@@ -65,8 +65,14 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
-
-        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
+        if (! session('manager')) {
+            $manager = $this->person->findOrFail(auth()->user()->person->id);
+            session(['manager'=>$person->id]);
+        } else {
+            $manager = $this->person->findOrFail(session('manager'));
+        }
+        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
+        
         $branch_ids = $myBranches->pluck('id')->toArray();
         $campaigns = $this->campaign->current($branch_ids)->get();
         
@@ -82,13 +88,15 @@ class BranchCampaignController extends Controller
             session(['campaign'=>$campaigns->first()->id]);
         }
         
+        
        
         if ($myBranches->count() == 1) {
 
             return $this->show($campaign, $myBranches->first());
         } 
 
-        
+        $team = $this->_getCampaignTeam($campaign);
+
         $branches = $this->branch
             ->whereIn('id', $branch_ids)
             ->when(
@@ -100,17 +108,15 @@ class BranchCampaignController extends Controller
             ) 
             ->get();
 
-        $servicelines = $campaign->getServicelines();
-        $myTeam = $this->person->myTeam()->get();
-        $campaignTeam = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
+        
         if($campaign->type === 'open') {
             $fields=$this->openfields;
         } else {
             $fields=$this->fields;
         }
-        $team = $myTeam->intersect($campaignTeam);
+        
 
-        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields'));
+        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields', 'manager'));
     }
 
     public function store(Request $request)
@@ -148,13 +154,15 @@ class BranchCampaignController extends Controller
      * 
      * @return [type]             [description]
      */
-    public function show(Campaign $campaign, Branch $branch = null)
+    public function show(Campaign $campaign, Branch $branch)
     {
         
         $person = $this->person->findOrFail(auth()->user()->person->id);
+           
+
         $myBranches = $this->person->myBranches($person);
-      
-        if (! in_array($branch->id, array_keys($myBranches))) {
+        
+        if (in_array($branch->id, array_keys($myBranches))) {
             return redirect()->back()->withError('That is not one of your branches');
         }
 
@@ -181,6 +189,21 @@ class BranchCampaignController extends Controller
         return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));
 
         
+    }
+
+    public function setManager(Campaign $campaign, Request $request)
+    {
+        
+        // check if this is one of the logged in persons reports
+        $myTeam = $this->person->myTeam()->get()->pluck('id')->toArray();
+        if (! in_array(request('manager_id'), $myTeam)) {
+            return redirect()->back()->withError('That is not one of your team members');
+        }
+        // else redirect back
+        session(['manager'=>request('manager_id')]);
+        session(['campaign'=>$campaign->id]);
+        return $this->index();
+        // redirect to this show
     }
     /**
      * [_getBranchCampaignDetailData description]
@@ -256,8 +279,13 @@ class BranchCampaignController extends Controller
         ];
     }
 
-    private function _getTeamForCampaign()
+    private function _getCampaignTeam(Campaign $campaign)
     {
-
+        $campaignTeam = $campaign->getSalesTeamFromManager();
+        if( auth()->user()->hasRole('admin', 'sales_operations')) {
+            return $campaignTeam;
+        }
+        $myTeam = $this->person->myTeam()->get();
+        return $campaignTeam->intersect($myTeam);
     }
 }

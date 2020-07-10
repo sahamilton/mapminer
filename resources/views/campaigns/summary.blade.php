@@ -19,7 +19,7 @@
         </p>
         <p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-warning">Relaunch Campaign</a></p>
     @endif
-    @php $route = 'campaigns.report'; @endphp
+    @php $route = 'branchcampaign.manager'; @endphp
     @if($team->count()>1)
         @include('campaigns.partials._teamselector')
     @endif
