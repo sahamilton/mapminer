@@ -377,7 +377,10 @@ class OpportunityController extends BaseController
     public function show(Opportunity $opportunity)
     {
         $opportunity->load('branch', 'address');
-        
+       
+        if (! in_array($opportunity->branch_id, array_keys($this->person->myBranches()))) {
+            return redirect()->back()->withError("That is not one of your opportunities'");
+        }
       
         return response()->view('opportunities.show', compact('opportunity'));
     }
