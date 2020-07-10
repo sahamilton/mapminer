@@ -1315,7 +1315,7 @@ class Branch extends Model implements HasPresenter
                                                     }
                                                 );
                                         }
-                                    );
+                                    )->where('address_branch.status_id',2);
                             }
                         ]
                     );

@@ -46,7 +46,7 @@ class LeadTable extends Component
                             ->where('branch_id', $this->branch->id)
                             ->where('status_id',2);
                     }
-                )
+                )->whereDoesntHave('opportunities')
                 ->withLastActivityId()
                 ->with('lastActivity')
                 ->withCount('openOpportunities')
