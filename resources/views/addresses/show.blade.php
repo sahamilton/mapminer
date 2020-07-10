@@ -10,9 +10,9 @@
      
     @endif
 </p>
-
+@if($owned)
 @include('addresses.partials._ranking')
-
+@endif
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 
