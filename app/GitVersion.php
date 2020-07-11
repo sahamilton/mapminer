@@ -84,7 +84,7 @@ class GitVersion extends Model
                 $commit['commitdate'] = Carbon::parse($commit['commitdate']);
                 $commit['message'] = preg_replace("#(\A\N* -0[7,8]00 )#", "", $commit['message']);
                 $commit['author'] = preg_replace("#( <\N*>)#", "", $commit['author']);
-                $commit['branch'] = preg_replace("#( <\N*>)#", "", $commit['branch']);
+                //$commit['branch'] = preg_replace("#( <\N*>)#", "", $commit['branch']);
                 $this->create($commit);
             }
         }

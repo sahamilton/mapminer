@@ -65,6 +65,7 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
+      
         if (! session('manager')) {
             $manager = $this->person->findOrFail(auth()->user()->person->id);
             session(['manager'=>$manager->id]);
@@ -74,12 +75,11 @@ class BranchCampaignController extends Controller
 
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
         
-        $branch_ids = $myBranches->pluck('id')->toArray();
-        $campaigns = $this->campaign->current($branch_ids)->get();
-         
+        $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
+        $branches = $myBranches->intersect($campaigns->first()->branches);
        
         if (! $campaigns->count()) {
-            return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
+            return redirect()->back()->withMessage('There are no current sales campaigns for your branches');
         }
         
         if (session('campaign') && session('campaign') != 'all') {
@@ -91,15 +91,15 @@ class BranchCampaignController extends Controller
         
         
        
-        if ($myBranches->count() == 1) {
+        if ($branches->count() == 1) {
 
-            return $this->show($campaign, $myBranches->first());
+            return $this->show($campaign, $branches->first());
         } 
 
         $team = $this->_getCampaignTeam($campaign);
-
+        
         $branches = $this->branch
-            ->whereIn('id', $branch_ids)
+            ->whereIn('id', $branches->pluck('id')->toArray())
             ->when(
                 $campaign->type === 'open', function ($q)  use($campaign){
                     $q->summaryOpenCampaignStats($campaign);
@@ -200,12 +200,14 @@ class BranchCampaignController extends Controller
             session()->forget('manager');
             return $this->index();
         }
-        
-        // check if this is one of the logged in persons reports
-        $myTeam = $this->person->myTeam()->get()->pluck('id')->toArray();
-        if (! in_array(request('manager_id'), $myTeam)) {
-            return redirect()->back()->withError('That is not one of your team members');
+        if(! auth()->user()->hasRole(['admin'])) {
+            $myTeam = $this->person->myTeam()->get()->pluck('id')->toArray();
+            if (! in_array(request('manager_id'), $myTeam)) {
+                return redirect()->back()->withError('That is not one of your team members');
+            }
         }
+        // check if this is one of the logged in persons reports
+        
         // else redirect back
         session(['manager'=>request('manager_id')]);
         session(['campaign'=>$campaign->id]);
