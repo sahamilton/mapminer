@@ -31,7 +31,7 @@
            <input type="submit" value="Record Activity" class="btn btn-danger" />
             </div>
             <input type="hidden" name= "address_id" id = "address_id" value="" />
-            <input type="hidden" name= "branch_id" id = "branch_id" value="{{$data['branches']->first()->id}}" />
+            <input type="hidden" name= "branch_id" id = "branch_id" value="{{array_keys($myBranches)[0]}}" />
         </form>
 
         <div class="modal-footer">

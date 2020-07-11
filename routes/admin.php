@@ -138,6 +138,8 @@ use Illuminate\Http\Request;
         Route::get('userlogin/download/{view?}', ['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
         Route::get('/', ['as'=>'dashboard', 'uses'=>'Admin\AdminDashboardController@dashboard']);
 
+        Route::post('dashboard/show', ['as'=>'dashboard.show', 'uses'=>'NewDashboardController@show']);
+
         //     Comments
         Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
 
@@ -165,6 +167,9 @@ use Illuminate\Http\Request;
         Route::resource('jobs', 'FailedJobsController');
         Route::get(
             'testjob', function () {
+                $opportunity = App\Opportunity::whereHas('branch')->with('branch.branch.manager.userdetails')->first();
+                
+                App\Jobs\WonOpportunity::dispatch($opportunity);
                 //$companies = App\Company::whereIn('id', [532])->get();
                 $opportunity = App\Opportunity::whereHas('branch')->whereHas('location')->latest()->first();
 
@@ -178,11 +183,11 @@ use Illuminate\Http\Request;
                 App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
                 //App\Jobs\BranchLogins::dispatch();
-               // App\Jobs\DailyBranch::dispatch($period);
-                 //App\Jobs\AccountActivities::dispatch($company, $period);
+                // App\Jobs\DailyBranch::dispatch($period);
+                //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);
-                 //App\Jobs\RebuildPeople::dispatch();
+                //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
                  foreach ($filesInFolder as $file){

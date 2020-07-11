@@ -79,7 +79,7 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
-    
+        
         if (session()->has('impersonated_by')) {
             session()->forget('branch');
         }
@@ -95,14 +95,15 @@ class BranchDashboardController extends DashboardController
             
             $branch = session('branch');
 
-            return redirect()->route('dashboard.show', $branch);
+            return redirect()->route('branchdashboard.show', $branch);
         } else {
            
             $this->myBranches = $this->_getBranches();
             
             if (count($this->myBranches) > 0) {
                 $branch = array_keys($this->myBranches);
-                return redirect()->route('dashboard.show', $branch[0]);
+
+                return redirect()->route('branchdashboard.show', $branch[0]);
             } else {
                 return redirect()->route('user.show', auth()->user()->id)
                     ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
@@ -120,8 +121,8 @@ class BranchDashboardController extends DashboardController
      */
     public function setPeriod(Request $request)
     {
-      
-        $this->period = $this->activity->setPeriod(request('period'));
+        
+        $this->period = $this->activity->setPeriod($request);
     
 
         return redirect()->back();
@@ -148,7 +149,13 @@ class BranchDashboardController extends DashboardController
      */
     public function show(Branch $branch)
     {
-       
+        $myBranches = $this->person->myBranches();
+        
+         
+        if (! array_key_exists($branch->id, $myBranches)) {
+             return redirect()->back()
+                 ->withWarning("You are not assigned to " .$branch->branchname);
+        }
         if (! session()->has('branch') or $branch->id != session('branch') ) {
             session(['branch'=>$branch->id]);
         }
@@ -179,8 +186,7 @@ class BranchDashboardController extends DashboardController
 
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-    
-     
+        
         return response()->view('branches.dashboard', compact('data', 'branch'));
 
     }
@@ -202,10 +208,9 @@ class BranchDashboardController extends DashboardController
             ->WithRoles($teamroles)     
             ->get();
 
-          //$data['team']= $this->myTeamsOpportunities();
+
         $data['summary'] = $this->getSummaryBranchData();
    
-        //$data['activitychart'] =  $this->_getActivityChartData();
         $data['activitychart'] = $this->chart->getBranchActivityByTypeChart(
             $this->_getActivityTypeChartData()
         );
@@ -258,8 +263,8 @@ class BranchDashboardController extends DashboardController
      */
     private function _getUpcomingCalendar($activities)
     {
-       
-          return \Calendar::addEvents($activities);
+        return [];
+        //return \Calendar::addEvents($activities);
     }    
     /**
      * [_getActivities description]
@@ -287,7 +292,7 @@ class BranchDashboardController extends DashboardController
         return $this->activity->whereIn('branch_id', $this->myBranches)
             ->periodActivities($this->period)
             ->completed()
-            ->typeCount()
+            ->typeDayCount()
             ->get();
        
     }

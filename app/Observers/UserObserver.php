@@ -19,14 +19,8 @@ class UserObserver
     private $observableEventNames  = [
                 "creating",
                 "created",
-                "updating",
-                "updated",
-                "deleting",
-                "deleted",
-                "saving",
-                "saved",
-                "restoring",
-                "restored",
+                
+               
             ];
 
 
@@ -36,4 +30,6 @@ class UserObserver
        
         // Mail::queue(new UserNotification($user));
     }
+
+    
 }

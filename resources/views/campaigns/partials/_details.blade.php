@@ -13,7 +13,7 @@ name="branches"
 <tbody>
 
 @foreach ($data['branches'] as $branch)
-    
+
     <tr>
     <td><a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">{{$branch->id}}</a></td>
     <td>{{$branch->branchname}}</td>
@@ -34,7 +34,7 @@ name="branches"
  @endforeach
  <tfoot>
     <td>Totals</td>
-    <td>Unassignable:{{$data['locations']['unassigned'] - $assignable }}</td>
+    <td>Unassignable:{{isset($assignable) ? $data['locations']['unassigned'] - $assignable : 0 }}</td>
     <td class="text-right">{{isset($assignable) ? $assignable : 0}}</td>
     
     <td class="text-right">{{isset($totalleads) ? $totalleads : 0}}</td>

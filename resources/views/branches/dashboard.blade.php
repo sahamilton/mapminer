@@ -34,10 +34,10 @@
 		</thead>
 		<tbody>
 			<td class="text-center">
-				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->Top25}}</a></td>
-			<td class="text-center">{{$data['summary']->first()->open}}</td>
-			<td class="text-center">{{$data['summary']->first()->won}}</td>
-			<td class="text-center">{{$data['summary']->first()->lost}}</td>
+				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->top25_opportunities}}</a></td>
+			<td class="text-center">{{$data['summary']->first()->open_opportunities}}</td>
+			<td class="text-center">{{$data['summary']->first()->won_opportunities}}</td>
+			<td class="text-center">{{$data['summary']->first()->lost_opportunities}}</td>
 			<td class="text-center">
 				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
 			<td class="text-center">
@@ -52,11 +52,7 @@
 			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">Upcoming Activities</a></p>
 		</div>
 
-		<div id="calendar"  class="card-body" >
-	
-			{!! $data['calendar']->calendar() !!}
-			{!! $data['calendar']->script() !!}
-		</div>
+		<div id="calendar"  class="card-body" ></div>
 	</div>
 	 
 	<div class="row" style="margin-bottom:100px">
@@ -72,14 +68,20 @@
 	<div class="col-sm-6 float-right" style="margin-top:10px">
 		<div class="card-header">
 			<h4>Activities</h4>
-		</div>
+		</div>@if(count($data['activitychart']) >0)
 		<div class="card-body">
 				  <canvas id="ctb" width="450" height="400" ></canvas>
-				@include('charts._branchactivitiestype')
+				 
+					@include('charts._branchactivitiestype')
+
 		</div>
+		@else
+			<p class="text-warning">No Activities in this period</p>
+		@endif
 	</div>
 </div>
 </div>
 @include('partials._scripts')
+@include('partials._calendarscript')
 
 @endsection

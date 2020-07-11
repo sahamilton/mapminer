@@ -168,7 +168,7 @@ return [
          * Package Service Providers...
          */
 
-        Baum\Providers\BaumServiceProvider::class,
+
 
        // Collective\Html\HtmlServiceProvider::class,
       //  MaddHatter\LaravelFullcalendar\ServiceProvider::class,
@@ -243,7 +243,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Input' => Illuminate\Support\Facades\Input::class,
         'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
-        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
+        
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
 

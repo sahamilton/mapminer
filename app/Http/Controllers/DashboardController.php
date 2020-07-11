@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Dashboard;
 use App\Person;
 use App\Branch;
+use App\Role;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -33,18 +34,31 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('national_account_manager')) {
-            return redirect()->route('namdashboard.index');
-        }
-        $branchCount = $this->dashboard->checkBranchCount();
         
-        if ($branchCount > 1 or auth()->user()->hasRole('admin')) {
-            return redirect()->route('mgrdashboard.index');
-        } else {
+        $myRoles = auth()->user()->roles->pluck('name')->toArray();
+       
 
-            return redirect()->route('branchdashboard.index');
-        }
+        switch ($myRoles[0]) {
+
+        case 'national_account_manager':
+            return redirect()->route('namdashboard.index');
+            break;
         
+        case 'branch_manager';
+            return redirect()->route('branchdashboard.index');
+            break;
+
+        case 'admin':
+            $managers = $this->_selectDashboard();
+            return response()->view('dashboard.select', compact('managers'));
+            break;
+
+        default:
+            
+            return redirect()->route('mgrdashboard.index');
+            break;
+
+        }       
 
 
     }
@@ -55,11 +69,33 @@ class DashboardController extends Controller
      * 
      * @return [type]         [description]
      */
-    public function show(Branch $branch)
+    public function select(Request $request)
     {
-       
-        $branch->load('manager');
-        return redirect()->route('branchdashboard.show',  $branch->id);
+        $manager = $this->person->with('userdetails.roles')->findOrFail(request('manager'));
+        
+        $role =  $manager->userdetails->roles->pluck('name')->toArray();
+        
+        switch ($role[0]) {
+
+        case 'national_account_manager':
+            return redirect()->route('namdashboard.index');
+            break;
+        
+        case 'branch_manager';
+        
+            return redirect()->route('branchdashboard.index');
+            break;
+
+        case 'admin':
+            $managers = $this->_selectDashboard();
+            return response()->view('dashboard.select', compact('managers'));
+            break;
+
+        default:
+            return redirect()->route('mgrdashboard.index');
+            break;
+
+        }
         
     }
     /**
@@ -69,12 +105,12 @@ class DashboardController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function select(Request $request)
+    public function show(Branch $branch)
     {
         
         $this->manager = $this->person->with('manages')
-            ->findOrFail(request('manager'));
-     
+            ->findOrFail(auth()->user()->person->id);
+       
         $branchCount = $this->dashboard->checkBranchCount($this->manager);
         
         if ($branchCount > 1) {
@@ -98,14 +134,33 @@ class DashboardController extends Controller
      */
     protected function getSummaryBranchData() 
     {
-      
-        return $this->branch
-            ->SummaryStats($this->period)
+       
+        
+        $leadFields = [
+            'leads',
+        ];
+        $opportunityFields =[
+            "lost_opportunities",
+            "open_opportunities",
+            "top25_opportunities",
+            "won_opportunities",
+            "active_value",
+            "lost_value",
+            "won_value",
+        ];
+        return $this->branch->select('id', 'branchname')
+            ->SummaryLeadStats($this->period, $leadFields)
+            ->SummaryOpportunities($this->period, $opportunityFields)
+            ->SummaryActivities($this->period)
             ->with('manager', 'manager.reportsTo')
-            ->getActivitiesByType($this->period)
             ->whereIn('id', $this->myBranches)
             ->get(); 
 
+    }
+
+    private function _selectDashboard()
+    {
+        return $this->person->managers([3,4,6,7,9]);
     }
    
 }

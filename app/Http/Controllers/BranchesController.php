@@ -459,6 +459,10 @@ class BranchesController extends BaseController {
             ->where('branch_id', $branch->id)
             ->update(['branch_id'=> $newbranch]);
 
+        if (request()->filled('delete')) {
+            $branch->delete();
+        }
+
         return redirect()->route('branches.show', $newbranch)->withSuccess('All leads & opportunities & open activities have been reassigned from ' . $branch->branchname . ' to branch ' . $newbranch);
     }
     /**

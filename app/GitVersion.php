@@ -10,7 +10,7 @@ class GitVersion extends Model
 
     protected $table='gittracking';
     protected $dates =['commitdate'];
-    protected $fillable = ['hash','author','message','commitdate'];
+    protected $fillable = ['hash','author','message','commitdate','branch'];
 
     const MAJOR = 2;
     const MINOR = 5;
@@ -84,6 +84,7 @@ class GitVersion extends Model
                 $commit['commitdate'] = Carbon::parse($commit['commitdate']);
                 $commit['message'] = preg_replace("#(\A\N* -0[7,8]00 )#", "", $commit['message']);
                 $commit['author'] = preg_replace("#( <\N*>)#", "", $commit['author']);
+                //$commit['branch'] = preg_replace("#( <\N*>)#", "", $commit['branch']);
                 $this->create($commit);
             }
         }

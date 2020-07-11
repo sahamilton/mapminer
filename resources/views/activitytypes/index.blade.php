@@ -11,16 +11,19 @@
 				<th>Activity</th>
 				<th>Count</th>
 				<th>Color</th>
+				<th>Defintion</th>
 				<th>Actions</th>
 			</thead>
 			<tbody>
 				@foreach ($activitytypes as $activitytype)
+				
 				<tr>
-					<td><a href="{{route('activitytype.show',$activitytype->id)}}">{{$activitytype->activity}}</a></td>
+					<td><a href="">{{$activitytype->activity}}</a></td>
 					
 					<td>{{$activitytype->activities_count}}</td>
 					<td bgcolor='#{{$activitytype->color}}'>#{{$activitytype->color}}
 					</td>
+					<td>{{$activitytype->definition}}</td>
 					<td>
 						<div class="btn-group">
 				            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">

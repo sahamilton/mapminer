@@ -18,9 +18,15 @@ Create a Service Line::
 
 <!-- Tabs -->
 
-<?php $buttonLabel = 'Create Service Line';?>
-{{Form::open(['route'=>'serviceline.store'])}}
-	@include('servicelines.partials._form')
-{{Form::close()}}
+@php $buttonLabel = 'Create Service Line' @endphp
+<form name="serviceline"
+    method='post'
+    action = "{{route('serviceline.store'}}"
+    >
+    @csrf
+    @method="patch"
+    @include('servicelines.partials._form')
+</form>
+</div>
 </div>
 @endsection

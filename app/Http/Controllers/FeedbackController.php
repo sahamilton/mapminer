@@ -144,8 +144,8 @@ class FeedbackController extends Controller
         $feedback->update(['status'=>'closed']);
         $feedback->load('comments');
         Mail::to(config('mapminer.system_contact'))
-        ->cc(config('mapminer.developer_email'))
-        ->send(new FeedbackClosed($feedback));
+            ->cc(config('mapminer.developer_email'))
+            ->send(new FeedbackClosed($feedback));
 
         return redirect()->back()->withMessage('Feedback closed');
     }

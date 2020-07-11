@@ -74,7 +74,7 @@ class CampaignController extends Controller
             ->with('author', 'manager', 'companies', 'vertical')
             ->withCount('branches')
             ->get();
-        $calendar = \Calendar::addEvents($campaigns);
+        $calendar = [];
         return response()->view('campaigns.index', compact('campaigns', 'calendar'));
     }
 
@@ -419,9 +419,11 @@ class CampaignController extends Controller
     private function _getCampaignSummaryData(Campaign $campaign)
     {
         $data = $this->_getCampaignData($campaign);
+        // open campaigns do not have pre-assigned locations.
+        if ($campaign->type != 'open') {
+            $data['locations'] = $this->_getSummaryLocations($campaign, $data['companies']);
+        }
         
-        $data['locations'] = $this->_getSummaryLocations($campaign, $data['companies']);
- 
         return $data;
     }
     /**
@@ -433,6 +435,7 @@ class CampaignController extends Controller
      */
     private function _getSummaryLocations(Campaign $campaign, $data)
     {
+     
        
         $result['unassigned'] = $data->map(
             function ($company) {
@@ -452,6 +455,7 @@ class CampaignController extends Controller
     }
     private function _getBranchAssignableSummary(Campaign $campaign, $result)
     {
+        $data = [];
         $addresses = $result->flatten()->pluck('id')->toArray();
         $assignable = $campaign->getAssignableLocationsofCampaign($addresses, $count = true);
         foreach ($assignable as $branch) {

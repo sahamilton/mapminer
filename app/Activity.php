@@ -5,7 +5,7 @@ namespace App;
 use \Carbon\Carbon;
 
 
-class Activity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent 
+class Activity extends Model
 {
     use GeoCode, \Awobaz\Compoships\Compoships;
     protected $dates = ['activity_date','followup_date'];
@@ -219,7 +219,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      * 
      * @return [type]         [description]
      */
-    public function scopeTypeCount($query)
+    public function scopeTypeDayCount($query)
     {
 
         return $query->selectRaw("DATE_FORMAT(`activity_date`,'%Y-%m-%d') as day,`activitytype_id`,count(activities.id) as activities")
@@ -228,6 +228,16 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             ->orderBy('day');
             
     }
+    public function scopeTypeCount($query)
+    {
+        return $query->selectRaw("activity_type.activity,count(activities.id) as activities")
+            ->leftJoin('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
+           
+            ->groupBy(['activity_type.activity']);
+
+    }
+
+
 
     /**
      * [scopeSevenDayTypeCount description]

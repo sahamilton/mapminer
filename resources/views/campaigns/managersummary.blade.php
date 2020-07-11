@@ -7,7 +7,9 @@
     <p><a href="{{route('campaigns.manager', [$campaign->id, $manager->reportsTo->id])}}">View {{$manager->reportsTo->fullName()}} Campaign Summary</a></p>
     @include('campaigns.partials._teamselector')
     <p><a href="{{route('campaigns.show', $campaign->id)}}">Return campaign</a></p>
+    @if(! $campaign->type==='open')
     <p><a href="{{route('campaigns.company', $campaign->id)}}">Show Company Stats</a></p>
+    @endif
     <table id="sorttable"
         name="branchsummary"
         class="table table-striped"

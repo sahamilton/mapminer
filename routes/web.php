@@ -95,12 +95,23 @@ Route::group(
         Route::post('branches/dashboard', ['as'=>'branches.dashboard', 'uses'=>'BranchDashboardController@selectBranch']);
         Route::get('manager/{person}/dashboard', ['as'=>'manager.dashboard', 'uses'=>'MgrDashboardController@manager']);
         Route::post('manager/dashboard', ['as'=>'dashboard.select', 'uses'=>'DashboardController@select']);
+        Route::get('dashboard', ['as'=>'dashboard', 'uses'=>'DashboardController@index']);
         Route::resource('branchdashboard', 'BranchDashboardController');
+        
+        Route::resource('calendar', 'CalendarController')->except(['show']);
+        Route::get('cal/{period}', ['as'=>'cal.month', 'uses'=>'CalendarController@getCalPeriod']);
         //   Manager Dashboard
         Route::resource('mgrdashboard', 'MgrDashboardController');
         Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
         Route::resource('namdashboard', 'NAMDashboardController');
         //   Dashboard
+        Route::get('newdashboard', ['as'=>'newdashboard', 'uses'=>'NewDashboardController@index']);
+        Route::get('newdashboard/{company}/company', ['as'=>'newdashboard.company', 'uses'=>'NewDashboardController@showCompany']);
+        Route::get('newdashboard/{person}/manager', ['as'=>'newdashboard.manager', 'uses'=>'NewDashboardController@showManager']);
+        Route::get('newdashboard/{person}/leads', ['as'=>'newdashboard.leads', 'uses'=>'NewDashboardController@showLeads']);
+        Route::get('newdashboard/{company}/branch/{branch}', ['as'=>'newdashboard.branchdetail', 'uses'=>'NewDashboardController@showCompanyBranch']);
+
+        Route::post('dashboard/period', ['as'=>'newperiod.setperiod', 'uses'=>'NewDashboardController@setPeriod']);
         Route::resource('dashboard', 'DashboardController');
         // Branch Next Week View
         Route::resource('branchsummary', 'BranchSummaryController');
@@ -199,7 +210,7 @@ Route::group(
         //     Opportunity
         Route::post('/branchlead/{address}', ['as'=>'branch.lead.add', 'uses'=>'OpportunityController@addToBranchLeads']);
         Route::post('/opportunities/{opportunity}/close/', ['as'=>'opportunity.close', 'uses'=>'OpportunityController@close']);
-        Route::post('/opportunities/branch/', ['as'=>'opportunity.branch', 'uses'=>'OpportunityController@branchOpportunities']);
+        Route::post('/opportunities/branch/', ['as'=>'opportunity.branch', 'uses'=>'OpportunityController@getBranchOpportunities']);
         Route::post('/opportunities/manager/', ['as'=>'opportunity.manager', 'uses'=>'OpportunityController@managerOpportunities']);
         Route::get('/opportunities/branch/{branch}', ['as'=>'opportunities.branch', 'uses'=>'OpportunityController@branchOpportunities']);
         Route::delete('opportunity/{opportunity}/destroy', ['as'=>'opportunity.remove', 'uses'=>'OpportunityController@destroy']);
@@ -242,8 +253,12 @@ Route::group(
         //     Branch Sales Campaigns
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
 
+       Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
+
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
-        
+
+        Route::post('branchcampaigns/{campaign}/setmgr',['as'=>'branchcampaign.manager','uses'=>'BranchCampaignController@setManager']);
+
         Route::resource('branchcampaigns', 'BranchCampaignController');
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         

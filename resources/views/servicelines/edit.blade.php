@@ -7,21 +7,26 @@ Edit a Service Line::
 @endsection
 @section('content')
 <div class="page-header">
-	<h3>
-		Edit Service Line
+    <h3>
+        Edit Service Line
 
-		<div class="float-right">
-			<a href="{{ route('serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
-		</div>
-	</h3>
+        <div class="float-right">
+            <a href="{{ route('serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
+        </div>
+    </h3>
 </div>
 
 <!-- Tabs -->
 
-<?php $buttonLabel = 'Edit Service Line';?>
-{{Form::model($serviceline, ['method'=>'PATCH','route'=>['serviceline.update', $serviceline->id]]) }}
+@php $buttonLabel = 'Edit Service Line';@endphp
 
-	@include('servicelines.partials._form')
-{{Form::close()}}
+<form name="serviceline"
+    method='post'
+    action = "{{route('serviceline.update', $serviceline->id)}}"
+    >
+    @csrf
+    @method="patch"
+    @include('servicelines.partials._form')
+</form>
 </div>
 @endsection

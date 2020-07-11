@@ -33,6 +33,17 @@ class CampaignTrackingController extends Controller
                     "won_value",
                     "open_value",
                 ];
+    public $openfields = [
+                    
+                    "campaign_leads",
+     
+                    "touched_leads",
+                    "new_opportunities",
+                    "won_opportunities",
+                    "open_opportunities",
+                    "won_value",
+                    "open_value",
+                ];
     /**
      * [__construct description]
      * 
@@ -68,14 +79,18 @@ class CampaignTrackingController extends Controller
      */
     public function show(Campaign $campaign)
     {
-      
+        
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
         $team = $this->_getCampaignBranchTeam($campaign);
       
         $campaigns = $this->campaign->current()->get();
-        $fields =  $this->fields;
-        
+        if($campaign->type=== 'open') {
+            $fields =  $this->openfields;
+        }else{
+            $fields =  $this->fields;
+        }
+     
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns', 'fields'));
     }
     /**
@@ -182,8 +197,12 @@ class CampaignTrackingController extends Controller
      */
     private function _getBranchesInCampaign(Campaign $campaign)
     {
-        $branch_ids = $campaign->branches->pluck('id')->toArray();
         
+        $branch_ids = $campaign->branches->pluck('id')->toArray();
+        if ($campaign->type === 'open') {
+            return $this->branch->whereIn('id', $branch_ids)
+            ->summaryOpenCampaignStats($campaign)->get();
+        }
         return $this->branch->whereIn('id', $branch_ids)
             ->summaryCampaignStats($campaign)->get();
     }

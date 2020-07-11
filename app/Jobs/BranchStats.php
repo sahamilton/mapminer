@@ -24,6 +24,9 @@ class BranchStats implements ShouldQueue
     public $report;
     public $file;
     public $distribution;
+
+    public $timeout = 1200;
+
     /**
      * [__construct description]
      * @param Array $period [description]

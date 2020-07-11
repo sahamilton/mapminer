@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use \Carbon\Carbon;
-
+use Illuminate\Http\Request;
 
 trait PeriodSelector
 {
@@ -17,16 +17,20 @@ trait PeriodSelector
      *
      * @return array this period
      */
-    public function setPeriod($period)
+    public function setPeriod(Request $request)
     {
         
-        if (method_exists($this, $period)) {
+        if (! request()->has('period')) {
+            $this->period = $this->_default();
+        } elseif (method_exists($this, request('period'))) {
+            $period = request('period');
             $this->period = $this->$period();
         } else {
             $this->period = $this->_default();
         }
         session()->put('period', $this->period);
-        return $this->period;
+       
+        return redirect()->back();
     }
     /**
      * [getPeriod description]
@@ -37,19 +41,20 @@ trait PeriodSelector
      */
     public function getPeriod($period=null)
     {
-        if (session('period')) {
-            $this->period = session('period');
-            return $this->period;
-        }
-        if ($period && method_exists($this, $period)) {
-            $this->period = $this->$period();
-        } else {
-            $this->period = $this->thisWeek(); 
-            $this->period['period'] = $this->default;
-        }
         
-
+        if (! $period && session('period')) {
+                
+                $this->period = session('period');
+            
+        } elseif ($period && method_exists($this, $period)) {
+                $this->period = $this->$period(); 
+            
+        } else {
+                $this->period = $this->thisWeek(); 
+                
+        }
         session()->put('period', $this->period);
+        
         return $this->period;
     }
 

@@ -38,14 +38,14 @@ return [
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'default',
-            'retry_after' => 1200,
+            'retry_after' => 120,
         ],
 
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',
             'queue' => env('QUEUE_NAME', 'mapminer'),
-            'retry_after' => 1200,
+            'retry_after' => 120,
         ],
 
         'sqs' => [
@@ -60,8 +60,8 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => 'mapminerredis',
-            'retry_after' => 1200,
+            'queue' => 'mapminer',
+            'retry_after' => 120,
         ],
 
     ],

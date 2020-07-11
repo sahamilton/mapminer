@@ -5,6 +5,7 @@ use App\Presenters\LocationPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
+
 class Person extends NodeModel implements HasPresenter
 {
     use Geocode, Filters, SoftDeletes, FullTextSearch;
@@ -119,7 +120,7 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return [type]        [description]
      */
-    public function managers($roles=null)
+    public function managers(Array $roles=null)
     {
         if (! $roles) {
             $roles = [14,6,7,3];
@@ -141,7 +142,9 @@ class Person extends NodeModel implements HasPresenter
      */
     public function getMyBranches(Array $servicelines=null)
     {
+        
         if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
+
             return Branch::when(
                 $servicelines, function ($q1) use ($servicelines) {
                     $q1->whereIn('servicelines.id', $servicelines);
@@ -169,7 +172,16 @@ class Person extends NodeModel implements HasPresenter
             );
         return array_unique($branches->flatten()->toArray());
     }
+    public function getMyAccounts()
+    {
+        if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
+            return Company::all()->pluck('id')->toArray();
+        }
+        return $this->managesAccount->pluck('id')->toArray();
+        
 
+
+    }
     /**
      * [branchesManaged description]
      * 
@@ -200,10 +212,10 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
-        
+           
         if (! $person ) {
             $user = $this->_getPersonFromAuth();
-            
+           
             $person = $user->person;
             if ($user->hasRole(['admin', 'sales_operations'])) {
                 return $this->_getBranchesInServicelines($user->serviceline);
@@ -211,7 +223,10 @@ class Person extends NodeModel implements HasPresenter
                 return $this->_getBranchesFromTeam($person); 
             }
         } else {
-            
+            $person->load('userdetails');
+            if($person->userdetails->hasRole(['admin', 'sales_operations'])) {
+                return $this->_getBranchesInServicelines($person->userdetails->serviceline);
+            }
             return $this->_getBranchesFromTeam($person);
         }
     }  
@@ -936,9 +951,9 @@ class Person extends NodeModel implements HasPresenter
             ->withTimeStamps();
     }
 
-    public function scopeWithPrimaryRole()
+    public function scopeWithPrimaryRole($query)
     {
-        return $this->userdetails->roles->first();
+        return $query->userdetails->roles->first();
     }
     /**
      * [getCapoDiCapo id the top of the sales org
@@ -951,4 +966,23 @@ class Person extends NodeModel implements HasPresenter
 
         return $this->findOrFail(config('mapminer.topdog'));
     }
+
+    public function inMyTeam(Person $person)
+    {
+        if (auth()->user()->hasRole('admin')) {
+            return true;
+        }
+        return $person->isDescendantOf(auth()->user()->person);
+    }
+
+    public function inMyAccounts(Company $company)
+    {
+        if (auth()->user()->hasRole('admin')) {
+            return true;
+        }
+        return auth()->user()->person->managesAccount->contains('id', $company->id);
+
+    }
+
+    
 }

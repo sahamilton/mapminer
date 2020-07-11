@@ -139,4 +139,48 @@
         </span>
     </div>
 </div>
+@php
+$branches = auth()->user()->person->getMyBranches()
+@endphp
+@if (count($branches) > 1)
+<div class="form-group row">
+    <label for="branch" 
+        class="col-md-2 control-label">Branch: </label>
+     <div class="col-sm-8">
+        <select
+            class="form-control"
+            name="branch_id"
+            required
+            >
+            @foreach ($branches as $id=>$title)
+                <option value={{$id}}>{{$title}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+@else
+<input type="hidden" name="branch_id" value="{{reset($branches)}}" />
+@endif
 
+@if(isset($campaigns))
+<!-- campaign -->
+<div class="form-group row{{ $errors->has('email') ? ' has-error' : '' }}">
+    <label for="campaign" class="col-md-2 control-label">Add to Campaign: </label>
+     <div class="col-sm-8">
+        <select
+            name="campaign"
+            class="form-control"
+            >
+
+            <option></option>
+            @foreach ($campaigns as $campaign)
+            <option value="{{$campaign->id}}">{{$campaign->title}}</option>
+            @endforeach
+        </select>
+
+        <span class="help-block">
+            <strong>{{ $errors->has('email') ? $errors->first('email') : ''}}</strong>
+        </span>
+    </div>
+</div>
+@endif

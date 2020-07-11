@@ -3,7 +3,9 @@
 @php $totals = []; @endphp
 <div class="container">
    <h2>{{$campaign->title}} Summary</h2>
+    @if($campaign->type != 'open')
     <p><a href="{{route('campaigns.company', $campaign->id)}}">Show Company Stats</a></p>
+    @endif
     <p>
         <a href="{{route('campaigns.export', $campaign->id)}}">
             <i class="fas fa-download"></i>
@@ -17,9 +19,10 @@
         </p>
         <p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-warning">Relaunch Campaign</a></p>
     @endif
-    @php $route = 'campaigns.report'; @endphp
-    @include('campaigns.partials._teamselector')
-
+    @php $route = 'branchcampaign.manager'; @endphp
+    @if($team->count()>1)
+        @include('campaigns.partials._teamselector')
+    @endif
     @include('campaigns.partials._campaignselector')
     @include('campaigns.partials._campaignsummarytable')
     

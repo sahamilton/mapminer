@@ -67,7 +67,7 @@ class ActivityController extends Controller
     
       
         $data = $this->_getBranchActivities($branch);
-       
+        $activities = $data['activities'];
         $title= $data['branches']->first()->branchname . " activities";
 
         return response()->view(
@@ -412,7 +412,7 @@ class ActivityController extends Controller
         return $this->activity->whereIn('branch_id', [$branch->id])
             ->periodActivities($this->period)
             ->completed()
-            ->typeCount()
+            ->typeDayCount()
             ->get();
     }
     /**

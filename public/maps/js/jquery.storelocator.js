@@ -476,7 +476,6 @@ $.fn.storeLocator = function(options) {
         				  'brand': $(this).attr('brand'),
                   'reportsto': $(this).attr('reportsto'),
                   'salesorg': $(this).attr('salesorg'),
-                  'type': $(this).attr('type'),
         				  'account': $(this).attr('account'),
         				  'locid': $(this).attr('locationid'),
         				  'link':$(this).attr('link'),
@@ -767,15 +766,16 @@ $.fn.storeLocator = function(options) {
                     }else {	
                       var pinColor = "FDF569";
                     }
-              }else if (type === 'project'){
+              }else if (type === 'branchlead'){
                    
                       var pinColor = "59AB3D";
+                      
                }else if (type === 'lead'){
                    
                       var pinColor = "FDF569";
-               }else if (type === 'customer'){
+               }else if (type === 'opportunity'){
                    
-                      var pinColor = "ff0000";
+                      var pinColor = "ee66f6";
                }else if (type === 'industry'){
                    
 

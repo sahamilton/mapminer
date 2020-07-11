@@ -102,8 +102,10 @@ class MgrDashboardController extends DashboardController
         if (count($this->myBranches) < 2) {
                     return $this->_checkBranches();
 
-        } else {   
+        } else {  
+
             $data = $this->_getDashBoardData();
+            
             $reports = \App\Report::publicReports()->get();
             $managers = $this->manager->load('directReports')->directReports;
             
@@ -183,8 +185,9 @@ class MgrDashboardController extends DashboardController
           
             $this->manager = $this->person->findOrFail(request('manager'));
         }
-       
-        $team = $this->manager->descendantsAndSelf()
+        // This should be getMyBranches
+        $this->myBranches = $manager->getMyBranches();
+        /*$team = $this->manager->descendantsAndSelf()
             ->with('branchesServiced')->get();
         
         $branches = $team->map(
@@ -193,7 +196,7 @@ class MgrDashboardController extends DashboardController
             }
         ); 
         
-        $this->myBranches = array_unique($branches->flatten()->toArray());
+        $this->myBranches = array_unique($branches->flatten()->toArray());*/
        
         if (count($this->myBranches)==0) {
             return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
@@ -220,11 +223,12 @@ class MgrDashboardController extends DashboardController
         
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
+    
         $data['team']= $this->_myTeamsOpportunities($data['branches']);
-
+      
         // this should go away and incorparte in charts
         $data['chart'] = $this->_getChartData($data['branches']);
-        
+     
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
@@ -282,7 +286,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _myTeamsOpportunities(Collection $branchdata)
     {
-       
+ 
         $stats = ['leads',
                 'opportunities',
                 'Top25',
@@ -321,46 +325,51 @@ class MgrDashboardController extends DashboardController
             );
             
             $branches = $branches->flatten();
-              
-            if ($data['branchteam']->count() > 0 ) {
-                $data['data'][$team->id]['leads'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('leads_count');
-                
-                $data['data'][$team->id]['activities'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->where('completed', 1)
-                      ->sum('activities_count');
 
-                $data['data'][$team->id]['activitiestype'] = $branchdata
+            $mybranchdata = $branchdata->filter(function ($branch) use ($branches) {
+                return in_array($branch->id, $branches->toArray());
+            });
+           
+
+            if ($data['branchteam']->count() > 0 ) {
+                $data['data'][$team->id]['leads'] = $mybranchdata->sum('leads_count');
+                
+                $data['data'][$team->id]['activities'] = $mybranchdata->sum('activities_count');
+                $data['data'][$team->id]['activitiestype'] = $this->_getSummaryBranchActivitiesByType($mybranchdata);       
+               /* $data['data'][$team->id]['activitiestype'] = $branchdata
                     ->whereIn('id', $branches)
                     ->map(
                         function ($branch) {
                               return $branch->activities->groupBy('activitytype_id')->toArray();
                         }
                     );
+                */
 
-                $data['data'][$team->id]['won'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('won');
+                $data['data'][$team->id]['won'] = $mybranchdata->sum('won_opportunities');
 
-                $data['data'][$team->id]['lost'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('lost');
+                $data['data'][$team->id]['lost'] = $mybranchdata->sum('lost_opportunities');
 
-                $data['data'][$team->id]['Top25'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('Top25');
+                $data['data'][$team->id]['Top25'] = $mybranchdata->sum('top25_opportunities');
 
-                $data['data'][$team->id]['open'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('open');
-
+                $data['data'][$team->id]['open'] = $mybranchdata->sum('open_opportunities');
+                
             }
         }
     
         $data = $this->_getCharts($data);
 
+        return $data;
+    }
+
+    private function _getSummaryBranchActivitiesByType(Collection $mybranchdata)
+    {
+        $types =$mybranchdata->first()->activityFields;
+        foreach ($types as $type) {
+            $type=str_replace(" ", "_",strtolower($type));
+            $data[$type] = $mybranchdata->sum($type);
+
+
+        }
         return $data;
     }
     /**
@@ -372,7 +381,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _getCharts(array $data) 
     {
-
+        
         $data['activities'] = $this->chart->getTeamActivityChart($data);
         $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
         $data['Top25chart'] = $this->chart->getTeamTop25Chart($data);
@@ -400,8 +409,8 @@ class MgrDashboardController extends DashboardController
         $string = '';
 
         foreach ($results as $branch) {
-          
-            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->salesappts .",  ".$branch->won.", ". ($branch->wonvalue ? $branch->wonvalue : 0) ."],";
+           
+            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
          
         }
      
@@ -428,7 +437,7 @@ class MgrDashboardController extends DashboardController
                 ]
             )
             ->get();
-        dd($track->first());
+        
         return $track->map(
             function ($person) {
          

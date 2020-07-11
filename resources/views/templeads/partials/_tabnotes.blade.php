@@ -36,10 +36,11 @@
 
 	<form method='post' action={{route('notes.store')}} name="noteForm">
 		{{csrf_field()}}
-		<div>
-			{{Form::label('note','Add a Note:')}}
-			<div>
-				{{Form::textarea('note')}}
+		<div class="form-group">
+			<label for="note">Add a Note</label>
+			
+			<div class="form-item">
+				<textarea name="note"></textarea>
 				{{ $errors->first('note') }}
 			</div>
 		</div>

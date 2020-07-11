@@ -108,15 +108,15 @@ class NodeModel extends Node
     }
     
     /*
-	 * Function export
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param fields arrary 
-	 *         data array (collection)
-	 *         filename string
-	 * @return (array) csv results
-	 */
+     * Function export
+     *
+     * Create array of locations of logged in users watchlist
+     *
+     * @param fields arrary 
+     *         data array (collection)
+     *         filename string
+     * @return (array) csv results
+     */
     public function export($fields, $data, $name = 'Export')
     {
         
@@ -165,15 +165,15 @@ class NodeModel extends Node
     
     
     /*
-	 * Function export
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param fields arrary 
-	 *         data array (collection)
-	 *         filename string
-	 * @return (array) csv results
-	 */
+     * Function export
+     *
+     * Create array of locations of logged in users watchlist
+     *
+     * @param fields arrary 
+     *         data array (collection)
+     *         filename string
+     * @return (array) csv results
+     */
     public function exportArray($fields, $data, $name = 'Export')
     {
         

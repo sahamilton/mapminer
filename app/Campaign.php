@@ -4,10 +4,10 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
+class Campaign extends Model 
 {
     use GeoCode;
-    public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];
+    public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status', 'type'];
     
     public $dates =['datefrom', 'dateto'];
     // Methods for Calendar
@@ -280,10 +280,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      * 
      * @return [type]              [description]
      */
-    public function getSalesTeamFromManager($manager_id, $serviceline)
+    public function getSalesTeamFromManager()
     {
         
-        return Person::whereId([$manager_id])->firstOrFail()
+        return Person::whereId([$this->manager_id])->firstOrFail()
             ->descendantsAndSelf()
      
             ->whereHas(
@@ -292,10 +292,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                 }
             )
             ->with(
-                ['branchesServiced'=>function ($q) use ($serviceline) {
+                ['branchesServiced'=>function ($q)  {
                     $q->whereHas(
-                        'servicelines', function ($q1) use ($serviceline) {
-                            $q1->whereIn('id', $serviceline);
+                        'servicelines', function ($q1){
+                            $q1->whereIn('id', $this->servicelines->pluck('id')->toarray());
                         }
                     );
                 }
@@ -306,7 +306,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             ->get();
     }
     /**
-     * [getCampaignServiceLines description]
+     * [author description]
      * 
      * @return [type] [description]
      */
@@ -366,19 +366,45 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     public function scopeCurrent($query, Array $branches =null)
     {
         
-        $query = $query->active()->when(
-            $branches, function ($q) use ($branches) {
-                return $q->wherehas(
-                    'branches', function ($q) use ($branches) {
-                        $q->whereIn('branches.id', $branches);
-                    }
-                );
-            }
-        );
+        $query = $query->active()
+            ->when(
+                $branches, function ($q) use ($branches) {
+                    return $q->wherehas(
+                        'branches', function ($q) use ($branches) {
+                            $q->whereIn('branches.id', $branches);
+                        }
+                    );
+                }
+            );
         
         return $query;
     }
     
+
+    /**
+     * [scopeCurrentOpen description]
+     * 
+     * @param [type]     $query    [description]
+     * @param Array|null $branches [description]
+     * 
+     * @return [type]               [description]
+     */
+    public function scopeCurrentOpen($query, Array $branches =null)
+    {
+        
+        $query = $query->active()->whereType('open')
+            ->when(
+                $branches, function ($q) use ($branches) {
+                    return $q->wherehas(
+                        'branches', function ($q) use ($branches) {
+                            $q->whereIn('branches.id', $branches);
+                        }
+                    );
+                }
+            );
+        
+        return $query;
+    }
     /**
      * [documents description]
      * 
@@ -386,7 +412,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function documents()
     {
-        return $this->hasMany(CampaignDocuments::class);
+        return $this->belongsToMany(Document::class);
     }
 
     

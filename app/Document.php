@@ -30,7 +30,10 @@ class Document extends Model
     {
         return $this->belongsToMany(SalesProcess::class, 'document_salesprocess', 'document_id', 'salesprocess_id');
     }
-
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class);
+    }
     public function getDocumentsWithVerticalProcess($data)
     {
 

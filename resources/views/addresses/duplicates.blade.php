@@ -1,12 +1,10 @@
 @extends('site.layouts.default')
 @section('content')
 <h1>Possible Duplicate Locations</h1>  
-@if(isset($data))
 
-
-
-@endif
-
+<div class="warning">
+	<p>Note merging addresses cannot be unmerged.  Please check carefully before merging.</p>
+</div>
 <form 
 name="mergeaddresses"
 method="post"

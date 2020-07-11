@@ -154,7 +154,7 @@ class Opportunity extends Model
      */
     public function scopeThisPeriod($query,$period)
     {
-        return $query->where('opportunities.created_at', '<=', $period['to']);
+        return $query->whereBetween('opportunities.created_at', [$period['from'], $period['to']]);
     }
     /**
      * [scopeTop25 description]
@@ -166,7 +166,9 @@ class Opportunity extends Model
      */
     public function scopeTop25($query,$period)
     {
-            return $query->where('opportunities.Top25', '=', 1);
+            return $query->where('opportunities.Top25', '=', 1)
+                ->open($period)
+                ->where('opportunities.created_at', '<=', $period['to']);
     }
     /**
      * [scopeOpen description]
@@ -179,7 +181,7 @@ class Opportunity extends Model
     public function scopeOpen($query, $period=null)
     {
         if (! $period) {
-            $period['to'] = now();
+            $period = ['from'=>now()->subYear(), 'to' => now()];
         }
         return $query->where(
             function ($q) use ($period) {
@@ -279,20 +281,40 @@ class Opportunity extends Model
      * 
      * @return [type]        [description]
      */
-    public function scopeWithLastActivityId($query)
+    public function scopeWithLastActivity($query, $period=null)
     {
-        return $query->select('opportunities.*')->selectSub('select id as last_activity_id from activities where opportunities.address_id = activities.address_id and opportunities.branch_id = activities.branch_id and completed =1 order by activities.created_at desc limit 1', 'last_activity_id');
-       
-    }
 
-    public function activities()
-    {
-        return $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id')
-            ->where('activity_date', '>', $this->created_at)->where('completed', 1);
-    }
     
+        $query->addSelect(
+            ['last_activity_id' => Activity::select('activities.id')
+                ->whereColumn('activities.address_id', 'opportunities.address_id')
+                ->where('completed', 1)
+                ->when(
+                    $period, function ($q) use ($period) {
+                        $q->whereBetween('activity_date', [$period['from'], $period['to']]);
+                    }
+                )
+                ->latest()
+                ->take(1)
+            ]
+        )->with('lastActivity');
+    
+    }
 
-    public function currentlyActive()
+    
+    public function scopeNewOpportunities($query, array $period)
+    {
+        return $query->wherebetween('opportunities.created_at', [$period['from'], $period['to']]); 
+    }
+
+    public function scopeActive($query, array $period)
+    {
+
+        return $query->withLastActivity($period);
+
+
+    }
+    /*public function currentlyActive()
     {
        
         return  $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id')
@@ -302,6 +324,16 @@ class Opportunity extends Model
             ->limit(1);
         
         
+    }*/
+    public function scopeCurrentlyActive($query, $period)
+    {
+        return $query->whereHas(
+            'relatedActivities', function ($q) use ($period) { 
+                $q->whereBetween('activity_date', [$period['from'], $period['to']])
+                    ->where('completed', 1);
+            }
+        )->where('closed', 0);
+
     }
     public function scopeStale($query)
     {
@@ -322,5 +354,50 @@ class Opportunity extends Model
             );
     }
 
-    
+    public function scopeOpenValue($query, $period)
+    {
+        return $query->select(\DB::raw("SUM(value) as open_value"))
+            ->open($period);
+    }
+
+    public function scopeWonValue($query, $period)
+    {
+        return $query->select(\DB::raw("SUM(value) as won_value"))
+            ->won($period);
+            
+    }
+    public function scopeSearch($query, $search)
+    { 
+        
+        return  $query->whereIn('address_id', function ($q) use ($search) {
+                    $q->select('id')
+                    ->from('addresses')
+                    ->where('businessname', 'like', "%{$search}%");
+                }
+            );
+     
+
+    }
+    public function scopeNewValue($query, $period)
+    {
+
+        return $query->select(\DB::raw("SUM(value) as new_value"))->newOpportunities($period);
+    }
+
+    public function scopeActiveValue($query, $period)
+    {
+
+        return $query->select(\DB::raw("SUM(value) as new_value"))->currentlyActive($period);
+    }
+
+    public function scopeLostValue($query, $period)
+    {
+
+        return $query->select(\DB::raw("SUM(value) as lost_value"))->lost($period);
+    }
+
+    public function scopeTop25Value($query, $period)
+    {
+        return $query->select(\DB::raw("SUM(value) as lost_value"))->top25($period);
+    }
 }

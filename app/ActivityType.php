@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ActivityType extends Model
 {
     public $table = 'activity_type';
-    public $fillable = ['activity','active','color'];
+    public $fillable = ['activity', 'color', 'definition'];
     /**
      * [activities description]
      * 

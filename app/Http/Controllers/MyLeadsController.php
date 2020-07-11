@@ -46,7 +46,7 @@ class MyLeadsController extends BaseController
      */
     public function index()
     {
-        
+  
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
@@ -55,12 +55,13 @@ class MyLeadsController extends BaseController
         // get first branch
         $branch_id = reset($branch_ids);
         session(['branch'=>$branch_id]);
+        // necessary if using impersonate
+        session()->forget('manager');
+        $branch = $this->branch->findOrFail($branch_id);
 
-        $branch = $this->_getBranchLeadData($branch_id);
-        
-        $campaign_ids = $this->_getCurrentCampaignCompanies($branch_id);
-
-        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids'));
+        $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
+     
+        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaigns'));
         
     }
 
@@ -94,9 +95,9 @@ class MyLeadsController extends BaseController
         }
         session(['branch'=>$branch_id]);
         $branch = $this->_getBranchLeadData($branch_id);
-        $campaign_ids = $this->_getCurrentCampaignCompanies($branch_id);
+        $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
         
-        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids'));
+        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaigns'));
     }
     
     /**
@@ -121,6 +122,9 @@ class MyLeadsController extends BaseController
         $address = $this->lead->create($data['lead']);
         
         $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
+        if (request()->has('campaign')) {
+            $address->campaigns()->attach(request('campaign'));
+        }
         $dupes = $this->_getDuplicateLeads($data);
       
         if (isset($data['contact'])) {
@@ -198,25 +202,21 @@ class MyLeadsController extends BaseController
             ->with(
                 ['leads'=>function ($query) {
                     $query->withLastActivityId();
-                },'leads.lastActivity','leads.leadsource']
+                },'leads.lastActivity','leads.leadsource','leads.currentcampaigns']
             )->find($branch_id);
     }
     /**
-     * [_getCurrentCampaignCompanies 
+     * [_getCurrentOpenCampaigns 
      * Get the company ids in each current campaign]
      * 
      * @param string $branch_id [description]
      * 
      * @return array            [description]
      */
-    private function _getCurrentCampaignCompanies($branch_id)
+    private function _getCurrentOpenCampaigns($branch_id)
     {
-        $campaigns = Campaign::current([$branch_id])->with('companies')->get();
-        $campaign_ids = [];
-        foreach ($campaigns as $campaign) {
-            $campaign_ids[$campaign->title] = $campaign->companies->pluck('id')->toArray();
-        }
-        return $campaign_ids;
+        return Campaign::currentOpen([$branch_id])->get();
+        
     }
     /**
      * [_cleanseInput description]

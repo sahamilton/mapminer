@@ -16,6 +16,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
     use Exportable;
+    
     public $period;
     public $branches;
     public $person;
@@ -42,7 +43,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
        
         $this->period = $period;
         $this->branches = $branches;
-        
+
 
        
     }
@@ -98,7 +99,8 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
      */
     public function query()
     {
-        return Branch::summaryStats($this->period)
+      
+        return Branch::query()->summaryStats($this->period)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {

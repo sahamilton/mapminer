@@ -12,6 +12,7 @@ use App\Note;
 use App\Person;
 use App\Howtofield;
 use App\ActivityType;
+use App\Campaign;
 use App\Http\Requests\MergeAddressFormRequest;
 
 
@@ -84,7 +85,7 @@ class AddressController extends BaseController
         
         
         $location = $address->load(
-            'contacts',
+           
             'contacts.relatedActivities',
             'activities.type',
             'activities.relatedContact',
@@ -93,6 +94,7 @@ class AddressController extends BaseController
             'opportunities',
             'industryVertical',
             'relatedNotes',
+            'currentcampaigns',
             'orders.branch',
             'watchedBy.person',
             'ranking',
@@ -129,8 +131,17 @@ class AddressController extends BaseController
         //}
        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
-        
-        return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
+        $campaigns = Campaign::active()->select('id', 'title')->get();
+        return response()->view('addresses.show', compact('location', 
+            'branches', 
+            'rankingstatuses', 
+            'people', 
+            'myBranches', 
+            'ranked', 
+            'notes', 
+            'owned', 
+            'fields', 
+            'campaigns'));
     }
 
     /**
@@ -165,6 +176,11 @@ class AddressController extends BaseController
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
 
         $address->update($data);
+        if (request()->has('campaign')) {
+            $address->campaigns()->attach(request('campaign'));
+        } else {
+             $address->campaigns()->detach(request('campaign'));
+        }
         return redirect()->route('address.show', $address->id)->withMessage('Location updated');
     }
 
@@ -192,9 +208,14 @@ class AddressController extends BaseController
     {
        
         $location = $this->getLocationLatLng($latlng);
-      
-        $result = $this->address->filtered()->nearby($location, $distance)->get();
+        $myBranches = auth()->user()->person->getMyBranches();
+        $myLeads = $this->address->filtered()->myLeads()->nearby($location, $distance)
+            ->withCount('assignedToBranch', 'openOpportunities')->get();
 
+        $unassignedLeads = $this->address->filtered()->unassigned()->nearby($location, $distance)->get();
+        
+        $result = $myLeads->merge($unassignedLeads);
+        
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
     /**

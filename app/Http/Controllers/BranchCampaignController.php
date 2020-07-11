@@ -6,12 +6,17 @@ use Illuminate\Http\Request;
 use App\Campaign;
 use App\Branch;
 use App\Person;
+use App\Address;
+use App\AddressCampaign;
 use Carbon\Carbon;
 
 class BranchCampaignController extends Controller
 {
+    
+
     public $branch;
     public $campaign;
+    public $addresscampaign;
     public $person;
     public $fields = [
                     "supplied_leads",
@@ -25,7 +30,17 @@ class BranchCampaignController extends Controller
                     "won_value",
                     "open_value",
                 ];
-    
+    public $openfields = [
+                    
+                    "campaign_leads",
+     
+                    "touched_leads",
+                    "new_opportunities",
+                    "won_opportunities",
+                    "open_opportunities",
+                    "won_value",
+                    "open_value",
+                ];
     /**
      * [__construct description]
      * 
@@ -35,11 +50,13 @@ class BranchCampaignController extends Controller
     public function __construct(
         Branch $branch, 
         Campaign $campaign,
-        Person $person
+        Person $person,
+        AddressCampaign $addresscampaign
     ) {
         $this->branch = $branch;
         $this->campaign = $campaign;
         $this->person = $person;
+        $this->addresscampaign = $addresscampaign;
     }
     /**
      * Display a listing of the resource.
@@ -48,14 +65,22 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
-
-        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
+        
+        if (! session('manager')) {
+            $manager = $this->person->findOrFail(auth()->user()->person->id);
+            session(['manager'=>$manager->id]);
+        } else {
+            $manager = $this->person->findOrFail(session('manager'));
+        }
+       
+        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
         
         $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
-    
+       
+        $branches = $campaigns->first()->branches->intersect($myBranches);
        
         if (! $campaigns->count()) {
-            return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
+            return redirect()->back()->withMessage('There are no current sales campaigns for your branches');
         }
         
         if (session('campaign') && session('campaign') != 'all') {
@@ -65,22 +90,46 @@ class BranchCampaignController extends Controller
             session(['campaign'=>$campaigns->first()->id]);
         }
         
-       
-        if ($myBranches->count() == 1) {
+        
+        
+        if ($branches->count() == 1) {
 
-            return $this->show($campaign, $myBranches->first());
+            return $this->show($campaign, $branches->first());
         } 
 
-        $branch_ids = $myBranches->pluck('id')->toArray();
+        $team = $this->_getCampaignTeam($campaign);
+        
         $branches = $this->branch
-            ->whereIn('id', $branch_ids)
-            ->summaryCampaignStats($campaign)
+            ->whereIn('id', $branches->pluck('id')->toArray())
+            ->when(
+                $campaign->type === 'open', function ($q)  use($campaign){
+                    $q->summaryOpenCampaignStats($campaign);
+                }, function ($q) use ($campaign) {
+                    $q->summaryCampaignStats($campaign);
+                }
+            ) 
             ->get();
-      
-        $servicelines = $campaign->getServicelines();
-        $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
-        $fields=$this->fields;
-        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields'));
+
+        
+        if($campaign->type === 'open') {
+            $fields=$this->openfields;
+        } else {
+            $fields=$this->fields;
+        }
+        
+
+        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields', 'manager'));
+    }
+
+    public function store(Request $request)
+    {
+        
+        foreach (request('campaign') as $campaign_id) {
+           
+            $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+        }
+        
+        return back()->withMessage('Lead added to campaigns');
     }
     /**
      * [change description]
@@ -108,13 +157,16 @@ class BranchCampaignController extends Controller
      * 
      * @return [type]             [description]
      */
-    public function show(Campaign $campaign, Branch $branch = null)
+    public function show(Campaign $campaign, Branch $branch)
     {
         
         $person = $this->person->findOrFail(auth()->user()->person->id);
+           
+
         $myBranches = $this->person->myBranches($person);
-        
+    
         if (! in_array($branch->id, array_keys($myBranches))) {
+           
             return redirect()->back()->withError('That is not one of your branches');
         }
 
@@ -124,29 +176,45 @@ class BranchCampaignController extends Controller
             }
         )
         ->current([$branch->id])->get();// else return not valid
-        
+  
         $campaign->load('companies', 'branches');
                 
         $branch = $this->branch
-            ->campaignDetail($campaign)
-            ->findOrFail($branch->id);
+            ->when(
+                $campaign->type === 'open', function ($q) use($campaign) {
+                    $q->openCampaignDetail($campaign);
+                }, function ($q) use($campaign) {
+                    $q->campaignDetail($campaign);
+                }
+            )->findOrFail($branch->id);
        
-        $views = [
-            'offeredLeads'=>['title'=>"New Sales Initiative Leads", 'detail'=>'These leads have been offered to your branch.  You must either accept or decline them before you can record any activities or opportunities on them'],
-
-            'untouchedLeads'=>['title'=>"Untouched Sales Initiatives Leads", 'detail'=>'Here are the Sales Initiative Leads that you accepted but do not have any activity. Make sure you enter in any activity that has taken place to remove these Leads for the Untouched list.'],
-
-            'workedLeads'=>['title'=>'Worked Leads', 'details'=>'These are your campaign leads'],
-
-            'opportunitiesClosingThisWeek'=>['title'=>"Opportunities to Close this Week", 'detail'=>'Make sure you are updating your Opportunities status. Opportunities should be marked Closed – Won once we have billed the our new customer.'],
-
-            'upcomingActivities'=>['title'=>"Upcoming Activities", 'detail'=>''],
-             
-        ];
+        $views = $this->_getCampaignViews($campaign);
        
         return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));
 
         
+    }
+
+    public function setManager(Campaign $campaign, Request $request)
+    {
+        
+        if (! request()->filled('manager_id')) {
+            session()->forget('manager');
+            return $this->index();
+        }
+        if(! auth()->user()->hasRole(['admin'])) {
+            $myTeam = $this->person->myTeam()->get()->pluck('id')->toArray();
+            if (! in_array(request('manager_id'), $myTeam)) {
+                return redirect()->back()->withError('That is not one of your team members');
+            }
+        }
+        // check if this is one of the logged in persons reports
+        
+        // else redirect back
+        session(['manager'=>request('manager_id')]);
+        session(['campaign'=>$campaign->id]);
+        return $this->index();
+        // redirect to this show
     }
     /**
      * [_getBranchCampaignDetailData description]
@@ -179,5 +247,56 @@ class BranchCampaignController extends Controller
             ->get();
     }
     
+    private function _getCampaignViews(Campaign $campaign)
+    {
+        if ($campaign->type === 'open') {
+            return $this->_opencampaignviews();
+        } else {
+            return $this->_campaignViews();
+        }
 
+    }
+
+
+    private function _campaignviews()
+    {
+        return  [
+            'offeredLeads'=>['title'=>"New Sales Initiative Leads", 'detail'=>'These leads have been offered to your branch.  You must either accept or decline them before you can record any activities or opportunities on them'],
+
+            'untouchedLeads'=>['title'=>"Untouched Sales Initiatives Leads", 'detail'=>'Here are the Sales Initiative Leads that you accepted but do not have any activity. Make sure you enter in any activity that has taken place to remove these Leads for the Untouched list.'],
+
+            'workedLeads'=>['title'=>'Campaign Leads', 'detail'=>'These are your campaign leads'],
+
+            'opportunitiesClosingThisWeek'=>['title'=>"Opportunities to Close this Week", 'detail'=>'Make sure you are updating your Opportunities status. Opportunities should be marked Closed – Won once we have billed the our new customer.'],
+
+            'upcomingActivities'=>['title'=>"Upcoming Activities", 'detail'=>''],
+             
+        ];
+    }
+
+    private function _opencampaignviews()
+    {
+        return  [
+            
+            'newLeads'=>['title'=>'New Leads', 'detail'=>'These are your campaign leads that you created for this campaign'],
+            'untouchedLeads'=>['title'=>"Untouched Sales Initiatives Leads", 'detail'=>'Here are the Sales Initiative Leads that you added to the campaign  but do not have any activity during the campaign period. Make sure you enter in any activity that has taken place to remove these Leads for the Untouched list.'],
+             'workedLeads'=>['title'=>'Campaign Leads', 'detail'=>'These are your campaign leads'],
+            
+
+            'opportunitiesClosingThisWeek'=>['title'=>"Opportunities to Close this Week", 'detail'=>'Make sure you are updating your Opportunities status. Opportunities should be marked Closed – Won once we have billed the our new customer.'],
+
+            'upcomingActivities'=>['title'=>"Upcoming Activities", 'detail'=>'Activities for campaign leads that are due this week'],
+             
+        ];
+    }
+
+    private function _getCampaignTeam(Campaign $campaign)
+    {
+        $campaignTeam = $campaign->getSalesTeamFromManager();
+        if( auth()->user()->hasRole('admin', 'sales_operations')) {
+            return $campaignTeam;
+        }
+        $myTeam = $this->person->myTeam()->get();
+        return $campaignTeam->intersect($myTeam);
+    }
 }
