@@ -10,7 +10,9 @@
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">
-    <form name="selectbranch" method="post" action="{{route('opportunity.branch')}}" >
+    <form name="selectbranch" 
+    method="post" 
+    action="{{route('opportunity.branch')}}" >
     @csrf
 
     <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
@@ -24,7 +26,7 @@
 @endif
     <div class="row">
 
-    @livewire('opportunity-table', ['branch'=>$branch])
+        @livewire('opportunity-table', ['branch'=>$branch->id])
 
     </div>
 </div>

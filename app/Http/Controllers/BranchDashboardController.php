@@ -149,7 +149,13 @@ class BranchDashboardController extends DashboardController
      */
     public function show(Branch $branch)
     {
-       
+        $myBranches = $this->person->myBranches();
+        
+         
+        if (! array_key_exists($branch->id, $myBranches)) {
+             return redirect()->back()
+                 ->withWarning("You are not assigned to " .$branch->branchname);
+        }
         if (! session()->has('branch') or $branch->id != session('branch') ) {
             session(['branch'=>$branch->id]);
         }

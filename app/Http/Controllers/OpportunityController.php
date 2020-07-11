@@ -89,9 +89,10 @@ class OpportunityController extends BaseController
         if (count($myBranches) == 1 ) {
             
             //$data = $this->_getBranchData([session('branch')]);
+            $branch = $this->branch->findOrFail(session('branch'));
             return response()->view(
                 'opportunities.index', 
-                compact('activityTypes', 'myBranches','period')
+                compact('activityTypes', 'myBranches','period', 'branch')
             );
 
         } else {
@@ -120,13 +121,13 @@ class OpportunityController extends BaseController
     public function showBranchOpportunities(Branch $branch)
     {
         $myBranches = $this->person->myBranches();
-        if ($branch->id) {
+        
          
-            if (! array_key_exists($branch->id, $myBranches)) {
-                 return redirect()->back()
-                     ->withWarning("You are not assigned to " .$branch->branchname);
-            }
+        if (! array_key_exists($branch->id, $myBranches)) {
+             return redirect()->back()
+                 ->withWarning("You are not assigned to " .$branch->branchname);
         }
+       
         session(['branch'=>$branch->id]);
         $data = $this->_getBranchData([session('branch')]);
         return response()->view(
@@ -134,6 +135,12 @@ class OpportunityController extends BaseController
             compact('data', 'activityTypes', 'myBranches', 'period')
         );
 
+    }
+    public function getBranchOpportunities(Request $request)
+    {
+        
+        $branch = $this->branch->findOrFail(request('branch'));
+        return redirect()->route('opportunities.branch', $branch->id);
     }
     /**
      * [branchOpportunities description]
@@ -143,35 +150,30 @@ class OpportunityController extends BaseController
      * 
      * @return [type]           [description]
      */
-    public function branchOpportunities(Branch $branch, Request $request)
+    public function branchOpportunities(Branch $branch)
     {
+        
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
         // check that user is assigned to branch
         $myBranches = $this->person->myBranches();
-        if ($branch->id) {
+        
          
-            if (! array_key_exists($branch->id, $myBranches)) {
-                 return redirect()->back()
-                     ->withWarning("You are not assigned to " .$branch->branchname);
-            }
+        if (! array_key_exists($branch->id, $myBranches)) {
+             return redirect()->back()
+                 ->withWarning("You are not assigned to " .$branch->branchname);
         }
-        if (request()->has('branch')) {
-           
-            $data = $this->_getBranchData([request('branch')]);
-        } else {
-
-            $data = $this->_getBranchData([$branch->id]);
-        }
+        
+       
 
         $activityTypes = $activityTypes = ActivityType::all();
        
         $data['period'] = $this->period;
         
         return response()->view(
-            'opportunities.index', 
-            compact('data', 'activityTypes', 'myBranches')
+            'opportunities.list', 
+            compact('data', 'activityTypes', 'myBranches', 'branch')
         );
     }
     /**

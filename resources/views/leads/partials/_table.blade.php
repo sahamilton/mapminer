@@ -22,7 +22,7 @@
                    <li>{{$campaign->title}}</li>
                
             @endforeach
-            
+            @if(auth()->user()->hasRole('branch_manager'))
             <a 
             data-pk="{{$lead->id}}"
             data-id="{{$lead->id}}"
@@ -32,7 +32,7 @@
             href="#">
                 <i class="text-success fas fa-plus-circle"></i> Add to current campaign
             </a>
-           
+           @endif
         </td>
         @endif
         <td>

@@ -59,6 +59,7 @@
             </thead>
             <tbody>
                 @include('opportunities.partials._table')
+                
             </tbody>
         </table>
     </div>

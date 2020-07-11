@@ -31,16 +31,14 @@ class OpportunityTable extends Component
     }
     public function mount($branch)
     {
-        $this->branch = Branch::findOrFail($branch);
+        $this->branch = Branch::findOrFail($branch->id);
         $this->period = session('period');
     }
     public function render()
     {
-  
         
         return view('livewire.opportunity-table', [
             'opportunities' => Opportunity::query()
-                ->search($this->search)
                 ->where('branch_id', $this->branch->id)
                 ->where('closed', $this->filter)
                 ->with(
@@ -50,7 +48,7 @@ class OpportunityTable extends Component
                         },'address.address.lastActivity'
                     ]
                 )
-                ->thisPeriod($this->period)
+               
                 ->when(
                     $this->search, function ($q) {
                         $q->search($this->search);
