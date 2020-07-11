@@ -1,4 +1,5 @@
 <div>
+    
 <div class="row mb-4">
         <div class="col form-inline">
             Per Page: &nbsp;
@@ -54,12 +55,14 @@
                         </a>
                     </th>
                     <th>Last Activity</th>
+                    @if(auth()->user()->hasRole('branch_manager'))
                     <th>Activities</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
                 @include('opportunities.partials._table')
-                
+
             </tbody>
         </table>
     </div>

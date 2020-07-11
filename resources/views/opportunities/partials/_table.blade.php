@@ -22,8 +22,8 @@
       <td>{{$opportunity->daysOpen()}}</td>
       <td>
 
-        {{$statuses[$opportunity->closed]}}
-        @if($opportunity->closed == 0)
+        {{ucwords($statuses[$opportunity->closed])}}
+        @if($opportunity->closed == 0 && auth()->user()->hasRole('branch_manager'))
         <button class="btn btn-danger" 
                 data-href="{{route('opportunity.close',$opportunity->id)}}"
                 data-toggle="modal" 
@@ -39,7 +39,7 @@
         <input 
           type="checkbox" 
           class="Top25" 
-          @if($opportunity->closed !=0)
+          @if($opportunity->closed !=0 || ! auth()->user()->hasRole('branch_manager'))
           disabled
           @endif
           value="{{$opportunity->id}}" 
@@ -74,7 +74,7 @@
         
         @endif
       </td>
-          
+          @if(auth()->user()->hasRole('branch_manager'))
       <td>
 
         
@@ -90,6 +90,7 @@
          
 
       </td>
+      @endif
     </tr>
        
         @endforeach
