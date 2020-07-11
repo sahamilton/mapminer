@@ -17,7 +17,7 @@
 
     <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
           @foreach ($myBranches as $key=>$branchname)
-                <option value="{{$key}}">{{$branchname}}</option>
+                <option @if($branch->id == $key) selected @endif value="{{$key}}">{{$branchname}}</option>
           @endforeach 
     </select>
 
@@ -26,7 +26,7 @@
 @endif
     <div class="row">
 
-        @livewire('opportunity-table', ['branch'=>$branch->id])
+        @livewire('opportunity-table', ['branch'=>$branch])
 
     </div>
 </div>

@@ -170,7 +170,7 @@ class OpportunityController extends BaseController
         $activityTypes = $activityTypes = ActivityType::all();
        
         $data['period'] = $this->period;
-        
+       
         return response()->view(
             'opportunities.list', 
             compact('data', 'activityTypes', 'myBranches', 'branch')
