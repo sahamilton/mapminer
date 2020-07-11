@@ -85,6 +85,7 @@ class OpportunityController extends BaseController
         session(['branch'=>array_keys($myBranches)[0]]);
         
         $period = $this->period;
+
         if (count($myBranches) == 1 ) {
             
             //$data = $this->_getBranchData([session('branch')]);
@@ -98,7 +99,9 @@ class OpportunityController extends BaseController
             $managers = $person->load('directReports')->directReports;
           
             $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches));
-           
+            
+            $data['period'] = $period;
+
             return response()->view(
                 'opportunities.summary', 
                 compact('data', 'activityTypes', 'myBranches', 'managers', 'person')
@@ -220,7 +223,7 @@ class OpportunityController extends BaseController
      */
     private function _getBranchSummaryData(array $branches)
     {
-        return $this->branch->summaryBranchOpportunities($this->period)
+        return $this->branch->summaryOpportunities($this->period)
             ->whereIn('id', $branches)
             ->get();
     } 

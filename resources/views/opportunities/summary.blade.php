@@ -5,8 +5,9 @@
 <h4>{{$person->fullName()}}'s Summary Opportunities</h4>
 <p><a href="{{route('opportunity.index')}}">Return to all Opportunities</a></p>
  @php $total = []; 
-    $fields = ['open', 'created', 'openvalue', 'won', 'wonvalue']; 
+    $fields = ['open_opportunities', 'new_opportunities', 'open_value', 'won_opportunities', 'won_value']; 
 @endphp
+
     @if($managers->count())
     @include('opportunities.partials._teamselector')
     @endif
@@ -29,33 +30,26 @@
                     </a>
                 </td>
                 <td align="center">
-                    {{$branch->open}}
+                    {{$branch->open_opportunities}}
                     
                     
                 </td>
-                <td align="center">{{$branch->created}}</td>
-                <td align="right">{{$branch->openvalue ? "$" . number_format($branch->openvalue,0) : '0'}}</td>
-                <td align="center">{{$branch->won}}</td>
-               <td align="right">{{$branch->wonvalue ? "$" . number_format($branch->wonvalue,0) : '0'}}</td>
-               @foreach ($fields as $field)
-                    @if(isset($total[$field]))
-                        @php $total[$field] = $total[$field] + $branch->$field; @endphp
-                    @else
-                        @php $total[$field] =  $branch->$field; @endphp
-                    @endif 
-
-               @endforeach
+                <td align="center">{{$branch->new_opportunities}}</td>
+                <td align="right">{{$branch->open_value ? "$" . number_format($branch->open_value,0) : '0'}}</td>
+                <td align="center">{{$branch->won_opportunities}}</td>
+               <td align="right">{{$branch->won_value ? "$" . number_format($branch->won_value,0) : '0'}}</td>
+               
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <th>Totals:</th>
-            @if(count($total))
+           
                 @foreach ($fields as $field)
                
-                <th class="text-right">@if(strpos($field, 'value')) $ @endif{{number_format($total[$field],0)}}</th>
+                <th class="text-center">@if(strpos($field, 'value')) $ @endif{{number_format($data['summary']->sum($field),0)}}</th>
                 @endforeach
-            @endif
+   
         </tfoot>
     </table>
 @include('partials._scripts')

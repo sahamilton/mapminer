@@ -65,18 +65,19 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
-      
+        
         if (! session('manager')) {
             $manager = $this->person->findOrFail(auth()->user()->person->id);
             session(['manager'=>$manager->id]);
         } else {
             $manager = $this->person->findOrFail(session('manager'));
         }
-
+       
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
         
         $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
-        $branches = $myBranches->intersect($campaigns->first()->branches);
+       
+        $branches = $campaigns->first()->branches->intersect($myBranches);
        
         if (! $campaigns->count()) {
             return redirect()->back()->withMessage('There are no current sales campaigns for your branches');
@@ -90,7 +91,7 @@ class BranchCampaignController extends Controller
         }
         
         
-       
+        
         if ($branches->count() == 1) {
 
             return $this->show($campaign, $branches->first());
@@ -122,12 +123,13 @@ class BranchCampaignController extends Controller
 
     public function store(Request $request)
     {
+        
         foreach (request('campaign') as $campaign_id) {
            
             $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
         }
-       
-        return redirect()->back()->withMessage('Lead added to campaigns');
+        
+        return back()->withMessage('Lead added to campaigns');
     }
     /**
      * [change description]
@@ -164,7 +166,7 @@ class BranchCampaignController extends Controller
         $myBranches = $this->person->myBranches($person);
     
         if (! in_array($branch->id, array_keys($myBranches))) {
-            dd('oh no!');
+           
             return redirect()->back()->withError('That is not one of your branches');
         }
 

@@ -14,11 +14,19 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'Illuminate\Auth\Events\Login' => [
-        'App\Listeners\Users\UpdateLastLoggedInAt'],
+            'App\Listeners\Users\UpdateLastLoggedInAt',
+        ],
         
         'App\Events\FeedbackEvent' => [
-        'App\Listeners\FeedbackListener',
+            'App\Listeners\FeedbackListener',
         ],
+        'App\Events\TakeImpersonation'=>[
+            'App\Listeners\Users\TakeImpersonation',
+        ],
+        'App\Events\LeaveImpersonation'=>[
+            'App\Listeners\Users\LeaveImpersonation',
+        ],
+        
     ];
 
     /**

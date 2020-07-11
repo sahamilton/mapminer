@@ -55,7 +55,7 @@ class MyLeadsController extends BaseController
         // get first branch
         $branch_id = reset($branch_ids);
         session(['branch'=>$branch_id]);
-
+        session()->forget('manager');
         $branch = $this->branch->findOrFail($branch_id);
 
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
@@ -94,9 +94,9 @@ class MyLeadsController extends BaseController
         }
         session(['branch'=>$branch_id]);
         $branch = $this->_getBranchLeadData($branch_id);
-        $campaign_ids = $this->_getCurrentCampaigns($branch_id);
+        $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
         
-        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids'));
+        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaigns'));
     }
     
     /**
@@ -205,7 +205,7 @@ class MyLeadsController extends BaseController
             )->find($branch_id);
     }
     /**
-     * [_getCurrentCampaigns 
+     * [_getCurrentOpenCampaigns 
      * Get the company ids in each current campaign]
      * 
      * @param string $branch_id [description]
