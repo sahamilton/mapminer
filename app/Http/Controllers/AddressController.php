@@ -121,7 +121,7 @@ class AddressController extends BaseController
       
         $rankingstatuses = $this->address->getStatusOptions;
         $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->getMyBranches();
-      
+     
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
         //if ($myBranches) {
@@ -131,7 +131,8 @@ class AddressController extends BaseController
         //}
        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
-        $campaigns = Campaign::currentOpen(array_keys($myBranches))->select('id', 'title')->get();
+        $campaigns = Campaign::currentOpen($myBranches)->select('id', 'title')->get();
+   
         return response()->view('addresses.show', compact('location', 
             'branches', 
             'rankingstatuses', 
