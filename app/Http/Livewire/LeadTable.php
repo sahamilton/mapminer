@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\Address;
 use App\Branch;
+use App\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,7 +15,9 @@ class LeadTable extends Component
     public $sortField = 'businessname';
     public $sortAsc = true;
     public $search = '';
-    public $branch;
+    public $branch_id;
+    public $myBranches;
+
  
 
     public function sortBy($field)
@@ -29,12 +32,14 @@ class LeadTable extends Component
     }
     public function mount($branch)
     {
-        $this->branch = Branch::with('currentcampaigns')->findOrFail($branch);
+        $this->branch_id = $branch;
+        $person = new Person();
+        $this->myBranches = $person->myBranches();
     }
     public function render()
     {
         //$branches = auth()->user()->person->myBranches();
-        
+     
         return view('livewire.lead-table', [
             'leads' => Address::query()
                 ->search($this->search)
@@ -43,7 +48,7 @@ class LeadTable extends Component
                     'addresses.id', function ($query) {
                         $query->select('address_id')
                             ->from('address_branch')
-                            ->where('branch_id', $this->branch->id)
+                            ->where('branch_id', $this->branch_id)
                             ->where('status_id',2);
                     }
                 )->whereDoesntHave('opportunities')
@@ -57,6 +62,7 @@ class LeadTable extends Component
                 )
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
+                'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),
             ]
         );
     }

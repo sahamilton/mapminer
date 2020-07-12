@@ -1,4 +1,26 @@
 <div>
+<h1>{{$branch->branchname . " leads"}}</h1>
+<p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
+
+@if(count($myBranches) > 1)
+    <div class="col-sm-4">
+       
+            <select
+                wire:model="branch_id" 
+                class="form-control input-sm" 
+                id="branchselect" 
+                name="branch" 
+                onchange="this.form.submit()">
+                @foreach ($myBranches as $key=>$branchname)
+                    <option {{$branch->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branchname}}</option>
+                @endforeach 
+            </select>
+
+        
+    </div>
+@endif
+
+
     <div class="row mb-4">
         <div class="col form-inline">
             Per Page: &nbsp;
