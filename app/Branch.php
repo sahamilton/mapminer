@@ -1363,7 +1363,7 @@ class Branch extends Model implements HasPresenter
     }
     public function scopeSummaryStats($query,$period, $fields = null)
     {
-
+        $this->period = $period;
         return $query->withCount(       
             [
                 'leads'=>function ($query) {
