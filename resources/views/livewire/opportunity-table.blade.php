@@ -1,5 +1,5 @@
 <div>
-  <h2>{{$branch->branchname}} Branch Opportunities!!</h2>
+  <h2>{{$branch->branchname}} Branch Opportunities</h2>
 
 <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch {{$branch->id}} Dashboard</a></p>
 
