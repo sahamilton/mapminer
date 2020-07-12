@@ -131,7 +131,7 @@ class AddressController extends BaseController
         //}
        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
-        $campaigns = Campaign::active()->select('id', 'title')->get();
+        $campaigns = Campaign::currentOpen(array_keys($myBranches))->select('id', 'title')->get();
         return response()->view('addresses.show', compact('location', 
             'branches', 
             'rankingstatuses', 
