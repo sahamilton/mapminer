@@ -168,8 +168,9 @@ $branches = auth()->user()->person->getMyBranches()
     <label for="campaign" class="col-md-2 control-label">Add to Campaign: </label>
      <div class="col-sm-8">
         <select
-            name="campaign"
+            name="campaign[]"
             class="form-control"
+            multiple
             >
 
             <option></option>
