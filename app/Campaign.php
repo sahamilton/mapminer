@@ -280,10 +280,10 @@ class Campaign extends Model
      * 
      * @return [type]              [description]
      */
-    public function getSalesTeamFromManager()
+    public function getSalesTeamFromManager($manager)
     {
         
-        return Person::whereId([$this->manager_id])->firstOrFail()
+        return Person::whereId($manager)->firstOrFail()
             ->descendantsAndSelf()
      
             ->whereHas(
@@ -366,8 +366,7 @@ class Campaign extends Model
     public function scopeCurrent($query, Array $branches =null)
     {
         
-        $query = $query->active()
-            ->when(
+        $query->when(
                 $branches, function ($q) use ($branches) {
                     return $q->wherehas(
                         'branches', function ($q) use ($branches) {
@@ -377,7 +376,7 @@ class Campaign extends Model
                 }
             );
         
-        return $query;
+       
     }
     
 
