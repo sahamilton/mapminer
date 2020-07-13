@@ -50,7 +50,7 @@ class DashboardController extends Controller
 
         case 'admin':
             $managers = $this->_selectDashboard();
-            return response()->view('dashboard.select', compact('managers'));
+            return response()->view('dashboards.select', compact('managers'));
             break;
 
         default:
@@ -88,7 +88,7 @@ class DashboardController extends Controller
 
         case 'admin':
             $managers = $this->_selectDashboard();
-            return response()->view('dashboard.select', compact('managers'));
+            return response()->view('dashboards.select', compact('managers'));
             break;
 
         default:
