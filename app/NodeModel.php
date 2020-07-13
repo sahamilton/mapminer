@@ -6,7 +6,7 @@ use \Baum\Node;
 class NodeModel extends Node
 {
     
-    protected $parentColumn = 'parent_id';
+    protected $parentColumnName = 'parent_id';
 
       // 'lft' column name
     protected $leftColumnName = 'lft';

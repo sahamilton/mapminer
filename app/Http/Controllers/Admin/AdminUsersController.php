@@ -239,7 +239,7 @@ class AdminUsersController extends BaseController
             $track=Track::create(['user_id'=>$user->id]);
             $user->saveRoles(request('roles'));
             $user->serviceline()->attach(request('serviceline'));
-            //$person->rebuild();
+            $person->rebuild();
             return redirect()->route('person.details', $person->id)
                 ->with('success', 'User created succesfully');
         } else {
