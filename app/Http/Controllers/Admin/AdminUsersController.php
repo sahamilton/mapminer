@@ -163,10 +163,10 @@ class AdminUsersController extends BaseController
         $permissions = $this->permission->all();
 
         // Selected groups
-        $selectedRoles = \Input::old('roles', []);
+        $selectedRoles = [];
 
         // Selected permissions
-        $selectedPermissions = \Input::old('permissions', []);
+        $selectedPermissions = [];
 
         // Title
         $title = 'Create New User';
@@ -221,13 +221,16 @@ class AdminUsersController extends BaseController
             // need to get the lat lng;
             $name = request(['firstname','lastname','phone','business_title']);
             if (request()->filled('address')) {
+
                 $geoCode = app('geocoder')->geocode(request('address'))->get();
+                
                 $person = $this->person->getGeoCode($geoCode);
             } else {
                 $person['lat']=null;
                 $person['lng']=null;
                 $person['position'] = null;
             }
+            
             $person = array_merge($person, $name);
             $user->person()->create($person);
             $person = $user->person;
@@ -652,8 +655,8 @@ class AdminUsersController extends BaseController
         //
         $roleid = Role::where('name', '=', 'User')->pluck('id');
 
-        if (null!==(\Input::get('serviceline'))) {
-            $servicelines = \Input::get('serviceline');
+        if (request()->has('serviceline')) {
+            $servicelines = request('serviceline');
 
             $users = $this->user->whereIn('email', $newUsers)->get();
 

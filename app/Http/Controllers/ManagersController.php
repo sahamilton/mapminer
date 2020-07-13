@@ -330,9 +330,9 @@ class ManagersController extends BaseController {
      * 
      * @return [type] [description]
      */
-    public function companywatchexport() 
+    public function companywatchexport(Request $request) 
     {
-        $id = urldecode(\Input::get('id'));
+        $id = request('id');
         
         Excel::download(
             'Watch List', function ($excel) use ($id) {

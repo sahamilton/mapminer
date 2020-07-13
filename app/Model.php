@@ -77,7 +77,7 @@ class Model extends \Eloquent
     {
         // Make sure we have a file
 
-            $file = Input::file('upload');
+            $file = Request::file('upload');
             // Make sure its a CSV file - test #1
             $mimes = ['application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c'];
         if (!in_array($file->getMimeType(), $mimes)) {
