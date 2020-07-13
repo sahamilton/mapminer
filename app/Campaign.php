@@ -280,9 +280,12 @@ class Campaign extends Model
      * 
      * @return [type]              [description]
      */
-    public function getSalesTeamFromManager($manager)
+    public function getSalesTeamFromManager($manager=null)
     {
-        
+        if (! $manager) {
+            $manager = auth()->user()->person->id;
+     
+        }
         return Person::whereId($manager)->firstOrFail()
             ->descendantsAndSelf()
      
