@@ -42,15 +42,18 @@ class UserTable extends Component
                 ->select('users.*', 'persons.firstname', 'persons.lastname')
                 ->join('persons', 'user_id', '=', 'users.id')
                 ->with('usage',  'serviceline', 'roles')
-                ->whereHas(
-                        'roles',function($q) {
-                            $q->when($this->selectRole, function ($q) {
-                                $q->where('roles.id', $this->selectRole);
-                            }
-                        );
-                    }
+                ->when($this->selectRole !='All', function ($q) {
+                        $q->whereHas(
+                            'roles',function($q) {
+                                $q->when($this->selectRole, function ($q) {
+                                    $q->where('roles.id', $this->selectRole);
+                                }
+                            );
+                        }
 
-                )
+                    );
+                })
+                
                 ->when(
                     $this->search, function ($q) {
                         $q->search($this->search);

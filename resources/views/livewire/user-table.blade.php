@@ -1,11 +1,16 @@
 <div>
-   
+    <div class="float-right">
+        <a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">        
+            <i class="fas fa-plus-circle " aria-hidden="true"></i>
+         Create
+        </a>
+    </div>
     <div class="row mb-4">
         @include('livewire.partials._perpage')
         <div class="col">
             <select name="selectRole"
                 wire:model="selectRole" class="form-control">
-                <option>All</option>
+                <option vallue='All'>All</option>
                 @foreach ($roles as $role)
                     <option value="{{$role->id}}" @if($selectRole==$role->id) selected @endif>
                         {{$role->display_name}}
@@ -50,7 +55,7 @@
             <th class="col-md-2">Service Lines</th>
             <th class="col-md-2">LastLogin</th>
             <th class="col-md-2">LastUpdate</th>
-           
+            <th class="col-md-2">Actions</th>
             </tr>
         </thead>
         <tbody>
