@@ -73,26 +73,8 @@ class CompaniesController extends BaseController
      */
     public function index()
     {
-        $filtered = $this->company->isFiltered(['companies'], ['vertical']);
-        $companies = $this->company;
-        if (! auth()->user()->hasRole(['admin'])) {
-            $myLocation =$this->locations->getMyPosition();
-            
-            $companies = $companies->whereHas(
-                'locations', function ($q) use ($myLocation) {
-                      $q->nearby($myLocation, 25);
-                }
-            );
-        } 
-        $companies = $companies->withCount('locations')
-            ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
-            ->get();
-
-        $locationFilter = 'both';
-        return response()->view(
-            'companies.index', 
-            compact('companies', 'title', 'filtered', 'locationFilter')
-        );
+        
+        return response()->view('companies.index');
     }
 
     /**

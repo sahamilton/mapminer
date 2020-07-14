@@ -713,6 +713,10 @@ class Company extends NodeModel
 
 
     }
+    public function scopeSearch($query, $search)
+    {
+        $query->where('companyname', 'like', "%{$search}%");
+    }
     public function scopeActivitiesTypeCount($query, $period)
     {
       return $query->with(['activities'=>function ($q) use ($period) {
