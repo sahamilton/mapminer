@@ -255,7 +255,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Address::class, 'location_user');
 
     }
-      
+    
+    public function scopeSearch($query, $search)
+    { 
+        
+        return  $query->where('users.email', 'like', "%{$search}%")
+                ->orWhere('firstname', 'like', "%{$search}%")
+                ->orWhere('lastname', 'like', "%{$search}%");
+     
+
+    }
 
     /**
      * [position description]

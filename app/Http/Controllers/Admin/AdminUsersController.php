@@ -118,20 +118,18 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-
+        $roles = Role::all();
         if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
             $serviceline = 'All';
             $title = 'People / User Management';
         } else {
-           
-            
             $title = $serviceline->ServiceLine ." users";
         }
-       
+     
         // Show the page
-        return response()->view('admin.users.index', compact('title', 'serviceline'));
+        return response()->view('admin.users.index', compact('title' , 'roles', 'serviceline'));
     }
 
     /**

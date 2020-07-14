@@ -1,7 +1,18 @@
 <div>
+   
     <div class="row mb-4">
         @include('livewire.partials._perpage')
-        
+        <div class="col">
+            <select name="selectRole"
+                wire:model="selectRole" class="form-control">
+                <option>All</option>
+                @foreach ($roles as $role)
+                    <option value="{{$role->id}}" @if($selectRole==$role->id) selected @endif>
+                        {{$role->display_name}}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
         <div class="col">
             <input wire:model="search" class="form-control" type="text" placeholder="Search users...">
@@ -30,16 +41,16 @@
             </th>
 
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('email')" role="button" href="#">
+                <a wire:click.prevent="sortBy('users.email')" role="button" href="#">
                     Email
-                    @include('includes._sort-icon', ['field' => 'email'])
+                    @include('includes._sort-icon', ['field' => 'users.email'])
                 </a>
             </th>
             <th class="col-md-2">Roles</th>
             <th class="col-md-2">Service Lines</th>
             <th class="col-md-2">LastLogin</th>
             <th class="col-md-2">LastUpdate</th>
-            <th class="col-md-2">Actions</th>
+           
             </tr>
         </thead>
         <tbody>
