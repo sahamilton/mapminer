@@ -96,9 +96,12 @@ class MgrDashboardController extends DashboardController
         }
         
         // get associated branches
-    
+        $managers = $this->manager->load('directReports')->directReports;
+        if(! $managers->count()){
+            return redirect()->route('dashboard');
+        }
         $this->myBranches = array_keys($this->_getBranches());
-        
+       
         if (count($this->myBranches) < 2) {
                     return $this->_checkBranches();
 
@@ -107,7 +110,7 @@ class MgrDashboardController extends DashboardController
             $data = $this->_getDashBoardData();
             
             $reports = \App\Report::publicReports()->get();
-            $managers = $this->manager->load('directReports')->directReports;
+            
             
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
         }
@@ -224,15 +227,19 @@ class MgrDashboardController extends DashboardController
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
     
-        $data['team']= $this->_myTeamsOpportunities($data['branches']);
-      
-        // this should go away and incorparte in charts
+        if (! $data['team']= $this->_myTeamsOpportunities($data['branches'])) {
+            
+            return false;
+
+        }
+     
+        // this should go away and incorporate in charts
         $data['chart'] = $this->_getChartData($data['branches']);
      
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
-    
+        
         return $data;
     }
     /**
@@ -286,7 +293,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _myTeamsOpportunities(Collection $branchdata)
     {
- 
+      
         $stats = ['leads',
                 'opportunities',
                 'Top25',
@@ -299,11 +306,16 @@ class MgrDashboardController extends DashboardController
         $data['me'] = $this->person->findOrFail($this->manager->id);
         // this might return branch managers with no branches!
         $data['team'] =  $this->person
-            ->where('reports_to', '=', $this->manager->id)
+            ->where(function ($q) {
+                $q->where('reports_to', $this->manager->id);
+                }
+            )
             ->with('branchesServiced')
             ->withRoles($teamroles) 
             ->get();
-       
+        if (! $data['team']->count()) {
+            return false;
+        }
         // get all branch managers
         $branchManagerRole = 9;
        

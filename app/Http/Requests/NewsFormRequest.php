@@ -11,7 +11,7 @@ class NewsFormRequest extends FormRequest
 
 
 
-        \Input::merge(['slug' => strtolower(str_replace(" ", "_", \Input::get('title')))]);
+        FormRequest::merge(['slug' => strtolower(str_replace(" ", "_", FormRequest::get('title')))]);
     }
 
     /**

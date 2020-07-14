@@ -32,8 +32,8 @@
 	<td>{{$location->street}}</td>
 	<td>{{$location->city}}</td>
 	<td>
-
-		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->state])}}"
+	
+		<a href= "{{route('company.state', ['company'=>$company->id,'state'=>$location->state])}}"
 		title="See all {{$location->state}} locations for {{$company->companyname}}">
 		{{$location->state}}</a>
 	</td>
