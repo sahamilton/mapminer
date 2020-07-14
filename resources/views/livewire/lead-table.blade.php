@@ -22,14 +22,7 @@
 
 
     <div class="row mb-4">
-        <div class="col form-inline">
-            Per Page: &nbsp;
-            <select wire:model="perPage" class="form-control">
-                <option>10</option>
-                <option>15</option>
-                <option>25</option>
-            </select>
-        </div>
+        @include('livewire.partials._perpage')
 
         <div class="col">
             <input wire:model="search" class="form-control" type="text" placeholder="Search leads...">

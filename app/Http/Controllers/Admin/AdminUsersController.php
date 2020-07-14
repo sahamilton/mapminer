@@ -122,30 +122,16 @@ class AdminUsersController extends BaseController
         if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
-                $serviceline = 'All';
-                $title = 'People / User Management';
+            $serviceline = 'All';
+            $title = 'People / User Management';
         } else {
            
             
             $title = $serviceline->ServiceLine ." users";
         }
-            
-        $users = $this->user
-            ->with('roles', 'usage', 'person', 'serviceline');
-           
-        /*if ($serviceline) {
-            $users = $users->whereHas(
-                'serviceline', function ($q) {
-                    $q->whereIn('serviceline_id', $this->userServiceLines);
-                }
-            );
-        }*/
-           
-          $users = $users->get();
-         
-
+       
         // Show the page
-        return response()->view('admin.users.index', compact('users', 'title', 'serviceline'));
+        return response()->view('admin.users.index', compact('title', 'serviceline'));
     }
 
     /**
