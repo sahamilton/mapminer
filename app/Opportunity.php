@@ -372,7 +372,9 @@ class Opportunity extends Model
         return  $query->whereIn('address_id', function ($q) use ($search) {
                     $q->select('id')
                     ->from('addresses')
-                    ->where('businessname', 'like', "%{$search}%");
+                    ->where('businessname', 'like', "%{$search}%")
+                    ->orWhere('street', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%");
                 }
             );
      
