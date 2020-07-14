@@ -1,7 +1,7 @@
 @php $statuses = ['open','closed - won','closed - lost']; @endphp
 
     @foreach ($opportunities as $opportunity)
-
+    
 
    
     <tr>
@@ -65,10 +65,10 @@
       </td>
           
       <td>
-        @if($opportunity->address->address->lastActivity)
+        @if($opportunity->lastActivity)
 
-        {{$opportunity->address->address->lastActivity->activity_date->format('Y-m-d')}}
-          @if($opportunity->address->address->lastActivity->activity_date->diff(now())->m > 1)
+        {{$opportunity->lastActivity->activity_date->format('Y-m-d')}}
+          @if($opportunity->lastActivity->activity_date->diff(now())->m > 1)
             <br /><i class="fas fa-exclamation-triangle text-danger" title="Stale Account!"></i>
           @endif
         

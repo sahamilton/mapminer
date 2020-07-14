@@ -40,15 +40,20 @@
                 <tr>
                     <th>Title</th>
                     <th>
-                        <a wire:click.prevent="sortBy('created_at')" role="button" href="#">
+                        <a wire:click.prevent="sortBy('opportunities.created_at')" role="button" href="#">
                         Date Opened
-                        @include('includes._sort-icon', ['field' => 'created_at'])
+                        @include('includes._sort-icon', ['field' => 'opportunities.created_at'])
                         </a>
                         
                     </th>
                     <th>Days Open</th>
                     <th>Status</th>
-                    <th>Business</th>
+                    <th>
+                        <a wire:click.prevent="sortBy('businessname')" role="button" href="#">
+                            Business
+                            @include('includes._sort-icon', ['field' => 'businessname'])
+                        </a>
+                    </th>
                     <th>Address</th>
                     <th>Top 25</th>
                     <th>Potential Headcount</th>

@@ -12,7 +12,7 @@ class OpportunityTable extends Component
     use WithPagination;
 
     public $perPage = 10;
-    public $sortField = 'created_at';
+    public $sortField = 'opportunities.created_at';
     public $sortAsc = true;
     public $search = '';
     public $branch_id;
@@ -43,15 +43,11 @@ class OpportunityTable extends Component
     
         return view('livewire.opportunity-table', [
             'opportunities' => Opportunity::query()
-                ->where('branch_id', $this->branch_id)
+                ->select('opportunities.*','businessname')
+                ->where('branch_id', $this->branch->id)
                 ->where('closed', $this->filter)
-                ->with(
-                    [
-                        'address.address'=>function ($query) {
-                            $query->withLastActivityId();
-                        },'address.address.lastActivity'
-                    ]
-                )
+                ->join('addresses', 'addresses.id', '=', 'opportunities.address_id')
+                ->withLastactivity()   
                
                 ->when(
                     $this->search, function ($q) {
@@ -66,3 +62,20 @@ class OpportunityTable extends Component
         );
     }
 }
+
+/*
+return view('livewire.invoice-table', [
+        
+                'invoices' => Invoice::query()->select('invoices.*')
+                ->join('clients', 'clients.id', '=', 'invoices.client_id')
+                ->when(
+                    $this->client, function ($q) {
+                        $q->where('client_id', $this->client);
+                    }
+                )
+                ->summary()
+                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                ->paginate($this->perPage),
+
+                ]
+ */
