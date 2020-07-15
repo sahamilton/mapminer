@@ -242,16 +242,36 @@ class ReportsController extends Controller {
             }
             
             $export = "\App\Exports\\". $report->export;
-            
+            switch ($report->object) {
+                case 'Company':
 
-                //dd($export, $report->job, $report);
-                //return (new InvoicesExport)->download('invoices.xlsx');
-                //
-                return Excel::download(new \App\Exports\DailyBranchExport($period, $myBranches), $report->job . '.csv');
+                    $company = $this->company->findOrFail(request('company'));
+                    return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+                    break;
 
+                case 'Role':
+                   
+                    return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
+                    break;
 
+                case 'User':
+                    
+                    return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
+                    break;
+
+                case 'Campaign':
+
+                    return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
+                    break;
+
+                default:
+        
+                    return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
+                    break;
+
+            } 
             
-            
+          
         } else {
             return redirect()->route('welcome');
         }
