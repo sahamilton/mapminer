@@ -197,11 +197,11 @@ class OpportunityController extends BaseController
         $myBranches = $this->person->myBranches($person);
 
         if (count($myBranches) == 1 ) {
-            
+            $branch = $this->branch->findOrFail(array_keys($myBranches)[0]);
             $data = $this->_getBranchData([session('branch')]);
             return response()->view(
                 'opportunities.index', 
-                compact('data', 'activityTypes', 'myBranches', 'period')
+                compact('data', 'myBranches', 'branch')
             );
 
         } else {
@@ -211,7 +211,7 @@ class OpportunityController extends BaseController
             $managers = $person->load('directReports')->directReports;
             return response()->view(
                 'opportunities.summary', 
-                compact('data', 'activityTypes', 'myBranches', 'person', 'managers')
+                compact('data',  'myBranches', 'person', 'managers')
             );
         }
     }
