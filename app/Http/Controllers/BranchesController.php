@@ -271,7 +271,7 @@ class BranchesController extends BaseController {
 
         return response()->view(
             'branches.show', 
-            compact('data', 'servicelines', 'filtered', 'roles')
+            compact('data', 'servicelines', 'roles')
         );
     }
     /**
@@ -477,8 +477,8 @@ class BranchesController extends BaseController {
         //$filtered = $this->location->isFiltered(['companies'],['vertical']);
         $roles = \App\Role::pluck('display_name', 'id');
         $mywatchlist= [];
-        //$locations = NULL;
-        $data['branch'] = $branch->load('manager');
+        $data['branch'] = $branch->load('manager.reportsTo','manager.userdetails');
+    
         $data['title']='National Accounts';
         $servicelines = Serviceline::all();
         $locations  = $this->address->nearby($branch, 25)->with('company')->get();
@@ -493,7 +493,7 @@ class BranchesController extends BaseController {
 
         return response()->view(
             'branches.showlist', 
-            compact('data', 'locations', 'mywatchlist', 'filtered', 'roles', 'servicelines')
+            compact('data', 'locations', 'mywatchlist',  'roles', 'servicelines')
         );
 
     }

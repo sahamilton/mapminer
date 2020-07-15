@@ -35,13 +35,13 @@ $data['fulladdress'] = $data['branch']->fullAddress();
 </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-    <div id="locations" class="tab-pane show active">
-     @include('branches.partials._tablocations')
-    </div>
-    <div id="team" class="tab-pane fade">
+  <div id="locations" class="tab-pane show active">
+    @include('branches.partials._tablocations')
+  </div>
+  <div id="team" class="tab-pane fade">
  		@include('branches.partials._tabteam')
  	</div>
- </div>
+</div>
 
 
 @include('partials/_scripts')
