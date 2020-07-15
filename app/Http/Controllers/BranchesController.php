@@ -473,27 +473,11 @@ class BranchesController extends BaseController {
      * @return [type]         [description]
      */
     public function listNearbyLocations(Branch $branch)
-    {
-        //$filtered = $this->location->isFiltered(['companies'],['vertical']);
-        $roles = \App\Role::pluck('display_name', 'id');
-        $mywatchlist= [];
-        $data['branch'] = $branch->load('manager.reportsTo','manager.userdetails');
-    
-        $data['title']='National Accounts';
-        $servicelines = Serviceline::all();
-        $locations  = $this->address->nearby($branch, 25)->with('company')->get();
-
-        $watchlist = User::where('id', '=', auth()->user()->id)
-            ->with('watching')->get();
-        foreach ($watchlist as $watching) {
-            foreach ($watching->watching as $watched) {
-                $mywatchlist[]=$watched->id;
-            }
-        }
-
+    {        
+        $branch->load('manager.reportsTo','manager.userdetails');
         return response()->view(
             'branches.showlist', 
-            compact('data', 'locations', 'mywatchlist',  'roles', 'servicelines')
+            compact('branch')
         );
 
     }

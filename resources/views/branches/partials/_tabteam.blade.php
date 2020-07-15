@@ -1,6 +1,6 @@
 <h4>Branch Team</h4>
 
-        @foreach ($data['branch']->manager as $people)
+        @foreach ($branch->manager as $people)
 
             <p>
                 <strong>
@@ -51,7 +51,7 @@
           
         @endforeach
         <h4>Servicelines</h4>
-        @foreach($data['branch']->servicelines as $serviceline)
+        @foreach($branch->servicelines as $serviceline)
             <li>{{$serviceline->ServiceLine}}</li>
 
         @endforeach
