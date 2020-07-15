@@ -704,7 +704,7 @@ class BranchesController extends BaseController {
         $allstates = $this->branch->allStates();
         return response()->view(
             'branches.state', 
-            compact('branches', 'state', 'fields', 'allstates')
+            compact('branches', 'state', 'allstates')
         );
         
     }

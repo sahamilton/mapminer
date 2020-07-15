@@ -198,10 +198,11 @@ class OpportunityController extends BaseController
 
         if (count($myBranches) == 1 ) {
             $branch = $this->branch->findOrFail(array_keys($myBranches)[0]);
+            $activityTypes = ActivityType::all(); 
             $data = $this->_getBranchData([session('branch')]);
             return response()->view(
                 'opportunities.index', 
-                compact('data', 'myBranches', 'branch')
+                compact('data', 'myBranches', 'branch', 'activityTypes')
             );
 
         } else {

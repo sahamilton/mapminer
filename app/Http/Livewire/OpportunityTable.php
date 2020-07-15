@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\Opportunity;
 use App\Branch;
+use App\ActivityType;
 use App\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,6 +21,7 @@ class OpportunityTable extends Component
     public $filter = 0;
     public $myBranches;
 
+
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -32,7 +34,7 @@ class OpportunityTable extends Component
     }
     public function mount($branch)
     {
-       
+        
         $this->branch_id = $branch->id;
         $this->period = session('period');
         $person = new Person();
@@ -45,7 +47,7 @@ class OpportunityTable extends Component
             [
                 'opportunities' => Opportunity::query()
                     ->select('opportunities.*','businessname')
-                    ->where('branch_id', $this->branch->id)
+                    ->where('branch_id', $this->branch_id)
                     ->where('closed', $this->filter)
                     ->join('addresses', 'addresses.id', '=', 'opportunities.address_id')
                     ->withLastactivity()
@@ -58,6 +60,7 @@ class OpportunityTable extends Component
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                 'branch'=>Branch::query()->findOrFail($this->branch_id),
+                
             ]
         );
     }
