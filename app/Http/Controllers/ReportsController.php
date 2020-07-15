@@ -242,15 +242,7 @@ class ReportsController extends Controller {
             }
             
             $export = "\App\Exports\\". $report->export;
-            
-
-                //dd($export, $report->job, $report);
-                //return (new InvoicesExport)->download('invoices.xlsx');
-                //
-                return Excel::download(new \App\Exports\DailyBranchExport($period, $myBranches), $report->job . '.csv');
-
-
-            
+            return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
             
         } else {
             return redirect()->route('welcome');
