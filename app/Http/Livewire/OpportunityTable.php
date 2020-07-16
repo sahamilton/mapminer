@@ -13,7 +13,7 @@ class OpportunityTable extends Component
     public $perPage = 10;
     public $sortField = 'opportunities.created_at';
     public $sortAsc = true;
-    public $search = '';
+    public $search ='';
     public $branch;
     public $period;
     public $filter = 0;
