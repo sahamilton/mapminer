@@ -172,6 +172,16 @@ class Activity extends Model
         return $query->whereIn('branch_id', $mybranches);
     }
     /**
+     * [scopeSearch description]
+     * @param  [type] $query  [description]
+     * @param  [type] $search [description]
+     * @return [type]         [description]
+     */
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('businessname', 'like', "%{$search}%");
+    }
+    /**
      * [relatedContact description]
      * 
      * @return [type] [description]

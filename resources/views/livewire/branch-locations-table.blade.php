@@ -12,6 +12,7 @@
     <tbody>
         @include('branches.partials._branchlocations')
     </tbody>
+</table>
     <div class="row">
             <div class="col">
                 {{ $addresses->links() }}

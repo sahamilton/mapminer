@@ -66,13 +66,13 @@ class ActivityController extends Controller
         }
     
       
-        $data = $this->_getBranchActivities($branch);
-        $activities = $data['activities'];
-        $title= $data['branches']->first()->branchname . " activities";
-
+        //$data = $this->_getBranchActivities($branch);
+        
+        
+      
         return response()->view(
-            'activities.index', 
-            compact('activities', 'data', 'title', 'myBranches')
+            'activities.newindex', 
+            compact('branch', 'myBranches')
         );
        
     }
