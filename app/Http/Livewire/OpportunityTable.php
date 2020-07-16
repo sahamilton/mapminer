@@ -17,8 +17,12 @@ class OpportunityTable extends Component
     public $branch;
     public $period;
     public $filter = 0;
- 
+    public $myBranches;
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
