@@ -214,9 +214,8 @@
     </div>
 
   </div>
-
-@include('addresses.partials._addresscampaignmodal')
 @include('partials._modal')
+@include('addresses.partials._addresscampaignmodal')
 @include('opportunities.partials._closemodal')
 @include('addresses.partials._reassignlead')
 @include('addresses.partials._rateaddressform')
