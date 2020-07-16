@@ -24,9 +24,9 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
         'newbranchleads'=>'# New Leads Created',
-        'proposals'=>'# Completed Proposals',
-        'salesappts'=>'# Completed Sales Appts',
-        'sitevisits'=>'# Completed Site Visits'
+        'proposal'=>'# Completed Proposals',
+        'sales_appointment'=>'# Completed Sales Appts',
+        'site_visit'=>'# Completed Site Visits'
 
         
     ];
@@ -100,6 +100,7 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
     {
        
         return Branch::summaryStats($this->period)
+        ->summaryActivities($this->period)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {
