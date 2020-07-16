@@ -126,10 +126,6 @@ class AddressController extends BaseController
         $notes = $this->notes->locationNotes($location->id)->get();
         //if ($myBranches) {
         $owned = $this->_checkIfOwned($address, $myBranches);
-        //} else {
-        //    $owned = false;
-        //}
-       
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
         $campaigns = Campaign::currentOpen($myBranches)->select('id', 'title')->get();
    
@@ -415,7 +411,7 @@ class AddressController extends BaseController
         $ownedBy = $address->assignedToBranch->whereIn('id', $myBranches);
         
         if (! $ownedBy->count()) {
-            return null;
+            return false;
         }
         // find out if the lead is offered or owned
         $owner = $ownedBy->filter(
@@ -425,7 +421,7 @@ class AddressController extends BaseController
         );
         
         if (! $owner) {
-            return null;
+            return false;
         }
         return true;
     }

@@ -1,4 +1,4 @@
-  @if($owned && $owned ==2)
+  @if($owned)
  <div class="float-right">
     <a class="btn btn-info" 
         title="Add Activity"
@@ -21,8 +21,9 @@
     <th>Contact</th>
     <th>Notes</th>
     <th>Completed</th>
+    @if($owned)
     <th>Actions</th>
-
+    @endif
     </thead>
     <tbody>
          @foreach($location->activities as $activity)
@@ -47,6 +48,7 @@
                 </td>
                 <td>{{$activity->note}}</td>
                 <td>{{$activity->completed ? 'Completed' : ''}}</td>
+                @if($owned)
                 <td>
                     <div class="btn-group">
                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -88,6 +90,7 @@
                         </ul>
                     </div>
                 </td>
+                @endif
             </tr>
            @endforeach
 
