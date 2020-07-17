@@ -1,8 +1,8 @@
 <div>
     <div class="row mb-4">
             @include('livewire.partials._perpage')
-             <div class="col">
-                Filter by Type:
+             <div class="col form-inline">
+                Type:
                 <select wire:model="accounttype" 
                 class="form-control">
                     <option>All</options>
