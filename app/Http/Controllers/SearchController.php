@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Person;
+use App\Branch;
 use App\Role;
 use App\Company;
 use App\Address;
