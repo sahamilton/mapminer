@@ -148,10 +148,11 @@ class DashboardController extends Controller
             "lost_value",
             "won_value",
         ];
+        $activityFields = ['sales_appointment'];
         return $this->branch->select('id', 'branchname')
             ->SummaryLeadStats($this->period, $leadFields)
             ->SummaryOpportunities($this->period, $opportunityFields)
-            ->SummaryActivities($this->period)
+            ->SummaryActivities($this->period, $activityFields)
             ->with('manager', 'manager.reportsTo')
             ->whereIn('id', $this->myBranches)
             ->get(); 
