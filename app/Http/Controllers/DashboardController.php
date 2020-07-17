@@ -148,7 +148,15 @@ class DashboardController extends Controller
             "lost_value",
             "won_value",
         ];
-        $activityFields = ['sales_appointment'];
+        $activityFields = [
+            'sales_appointment',
+            'stop_by',
+            'proposal',
+            'site_visit',
+            'log_a_call',
+            'in_person',
+
+        ];
         return $this->branch->select('id', 'branchname')
             ->SummaryLeadStats($this->period, $leadFields)
             ->SummaryOpportunities($this->period, $opportunityFields)
