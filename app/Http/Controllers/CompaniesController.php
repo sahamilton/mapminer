@@ -91,7 +91,7 @@ class CompaniesController extends BaseController
         $locationFilter = 'both';
         return response()->view(
             'companies.index', 
-            compact('companies', 'title', 'filtered', 'locationFilter')
+            compact('companies', 'filtered', 'locationFilter')
         );
     }
 

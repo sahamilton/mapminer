@@ -78,18 +78,17 @@ class SearchController extends Controller
 
         $branches = auth()->user()->person->myBranches();
 
-        return Address::whereHas(
-            'assignedToBranch', function ($q) use ($branches) {
-                $q->whereIn('branch_id', array_keys($branches));
-            }
-        )
-        ->search(request('q'))
-        ->get();
+        return Address::query()
+            ->join('AddressBranch', 'address_id','=','address.id')
+            ->where('branch_id',array_keys($branches))
+            ->search(request('q'))
+            ->get();
     }
 
     public function leads()
     {
-        
-        return response()->view('search.leads');
+        $branches = array_keys(auth()->user()->person->myBranches());
+        $branch = Branch::findOrFail($branches[0]);
+        return response()->view('search.leads', compact('branch'));
     }
 }

@@ -4,7 +4,7 @@
 <div class="container">
 <h2>Search My Leads</h2>
 
-    @livewire('lead-table')
+    @livewire('lead-table', ['branch'=>$branch->id]);
 
 </h2>
 
