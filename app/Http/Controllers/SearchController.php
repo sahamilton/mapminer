@@ -81,6 +81,7 @@ class SearchController extends Controller
 
         return Address::query()
             ->join('address_branch', 'address_id','=','addresses.id')
+            ->select('addresses.id','businessname', 'city')
             ->where('branch_id',array_keys($branches))
             ->search(request('q'))
             ->get();
