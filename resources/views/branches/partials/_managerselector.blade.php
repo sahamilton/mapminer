@@ -3,7 +3,7 @@
 
 	class="inline"
 	 method="post" 
-	 action="{{route('dashboard.select')}}" >
+	 action="{{route('dashboard.setManager')}}" >
 	@csrf
 		<div class="form-group row col-sm-8 inline align-middle">
 			<div class="input-group-prepend">
