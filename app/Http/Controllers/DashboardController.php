@@ -41,7 +41,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        
+        dd(session()->all());
         if(! session('manager')) {
             session(['manager'=>auth()->user()->id]);
         }

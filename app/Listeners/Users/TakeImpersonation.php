@@ -6,10 +6,8 @@ use App\Events\TakeImpersonation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-
 class TakeImpersonation
 {
- 
     /**
      * Create the event listener.
      *
@@ -17,7 +15,7 @@ class TakeImpersonation
      */
     public function __construct()
     {
-        
+        //
     }
 
     /**
@@ -28,7 +26,6 @@ class TakeImpersonation
      */
     public function handle(TakeImpersonation $event)
     {
-        
         session()->forget(['manager','branch']);
     }
 }

@@ -6,18 +6,16 @@ use App\Events\LeaveImpersonation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-
 class LeaveImpersonation
 {
-    
     /**
-     * Create a new event instance.
+     * Create the event listener.
      *
      * @return void
      */
     public function __construct()
     {
-        
+        //
     }
 
     /**
@@ -28,7 +26,6 @@ class LeaveImpersonation
      */
     public function handle(LeaveImpersonation $event)
     {
-        
         session()->forget(['manager','branch']);
     }
 }
