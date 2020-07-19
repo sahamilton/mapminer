@@ -41,8 +41,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $myTeam = auth()->user()->person->myTeam()->get()->pluck('user_id')->toArray();
         
-        if(! session('manager')) {
+        if(! session('manager') or ! in_array(session('manager'), $myTeam)) {
             session(['manager'=>auth()->user()->id]);
         }
         
@@ -172,7 +173,7 @@ class DashboardController extends Controller
         $manager = $this->person->findOrFail(request('manager'));
 
         session(['manager'=>$manager->user_id]);
-   
+       
         return redirect()->route('dashboard.index');
     }
 
