@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Person;
+use App\Branch;
 use App\Role;
 use App\Company;
 use App\Address;
@@ -78,18 +79,18 @@ class SearchController extends Controller
 
         $branches = auth()->user()->person->myBranches();
 
-        return Address::whereHas(
-            'assignedToBranch', function ($q) use ($branches) {
-                $q->whereIn('branch_id', array_keys($branches));
-            }
-        )
-        ->search(request('q'))
-        ->get();
+        return Address::query()
+            ->join('address_branch', 'address_id','=','addresses.id')
+            ->select('addresses.id','businessname', 'city')
+            ->where('branch_id',array_keys($branches))
+            ->search(request('q'))
+            ->get();
     }
 
     public function leads()
     {
-        
-        return response()->view('search.leads');
+        $branches = array_keys(auth()->user()->person->myBranches());
+        $branch = Branch::findOrFail($branches[0]);
+        return response()->view('search.leads', compact('branch'));
     }
 }

@@ -61,12 +61,6 @@ class DailyBranchDetail implements ShouldQueue
     public function handle()
     {
 
-        // send this to a queued job
-               
-        /*(new InvoicesExport)->queue('invoices.xlsx')->chain([
-            new NotifyUserOfCompletedExport(request()->user()),
-        ]);
-        */
         
         (new DailyBranch($this->period, $this->branches))
             ->store($this->file);

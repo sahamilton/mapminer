@@ -1256,21 +1256,28 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryActivities($query, $period)
+    public function scopeSummaryActivities($query, $period, $fields = null)
     {
         $this->period = $period;
+        if (! $fields) {
+            $fields = $this->activityFields;
+        }
+        $this->fields = $fields;
         foreach ($this->activityFields as $key=>$field) {
             $label = str_replace(" ", "_",strtolower($field));
-            $query->withCount(
-                [
-                    'activities as '.$label=>function ($query) use($key) {
-                        $query->whereBetween(
-                            'activity_date', [$this->period['from'],$this->period['to']]
-                        )->where('completed', 1)
-                        ->where('activitytype_id', $key);
-                    }
-                ]
-            );
+            if(in_array($label, $this->fields)) {
+                $label = str_replace(" ", "_",strtolower($field));
+                $query->withCount(
+                    [
+                        'activities as '.$label=>function ($query) use($key) {
+                            $query->whereBetween(
+                                'activity_date', [$this->period['from'],$this->period['to']]
+                            )->where('completed', 1)
+                            ->where('activitytype_id', $key);
+                        }
+                    ]
+                ); 
+            }
         }
         $query->withCount(
                 [
@@ -1316,6 +1323,19 @@ class Branch extends Model implements HasPresenter
                                                 );
                                         }
                                     )->where('address_branch.status_id',2);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('newbranchleads', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'leads as newbranchleads'=>function ($query) {
+                                $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
+                                    ->where('lead_source_id', 4);
+                                        
                             }
                         ]
                     );

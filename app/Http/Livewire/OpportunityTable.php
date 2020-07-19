@@ -3,8 +3,6 @@
 namespace App\Http\Livewire;
 use App\Opportunity;
 use App\Branch;
-use App\ActivityType;
-use App\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -22,6 +20,10 @@ class OpportunityTable extends Component
     public $myBranches;
 
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     public function sortBy($field)
     {
         if ($this->sortField === $field) {

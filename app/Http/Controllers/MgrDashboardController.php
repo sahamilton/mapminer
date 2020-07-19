@@ -83,16 +83,21 @@ class MgrDashboardController extends DashboardController
      */
     public function index()
     {
-       
+        
         request()->session()->forget('branch');
 
-        if (! $this->period) {
+        if (! $this->period && ! session('period')) {
             $this->period = $this->activity->getPeriod();
         }
+        if (! session('manager')) {
+            session(['manager'=>auth()->user()->id]);
+        }
+        
+        $this->period = session('period');
         if (auth()->user()->hasRole(['admin'])) {
             $this->manager = $this->salesorg->getCapoDiCapo();
         } else {
-            $this->manager = $this->person->where('user_id', '=', auth()->user()->id)->firstOrFail();
+            $this->manager = $this->person->where('user_id', '=', session('manager'))->firstOrFail();
         }
         
         // get associated branches
@@ -115,6 +120,8 @@ class MgrDashboardController extends DashboardController
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
         }
     }
+
+   
     /**
      * [_checkBranches description]
      * 
@@ -133,20 +140,7 @@ class MgrDashboardController extends DashboardController
         }
         
     }
-    /**
-     * [setPeriod description]
-     * 
-     * @param Request $request [description]
-     *
-     * @return redirect [<description>]
-     */
-    public function setPeriod(Request $request)
-    {
-      
-        $this->period = $this->activity->setPeriod(request('period'));
-
-        return redirect()->route('newdashboard.index');
-    }
+    
     /**
      * [selectBranch description]
      * 
@@ -213,6 +207,13 @@ class MgrDashboardController extends DashboardController
 
         return $this->_displayDashboard($data);
     }
+
+    public function reset()
+    {
+        
+        session()->forget('manager');
+        return redirect()->route('dashboard.index');
+    }
     
     /**
      * [_getDashBoardData description]
@@ -221,7 +222,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _getDashBoardData()
     {
-        $myBranches = $this->myBranches;
+        
 
         
         $data['period'] = $this->period;
@@ -256,7 +257,7 @@ class MgrDashboardController extends DashboardController
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team']['me']->directReports()->get();
             
-            return response()->view('opportunities.mgrindex', compact('data', 'myBranches', 'reports', 'managers'));
+            return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
           
         } else {
 
@@ -272,14 +273,14 @@ class MgrDashboardController extends DashboardController
      */
     private function _getBranches()
     {
-      
+        
         if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')) {
        
             return $this->branch->all()->pluck('branchname', 'id')->toArray();
         
         } else {
       
-             return $this->person->myBranches();
+             return $this->manager->myBranches($this->manager);
         }
     }
     

@@ -19,15 +19,12 @@ class='table table-striped table-bordered table-condensed table-hover'>
       
           <tr>
             <td>
-              <a href="{{route('dashboard.show',$branch->id)}}">{{$branch->branchname}}</a>
+              <a href="{{route('branchdashboard.show',$branch->id)}}">{{$branch->branchname}}</a>
             </td>
             
             <td>
               @foreach ($branch->manager as $manager)
-                <li>
-                  <a href="{{route('manager.dashboard',$manager->id)}}">{{$manager->fullName()}}
-                  </a>
-                </li>
+                <li>{{$manager->fullName()}}</li>
               @endforeach
             </td>
              <td align="center">

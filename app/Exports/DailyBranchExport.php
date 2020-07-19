@@ -24,12 +24,20 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
         'branchname'=>'Branch',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
-        'newbranchleads'=>'# New Leads Created',
-        'proposals'=>'# Completed Proposals',
-        'salesappts'=>'# Completed Sales Appts',
-        'sitevisits'=>'# Completed Site Visits'
-
         
+    ];
+    public $allFields;
+    public $leadFields = [
+
+        'newbranchleads'=>'# New Leads Created',
+
+    ];
+
+    public $activityFields  =  [
+        'proposals'=>'# Completed Proposals',
+        'sales_appointment'=>'# Completed Sales Appts',
+        'site_visit'=>'# Completed Site Visits'
+
     ];
 
     /**
@@ -43,6 +51,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
        
         $this->period = $period;
         $this->branches = $branches;
+        $this->allFields = array_merge($this->fields, $this->leadFields,$this->activityFields);
 
 
        
@@ -50,12 +59,14 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
         
     public function headings(): array
     {
+        
+
         return [
             [' '],
             ['Branch Stats'],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
             [' ' ],
-            $this->fields
+            $this->allFields
         ];
     }
     
@@ -63,7 +74,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     public function map($branch): array
     {
         
-        foreach ($this->fields as $key=>$field) {
+        foreach ($this->allFields as $key=>$field) {
             switch ($key) {
             
             case 'branchname':
@@ -100,7 +111,8 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     public function query()
     {
       
-        return Branch::query()->summaryStats($this->period)
+        return Branch::query()->summaryStats($this->period, array_keys($this->leadFields))
+            ->summaryActivities($this->period, array_keys($this->activityFields))
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {

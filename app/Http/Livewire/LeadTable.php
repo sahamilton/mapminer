@@ -19,7 +19,10 @@ class LeadTable extends Component
     public $myBranches;
 
  
-
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     public function sortBy($field)
     {
         if ($this->sortField === $field) {

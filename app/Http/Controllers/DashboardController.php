@@ -6,6 +6,7 @@ use App\Dashboard;
 use App\Person;
 use App\Branch;
 use App\Role;
+use App\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -13,6 +14,7 @@ class DashboardController extends Controller
     public $dashboard;
     public $person;
     public $branch;
+    public $user;
 
     /**
      * [__construct description]
@@ -21,11 +23,16 @@ class DashboardController extends Controller
      * @param Person    $person    [description]
      * @param Branch    $branch    [description]
      */
-    public function __construct(Dashboard $dashboard,Person $person,Branch $branch)
+    public function __construct(
+        Dashboard $dashboard,
+        Person $person,
+        Branch $branch,
+        User $user)
     {
         $this->dashboard = $dashboard;
         $this->person = $person;
         $this->branch = $branch;
+        $this->user = $user;
     }
     /**
      * Display a listing of the resource.
@@ -35,9 +42,12 @@ class DashboardController extends Controller
     public function index()
     {
         
-        $myRoles = auth()->user()->roles->pluck('name')->toArray();
-       
-
+        if(! session('manager')) {
+            session(['manager'=>auth()->user()->id]);
+        }
+        
+        $myRoles = $this->user->findOrFail(session('manager'))->roles->pluck('name')->toArray();
+        
         switch ($myRoles[0]) {
 
         case 'national_account_manager':
@@ -72,7 +82,7 @@ class DashboardController extends Controller
     public function select(Request $request)
     {
         $manager = $this->person->with('userdetails.roles')->findOrFail(request('manager'));
-        
+        session(['manager'=>$manager->user_id]);
         $role =  $manager->userdetails->roles->pluck('name')->toArray();
         
         switch ($role[0]) {
@@ -92,6 +102,7 @@ class DashboardController extends Controller
             break;
 
         default:
+
             return redirect()->route('mgrdashboard.index');
             break;
 
@@ -128,6 +139,37 @@ class DashboardController extends Controller
     }
 
     /**
+     * [setPeriod description]
+     * 
+     * @param Request $request [description]
+     *
+     * @return redirect [<description>]
+     */
+    public function setPeriod(Request $request)
+    {
+      
+        $this->period = $this->person->setPeriod(request('period'));
+
+        return redirect()->route('dashboard.index');
+    }
+
+    /**
+     * [setManager description]
+     * 
+     * @param Request $request [description]
+     *
+     * @return redirect [<description>]
+     */
+    public function setManager(Request $request)
+    {
+        $manager = $this->person->findOrFail(request('manager'));
+
+        session(['manager'=>$manager->user_id]);
+   
+        return redirect()->route('dashboard.index');
+    }
+
+    /**
      * [_getSummaryBranchData description]
      * 
      * @return [type]           [description]
@@ -148,10 +190,20 @@ class DashboardController extends Controller
             "lost_value",
             "won_value",
         ];
+        $activityFields = [
+            'sales_appointment',
+            'stop_by',
+            'proposal',
+            'site_visit',
+            'log_a_call',
+            'in_person',
+
+        ];
+
         return $this->branch->select('id', 'branchname')
             ->SummaryLeadStats($this->period, $leadFields)
             ->SummaryOpportunities($this->period, $opportunityFields)
-            ->SummaryActivities($this->period)
+            ->SummaryActivities($this->period, $activityFields)
             ->with('manager', 'manager.reportsTo')
             ->whereIn('id', $this->myBranches)
             ->get(); 

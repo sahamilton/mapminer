@@ -79,18 +79,20 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
-        
+
         if (session()->has('impersonated_by')) {
             session()->forget('branch');
         }
-       
+        
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
-
+        if(! session('manager')) {
+            session(['manager'=>auth()->user()->id]);
+        }
         $this->manager = $this->person
-            ->where('user_id', '=', auth()->user()->id)->first();
-        
+            ->where('user_id', '=', session('manager'))->first();
+    
         if (session('branch')) {
             
             $branch = session('branch');
@@ -99,7 +101,7 @@ class BranchDashboardController extends DashboardController
         } else {
            
             $this->myBranches = $this->_getBranches();
-            
+      
             if (count($this->myBranches) > 0) {
                 $branch = array_keys($this->myBranches);
 
@@ -186,7 +188,7 @@ class BranchDashboardController extends DashboardController
 
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-        
+    
         return response()->view('branches.dashboard', compact('data', 'branch'));
 
     }
@@ -246,7 +248,7 @@ class BranchDashboardController extends DashboardController
             return $this->person->myBranches($manager);
         } else {
             
-             return  $this->person->myBranches();
+              return $this->manager->myBranches($this->manager);
         }
     }
     
