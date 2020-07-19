@@ -208,12 +208,7 @@ class MgrDashboardController extends DashboardController
         return $this->_displayDashboard($data);
     }
 
-    public function reset()
-    {
-        
-        session()->forget('manager');
-        return redirect()->route('dashboard.index');
-    }
+    
     
     /**
      * [_getDashBoardData description]
