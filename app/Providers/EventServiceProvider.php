@@ -20,11 +20,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\FeedbackEvent' => [
             'App\Listeners\FeedbackListener',
         ],
-        'App\Events\TakeImpersonation'=>[
-            'App\Listeners\Users\TakeImpersonation',
+        '\Lab404\Impersonate\Events\TakeImpersonation'=>[
+            'App\Listeners\TakeImpersonationListener',
         ],
-        'App\Events\LeaveImpersonation'=>[
-            'App\Listeners\Users\LeaveImpersonation',
+        '\Lab404\Impersonate\Events\LeaveImpersonation'=>[
+            'App\Listeners\LeaveImpersonationListener',
         ],
         
     ];

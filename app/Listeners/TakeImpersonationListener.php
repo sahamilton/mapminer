@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Listeners\Users;
+namespace App\Listeners;
 
-use App\Events\LeaveImpersonation;
+use \Lab404\Impersonate\Events\LeaveImpersonation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-
-class LeaveImpersonation
+use Illuminate\Support\Facades\Log;
+class TakeImpersonationListener
 {
     /**
      * Create the event listener.
@@ -21,11 +21,11 @@ class LeaveImpersonation
     /**
      * Handle the event.
      *
-     * @param  LeaveImpersonation  $event
+     * @param  TakeImpersonate  $event
      * @return void
      */
     public function handle(LeaveImpersonation $event)
     {
-        session()->forget(['manager','branch']);
+        Log::($event->impersonator->email ." is impersonating " . $event->impersonated->email . " @ " . now());
     }
 }
