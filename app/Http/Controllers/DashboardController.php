@@ -113,7 +113,7 @@ class DashboardController extends Controller
     public function reset()
     {
         
-        session()->forget(['manager','branch']);
+        session()->forget(['manager','branch', 'period']);
         return redirect()->route('dashboard.index');
     }
     /**
