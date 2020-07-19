@@ -109,6 +109,13 @@ class DashboardController extends Controller
         }
         
     }
+
+    public function reset()
+    {
+        
+        session()->forget(['manager','branch']);
+        return redirect()->route('dashboard.index');
+    }
     /**
      * [select description]
      * 

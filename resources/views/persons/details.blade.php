@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 <div class="container">
-	{{dd(session()->all())}}
+
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$person->fullName()}}</strong></h2>
