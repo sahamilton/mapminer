@@ -6,7 +6,7 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
 
-class Branch extends Model implements HasPresenter
+class Branch extends Model 
 {
     use GeoCode, PeriodSelector, \Awobaz\Compoships\Compoships;
     public $table ='branches';
@@ -969,7 +969,12 @@ class Branch extends Model implements HasPresenter
         }
         return $data;
     }
-
+    public function scopeSearch($query, string $search)
+    {
+         return $query->where('branchname', 'like', "%{$search}%")
+            ->orWhere('street', 'like', "%{$search}%")
+            ->orWhere('city', 'like', "%{$search}%");
+    }
     public function scopeSummaryOpportunities($query, array $period, array $fields=null)
     {
         $this->period = $period;

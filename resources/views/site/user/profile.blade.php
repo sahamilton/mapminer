@@ -13,6 +13,7 @@
 			@include('persons.partials._avatar')
 		</div>
 		@if (session()->has('impersonated_by'))
+		<p><a href="{{route('dashboard.reset')}}">Reset Sessions</a></p>
 			<a href="{{route('impersonate.leave')}}" 
 			class="btn btn-success">
 				Return to original user

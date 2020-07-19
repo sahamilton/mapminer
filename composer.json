@@ -29,7 +29,7 @@
         "dompdf/dompdf": "~0.6.1",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "nicolaslopezj/searchable": "1.*",
-        "mccool/laravel-auto-presenter": "^7.0",
+        "mccool/laravel-auto-presenter": "^7.4",
         "askedio/laravel-soft-cascade": "^6.0",
         "fideloper/proxy": "^4.0",
         "jjaffeux/postmark-inbound-php": "^3.0",

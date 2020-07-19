@@ -67,29 +67,7 @@ class BranchesController extends BaseController {
 
             
     }
-    /**
-     * [testmorph description]
-     * 
-     * @return [type] [description]
-     */
-    public function testmorph()
-    {
-        $branches = Branch::with(
-            'region', 'manager', 'relatedPeople', 
-            'relatedPeople.userdetails.roles', 'servicelines', 'address'
-        )
-            ->whereHas(
-                'servicelines', function ($q) {
-                        $q->whereIn('serviceline_id', $this->userServiceLines);
-
-                }
-            )
-            ->orderBy('id')
-            ->get();
-        $allstates = $this->branch->allStates('branch');
-
-        return response()->view('testmorph', compact('branches', 'allstates'));
-    }
+    
     /**
      * List all branches with region, manager filtered by users serviceline
      * 
@@ -98,7 +76,7 @@ class BranchesController extends BaseController {
     public function index()
     {
 
-        $branches = $this->branch
+        /*$branches = $this->branch
             ->with(
                 'region', 'manager', 
                 'relatedPeople', 'relatedPeople.userdetails.roles', 
@@ -111,12 +89,9 @@ class BranchesController extends BaseController {
                 }
             )
             ->orderBy('id')
-            ->get();
-        $allstates = $this->branch->allStates('branch');
-        return response()->view(
-            'branches.index', 
-            compact('branches', 'allstates')
-        );
+            ->get();*/
+       
+        return response()->view('branches.index');
     }
     
     /**

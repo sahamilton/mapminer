@@ -10,7 +10,7 @@ Your Profile
 <div class="page-header">
 	<h4>Update your Profile</h4>
 </div>
-
+{{dd(session()->all())}}
 <form method="post" action="" class="form-vertical" autocomplete="off">
 	<!-- CSRF Token -->
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
