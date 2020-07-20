@@ -1,21 +1,31 @@
 <?php
 namespace App;
 
-use \Baum\Node;
+use Kalnoy\Nestedset\NodeTrait;
 
-class NodeModel extends Node
-{
+class NodeModel extends Model {
+    use NodeTrait;
+    public function getLftName()
+    {
+        return 'lft';
+    }
+
+    public function getRgtName()
+    {
+        return 'rgt';
+    }
+
+    public function getParentIdName()
+    {
+        return 'parent_id';
+    }
+
+// Specify parent id attribute mutator
+    public function setParentAttribute($value)
+    {
+        $this->setParentIdAttribute($value);
+    }
     
-    protected $parentColumnName = 'parent_id';
-
-      // 'lft' column name
-    protected $leftColumnName = 'lft';
-
-      // 'rgt' column name
-    protected $rightColumnName = 'rgt';
-
-      // 'depth' column name
-    protected $depthColumnName = 'depth';
 
       // guard attributes from mass-assignment
     protected $guarded = array('id', 'parent_id', 'lft', 'rgt', 'depth');

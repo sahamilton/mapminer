@@ -19,7 +19,11 @@ class Person extends NodeModel implements HasPresenter
     
     protected $table ='persons';
     protected $hidden = ['created_at','updated_at','deleted_at','position'];
-    protected $parentColumnName = 'reports_to';
+    public function getParentIdName()
+    {
+        return 'reports_to';
+    }
+    
 
     
     // Don't forget to fill this array
@@ -297,7 +301,7 @@ class Person extends NodeModel implements HasPresenter
      */
     public function scopeMyReports($query)
     {
-        return $query->descendantsAndSelf();
+        return $query->descendantsAndSelf($this->id);
     }
 
     public function team()

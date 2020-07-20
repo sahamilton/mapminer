@@ -135,28 +135,3 @@ $states = $state->getStates();
 		</span>
 	</div>
 </div>
-
-<?php $regions = [ '1'=>'Western' ,'2'=>'CLP','3'=>'Eastern','4'=>'Mid-America & Canada
-'];?>
-<div class="form-group{{ $errors->has('region_id)') ? ' has-error' : '' }}">
-	<label class="col-md-2 control-label">Region:</label>
-	<div class="input-group input-group-lg">
-		<select  class="form-control" name='region_id'>
-			@foreach ($regions as $key=>$region))
-
-				<option @if(isset($branch) && $branch->region_id == $key) selected @endif value="{{$key}}">{{$region}}</option>
-			@endforeach
-		</select>
-		<span class="help-block">
-			<strong>{{ $errors->has('region_id') ? $errors->first('region_id') : ''}}</strong>
-		</span>
-	</div>
-</div>
-
-</div>
-
-
-
-
-
-
