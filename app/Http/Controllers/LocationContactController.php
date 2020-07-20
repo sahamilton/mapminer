@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use \App\Contact;
 use App\AddressBranch;
 use App\Branch;
-
+use App\Campaign;
 use App\Person;
 use App\Opportunity;
 use \App\Locations;
@@ -35,7 +35,8 @@ class LocationContactController extends Controller
         $myBranches = $this->person->myBranches();
         $data = $this->getBranchContacts(array_keys($myBranches));
         $title = "Branch " . reset($myBranches) . " Contacts";
-         return response()->view('contacts.index', compact('data', 'title','myBranches'));
+        $campaigns = Campaign::currentOpen([array_keys($myBranches)[0]])->get();
+         return response()->view('contacts.index', compact('data', 'title','myBranches', 'campaigns'));
     }
 
     public function branchContacts(Branch $branch, Request $request)
