@@ -55,7 +55,7 @@ class BranchLeadController extends Controller
         } else {
             $branches = $this->branch->withCount('leads')->with('manager')->get();
         }
-        
+       
         return response()->view('branchleads.index', compact('branches'));
     }
 

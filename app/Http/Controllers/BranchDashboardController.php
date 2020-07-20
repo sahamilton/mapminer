@@ -9,6 +9,7 @@ use App\AddressBranch;
 use App\Branch;
 use App\Chart;
 use App\Company;
+use App\Campaign;
 use App\Contact;
 use App\Track;
 
@@ -185,11 +186,11 @@ class BranchDashboardController extends DashboardController
                     . ". Notify Sales Opersations"
                 );
         }
-
+        $campaigns = Campaign::currentOpen([$branch->id])->get();;
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
     
-        return response()->view('branches.dashboard', compact('data', 'branch'));
+        return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns'));
 
     }
    

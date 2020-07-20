@@ -27,10 +27,11 @@ class MyLeadFormRequest extends FormRequest
      */
     public function rules()
     {
-        
+       
         return [
             'address'=>'required:street',
-            'campaign' => 'sometimes|required|numeric',
+            'campaign' => 'sometimes|required|array',
+            'campaign.*' => 'sometimes|required|numeric',
             'companyname'=>'required|filled',
             'phone'=>'sometimes|nullable|numeric',
             'email'=>'sometimes|nullable|email',
