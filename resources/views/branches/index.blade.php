@@ -27,7 +27,7 @@
     <th>Branch Address</th>
     <th>City</th>
     <th>State</th>
-    <th>Region</th>
+ 
     <th>Manager</th>
 
     @can('manage_branches')
@@ -82,16 +82,6 @@
 
     </td>
 
-    <td>
-            @if(!is_null($branch->region))
-                <a href="{{route('region.show',$branch->region->id)}}"
-                title="See all {{$branch->region->region}} region branches">
-                {{$branch->region->region}}
-                </a>
-            @endif
-            
-
-    </td>
     <td>            
             @if($branch->manager->count()>0)
                 
