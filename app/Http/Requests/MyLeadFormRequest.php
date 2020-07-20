@@ -30,7 +30,7 @@ class MyLeadFormRequest extends FormRequest
         
         return [
             'address'=>'required:street',
-            
+            'campaign' => 'sometimes|required|numeric',
             'companyname'=>'required|filled',
             'phone'=>'sometimes|nullable|numeric',
             'email'=>'sometimes|nullable|email',
