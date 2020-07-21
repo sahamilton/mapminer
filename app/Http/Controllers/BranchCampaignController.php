@@ -123,13 +123,18 @@ class BranchCampaignController extends Controller
 
     public function store(Request $request)
     {
-        
+        $existing = $this->addresscampaign->where('address_id', request('address_id'))->pluck('campaign_id')->toArray();
+        $count=0;
         foreach (request('campaign') as $campaign_id) {
-           
-            $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+            if(! in_array($campaign_id, $existing)) {
+                $count++;
+               $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+            } 
         }
+            // check if this address is already part of the campaign
+            
         
-        return back()->withMessage('Lead added to campaigns');
+        return back()->withMessage('Lead added to ' .$count . ' campaigns');
     }
     /**
      * [change description]
