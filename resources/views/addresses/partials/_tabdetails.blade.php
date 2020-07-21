@@ -25,19 +25,19 @@
 		 </fieldset>
 
 		@if($owned)
-		<a class="text text-info" href="{{route('address.edit',$location->id)}}" 
-		title="Edit this location">
-		<i class="far fa-edit"></i>
-		Edit Location</a>
-		@if($location->activities->count()==0)
-		<a data-href="{{route('address.destroy',$location->id)}}" 
-			data-toggle="modal" 
-			data-target="#confirm-delete" 
-			data-title = "This address and all its associations" href="#">
-			<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-		Delete Locaton</a>
+			<a class="text text-info" href="{{route('address.edit',$location->id)}}" 
+			title="Edit this location">
+			<i class="far fa-edit"></i>
+			Edit Location</a>
+			
+			<a data-href="{{route('address.destroy',$location->id)}}" 
+				data-toggle="modal" 
+				data-target="#confirm-delete" 
+				data-title = "this address and all its related branch activities and opportunities" href="#">
+				<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+			Delete Locaton</a>
 	
-		@endif
+		
 		@elseif ($location->createdBy)
 
 			<p>Lead Created by: <a href="{{route('user.show',$location->createdBy->id)}}">{{$location->createdBy->postName()}}</a></p>

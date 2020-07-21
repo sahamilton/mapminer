@@ -355,10 +355,7 @@ class Address extends Model
     public function opportunities()
     {
  
-        return $this->hasManyThrough(
-            Opportunity::class, AddressBranch::class, 
-            'address_id', 'address_branch_id', 'id', 'id'
-        );
+        return $this->hasMany(Opportunity::class, 'address_id', 'id');
     }
 
     public function scopeOrderByColumn($query, $field, $dir) 

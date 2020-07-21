@@ -22,7 +22,7 @@
     </div>
 @endif
    
-<div class="row float-right">
+    <div class="row float-right">
         <button type="button" 
             class="btn btn-info float-right" 
             data-toggle="modal" 
@@ -37,8 +37,9 @@
 
 
     @livewire('lead-table', ['branch'=>$branch->id])
- 
+@include('addresses.partials._deleteleadmodal') 
 @include('branchleads.partials._branchleadmodal')
 @include('branchleads.partials._branchcampaignmodal')
+
 @include('partials._scripts')
 @endsection

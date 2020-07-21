@@ -24,12 +24,12 @@
             @endforeach
             @if(auth()->user()->hasRole('branch_manager'))
             <a 
-            data-pk="{{$lead->id}}"
-            data-id="{{$lead->id}}"
-            data-toggle="modal" 
-            data-target="#addtocampaign" 
-            data-title = "" 
-            href="#">
+                data-pk="{{$lead->id}}"
+                data-id="{{$lead->id}}"
+                data-toggle="modal" 
+                data-target="#addtocampaign" 
+                data-title = "" 
+                href="#">
                 <i class="text-success fas fa-plus-circle"></i> Add to current campaign
             </a>
            @endif
@@ -40,7 +40,19 @@
                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
             @endif
         </td>
+       
+        <td>
 
+            
+            <a 
+                data-href="{{route('branchleads.destroy',$lead->assignedToBranch->where('id', $this->branch->id)->first()->pivot->id)}}" 
+                data-toggle="modal" 
+                data-target="#delete-lead" 
+                data-title = "  {{$lead->businessname}} lead from your branch" 
+                href="#"><i class="fas fa-trash-alt text-danger"></i>
+            </a> 
+        </td>
 
+        
     </tr>
 @endforeach

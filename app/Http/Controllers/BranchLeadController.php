@@ -6,6 +6,7 @@ use App\Lead;
 use App\Address;
 use App\Person;
 use App\Branch;
+use App\Note;
 use App\BranchLead;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,7 @@ class BranchLeadController extends Controller
     public $branch;
     public $address;
     public $person;
+    public $note;
     public $branchlead;
 
     /**
@@ -31,13 +33,15 @@ class BranchLeadController extends Controller
         Person $person, 
         BranchLead $branchlead, 
         Branch $branch, 
-        Address $address
+        Address $address,
+        Note $note
     ) {
         $this->lead = $lead;
         $this->address = $address;
         $this->branch = $branch;
         $this->branchlead = $branchlead;
         $this->person = $person;
+        $this->note = $note;
     }
     /**
      * Display a listing of the resource.
@@ -137,10 +141,12 @@ class BranchLeadController extends Controller
      */
     public function destroy(Request $request, BranchLead $branchLead)
     {
-        
-        $branch = $this->branch->findOrFail($branchLead->branch_id);
-        $branchLead->update(['status_id'=>4, 'comments'=>request('comment')]);
-        return redirect()->route('branchdashboard.show', $branch->id);
+        $data['note'] = auth()->user()->person->fullName() . " removed this lead from branch " . $branchLead->branch_id ." on " .now()->format('Y-m-d');
+        $data['user_id'] = auth()->user()->id;
+        $data['address_id'] = $branchLead->address_id;
+        $this->note->create($data);
+        $branchLead->delete();
+        return redirect()->back()->withMessage('Lead removed');
     }
     /**
      * [assign description]
