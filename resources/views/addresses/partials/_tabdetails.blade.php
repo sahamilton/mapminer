@@ -30,9 +30,9 @@
 			<i class="far fa-edit"></i>
 			Edit Location</a>
 			
-			<a data-href="{{route('address.destroy',$location->id)}}" 
+			<a data-href="{{route('branchleads.destroy',$location->assignedToBranch->where('id', $branch->id)->first()->pivot->id)}}" 
 				data-toggle="modal" 
-				data-target="#confirm-delete" 
+				data-target="#delete-lead" 
 				data-title = "this address and all its related branch activities and opportunities" href="#">
 				<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
 			Delete Locaton</a>

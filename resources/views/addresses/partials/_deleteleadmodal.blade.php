@@ -40,7 +40,9 @@
           <div class="float-right">
             <input type="submit" value="Delete lead" class="btn btn-danger" />
           </div>
+         
           <input type="hidden" name="branch_id" value="{{$branch->id}}" />
+        
         </form>
       </div>
       <div class="modal-footer">
