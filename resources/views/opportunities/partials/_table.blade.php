@@ -63,7 +63,9 @@
         @endif
         @endif
       </td>
-          
+          <td>
+            {{$opportunity->actual_close ? $opportunity->actual_close->format('Y-m-d') : ''}}
+      </td>
       <td>
         @if($opportunity->lastActivity)
 

@@ -8,6 +8,7 @@ use App\Address;
 use App\AddressBranch;
 use App\Branch;
 use App\Company;
+use App\Campaign;
 use App\Contact;
 use App\Note;
 use App\Http\Requests\OpportunityFormRequest;
@@ -77,7 +78,7 @@ class OpportunityController extends BaseController
 
         $activityTypes = $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-       
+        
         if (! $myBranches) {
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
@@ -90,9 +91,10 @@ class OpportunityController extends BaseController
             
             //$data = $this->_getBranchData([session('branch')]);
             $branch = $this->branch->findOrFail(session('branch'));
+            $campaigns = Campaign::currentOpen([$branch->id])->get();
             return response()->view(
                 'opportunities.index', 
-                compact('activityTypes', 'myBranches','period', 'branch')
+                compact('activityTypes', 'myBranches','period', 'branch', 'campaigns')
             );
 
         } else {
@@ -383,7 +385,6 @@ class OpportunityController extends BaseController
     public function show(Opportunity $opportunity)
     {
         $opportunity->load('branch', 'address');
-       
         if (! in_array($opportunity->branch_id, array_keys($this->person->myBranches()))) {
             return redirect()->back()->withError("That is not one of your opportunities'");
         }

@@ -74,14 +74,17 @@
                             @include('includes._sort-icon', ['field' => 'last_activity_id'])
                         </a>
 
-                    
+                   
                 </th>
-                    
+                    <th></th>
                     
                 </tr>
             </thead>
             <tbody>
+
                 @include('leads.partials._table')
+                
+           
             </tbody>
         </table>
     </div>

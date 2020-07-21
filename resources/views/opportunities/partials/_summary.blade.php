@@ -16,7 +16,7 @@ class='table table-striped table-bordered table-condensed table-hover'>
     </thead>
       <tbody>
         @foreach ($data['branches'] as $branch)
-      
+  
           <tr>
             <td>
               <a href="{{route('branchdashboard.show',$branch->id)}}">{{$branch->branchname}}</a>
@@ -29,22 +29,22 @@ class='table table-striped table-bordered table-condensed table-hover'>
             </td>
              <td align="center">
               <a href="{{route('opportunities.branch',$branch->id)}}">
-                {{$branch->open}}
+                {{$branch->open_opportunities}}
               </a>
             </td>
             <td align="center">
-              @if($branch->won >0)
+              @if($branch->won_opportunities >0)
               <a href="{{route('opportunities.branch',$branch->id)}}">
-                {{$branch->won}}
+                {{$branch->won_opportunities}}
               </a> 
               @else
                0 
                @endif
             </td>
             <td  align="center"> 
-              @if($branch->lost >0)
+              @if($branch->lost_opportunities >0)
               <a href="{{route('opportunities.branch',$branch->id)}}">
-                {{$branch->lost}}
+                {{$branch->lost_opportunities}}
               </a> 
             @else 
               0 
@@ -67,4 +67,12 @@ class='table table-striped table-bordered table-condensed table-hover'>
         </tr>
        @endforeach
   </tbody>
+  <tfoot>
+    <th colspan=2></th>
+    <td align="center">{{$data['branches']->sum('open_opportunities')}}</td>
+    <td align="center">{{$data['branches']->sum('won_opportunities')}}</td>
+    <td align="center">{{$data['branches']->sum('olost_opportunities')}}</td>
+    <td align="center">{{$data['branches']->sum('lead_count')}}</td>
+    <td align="center">{{$data['branches']->sum('activities_count')}}</td>
+  </tfoot>
 </table>

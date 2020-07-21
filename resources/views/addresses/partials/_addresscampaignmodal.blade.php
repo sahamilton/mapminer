@@ -43,13 +43,15 @@
                             value="{{$location->id}}" />
                         
                         {{ csrf_field() }}
-                        <input type="submit"name="submit" class="btn btn-info" />
-                    </form>
+                        <input type="submit" name="submit" class="btn btn-info" />
+                    </div>
+                </form>
             </div>
-            
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>     
             </div>
         </div>
     </div>
 </div>
+

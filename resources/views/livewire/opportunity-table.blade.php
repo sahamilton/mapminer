@@ -71,8 +71,10 @@
                         </a>
                     </th>
                     <th>Last Activity</th>
+                    <th>Actual Close</th>
                     @if(auth()->user()->hasRole('branch_manager'))
                     <th>Activities</th>
+
                     @endif
                 </tr>
             </thead>

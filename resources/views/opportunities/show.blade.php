@@ -11,7 +11,12 @@
         href="#">Delete Opportunity
             <i class="fas fa-trash-alt text-danger"></i></a>
 	</div>
-
+    @if($opportunity->closed == 0 && auth()->user()->hasRole('branch_manager'))
+        <button class="btn btn-danger" 
+                data-href="{{route('opportunity.close',$opportunity->id)}}"
+                data-toggle="modal" 
+                data-target="#closeopportunity">Close</button>
+    @endif
 <h2><strong>Opportunity </strong>{{$opportunity->title}}</h2>
 <p><strong>Branch:</strong>{{$opportunity->branch->branch->branchname}}</p>
 <p><strong>Location:</strong>
@@ -28,4 +33,5 @@
 
 </div>
 @include('partials._modal')
+@include('opportunities.partials._closemodal')
 @endsection	

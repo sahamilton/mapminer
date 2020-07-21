@@ -215,7 +215,11 @@
 
   </div>
 @include('partials._modal')
+@if($owned)
+@include('addresses.partials._deleteleadmodal')
+@endif
 @include('addresses.partials._addresscampaignmodal')
+
 @include('opportunities.partials._closemodal')
 @include('addresses.partials._reassignlead')
 @include('addresses.partials._rateaddressform')

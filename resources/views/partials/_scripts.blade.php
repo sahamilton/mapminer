@@ -36,6 +36,10 @@ $(document).ready(function()
         $(this).find('#title').html($(e.relatedTarget).data('title'));
         $(this).find('#period-form').attr('action',$(e.relatedTarget).data('href'));
     }); 
+     $(document).on('show.bs.modal','#delete-lead', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+    });
     $(document).on('show.bs.modal','#run-report-wop', function(e) {
         $(this).find('#title').html($(e.relatedTarget).data('title'));
         $(this).find('#period-form').attr('action',$(e.relatedTarget).data('href'));
