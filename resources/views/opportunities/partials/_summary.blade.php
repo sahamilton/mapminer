@@ -67,4 +67,12 @@ class='table table-striped table-bordered table-condensed table-hover'>
         </tr>
        @endforeach
   </tbody>
+  <tfoot>
+    <th colspan=2></th>
+    <td align="center">{{$data['branches']->sum('open_opportunities')}}</td>
+    <td align="center">{{$data['branches']->sum('won_opportunities')}}</td>
+    <td align="center">{{$data['branches']->sum('olost_opportunities')}}</td>
+    <td align="center">{{$data['branches']->sum('lead_count')}}</td>
+    <td align="center">{{$data['branches']->sum('activities_count')}}</td>
+  </tfoot>
 </table>
