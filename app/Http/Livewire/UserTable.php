@@ -28,7 +28,10 @@ class UserTable extends Component
 
         $this->sortField = $field;
     }
-    
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     public function mount()
     {
         $this->roles = Role::all();

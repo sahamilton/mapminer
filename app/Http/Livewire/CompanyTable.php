@@ -19,7 +19,10 @@ class CompanyTable extends Component
     public $accounttype=false;
 
 
- 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function sortBy($field)
     {
