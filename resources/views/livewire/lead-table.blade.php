@@ -76,8 +76,15 @@
 
                    
                 </th>
+                <th>
+                    <a wire:click.prevent="sortBy('dateAdded')" role="button" href="#">
+                    Lead Added
+                     @include('includes._sort-icon', ['field' => 'dateAdded'])
+                        </a>
+                </th>
+                @if(auth()->user()->hasRole(['branch_manager']))
                     <th></th>
-                    
+                @endif
                 </tr>
             </thead>
             <tbody>

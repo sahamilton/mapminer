@@ -9,6 +9,7 @@ class AddressBranch extends Model
 {
     public $table = 'address_branch';
     public $fillable = ['branch_id','address_id'];
+    public $dates = ['created_at'];
     /**
      * [orders description]
      * 

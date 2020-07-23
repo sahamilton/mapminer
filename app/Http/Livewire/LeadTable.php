@@ -45,8 +45,7 @@ class LeadTable extends Component
      
         return view('livewire.lead-table', [
             'leads' => Address::query()
-                ->search($this->search)
-                              
+                ->search($this->search)   
                 ->whereIn(
                     'addresses.id', function ($query) {
                         $query->select('address_id')
@@ -55,18 +54,20 @@ class LeadTable extends Component
                             ->where('status_id',2);
                     }
                 )
+
                 ->with('assignedToBranch')
                 ->whereDoesntHave('opportunities')
+
                 ->withLastActivityId()
                 ->with('lastActivity')
+                ->dateAdded()
                 ->withCount('openOpportunities')
-                
                 ->when(
                     $this->search, function ($q) {
                         $q->search($this->search);
                     }
                 )
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
                 'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),
             ]
