@@ -40,9 +40,14 @@
                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
             @endif
         </td>
+        <td>
+            @if($lead->dateAdded)
+                {{$lead->dateAdded->format('Y-m-d')}}
+            @endif
+        </td>
        
         <td>
-
+        @if(auth()->user()->hasRole(['branch_manager']))
             
             <a 
                 data-href="{{route('branchleads.destroy',$lead->assignedToBranch->where('id', $this->branch->id)->first()->pivot->id)}}" 
@@ -50,9 +55,8 @@
                 data-target="#delete-lead" 
                 data-title = "  {{$lead->businessname}} lead from your branch" 
                 href="#"><i class="fas fa-trash-alt text-danger"></i>
-            </a> 
+            </a>  @endif
         </td>
-
-        
+       
     </tr>
 @endforeach

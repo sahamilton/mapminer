@@ -6,7 +6,7 @@ class Address extends Model
 {
     use Geocode,Filters, FullTextSearch;
     public $table = 'addresses';
-
+    public $dates = ['dateAdded'];
     public $timestamps = true;
     
     public $fillable = [
@@ -223,7 +223,16 @@ class Address extends Model
      */
     public function scopeWithLastActivityId($query)
     {
-         return $query->select('addresses.*')->selectSub('select id as last_activity_id from activities where address_id = addresses.id and completed=1 order by activities.activity_date desc limit 1', 'last_activity_id');
+         return $query
+             ->select('addresses.*')
+             ->selectSub('select id as last_activity_id from activities where address_id = addresses.id and completed=1 order by activities.activity_date desc limit 1', 'last_activity_id');
+       
+    }
+    public function scopeDateAdded($query)
+    {
+         return $query
+             
+             ->selectSub('select created_at as dateAdded from address_branch where address_id = addresses.id and status_id=2 order by address_branch.created_at desc limit 1', 'dateAdded');
        
     }
     
@@ -282,6 +291,7 @@ class Address extends Model
             return $query;
         }
     }
+
     /**
      * [assignedToBranch description]
      * 
@@ -363,13 +373,13 @@ class Address extends Model
         
         switch($field) {
         case 'lastActivity': return $query->orderByLastActivityDate();
-
+       
         default: return $query->orderBy($field, $dir);
         }
 
 
     }
-
+    
     public function scopeOrderByLastActivityDate($query, $dir='asc')
     {
         $query->orderBy(

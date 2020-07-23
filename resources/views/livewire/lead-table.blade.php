@@ -62,8 +62,15 @@
 
                    
                 </th>
+                <th>
+                    <a wire:click.prevent="sortBy('dateAdded')" role="button" href="#">
+                    Lead Added
+                     @include('includes._sort-icon', ['field' => 'dateAdded'])
+                        </a>
+                </th>
+             
                     <th></th>
-                    
+              
                 </tr>
             </thead>
             <tbody>
