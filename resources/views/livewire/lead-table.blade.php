@@ -68,9 +68,9 @@
                      @include('includes._sort-icon', ['field' => 'dateAdded'])
                         </a>
                 </th>
-             
+                @if(auth()->user()->hasRole(['branch_manager']))
                     <th></th>
-              
+                @endif
                 </tr>
             </thead>
             <tbody>
