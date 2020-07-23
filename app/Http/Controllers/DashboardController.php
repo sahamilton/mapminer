@@ -208,12 +208,20 @@ class DashboardController extends Controller
 
         ];
 
-        return $this->branch->select('id', 'branchname')
-            ->SummaryLeadStats($this->period, $leadFields)
-            ->SummaryOpportunities($this->period, $opportunityFields)
-            ->SummaryActivities($this->period, $activityFields)
+        /*foreach ($this->myBranches as $branch) {
+            if (gettype($branch) != 'string') {
+                settype($branch, 'string');
+            }
+            $newBranch[]=$branch;
+        }*/
+        
+        return $this->branch->select('branches.id', 'branchname')
+            ->summaryLeadStats($this->period, $leadFields)
+            ->summaryOpportunities($this->period, $opportunityFields)
+            ->summaryActivities($this->period, $activityFields)
+            //->newSummaryActivities($this->period, $activityFields)
             ->with('manager', 'manager.reportsTo')
-            ->whereIn('id', $this->myBranches)
+            ->whereIn('branches.id', $this->myBranches)
             ->get(); 
 
     }

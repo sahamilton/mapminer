@@ -12,10 +12,12 @@ class Branch extends Model
     public $table ='branches';
     protected $hidden = ['created_at','updated_at','position'];
     protected $primaryKey = 'id'; // or null
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $spatialFields = [
         'position'
     ];
-    public $incrementing = false;
+
 
     public $branchManagerRole = 9;
     public $branchRoles = [3,5,9,11];
@@ -1253,6 +1255,22 @@ class Branch extends Model
         );
 
     }
+    public function scopeNewSummaryActivities($query, $period, $fields = null)
+    {
+       $this->period = $period;
+       $query->join('activities','activities.branch_id', '=', 'branches.id')
+            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+            ->selectRaw("count(case when activitytype_id = 4  then 1 else 0 end) as sales_appointment")
+            ->selectRaw("count(case when activitytype_id = 5  then 1 else 0 end) as stop_by")
+            ->selectRaw("count(case when activitytype_id = 7  then 1 else 0 end) as proposal")
+            ->selectRaw("count(case when activitytype_id = 10  then 1 else 0 end) as site_visit")
+            ->selectRaw("count(case when activitytype_id = 13  then 1 else 0 end) as log_a_call")
+            ->selectRaw("count(case when activitytype_id = 14  then 1 else 0 end) as in_person");
+            
+
+       
+
+    }
     /**
      * [scopeSummaryActivities description]
      * 
@@ -1267,6 +1285,7 @@ class Branch extends Model
         if (! $fields) {
             $fields = $this->activityFields;
         }
+        
         $this->fields = $fields;
         foreach ($this->activityFields as $key=>$field) {
             $label = str_replace(" ", "_",strtolower($field));
