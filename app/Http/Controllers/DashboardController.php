@@ -199,29 +199,30 @@ class DashboardController extends Controller
             "won_value",
         ];
         $activityFields = [
-            'sales_appointment',
-            'stop_by',
-            'proposal',
-            'site_visit',
-            'log_a_call',
-            'in_person',
+            '4'=>'Sales Appointment',
+            '5'=>'Stop By',
+            '7'=>'Proposal',
+            '10'=>'Site Visit',
+            '13'=>'Log a call',
+            '14'=>'In Person'
 
-        ];
+    ];
 
-        /*foreach ($this->myBranches as $branch) {
+        foreach ($this->myBranches as $branch) {
             if (gettype($branch) != 'string') {
                 settype($branch, 'string');
             }
             $newBranch[]=$branch;
-        }*/
+        }
         
-        return $this->branch->select('branches.id', 'branchname')
+        return $this->branch->select('branches.id', 'branches.branchname')
             ->summaryLeadStats($this->period, $leadFields)
             ->summaryOpportunities($this->period, $opportunityFields)
+            
             ->summaryActivities($this->period, $activityFields)
-            //->newSummaryActivities($this->period, $activityFields)
             ->with('manager', 'manager.reportsTo')
-            ->whereIn('branches.id', $this->myBranches)
+            ->whereIn('branches.id', $newBranch)
+
             ->get(); 
 
     }

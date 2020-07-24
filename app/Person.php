@@ -303,12 +303,34 @@ class Person extends NodeModel implements HasPresenter
     {
         return $query->descendantsAndSelf($this->id);
     }
-
-    public function team()
+    public function ownBranches()
     {
-        return $this->descendantsAndSelf()->with('branchesServiced');
+        return $this->descendantsAndSelf()
+            ->whereHas(
+                'userdetails.roles',function ($q)  {
+                    $q->whereIn('role_id', [9]);
+                }
+
+            )->with('branchesServiced');
+    }
+    public function team(array $roles=null)
+    {
+        return $this->descendantsAndSelf()
+        ->when($roles, function ($q) use ($roles)
+            {
+                    $q->whereHas('userdetails.roles', function ($q) use ($roles) {
+
+                        $q->whereIn('role_id', $roles);
+                    }
+                );
+            }
+        )->with('branchesServiced');
     }
 
+    public function scopeMyImmediateReports($query)
+    {
+        return $query->descendantsAndSelf($this->id)->limitDepth(1);
+    }
     /**
      * [myTeam description]
      * 
@@ -444,6 +466,44 @@ class Person extends NodeModel implements HasPresenter
                     $q->whereIn('role_id', $roles);
             }
         );
+    }
+
+    public function scopeSummaryActivitiesByManager($query, $period)
+    {
+        $this->period = $period;
+        $query->select(`branchname`)
+        ->selectRaw('COUNT(CASE when activitytype_id = 4  then 1 end) as sales_appointment,
+            COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by,
+            COUNT(CASE when activitytype_id = 7  then 1 end) as proposal,
+            COUNT(CASE when activitytype_id = 10  then 1 end) as site_visit,
+            COUNT(CASE when activitytype_id = 11  then 1 end) as log_a_call,
+            COUNT(CASE when activitytype_id = 131  then 1 end) as site_visit,
+            COUNT(CASE when activitytype_id = 14  then 1 end) as in_person,
+            COUNT(*) as all_activities')
+        ->join('persons as mgr', function ($join) {
+            $join->on('reports_to', '=', $this->id);
+        })
+        ->join('branches')
+        ->join('persons as rep', function ($join) {
+            $join->on('rep.lft', '>=', 'mgr.lft')
+                ->on('rep.rgt', '<=', 'mgr.rgt')
+                ->whereHasRoles([9])
+                ->with('branchesServiced.activities');
+            }
+        )
+        ->where(function ($q) {
+            $q->where('mgr.reports_to',"=",$this->id)
+                ->orWhere('mgr.id','=',$this->id);
+            }
+        )
+        /*  need to use a with or join here
+        ->where('rep.id','=','branch_person.person_id')
+        ->where('branch_person.role_id','=',9)
+        ->where('branch_person.branch_id','=','activities.branch_id')
+        */
+        ->whereBetween('activities.activity_date', [$this->period['from'], $this->period['to']])
+        ->whereCompleted(1);
+
     }
     /**
      * [scopeLeadsByType description]

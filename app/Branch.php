@@ -1258,15 +1258,18 @@ class Branch extends Model
     public function scopeNewSummaryActivities($query, $period, $fields = null)
     {
        $this->period = $period;
-       $query->join('activities','activities.branch_id', '=', 'branches.id')
-            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+       $query->select ('branches.*')->with(['activities'=>function ($q) {
+            $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+            ->select('id', 'branch_id')
             ->selectRaw("count(case when activitytype_id = 4  then 1 else 0 end) as sales_appointment")
             ->selectRaw("count(case when activitytype_id = 5  then 1 else 0 end) as stop_by")
             ->selectRaw("count(case when activitytype_id = 7  then 1 else 0 end) as proposal")
             ->selectRaw("count(case when activitytype_id = 10  then 1 else 0 end) as site_visit")
             ->selectRaw("count(case when activitytype_id = 13  then 1 else 0 end) as log_a_call")
             ->selectRaw("count(case when activitytype_id = 14  then 1 else 0 end) as in_person");
-            
+            }
+        ]
+        );
 
        
 
@@ -1287,16 +1290,21 @@ class Branch extends Model
         }
         
         $this->fields = $fields;
+        $query->join('activities', function($join)
+        {
+            $join->on('branches.id', '=', 'activities.branch_id')
+                 ->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
+                 ->whereCompleted(1);
+        });
+        
         foreach ($this->activityFields as $key=>$field) {
-            $label = str_replace(" ", "_",strtolower($field));
-            if(in_array($label, $this->fields)) {
+            //
+            if(in_array($field, $this->fields)) {
                 $label = str_replace(" ", "_",strtolower($field));
                 $query->withCount(
                     [
                         'activities as '.$label=>function ($query) use($key) {
-                            $query->whereBetween(
-                                'activity_date', [$this->period['from'],$this->period['to']]
-                            )->where('completed', 1)
+                            $query
                             ->where('activitytype_id', $key);
                         }
                     ]
@@ -1306,9 +1314,7 @@ class Branch extends Model
         $query->withCount(
                 [
                     'activities'=>function ($query) use($key) {
-                        $query->whereBetween(
-                            'activity_date', [$this->period['from'],$this->period['to']]
-                        )->where('completed', 1);
+                        
                     }
                 ]
             );
