@@ -33,7 +33,7 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
     ];
 
     public $activityFields  =  [
-        'proposals'=>'# Completed Proposals',
+        'proposal'=>'# Completed Proposals',
         'sales_appointment'=>'# Completed Sales Appts',
         'site_visit'=>'# Completed Site Visits'
 
