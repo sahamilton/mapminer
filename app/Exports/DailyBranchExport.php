@@ -34,7 +34,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     ];
 
     public $activityFields  =  [
-        'proposals'=>'# Completed Proposals',
+        'proposal'=>'# Completed Proposals',
         'sales_appointment'=>'# Completed Sales Appts',
         'site_visit'=>'# Completed Site Visits'
 
