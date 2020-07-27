@@ -1,0 +1,187 @@
+/************************************************ Branch stats from Branch *****************************************************
+
+SELECT branches.id, count(CASE when opportunities.closed = 0 and opportunities.created_at < '2020-07-21' then 1 end) as open,
+count(CASE when opportunities.closed = 0 and opportunities.created_at between '2020-07-01' and '2020-07-21' then 1 end) as opened,
+count(CASE when opportunities.closed = 1 and opportunities.actual_close between '2020-07-01' and '2020-07-21' then 1 end) as won,
+SUM(CASE When opportunities.closed = 1 and opportunities.actual_close between '2020-07-01' and '2020-07-21' then `value` else 0 end ) as wonvalue,
+COUNT(CASE when opportunities.closed = 2 and opportunities.actual_close between '2020-07-01' and '2020-07-21' then 1 end) as lost,
+SUM(CASE When opportunities.closed = 2 and opportunities.actual_close between '2020-07-01' and '2020-07-21' then `value` else 0 end ) as lostvalue,
+SUM(CASE When opportunities.closed = 0 and opportunities.created_at < '2020-07-21' then `value` Else 0 End ) as openvalue
+from branches, opportunities
+where branches.id = opportunities.branch_id
+and branches.id in ('1143', '1145', '1201', '1203', '1205', '1207', '1209', '1210', '1455', '1610', '1611', '1661', '1665', '1669', '1878', '2146', '2402', '2684', '2685', '2686', '2841', '3011', '3062', '3401', '3403', '3404', '3411', '3413', '3417', '3422', '3424', '3430', '3431', '3433', '7262', '7386', '8038', '8042', '8046', '2681', '1151', '1153', '1152', '1159', '1160', '1161', '2256', '3300', '1150', '1149', '2255', '2751', '2753', '2961', '3434', '3426', '3064', '1668', '2700', '3400', '3063', '1432', '1605', '7261', '3416', '3418', '9001', '9002')
+group by branches.id
+        
+
+
+        SELECT count(CASE when opportunities.closed = 0 and opportunities.created_at < '2020-07-21' then 1 end) as open,
+count(CASE when opportunities.closed = 0 and opportunities.created_at between '2020-07-2019' and '2020-07-21' then 1 end) as opened,
+count(CASE when opportunities.closed = 1 and opportunities.actual_close between '2020-07-2019' and '2020-07-21' then 1 end) as won,
+SUM(CASE When opportunities.closed = 1 and opportunities.actual_close between '2020-07-20`19' and '2020-07-21' then `value` else 0 end ) as wonvalue,
+COUNT(CASE when opportunities.closed = 2 and opportunities.actual_close between '2020-07-2019' and '2020-07-21' then 1 end) as lost,
+SUM(CASE When opportunities.closed = 2 and opportunities.actual_close between '2020-07-2019' and '2020-07-21' then `value` else 0 end ) as lostvalue,
+SUM(CASE When opportunities.closed = 0 and opportunities.created_at < '2020-07-21' then `value` Else 0 End ) as openvalue
+FROM `opportunities`  where branch_id = 1159
+
+/************************************************ Branch stats from person *******************************************************/
+SELECT concat_ws(" ", m.firstname, m.lastname) as manager, count(CASE when opportunities.closed = 0 and opportunities.created_at < '2020-07-21' then 1 end) as open,
+count(CASE when opportunities.closed = 0 and opportunities.created_at between '2020-07-01' and '2020-07-21' then 1 end) as opened,
+count(CASE when opportunities.closed = 1 and opportunities.actual_close between '2020-07-01' and '2020-07-21' then 1 end) as won,
+SUM(CASE When opportunities.closed = 1  then `value` else 0 end ) as wonvalue,
+COUNT(CASE when opportunities.closed = 2 and opportunities.actual_close between '2020-07-01' and '2020-07-21' then 1 end) as lost,
+SUM(CASE When opportunities.closed = 2 and opportunities.actual_close between '2020-07-01' and '2020-07-21' then `value` else 0 end ) as lostvalue,
+SUM(CASE When opportunities.closed = 0 and opportunities.created_at < '2020-07-21' then `value` Else 0 End ) as openvalue
+
+FROM `persons` m, persons r, branch_person, opportunities
+
+WHERE (m.reports_to = 647 or m.id = 647)
+and r.lft >= m.lft
+and r.rgt <= m.rgt
+and r.id = branch_person.person_id
+and branch_person.role_id = 9
+and branch_person.branch_id =  opportunities.branch_id
+
+group by manager
+/************************* activities by manager
+USE mapminer;
+SELECT
+    
+    concat_ws(' ' , m.firstname, m.lastname) as manager,
+        COUNT(CASE when activitytype_id = 4  then 1 end) as sales_appointment,
+        COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by,
+        COUNT(CASE when activitytype_id = 7  then 1 end) as proposal,
+        COUNT(CASE when activitytype_id = 10  then 1 end) as site_visit,
+        COUNT(CASE when activitytype_id = 13  then 1 end) as log_a_call,
+        COUNT(CASE when activitytype_id = 14  then 1 end) as in_person,
+        COUNT(*) as all_activities
+
+FROM `persons` m, persons r, branch_person, activities
+
+WHERE (m.reports_to = 647 or m.id = 647)
+and r.lft >= m.lft
+and r.rgt <= m.rgt
+and r.id = branch_person.person_id
+and branch_person.role_id = 9
+and branch_person.branch_id =  activities.branch_id
+
+and `activity_date` BETWEEN '2019-07-20 00:00:00' AND '2020-07-26 23:59:59' 
+AND `completed` = 1 
+
+group by manager
+/********************************
+
+/**********************************************************************************
+SELECT
+    
+    `branchname`,
+   
+        COUNT(CASE when activitytype_id = 4  then 1 end) as sales_appointment,
+        COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by,
+        COUNT(CASE when activitytype_id = 7  then 1 end) as proposal,
+        COUNT(CASE when activitytype_id = 10  then 1 end) as site_visit,
+        COUNT(CASE when activitytype_id = 13  then 1 end) as log_a_call,
+        COUNT(CASE when activitytype_id = 14  then 1 end) as in_person,
+        COUNT(*) as all_activities
+    
+FROM
+    `branches`
+    left join activities on branches.id = activities.branch_id
+
+    WHERE
+        `branches`.`id` = `activities`.`branch_id` AND `activity_date` BETWEEN '2019-07-20 00:00:00' AND '2020-07-26 23:59:59' AND `completed` = 1 
+        and 
+    branches.id IN(
+        '1143',
+        '1145',
+        '1201',
+        '1203',
+        '1205',
+        '1207',
+        '1209',
+        '1210',
+        '1455',
+        '1610',
+        '1611',
+        '1661',
+        '1665',
+        '1669',
+        '1878',
+        '2146',
+        '2402',
+        '2684',
+        '2685',
+        '2686',
+        '2841',
+        '3011',
+        '3062',
+        '3401',
+        '3403',
+        '3404',
+        '3411',
+        '3413',
+        '3417',
+        '3422',
+        '3424',
+        '3430',
+        '3431',
+        '3433',
+        '7262',
+        '7386',
+        '8038',
+        '8042',
+        '8046',
+        '2681',
+        '1151',
+        '1153',
+        '1152',
+        '1159',
+        '1160',
+        '1161',
+        '2256',
+        '3300',
+        '1150',
+        '1149',
+        '2255',
+        '2751',
+        '2753',
+        '2961',
+        '3434',
+        '3426',
+        '3064',
+        '1668',
+        '2700',
+        '3400',
+        '3063',
+        '1432',
+        '1605',
+        '7261',
+        '3416',
+        '3418',
+        '9001',
+        '9002'
+    )
+    group by branchname
+    /*******************************************************
+    /************************* activities by manager
+USE mapminer;
+SELECT
+    concat_ws(' ', firstname, lastname, activities.user_id) as manager,
+    COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment,
+    COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by,
+    COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal,
+    COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit,
+    COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call,
+    COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person,
+    COUNT(*) AS all_activities 
+    FROM
+    activities, persons
+WHERE
+    completed = 1 AND activity_date BETWEEN '2020-07-01' AND '2020-07-31' 
+    AND activities.user_id IN(
+        SELECT user_id
+        FROM   persons
+        WHERE lft > 423 AND rgt < 570 AND deleted_at IS NULL
+    )
+and persons.user_id = activities.user_id
+GROUP BY
+    manager

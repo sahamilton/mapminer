@@ -984,5 +984,28 @@ class Person extends NodeModel implements HasPresenter
 
     }
 
+    public function scopeSummaryActivities($query, $period)
+    {
+        $this->period = $period;
+
+        $query
+        ->join('persons as reports',function ($join) {
+            $join->on('reports.lft', '>=', 'persons.lft')
+            ->on('reports.rgt', '<=', 'persons.rgt');
+        })
+        ->join('activities','reports.user_id', '=', 'activities.user_id')
+        ->where('completed',1)
+        ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+        ->selectRaw('concat_ws(" ", persons.firstname, persons.lastname) as manager')
+        ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
+        ->selectRaw('COUNT(*) AS all_activities')
+        ->groupBy('manager');
+
+    }
     
 }
