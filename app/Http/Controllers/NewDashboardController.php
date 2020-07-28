@@ -83,13 +83,8 @@ class NewDashboardController extends Controller
 
             break;     
         case 'admin':
-            $managers = $this->person->wherehas(
-                'userdetails.roles', function ($q) {
-                    $q->whereIn('role_id', [3,4,6,7,9,14]);
-                }
-            )->with('userdetails.roles', 'reportsTo', 'branchesServiced')
-            ->get();
-            return response()->view('dashboards.select', compact('managers'));
+            
+            return response()->view('dashboards.select');
             break; 
 
         default:
@@ -117,7 +112,7 @@ class NewDashboardController extends Controller
     }
     public function show(Person $manager)
     {
-       
+        
         return $this->showManager($manager);
             
     }
@@ -193,13 +188,9 @@ class NewDashboardController extends Controller
                 $period = $this->period;
                 return response()->view('dashboards.namdashboard', compact('companies', 'person', 'period', 'data'));
 
-            } elseif ($myBranches->count()==1) {
+            } elseif ($myBranches->count()) {
              
                 return redirect()->route('branchdashboard.show', $myBranches->first()->id);
-
-            } elseif ($myBranches->count() >1) {
-                
-                return $this->_getManagerBranchDashboard($person);
 
             } else {
                 return redirect()->back()->withError('You do not have any dashboards');    

@@ -939,6 +939,12 @@ class Person extends NodeModel implements HasPresenter
             }
         );
     }
+
+    public function scopeSearch($query, $search)
+    {
+        return  $query->where('firstname', 'like', "%{$search}%")
+                    ->Orwhere('lastname', 'like', "%{$search}%");
+    }
     /**
      * [rankings description]
      * 

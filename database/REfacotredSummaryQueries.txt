@@ -185,3 +185,23 @@ WHERE
 and persons.user_id = activities.user_id
 GROUP BY
     manager
+
+    /**************************************************
+
+    select concat_ws("", persons.firstname, persons.lastname) as manager, 
+COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment, 
+COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by, 
+COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal, 
+COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit, 
+COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call, 
+COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person, 
+COUNT(*) AS all_activities 
+from `persons` inner join `persons` as `reports` on `reports`.`lft` >= `persons`.`lft` 
+and `reports`.`rgt` <= `persons`.`rgt` 
+inner join `activities` on `reports`.`user_id` = `activities`.`user_id` 
+where `completed` = 1 
+and `activity_date` between 2020-06-27 13:28:04 
+and 2020-07-27 13:28:04 
+and `id` in (128, 470, 1275, 1931, 3148, 3385, 654, 3449, 1250) 
+and `persons`.`deleted_at` is null group by `manager` 
+order by `persons`.`lft` asc
