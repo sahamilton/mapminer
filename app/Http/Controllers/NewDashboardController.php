@@ -194,10 +194,8 @@ class NewDashboardController extends Controller
                 return response()->view('dashboards.namdashboard', compact('companies', 'person', 'period', 'data'));
 
             } elseif ($myBranches->count()==1) {
-                
-                $branch = $this->_getBranchDashboard($myBranches->first());
-                dd($branch);
-                //return response()->view(, compact('branch'))
+             
+                return redirect()->route('branchdashboard.show', $myBranches->first()->id);
 
             } elseif ($myBranches->count() >1) {
                 
@@ -327,7 +325,7 @@ class NewDashboardController extends Controller
 
     private function _getManagerBranchDashboard(Person $person)
     {
-        dd(198, $person);
+        dd(330, $person);
     }
 
     private function _getNAMDashboard(Person $person, array $fields)

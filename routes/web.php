@@ -107,12 +107,12 @@ Route::group(
         Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
         Route::resource('namdashboard', 'NAMDashboardController');
         //   Dashboard
-        Route::get('newdashboard', ['as'=>'newdashboard', 'uses'=>'NewDashboardController@index']);
+        
         Route::get('newdashboard/{company}/company', ['as'=>'newdashboard.company', 'uses'=>'NewDashboardController@showCompany']);
         Route::get('newdashboard/{person}/manager', ['as'=>'newdashboard.manager', 'uses'=>'NewDashboardController@showManager']);
         Route::get('newdashboard/{person}/leads', ['as'=>'newdashboard.leads', 'uses'=>'NewDashboardController@showLeads']);
         Route::get('newdashboard/{company}/branch/{branch}', ['as'=>'newdashboard.branchdetail', 'uses'=>'NewDashboardController@showCompanyBranch']);
-
+        Route::get('newdashboard', ['as'=>'newdashboard', 'uses'=>'NewDashboardController@index']);
         Route::post('dashboard/period', ['as'=>'newperiod.setperiod', 'uses'=>'NewDashboardController@setPeriod']);
         Route::resource('dashboard', 'DashboardController');
         // Branch Next Week View
