@@ -94,19 +94,20 @@ class MgrDashboardController extends DashboardController
         }
         
         $this->period = session('period');
-        if (auth()->user()->hasRole(['admin'])) {
+        /*if (auth()->user()->hasRole(['admin'])) {
             $this->manager = $this->salesorg->getCapoDiCapo();
         } else {
-            $this->manager = $this->person->where('user_id', '=', session('manager'))->firstOrFail();
-        }
-        
+            
+        }*/
+        $this->manager = $this->person->where('user_id', '=', session('manager'))->firstOrFail();
         // get associated branches
         $managers = $this->manager->load('directReports')->directReports;
+
         if(! $managers->count()){
             return redirect()->route('dashboard');
         }
-        $this->myBranches = array_keys($this->_getBranches());
-       
+        $this->myBranches = $this->manager->getMyBranches();
+        
         if (count($this->myBranches) < 2) {
                     return $this->_checkBranches();
 
@@ -269,14 +270,14 @@ class MgrDashboardController extends DashboardController
     private function _getBranches()
     {
         
-        if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')) {
+        /*if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')) {
        
             return $this->branch->all()->pluck('branchname', 'id')->toArray();
         
-        } else {
+        } else {*/
       
              return $this->manager->myBranches($this->manager);
-        }
+        
     }
     
     

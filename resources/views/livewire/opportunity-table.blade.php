@@ -70,16 +70,27 @@
                             @include('includes._sort-icon', ['field' => 'expected_close'])
                         </a>
                     </th>
-                    <th>Last Activity</th>
-                    <th>Actual Close</th>
+                    
+                    <th>
+                    <a wire:click.prevent="sortBy('actual_close')" role="button" href="#">
+                    Actual Close
+                    @include('includes._sort-icon', ['field' => 'actual_close'])
+                </th>
+                    <th>
+                    <a wire:click.prevent="sortBy('last_activity_id')" role="button" href="#">
+                    Last Activity
+                    @include('includes._sort-icon', ['field' => 'last_activity_id'])
+                </th>
                     @if(auth()->user()->hasRole('branch_manager'))
-                    <th>Activities</th>
+                    <th></th>
 
                     @endif
                 </tr>
             </thead>
             <tbody>
+
                 @include('opportunities.partials._table')
+
 
             </tbody>
         </table>

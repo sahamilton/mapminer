@@ -83,13 +83,8 @@ class NewDashboardController extends Controller
 
             break;     
         case 'admin':
-            $managers = $this->person->wherehas(
-                'userdetails.roles', function ($q) {
-                    $q->whereIn('role_id', [3,4,6,7,9,14]);
-                }
-            )->with('userdetails.roles', 'reportsTo', 'branchesServiced')
-            ->get();
-            return response()->view('dashboards.select', compact('managers'));
+            
+            return response()->view('dashboards.select');
             break; 
 
         default:
@@ -117,7 +112,7 @@ class NewDashboardController extends Controller
     }
     public function show(Person $manager)
     {
-       
+        
         return $this->showManager($manager);
             
     }
@@ -168,8 +163,35 @@ class NewDashboardController extends Controller
     {
         
         if ($this->_isValidManager($person)) {
+           
+            session(['manager'=>$person->userdetails->id]);
+            
+            $person->load('userdetails.roles');
+            $myRoles = $person->userdetails->roles->pluck('name')->toArray();
+            
+            switch ($myRoles[0]) {
 
-            $myBranches = $this->branch->whereIn('id', $person->getMyBranches())->get();
+            case 'national_account_manager':
+                return redirect()->route('namdashboard.index');
+                break;
+            
+            case 'branch_manager';
+                session()->forget('branch');
+                return redirect()->route('branchdashboard.index');
+                break;
+
+            case 'admin':
+                $managers = $this->_selectDashboard();
+                return response()->view('dashboards.select', compact('managers'));
+                break;
+
+            default:
+              
+                return redirect()->route('mgrdashboard.index');
+                break;
+
+            } 
+            /*$myBranches = $this->branch->whereIn('id', $person->getMyBranches())->get();
             if ($person->userdetails->hasRole(['national_account_manager'])) {
                 $fields = [
                     'top_25opportunities', 
@@ -193,19 +215,13 @@ class NewDashboardController extends Controller
                 $period = $this->period;
                 return response()->view('dashboards.namdashboard', compact('companies', 'person', 'period', 'data'));
 
-            } elseif ($myBranches->count()==1) {
-                
-                $branch = $this->_getBranchDashboard($myBranches->first());
-                dd($branch);
-                //return response()->view(, compact('branch'))
-
-            } elseif ($myBranches->count() >1) {
-                
-                return $this->_getManagerBranchDashboard($person);
+            } elseif ($myBranches->count()) {
+             
+                return redirect()->route('branchdashboard.show', $myBranches->first()->id);
 
             } else {
                 return redirect()->back()->withError('You do not have any dashboards');    
-            }
+            }*/
         }
         return redirect()->back()->withError($person->fullName() . ' is not part of your team');   
     }
@@ -327,7 +343,7 @@ class NewDashboardController extends Controller
 
     private function _getManagerBranchDashboard(Person $person)
     {
-        dd(198, $person);
+        dd(330, $person);
     }
 
     private function _getNAMDashboard(Person $person, array $fields)

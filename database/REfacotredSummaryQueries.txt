@@ -42,6 +42,33 @@ and branch_person.role_id = 9
 and branch_person.branch_id =  opportunities.branch_id
 
 group by manager
+/************************* activities by manager
+USE mapminer;
+SELECT
+    
+    concat_ws(' ' , m.firstname, m.lastname) as manager,
+        COUNT(CASE when activitytype_id = 4  then 1 end) as sales_appointment,
+        COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by,
+        COUNT(CASE when activitytype_id = 7  then 1 end) as proposal,
+        COUNT(CASE when activitytype_id = 10  then 1 end) as site_visit,
+        COUNT(CASE when activitytype_id = 13  then 1 end) as log_a_call,
+        COUNT(CASE when activitytype_id = 14  then 1 end) as in_person,
+        COUNT(*) as all_activities
+
+FROM `persons` m, persons r, branch_person, activities
+
+WHERE (m.reports_to = 647 or m.id = 647)
+and r.lft >= m.lft
+and r.rgt <= m.rgt
+and r.id = branch_person.person_id
+and branch_person.role_id = 9
+and branch_person.branch_id =  activities.branch_id
+
+and `activity_date` BETWEEN '2019-07-20 00:00:00' AND '2020-07-26 23:59:59' 
+AND `completed` = 1 
+
+group by manager
+/********************************
 
 /**********************************************************************************
 SELECT
@@ -52,7 +79,8 @@ SELECT
         COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by,
         COUNT(CASE when activitytype_id = 7  then 1 end) as proposal,
         COUNT(CASE when activitytype_id = 10  then 1 end) as site_visit,
-        COUNT(CASE when activitytype_id = 1  then 1 end) as log_a_call,
+        COUNT(CASE when activitytype_id = 13  then 1 end) as log_a_call,
+        COUNT(CASE when activitytype_id = 14  then 1 end) as in_person,
         COUNT(*) as all_activities
     
 FROM
@@ -133,3 +161,47 @@ FROM
         '9002'
     )
     group by branchname
+    /*******************************************************
+    /************************* activities by manager
+USE mapminer;
+SELECT
+    concat_ws(' ', firstname, lastname, activities.user_id) as manager,
+    COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment,
+    COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by,
+    COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal,
+    COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit,
+    COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call,
+    COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person,
+    COUNT(*) AS all_activities 
+    FROM
+    activities, persons
+WHERE
+    completed = 1 AND activity_date BETWEEN '2020-07-01' AND '2020-07-31' 
+    AND activities.user_id IN(
+        SELECT user_id
+        FROM   persons
+        WHERE lft > 423 AND rgt < 570 AND deleted_at IS NULL
+    )
+and persons.user_id = activities.user_id
+GROUP BY
+    manager
+
+    /**************************************************
+
+    select concat_ws("", persons.firstname, persons.lastname) as manager, 
+COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment, 
+COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by, 
+COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal, 
+COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit, 
+COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call, 
+COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person, 
+COUNT(*) AS all_activities 
+from `persons` inner join `persons` as `reports` on `reports`.`lft` >= `persons`.`lft` 
+and `reports`.`rgt` <= `persons`.`rgt` 
+inner join `activities` on `reports`.`user_id` = `activities`.`user_id` 
+where `completed` = 1 
+and `activity_date` between 2020-06-27 13:28:04 
+and 2020-07-27 13:28:04 
+and `id` in (128, 470, 1275, 1931, 3148, 3385, 654, 3449, 1250) 
+and `persons`.`deleted_at` is null group by `manager` 
+order by `persons`.`lft` asc
