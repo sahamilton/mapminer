@@ -163,8 +163,35 @@ class NewDashboardController extends Controller
     {
         
         if ($this->_isValidManager($person)) {
+           
+            session(['manager'=>$person->userdetails->id]);
+            
+            $person->load('userdetails.roles');
+            $myRoles = $person->userdetails->roles->pluck('name')->toArray();
+            
+            switch ($myRoles[0]) {
 
-            $myBranches = $this->branch->whereIn('id', $person->getMyBranches())->get();
+            case 'national_account_manager':
+                return redirect()->route('namdashboard.index');
+                break;
+            
+            case 'branch_manager';
+                session()->forget('branch');
+                return redirect()->route('branchdashboard.index');
+                break;
+
+            case 'admin':
+                $managers = $this->_selectDashboard();
+                return response()->view('dashboards.select', compact('managers'));
+                break;
+
+            default:
+              
+                return redirect()->route('mgrdashboard.index');
+                break;
+
+            } 
+            /*$myBranches = $this->branch->whereIn('id', $person->getMyBranches())->get();
             if ($person->userdetails->hasRole(['national_account_manager'])) {
                 $fields = [
                     'top_25opportunities', 
@@ -194,7 +221,7 @@ class NewDashboardController extends Controller
 
             } else {
                 return redirect()->back()->withError('You do not have any dashboards');    
-            }
+            }*/
         }
         return redirect()->back()->withError($person->fullName() . ' is not part of your team');   
     }
