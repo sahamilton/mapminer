@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-trait Geocode
+trait GeoCode
 {
       /**
        * GetGeoCode [description]
