@@ -205,3 +205,68 @@ and 2020-07-27 13:28:04
 and `id` in (128, 470, 1275, 1931, 3148, 3385, 654, 3449, 1250) 
 and `persons`.`deleted_at` is null group by `manager` 
 order by `persons`.`lft` asc
+
+
+
+
+/************************************************
+$query
+     ->join(`persons` AS `reports`, function ($join) {
+        $join->on(`reports`.`lft` >= `persons`.`lft` AND `reports`.`rgt` <= `persons`.`rgt`);
+     }
+    ->join('activities','reports.user_id','=','activities.user_id')
+    ->selectRaw("concat_ws(' ', firstname, lastname) as manager")
+    ->selectRaw("count(case when activitytype_id = 4  then 1 else 0 end) as sales_appointment")
+    ->selectRaw("count(case when activitytype_id = 5  then 1 else 0 end) as stop_by")
+    ->selectRaw("count(case when activitytype_id = 7  then 1 else 0 end) as proposal")
+    ->selectRaw("count(case when activitytype_id = 10  then 1 else 0 end) as site_visit")
+    ->selectRaw("count(case when activitytype_id = 13  then 1 else 0 end) as log_a_call")
+    ->selectRaw("count(case when activitytype_id = 14  then 1 else 0 end) as in_person")
+    ->selectRaw("count(*) as allactivities")
+    ->where('completed', 1)
+    ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+    ->where('persons.id', function ($q){
+        $q->select('id')->from('persons')->where('reports_to', 647);
+     })
+    ->whereNull('persons.deleted_at')
+    ->groupBy('manager')
+    
+
+$team = $this->person->directReports()->pluck('id')->toArray();
+App\Person::addSelect(['teamStats' => function ($query) {
+    $query->join(`persons` AS `reports`, function ($join) {
+        $join->on(`reports`.`lft` >= `persons`.`lft` AND `reports`.`rgt` <= `persons`.`rgt`);
+     })
+    ->selectRaw("count(case when activitytype_id = 4  then 1 else 0 end) as sales_appointment")
+    ->selectRaw("count(case when activitytype_id = 5  then 1 else 0 end) as stop_by")
+    ->selectRaw("count(case when activitytype_id = 7  then 1 else 0 end) as proposal")
+    ->selectRaw("count(case when activitytype_id = 10  then 1 else 0 end) as site_visit")
+    ->selectRaw("count(case when activitytype_id = 13  then 1 else 0 end) as log_a_call")
+    ->selectRaw("count(case when activitytype_id = 14  then 1 else 0 end) as in_person")
+    ->selectRaw("count(*) as allactivities")
+    ->where('completed', 1)
+    ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+    ->whereIn('user_id', );
+}])->whereIn('persons.id', );
+
+
+select `id`, `branchname`,  (select count(*) from `activities` where `branches`.`id` = `activities`.`branch_id` and `activity_date` between '2020-07-27 00:00:00' and '2020-08-02 23:59:59' and `completed` = 1 and `activitytype_id` = 4) as `sales_appointment`, (select count(*) from `activities` where `branches`.`id` = `activities`.`branch_id` and `activity_date` between '2020-07-27 00:00:00' and '2020-08-02 23:59:59' and `completed` = 1 and `activitytype_id` = 5) as `stop_by`, (select count(*) from `activities` where `branches`.`id` = `activities`.`branch_id` and `activity_date` between '2020-07-27 00:00:00' and '2020-08-02 23:59:59' and `completed` = 1 and `activitytype_id` = 7) as `proposal`, (select count(*) from `activities` where `branches`.`id` = `activities`.`branch_id` and `activity_date` between '2020-07-27 00:00:00' and '2020-08-02 23:59:59' and `completed` = 1 and `activitytype_id` = 10) as `site_visit`, (select count(*) from `activities` where `branches`.`id` = `activities`.`branch_id` and `activity_date` between '2020-07-27 00:00:00' and '2020-08-02 23:59:59' and `completed` = 1 and `activitytype_id` = 13) as `log_a_call`, (select count(*) from `activities` where `branches`.`id` = `activities`.`branch_id` and `activity_date` between '2020-07-27 00:00:00' and '2020-08-02 23:59:59' and `completed` = 1 and `activitytype_id` = 14) as `in_person`, (select count(*) from `activities` where `branches`.`id` = `activities`.`branch_id` and `activity_date` between '2020-07-27 00:00:00' and '2020-08-02 23:59:59' and `completed` = 1) as `activities_count` from `branches` where `id` in ('9001', '9002', '1160', '1153', '1152', '1151', '2256', '3300', '1161', '1610', '1611', '7386', '1159', '1668', '1669', '3062', '7262', '7261', '2681', '3063', '1661', '3064', '3426', '1665', '2255', '2961', '2753', '1605', '1878', '2751', '1149', '1150', '2700', '3400', '3403', '3430', '8038', '3434', '3418', '3422', '3424', '3431', '3433', '3404', '3411', '3417', '2685', '2686', '2684', '3401', '3416', '1455', '3413', '1205', '2402', '1209', '2146', '1206', '1210', '1207', '1208', '1201', '1203', '1432', '3011', '1143', '8046', '1145', '8042', '2841')
+/***********************************************
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' 
+     THEN 1
+        END
+    ) AS new_leads")
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."'  THEN 1
+        END
+    ) AS all_leads")
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."'
+             and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1
+        END
+    ) AS active_leads")"
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1
+        END
+    ) AS inactive_leads")

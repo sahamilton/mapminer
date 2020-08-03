@@ -118,7 +118,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     
     public function query()
     {
-        
+     
         return Branch::with('manager.reportsTo')
             ->whereHas(
                 'opportunities', function ($q) {
@@ -143,8 +143,8 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                                     $q->where('activitytype_id', 7);
                                 }
                             )
-                            ->withLastActivityId()
-                            ->with('lastActivity')
+                            ->withLastActivity()
+                            
                             ->whereClosed(0)
                             ->whereNotNull('expected_close')
                             ->whereNotNull('value')
