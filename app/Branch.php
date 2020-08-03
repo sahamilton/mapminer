@@ -66,6 +66,7 @@ class Branch extends Model
             'leads',
             'stale_leads',
             'active_leads',
+            'new_leads'
 
             
         ];
@@ -999,130 +1000,63 @@ class Branch extends Model
 
          */
         $this->fields = $fields;
-        return $query
-            ->when(
-                in_array('active_opportunities', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as active_opportunities'=>function ($query) {
-                                $query->currentlyActive($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('lost_opportunities', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as lost_opportunities'=>function ($query) {
-                                $query->lost($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-           
-            ->when(
-                in_array('new_opportunities', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as new_opportunities'=>function ($query) {
-                                $query->newOpportunities($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('open_opportunities', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as open_opportunities'=>function ($query) {
-                                $query->open($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('top25_opportunities', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as top25_opportunities'=>function ($query) {
-                                $query->top25($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('won_opportunities', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as won_opportunities'=>function ($query) {
-                                $query->won($this->period);
 
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('active_value', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as active_value' => function ($query) {
-                                $query->activeValue($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('lost_value', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as lost_value' => function ($query) {
-                                $query->lostValue($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('new_value', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as new_value'=>function ($query) {
-                                $query->newValue($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('open_value', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as open_value' => function ($query) {
-                                $query->openValue($this->period);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('won_value', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'opportunities as won_value' => function ($query) {
-                                $query->wonValue($this->period);
-                            }
-                        ]
-                    );
-                }
-            );
+        $query
+        ->join('address_branch', 'branches.id','=', 'address_branch.branch_id')
+        ->leftJoin('opportunities','opportunities.address_branch_id','=','address_branch.id')
+        ->leftJoin('activities', function ($join){
+                $join->on('activities.address_branch_id','=', 'address_branch.id')
+                ->where('completed',1)
+                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+            }
+        )
+        ->select('branchname','branches.id')
+        ->when(
+            in_array('sales_appointment', $this->fields), function ($q) {
+                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment");
+            }
+        )
+        ->when(
+            in_array('stop_by', $this->fields), function ($q) {
+                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 5 THEN 1  END) AS stop_by");
+            }
+        )
+        ->when(
+            in_array('proposal', $this->fields), function ($q) {
+                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 7 THEN 1  END) AS proposal");
+            }
+        )
+        ->when(
+            in_array('site_visit', $this->fields), function ($q) {
+                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 10 THEN 1  END) AS site_visit");
+            }
+        )
+        ->when(
+            in_array('log_a_call', $this->fields), function ($q) {
+                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 13 THEN 1  END) AS log_a_call");
+            }
+        )
+        ->when(
+            in_array('in_person', $this->fields), function ($q) {
+                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 14 THEN 1  END) AS in_person");
+            }
+        )
+        ->when(
+            in_array('all_activities', $this->fields), function ($q) {
+                $q->selectRaw("COUNT(*) AS all_activities");
+            }
+        )
+        ->selectRaw("COUNT(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN 1  END) AS open_opportunities")
+        ->selectRaw("SUM(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN `value`  else 0 END) AS open_value")
+        ->selectRaw("COUNT(CASE WHEN closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS new_opportunities")
+        ->selectRaw("SUM(CASE WHEN closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' THEN `value` else 0  END) AS new_value")
+        ->selectRaw("COUNT(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS won_opportunities")
+        ->selectRaw("SUM(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  else 0  END) AS won_value")
+        ->selectRaw("COUNT(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from'] ."' and '".$this->period['to']."' THEN 1  END) AS lost_opportunities")
+        ->selectRaw("SUM(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  END) AS lost_value")
+
+        ->groupBy('branches.id');
+        
 
     }
     /**
@@ -1285,39 +1219,21 @@ class Branch extends Model
     public function scopeSummaryActivities($query, $period, $fields = null)
     {
         $this->period = $period;
-        if (! $fields) {
-            $fields = $this->activityFields;
-        }
-        
-        $this->fields = $fields;
-        $query->join('activities', function($join)
-        {
-            $join->on('branches.id', '=', 'activities.branch_id')
-                 ->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
-                 ->whereCompleted(1);
-        });
-        
-        foreach ($this->activityFields as $key=>$field) {
-            //
-            if(in_array($field, $this->fields)) {
-                $label = str_replace(" ", "_",strtolower($field));
-                $query->withCount(
-                    [
-                        'activities as '.$label=>function ($query) use($key) {
-                            $query
-                            ->where('activitytype_id', $key);
-                        }
-                    ]
-                ); 
-            }
-        }
-        $query->withCount(
-                [
-                    'activities'=>function ($query) use($key) {
-                        
-                    }
-                ]
-            );
+     
+        $query->leftJoin('activities','activities.branch_id','=', 'branches.id')
+        ->select('branchname','branches.id')
+        ->selectRaw("COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment, 
+                    COUNT(CASE WHEN activitytype_id = 5 THEN 1  END) AS stop_by, 
+                    COUNT(CASE WHEN activitytype_id = 7 THEN 1  END) AS proposal, 
+                    COUNT(CASE WHEN activitytype_id = 10 THEN 1  END ) AS site_visit, 
+                    COUNT(CASE WHEN activitytype_id = 13 THEN 1  END) AS log_a_call, 
+                    COUNT(CASE WHEN activitytype_id = 14 THEN 1  END) AS in_person, 
+                    COUNT(*) AS all_activities")
+        ->where('completed',1)
+        ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+        ->groupBy('branches.id');          
+
+
 
     }
 
@@ -1328,8 +1244,10 @@ class Branch extends Model
             $fields = $this->leadFields;
         }
         $this->fields = $fields;
+
         /*
             'leads',
+            'new_leads',
             'stale_leads'
             'active_leads',
            
@@ -1359,10 +1277,10 @@ class Branch extends Model
                 }
             )
             ->when(
-                in_array('newbranchleads', $this->fields), function ($q) {
+                in_array('new_leads', $this->fields), function ($q) {
                     $q->withCount( 
                         [
-                            'leads as newbranchleads'=>function ($query) {
+                            'leads as new_leads'=>function ($query) {
                                 $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
                                     ->where('lead_source_id', 4);
                                         
@@ -1411,7 +1329,7 @@ class Branch extends Model
             );
 
     }
-    public function scopeSummaryStats($query,$period, $fields = null)
+   /* public function scopeSummaryStats($query,$period, $fields = null)
     {
         $this->period = $period;
         return $query->withCount(       
@@ -1531,7 +1449,7 @@ class Branch extends Model
             }
             ]
         );
-    }
+    }*/
     /**
      * [upcomingActivities description]
      * 

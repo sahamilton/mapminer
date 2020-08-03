@@ -1058,26 +1058,24 @@ class Person extends NodeModel implements HasPresenter
     {
         $this->period = $period;
 
-        $query->join('persons AS reports', function ($join) {
-                $join->on('reports.lft','>=','persons.lft')->on('reports.rgt', '<=', 'persons.rgt');
-             }
-         )
-            ->join('activities','reports.user_id','=','activities.user_id')
-            ->selectRaw("concat_ws(' ', persons.firstname, persons.lastname) as manager")
-            ->selectRaw("count(case when activitytype_id = 4  then 1 else 0 end) as sales_appointment")
-            ->selectRaw("count(case when activitytype_id = 5  then 1 else 0 end) as stop_by")
-            ->selectRaw("count(case when activitytype_id = 7  then 1 else 0 end) as proposal")
-            ->selectRaw("count(case when activitytype_id = 10  then 1 else 0 end) as site_visit")
-            ->selectRaw("count(case when activitytype_id = 13  then 1 else 0 end) as log_a_call")
-            ->selectRaw("count(case when activitytype_id = 14  then 1 else 0 end) as in_person")
-            ->selectRaw("count(*) as allactivities")
-            ->where('completed', 1)
-            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-            ->where('persons.id', function ($q){
-                $q->select('id')->from('persons')->where('reports_to', 647);
-             })
-            ->whereNull('persons.deleted_at')
-            ->groupBy('manager');
+        $query
+        ->join('persons as manager', 'persons.id', '=', 'manager.reports_to')
+        ->join('persons as reports',function ($join) {
+            $join->on('reports.lft', '>=', 'manager.lft')
+            ->on('reports.rgt', '<=', 'manager.rgt');
+        })
+        ->join('activities','reports.user_id', '=', 'activities.user_id')
+        ->where('completed',1)
+        ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+        ->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+        ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
+        ->selectRaw('COUNT(*) AS all_activities')
+        ->groupBy('manager');
 
     }
     

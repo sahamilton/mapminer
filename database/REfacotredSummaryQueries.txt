@@ -188,48 +188,64 @@ GROUP BY
 
     /**************************************************
 
-    SELECT
-    CONCAT_WS(
-        "",
-        persons.firstname,
-        persons.lastname
-    ) AS manager,
-    COUNT(
-        CASE WHEN activitytype_id = 4 THEN 1
-    END
-) AS sales_appointment,
-COUNT(
-    CASE WHEN activitytype_id = 5 THEN 1
-END
-) AS stop_by,
-COUNT(
-    CASE WHEN activitytype_id = 7 THEN 1
-END
-) AS proposal,
-COUNT(
-    CASE WHEN activitytype_id = 10 THEN 1
-END
-) AS site_visit,
-COUNT(
-    CASE WHEN activitytype_id = 13 THEN 1
-END
-) AS log_a_call,
-COUNT(
-    CASE WHEN activitytype_id = 14 THEN 1
-END
-) AS in_person,
-COUNT(*) AS all_activities
-FROM
-    `persons`
-INNER JOIN `persons` AS `reports`
-ON
-    `reports`.`lft` >= `persons`.`lft` AND `reports`.`rgt` <= `persons`.`rgt`
-INNER JOIN `activities` ON `reports`.`user_id` = `activities`.`user_id`
-WHERE
-    `completed` = 1 
-    AND `activity_date` 
-    BETWEEN '2020-06-27' AND '2020-07-27' 
-    AND `persons`.`id` IN(select id from persons where reports_to = 437)
-    AND `persons`.`deleted_at` IS NULL
-GROUP BY
-    `manager`
+select 
+COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment, 
+COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by, 
+COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal, 
+COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit, 
+COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call, 
+COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person, 
+COUNT(*) AS all_activities 
+from `persons` inner join `persons` as `reports` on `reports`.`lft` >= `persons`.`lft` 
+and `reports`.`rgt` <= `persons`.`rgt` 
+inner join `activities` on `reports`.`user_id` = `activities`.`user_id` 
+where `completed` = 1 
+and `activity_date` between '2020-07-01 13:28:04' 
+and '2020-07-27 13:28:04' 
+and `persons`.`id` in (select id from persons where reports_to = 647) 
+and `persons`.`deleted_at` is null
+
+// from branches
+select branchname, bas.* from (select * from (select 
+        branch_id,
+        COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment, 
+        COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by, 
+        COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal, 
+        COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit, 
+        COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call, 
+        COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person, 
+        COUNT(*) AS all_activities 
+                    from activities 
+                    where completed =1 
+                    and activity_date between '2020-07-27 00:00:00' 
+                    AND '2020-08-02 23:59:59' 
+                    group by branch_id
+                   ) branchactivities
+                                           ) bas
+, branches
+  where branches.id in  ('1552', '1522', '1506', '1518', '1516', '1525', '1589')
+  and branches.id = bas.branch_id
+
+from persons
+select concat_ws(" ", firstname, lastname) as manager, manageractivities.* 
+    from persons, (select
+        reports.id as manager_id,
+        COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment, 
+        COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by, 
+        COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal, 
+        COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit, 
+        COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call, 
+        COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person, 
+        COUNT(*) AS all_activities 
+        from activities, persons reports, persons team 
+        where  (reports.reports_to = 647 or reports.id = 647)
+        and team.lft >= reports.lft
+        and team.rgt <= reports.rgt
+        and team.user_id = activities.user_id
+        and completed =1 
+        and activity_date between '2020-07-27 00:00:00' 
+        AND '2020-08-02 23:59:59' 
+        group by manager_id
+   ) manageractivities
+where  (persons.reports_to = 647 or persons.id = 647)
+and manageractivities.manager_id = persons.id
