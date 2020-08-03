@@ -123,8 +123,14 @@ class ReportsController extends Controller {
         } else {
             $object=null;
         }
-        $managers = $this->person->managers();
+        if(auth()->user()->hasRole(['admin', 'sales_ops'])){
+            
+            $managers = $this->person->managers();
+        } else {
+            $managers = auth()->user()->person->descendants()->get();
+        }
         
+                
         return response()->view('reports.show', compact('report', 'object', 'managers'));
     }
 

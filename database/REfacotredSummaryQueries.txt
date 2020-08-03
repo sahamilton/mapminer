@@ -188,7 +188,6 @@ GROUP BY
 
     /**************************************************
 
-select 
 COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment, 
 COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by, 
 COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal, 

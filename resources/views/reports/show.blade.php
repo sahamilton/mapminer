@@ -69,7 +69,8 @@
     @endif
     </div>
     @include('reports.partials._removerecipient')
+    @endif
     @include('reports.partials._variableselector')
-@endif
+
 @include('partials._scripts')
 @endsection
