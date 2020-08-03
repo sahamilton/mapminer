@@ -73,7 +73,7 @@ group by manager
 /**********************************************************************************
 SELECT
     
-    `branchname`,
+    `branches`.`id`,
    
         COUNT(CASE when activitytype_id = 4  then 1 end) as sales_appointment,
         COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by,
@@ -88,7 +88,7 @@ FROM
     left join activities on branches.id = activities.branch_id
 
     WHERE
-        `branches`.`id` = `activities`.`branch_id` AND `activity_date` BETWEEN '2019-07-20 00:00:00' AND '2020-07-26 23:59:59' AND `completed` = 1 
+        `branches`.`id` = `activities`.`branch_id` AND `activity_date` BETWEEN '2019-07-03 00:00:00' AND '2020-08-03 23:59:59' AND `completed` = 1 
         and 
     branches.id IN(
         '1143',
@@ -160,7 +160,7 @@ FROM
         '9001',
         '9002'
     )
-    group by branchname
+    group by branches.id
     /*******************************************************
     /************************* activities by manager
 USE mapminer;
