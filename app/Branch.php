@@ -1001,51 +1001,10 @@ class Branch extends Model
          */
         $this->fields = $fields;
 
-        $query
-        ->join('address_branch', 'branches.id','=', 'address_branch.branch_id')
-        ->leftJoin('opportunities','opportunities.address_branch_id','=','address_branch.id')
-        ->leftJoin('activities', function ($join){
-                $join->on('activities.address_branch_id','=', 'address_branch.id')
-                ->where('completed',1)
-                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-            }
-        )
+        $query->leftJoin('opportunities','opportunities.branch_id','=','branches.id')
+        
         ->select('branchname','branches.id')
-        ->when(
-            in_array('sales_appointment', $this->fields), function ($q) {
-                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment");
-            }
-        )
-        ->when(
-            in_array('stop_by', $this->fields), function ($q) {
-                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 5 THEN 1  END) AS stop_by");
-            }
-        )
-        ->when(
-            in_array('proposal', $this->fields), function ($q) {
-                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 7 THEN 1  END) AS proposal");
-            }
-        )
-        ->when(
-            in_array('site_visit', $this->fields), function ($q) {
-                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 10 THEN 1  END) AS site_visit");
-            }
-        )
-        ->when(
-            in_array('log_a_call', $this->fields), function ($q) {
-                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 13 THEN 1  END) AS log_a_call");
-            }
-        )
-        ->when(
-            in_array('in_person', $this->fields), function ($q) {
-                $q->selectRaw("COUNT( CASE WHEN activitytype_id = 14 THEN 1  END) AS in_person");
-            }
-        )
-        ->when(
-            in_array('all_activities', $this->fields), function ($q) {
-                $q->selectRaw("COUNT(*) AS all_activities");
-            }
-        )
+
         ->selectRaw("COUNT(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN 1  END) AS open_opportunities")
         ->selectRaw("SUM(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN `value`  else 0 END) AS open_value")
         ->selectRaw("COUNT(CASE WHEN closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS new_opportunities")
@@ -1189,25 +1148,7 @@ class Branch extends Model
         );
 
     }
-    public function scopeNewSummaryActivities($query, $period, $fields = null)
-    {
-       $this->period = $period;
-       $query->select ('branches.*')->with(['activities'=>function ($q) {
-            $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-            ->select('id', 'branch_id')
-            ->selectRaw("count(case when activitytype_id = 4  then 1 else 0 end) as sales_appointment")
-            ->selectRaw("count(case when activitytype_id = 5  then 1 else 0 end) as stop_by")
-            ->selectRaw("count(case when activitytype_id = 7  then 1 else 0 end) as proposal")
-            ->selectRaw("count(case when activitytype_id = 10  then 1 else 0 end) as site_visit")
-            ->selectRaw("count(case when activitytype_id = 13  then 1 else 0 end) as log_a_call")
-            ->selectRaw("count(case when activitytype_id = 14  then 1 else 0 end) as in_person");
-            }
-        ]
-        );
-
-       
-
-    }
+    
     /**
      * [scopeSummaryActivities description]
      * 
@@ -1252,204 +1193,39 @@ class Branch extends Model
             'active_leads',
            
          */
-         return $query
-            ->when(
-                in_array('leads', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'leads'=>function ($query) {
-                                $query->where('address_branch.created_at', '<=', $this->period['to'])
-                                    ->where(
-                                        function ($q) {
-                                            $q->whereDoesntHave('opportunities')
-                                                ->orWhereHas(
-                                                    'opportunities', function ($q1) {
-                                                        $q1->where(
-                                                            'opportunities.created_at', '>', $this->period['to']
-                                                        );
-                                                    }
-                                                );
-                                        }
-                                    )->where('address_branch.status_id',2);
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('new_leads', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                            'leads as new_leads'=>function ($query) {
-                                $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
-                                    ->where('lead_source_id', 4);
-                                        
-                            }
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('stale_leads', $this->fields), function ($q) {
-                    $q->withCount( 
-                        [
-                           'addresses as active_leads'=>function ($q) {
-                                $q->whereDoesntHave(
-                                    'activities',function ($q) {
-                                        $q->where('completed', 1)
-                                        ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
-                                    }
-                                )
-                                ->where('address_branch.created_at', '<=', $this->period['to']);
-                            }
-
-                        ]
-                    );
-                }
-            )
-            ->when(
-                in_array('active_leads', $this->fields), function ($q) {
-                    $q->withCount(
-                        [
-                            'addresses as active_leads'=>function ($q) {
-                                $q->wherehas(
-                                    'activities',function ($q) {
-                                        $q->where('completed', 1)
-                                        ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
-                                    }
-                                )
-                                ->where('address_branch.created_at', '<=', $this->period['to']);
-                            }
-
-
-                        ]
-                    );
-
-                }
-            );
+         $query
+            ->join('address_branch', 'branches.id', '=', 'address_branch.branch_id')
+            ->select('branches.id', 'branchname')
+            ->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' THEN 1  END ) AS new_leads")
+            ->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' THEN 1 END) AS all_leads")
+            ->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1 END ) AS active_leads")
+            ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1 END) AS inactive_leads")
+            ->groupBy('branches.id');
 
     }
-   /* public function scopeSummaryStats($query,$period, $fields = null)
+   public function scopeSummaryStats($query,$period, $fields = null)
     {
         $this->period = $period;
-        return $query->withCount(       
-            [
-                'leads'=>function ($query) {
-                $query->where('address_branch.created_at', '<=', $this->period['to'])
-                    ->where(
-                        function ($q) {
-                            $q->whereDoesntHave('opportunities')
-                                ->orWhereHas(
-                                    'opportunities', function ($q1) {
-                                        $q1->where(
-                                            'opportunities.created_at', '>', $this->period['to']
-                                        );
-                                    }
-                                );
-                        }
-                    );
-            },
-            'offeredLeads'=>function ($query) {
-                $query->whereHas(
-                    'assignedToBranch', function ($q) {
+        $query
+            ->join('address_branch', 'branches.id', '=', 'address_branch.branch_id')
+            ->select('branches.id', 'branchname')
+            ->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' THEN 1  END ) AS new_leads")
+            ->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' THEN 1 END) AS all_leads")
+            ->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1 END ) AS active_leads")
+            ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1 END) AS inactive_leads")
+            ->groupBy('branches.id');
 
-                        $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
-                    }
-                );
-            },
-            'neglectedLeads',
-            'leads as newbranchleads'=>function ($query) {
-                $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
-                    ->where(
-                        function ($q) {
-                            $q->where('lead_source_id', 4);
-                        }
-                    );
-            },
-            'activities'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('completed', 1);
-            },
-            'activities as openactivities'=>function ($query) {
-                $query->where('completed', 0)->orWhereNull('completed');
-                    
-            },
-            
-            'activities as salesapptsscheduled'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('activitytype_id', 4);
-            },
-            'opportunities as opened'=>function ($query) {
-                $query->whereBetween(
-                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
-                );
-            },
-            'opportunities as won'=>function ($query) {
-                $query->whereClosed(1)
-                    ->whereBetween(
-                        'actual_close', [$this->period['from'],$this->period['to']]
-                    );
-            },
-            'opportunities as lost'=>function ($query) {
-                $query->whereClosed(2)
-                    ->whereBetween(
-                        'actual_close', [$this->period['from'],$this->period['to']]
-                    );
-            },
-            'opportunities as Top25'=>function ($query) {
-                $query->where('opportunities.Top25',  1)
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            },
-            'opportunities as Top25value'=>function ($query) {
-                $query->select(\DB::raw("SUM(value) as Top25value"))
-                    ->where('opportunities.Top25',  1)
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            },
-            'opportunities as open'=>function ($query) {
-                $query->whereClosed(0)        
-                    ->OrWhere(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            },
-            'opportunities as wonvalue' => function ($query) {
-                $query->select(\DB::raw("SUM(value) as wonvalue"))
-                    ->where('closed', 1)
-                    ->whereBetween(
-                        'actual_close', [$this->period['from'],$this->period['to']]
-                    );
-            },
-            'opportunities as openvalue' => function ($query) {
-                $query->select(\DB::raw("SUM(value) as wonvalue"))
-                    ->whereClosed(0)        
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            }
-            ]
-        );
-    }*/
+            ], $this->period['to']])
+        ->groupBy('branches.id');  
+        $quer->union('activities')
+
+    }
     /**
      * [upcomingActivities description]
      * 

@@ -242,9 +242,132 @@ select concat_ws(" ", firstname, lastname) as manager, manageractivities.*
         and team.rgt <= reports.rgt
         and team.user_id = activities.user_id
         and completed =1 
-        and activity_date between '2020-07-27 00:00:00' 
+        and activity_date between '2020-07-03 00:00:00' 
         AND '2020-08-02 23:59:59' 
         group by manager_id
    ) manageractivities
 where  (persons.reports_to = 647 or persons.id = 647)
 and manageractivities.manager_id = persons.id
+/******************************************************************
+
+select branches.id, 
+COUNT(
+            CASE WHEN address_branch.created_at between '2020-07-03 00:00:00' 
+        AND '2020-08-02 23:59:59' 
+     THEN 1
+        END
+    ) AS new_leads,
+    COUNT(
+            CASE WHEN address_branch.created_at <=  '2020-08-02 23:59:59'  THEN 1
+        END
+    ) AS all_leads,
+    COUNT(
+            CASE WHEN address_branch.created_at <=  '2020-08-02 23:59:59'
+             and address_branch.last_activity BETWEEN '2020-07-03 00:00:00' 
+        AND '2020-08-02 23:59:59'   THEN 1
+        END
+    ) AS active_leads,
+    COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT between '2020-07-03 00:00:00' 
+        AND '2020-08-02 23:59:59'  or last_activity is null)  THEN 1
+        END
+    ) AS inactive_leads
+
+    from branches
+    inner join branch_address on branches.id = branch_address.branch_id
+    where 
+ branches.id in ('1143',
+        '1145',
+        '1201',
+        '1203',
+        '1205',
+        '1207',
+        '1209',
+        '1210',
+        '1455',
+        '1610',
+        '1611',
+        '1661',
+        '1665',
+        '1669',
+        '1878',
+        '2146',
+        '2402',
+        '2684',
+        '2685',
+        '2686',
+        '2841',
+        '3011',
+        '3062',
+        '3401',
+        '3403',
+        '3404',
+        '3411',
+        '3413',
+        '3417',
+        '3422',
+        '3424',
+        '3430',
+        '3431',
+        '3433',
+        '7262',
+        '7386',
+        '8038',
+        '8042',
+        '8046',
+        '2681',
+        '1151',
+        '1153',
+        '1152',
+        '1159',
+        '1160',
+        '1161',
+        '2256',
+        '3300',
+        '1150',
+        '1149',
+        '2255',
+        '2751',
+        '2753',
+        '2961',
+        '3434',
+        '3426',
+        '3064',
+        '1668',
+        '2700',
+        '3400',
+        '3063',
+        '1432',
+        '1605',
+        '7261',
+        '3416',
+        '3418',
+        '9001',
+        '9002'
+    )
+    group by branches.id
+/***********************************
+
+$query->select('branches.id', 'branchname')
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' 
+     THEN 1
+        END
+    ) AS new_leads")
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."'  THEN 1
+        END
+    ) AS all_leads")
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."'
+             and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1
+        END
+    ) AS active_leads")"
+->selectRaw("COUNT(
+            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1
+        END
+    ) AS inactive_leads")
+->join('address_branch', 'branches.id', '=', 'address_branch.branch_id')
+
+    update address_branch set last_activity = (select activity_date from activities where activities.branch_id = address_branch.branch_id and activities.address_id = address_branch.address_id
+    and completed =1 order by activity_date desc)
