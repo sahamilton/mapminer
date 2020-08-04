@@ -1221,9 +1221,6 @@ class Branch extends Model
             ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1 END) AS inactive_leads")
             ->groupBy('branches.id');
 
-            ], $this->period['to']])
-        ->groupBy('branches.id');  
-        $quer->union('activities')
 
     }
     /**
