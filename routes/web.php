@@ -256,6 +256,7 @@ Route::group(
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
 
        Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
+       Route::post('branchcampaigns/delete', ['as'=>'branchcampaign.delete', 'uses'=>'BranchCampaignController@delete']);
 
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 

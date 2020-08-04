@@ -28,6 +28,10 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
+    $(document).on('show.bs.modal','#confirm-delete-campaign', function(e) {
+        $(this).find('#campaigndeletetitle').html($(e.relatedTarget).data('title'));
+        $(this).find('#campaigndeleteaction-form').attr('action',$(e.relatedTarget).data('href'));
+    }); 
     $(document).on('show.bs.modal','#addtocampaign', function(e) {
         $(this).find('#title').html($(e.relatedTarget).data('title'));
         $(this).find('#address_id').val($(e.relatedTarget).data('id'));

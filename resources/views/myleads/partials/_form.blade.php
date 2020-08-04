@@ -173,7 +173,7 @@ $branches = auth()->user()->person->getMyBranches()
             multiple
             >
 
-            <option></option>
+            <option value="0"></option>
             @foreach ($campaigns as $campaign)
             <option value="{{$campaign->id}}">{{$campaign->title}}</option>
             @endforeach

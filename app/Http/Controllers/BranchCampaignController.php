@@ -67,16 +67,16 @@ class BranchCampaignController extends Controller
     {
         
         if (! session('manager')) {
-            $manager = $this->person->findOrFail(auth()->user()->person->id);
-            session(['manager'=>$manager->id]);
+            $manager = $this->person->where('user_id', auth()->user()->id)->first();
+            session(['manager'=>auth()->user()->id]);
         } else {
-            $manager = $this->person->findOrFail(session('manager'));
+            $manager = $this->person->where('user_id', session('manager'))->first();
         }
        
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
         
-        $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
-       
+        $campaigns = $this->campaign->active()->current($myBranches->pluck('id')->toArray())->get();
+        
         $branches = $campaigns->first()->branches->intersect($myBranches);
        
         if (! $campaigns->count()) {
@@ -89,8 +89,6 @@ class BranchCampaignController extends Controller
             $campaign = $campaigns->first();
             session(['campaign'=>$campaigns->first()->id]);
         }
-        
-        
         
         if ($branches->count() == 1) {
 
@@ -131,6 +129,13 @@ class BranchCampaignController extends Controller
                $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
             } 
         }
+
+        foreach ($existing as $campaign) {
+            if(! in_array($campaign, request('campaign'))) {
+               $count--;
+               $ac[] = $this->addresscampaign->delete(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+            } 
+        }
             // check if this address is already part of the campaign
             
         
@@ -155,6 +160,33 @@ class BranchCampaignController extends Controller
 
         return $this->index();
     }
+
+
+    public function destroy(Request $request)
+    {
+        dd(request()->all());
+
+
+        $existing = $this->addresscampaign->where('address_id', request('address_id'))->pluck('campaign_id')->toArray();
+        $count=0;
+        foreach (request('campaign') as $campaign_id) {
+            if(! in_array($campaign_id, $existing)) {
+                $count++;
+               $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+            } 
+        }
+
+        foreach ($existing as $campaign) {
+            if(! in_array($campaign, request('campaign'))) {
+               $count--;
+               $ac[] = $this->addresscampaign->delete(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+            } 
+        }
+            // check if this address is already part of the campaign
+            
+        
+        return back()->withMessage('Lead added to ' .$count . ' campaigns');
+    }
     /**
      * [show description]
      * 
@@ -175,7 +207,7 @@ class BranchCampaignController extends Controller
             return redirect()->back()->withError('That is not one of your branches');
         }
 
-        $campaigns = $this->campaign->whereHas(
+        $campaigns = $this->campaign->active()->whereHas(
             'branches', function ($q) use ($myBranches) {
                 $q->whereIn('branch_id', array_keys($myBranches));
             }
