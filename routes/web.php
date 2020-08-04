@@ -256,13 +256,13 @@ Route::group(
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
 
        Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
-       Route::post('branchcampaigns/delete', ['as'=>'branchcampaign.delete', 'uses'=>'BranchCampaignController@delete']);
+       Route::post('branchcampaigns/remove', ['as'=>'branchcampaign.delete', 'uses'=>'BranchCampaignController@delete']);
 
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 
         Route::post('branchcampaigns/{campaign}/setmgr',['as'=>'branchcampaign.manager','uses'=>'BranchCampaignController@setManager']);
 
-        Route::resource('branchcampaigns', 'BranchCampaignController');
+        Route::resource('branchcampaigns', 'BranchCampaignController',['except'=>['destroy']]);
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
         //   Sales organization

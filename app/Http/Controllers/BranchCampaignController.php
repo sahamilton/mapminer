@@ -162,30 +162,15 @@ class BranchCampaignController extends Controller
     }
 
 
-    public function destroy(Request $request)
+    public function delete(Request $request)
     {
-        dd(request()->all());
-
-
-        $existing = $this->addresscampaign->where('address_id', request('address_id'))->pluck('campaign_id')->toArray();
-        $count=0;
-        foreach (request('campaign') as $campaign_id) {
-            if(! in_array($campaign_id, $existing)) {
-                $count++;
-               $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
-            } 
-        }
-
-        foreach ($existing as $campaign) {
-            if(! in_array($campaign, request('campaign'))) {
-               $count--;
-               $ac[] = $this->addresscampaign->delete(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
-            } 
-        }
-            // check if this address is already part of the campaign
+        $ac = $this->addresscampaign
+        ->where('address_id',request('address_id'))
+        ->where('campaign_id',request('campaign_id'))
+        ->first();
+        $ac->delete();
             
-        
-        return back()->withMessage('Lead added to ' .$count . ' campaigns');
+        return back()->withMessage('Lead removed from campaign');
     }
     /**
      * [show description]
