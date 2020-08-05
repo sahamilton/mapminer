@@ -80,7 +80,8 @@ class BranchCampaignController extends Controller
         $branches = $campaigns->first()->branches->intersect($myBranches);
        
         if (! $campaigns->count()) {
-            return redirect()->back()->withMessage('There are no current sales campaigns for your branches');
+            return redirect()->back()
+                ->withMessage('There are no current sales campaigns for your branches');
         }
         
         if (session('campaign') && session('campaign') != 'all') {
