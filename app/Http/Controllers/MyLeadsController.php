@@ -123,7 +123,7 @@ class MyLeadsController extends BaseController
         
         $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
         
-        if (request()->filled('campaign')) {
+        if (request()->filled('campaign')  && request('campaign') !=0) {
             $address->campaigns()->attach(request('campaign'));
         }
         $dupes = $this->_getDuplicateLeads($data);
