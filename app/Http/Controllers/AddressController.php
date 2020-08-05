@@ -173,10 +173,10 @@ class AddressController extends BaseController
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
 
         $address->update($data);
-        if (request()->has('campaign')) {
+        if (request()->filled('campaign') && request('campaign')!=0) {
             $address->campaigns()->attach(request('campaign'));
         } else {
-             $address->campaigns()->detach(request('campaign'));
+             $address->campaigns()->detach();
         }
         return redirect()->route('address.show', $address->id)->withMessage('Location updated');
     }
