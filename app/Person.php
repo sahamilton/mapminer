@@ -1070,4 +1070,30 @@ class Person extends NodeModel implements HasPresenter
 
     }
     
+    public function scopeSummaryOpportunities($query, $period)
+    {
+        $query
+            ->selectRaw("concat_ws(' ', mgr.firstname, mgr.lastname) as manager, count(CASE when opportunities.closed = 0 and opportunities.created_at < '".$this->period['to']."' then 1 end) as open")
+            ->selectRaw("count(CASE when opportunities.closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' then 1 end) as opened")
+            ->selectRaw("count(CASE when opportunities.closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' then 1 end) as won")
+            ->selectRaw("SUM(CASE When opportunities.closed = 1  then `value` else 0 end ) as wonvalue")
+            ->selectRaw("COUNT(CASE when opportunities.closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' then 1 end) as lost")
+            ->selectRaw("SUM(CASE When opportunities.closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' then `value` else 0 end ) as lostvalue")
+            ->selectRaw("SUM(CASE When opportunities.closed = 0 and opportunities.created_at < '".$this->period['to']."' then `value` Else 0 End ) as openvalue")
+
+            ->join("persons as mgr", function ($join) {
+                $join->on('mgr.reports_to', '=', 'persons.id')
+                    ->whereNull('mgr.deleted_at');
+                }
+            )
+            ->join('persons as reports', function ($join) {
+                $join->on('reports.lft', '>=', 'mgr.lft')
+                    ->on('reports.rgt', '<=', 'mgr.rgt')
+                    ->whereNull('reports.deleted_at');
+            })
+            ->join('branch_person', 'reports.id', '=', 'branch_person.person_id')
+            ->join('opportunities', 'branch_person.branch_id', '=', 'opportunities.branch_id')
+            ->where('branch_person.role_id','=',9)
+            ->groupBy('manager');
+    }
 }
