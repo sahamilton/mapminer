@@ -67,20 +67,21 @@ class BranchCampaignController extends Controller
     {
         
         if (! session('manager')) {
-            $manager = $this->person->findOrFail(auth()->user()->person->id);
-            session(['manager'=>$manager->id]);
+            $manager = $this->person->where('user_id', auth()->user()->id)->first();
+            session(['manager'=>auth()->user()->id]);
         } else {
-            $manager = $this->person->findOrFail(session('manager'));
+            $manager = $this->person->where('user_id', session('manager'))->first();
         }
        
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
         
-        $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
-       
+        $campaigns = $this->campaign->active()->current($myBranches->pluck('id')->toArray())->get();
+        
         $branches = $campaigns->first()->branches->intersect($myBranches);
        
         if (! $campaigns->count()) {
-            return redirect()->back()->withMessage('There are no current sales campaigns for your branches');
+            return redirect()->back()
+                ->withMessage('There are no current sales campaigns for your branches');
         }
         
         if (session('campaign') && session('campaign') != 'all') {
@@ -89,8 +90,6 @@ class BranchCampaignController extends Controller
             $campaign = $campaigns->first();
             session(['campaign'=>$campaigns->first()->id]);
         }
-        
-        
         
         if ($branches->count() == 1) {
 
@@ -131,6 +130,13 @@ class BranchCampaignController extends Controller
                $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
             } 
         }
+
+        foreach ($existing as $campaign) {
+            if(! in_array($campaign, request('campaign'))) {
+               $count--;
+               $ac[] = $this->addresscampaign->delete(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+            } 
+        }
             // check if this address is already part of the campaign
             
         
@@ -155,6 +161,18 @@ class BranchCampaignController extends Controller
 
         return $this->index();
     }
+
+
+    public function delete(Request $request)
+    {
+        $ac = $this->addresscampaign
+        ->where('address_id',request('address_id'))
+        ->where('campaign_id',request('campaign_id'))
+        ->first();
+        $ac->delete();
+            
+        return back()->withMessage('Lead removed from campaign');
+    }
     /**
      * [show description]
      * 
@@ -175,7 +193,7 @@ class BranchCampaignController extends Controller
             return redirect()->back()->withError('That is not one of your branches');
         }
 
-        $campaigns = $this->campaign->whereHas(
+        $campaigns = $this->campaign->active()->whereHas(
             'branches', function ($q) use ($myBranches) {
                 $q->whereIn('branch_id', array_keys($myBranches));
             }

@@ -16,16 +16,11 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Login' => [
             'App\Listeners\Users\UpdateLastLoggedInAt',
         ],
-        
+                
         'App\Events\FeedbackEvent' => [
             'App\Listeners\FeedbackListener',
         ],
-        '\Lab404\Impersonate\Events\TakeImpersonation'=>[
-            'App\Listeners\TakeImpersonationListener',
-        ],
-        '\Lab404\Impersonate\Events\LeaveImpersonation'=>[
-            'App\Listeners\LeaveImpersonationListener',
-        ],
+        
         
     ];
 
