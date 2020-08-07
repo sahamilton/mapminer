@@ -8,7 +8,7 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter
 {
-    use Geocode, Filters, SoftDeletes, FullTextSearch;
+    use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch;
     public $salesroles = ['5','9'];
     public $branchroles = ['9'];
     // Add your validation rules here
@@ -301,7 +301,7 @@ class Person extends NodeModel implements HasPresenter
      */
     public function scopeMyReports($query)
     {
-        return $query->descendantsAndSelf($this->id);
+        return $query->wheresummar;
     }
     public function ownBranches()
     {
@@ -1072,25 +1072,27 @@ class Person extends NodeModel implements HasPresenter
     
     public function scopeSummaryOpportunities($query, $period)
     {
-        $query
-            ->selectRaw("concat_ws(' ', mgr.firstname, mgr.lastname) as manager, count(CASE when opportunities.closed = 0 and opportunities.created_at < '".$this->period['to']."' then 1 end) as open")
-            ->selectRaw("count(CASE when opportunities.closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' then 1 end) as opened")
-            ->selectRaw("count(CASE when opportunities.closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' then 1 end) as won")
-            ->selectRaw("SUM(CASE When opportunities.closed = 1  then `value` else 0 end ) as wonvalue")
-            ->selectRaw("COUNT(CASE when opportunities.closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' then 1 end) as lost")
-            ->selectRaw("SUM(CASE When opportunities.closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' then `value` else 0 end ) as lostvalue")
-            ->selectRaw("SUM(CASE When opportunities.closed = 0 and opportunities.created_at < '".$this->period['to']."' then `value` Else 0 End ) as openvalue")
+        
+        $this->period = $period;
 
-            ->from("persons","mgr")
-            ->from("persons","reports")
-            ->join('branch_person', 'reports.id', '=', 'branch_person.person_id')
-            ->join('opportunities', 'branch_person.branch_id', '=', 'opportunities.branch_id')
-            ->where('mgr.reports_to', '=', 'persons.id')
-            ->where('reports.lft', '>=', 'mgr.lft')
-            ->where('reports.rgt', '<=', 'mgr.rgt')
-            ->whereNull('reports.deleted_at')
-            ->whereNull('mgr.deleted_at')
-            ->where('branch_person.role_id','=',9)
-            ->groupBy('manager');
+        $query->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+        ->join('persons as reports',function ($join) {
+            $join->on('reports.lft', '>=', 'persons.lft')
+            ->on('reports.rgt', '<=', 'persons.rgt')
+            ->join('activities','reports.user_id', '=', 'activities.user_id');
+        })
+        
+        ->where('completed',1)
+        ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+        ->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+        ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
+        ->selectRaw('COUNT(*) AS all_activities')
+        ->groupBy('manager');
+        
     }
 }

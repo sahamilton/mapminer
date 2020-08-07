@@ -219,7 +219,9 @@
 @include('addresses.partials._deleteleadmodal')
 @endif
 @include('addresses.partials._addresscampaignmodal')
-
+@if($campaigns->count())
+  @include('addresses.partials._removecampaignmodal')
+@endif
 @include('opportunities.partials._closemodal')
 @include('addresses.partials._reassignlead')
 @include('addresses.partials._rateaddressform')

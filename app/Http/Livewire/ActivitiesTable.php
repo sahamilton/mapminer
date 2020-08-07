@@ -71,8 +71,5 @@ class ActivitiesTable extends Component
 
 
         ]);
-        /*
-        $data['activities'] = ->get();
-         */
     }
 }

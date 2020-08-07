@@ -70,6 +70,7 @@ class OpportunityController extends BaseController
      */
     public function index()
     {
+      
         $person = auth()->user()->person;
      
         if (! $this->period) {
@@ -77,13 +78,13 @@ class OpportunityController extends BaseController
         }
 
         $activityTypes = $activityTypes = ActivityType::all();
-        $myBranches = $this->person->myBranches();
+        $myBranches = $person->getMyBranches();
         
         if (! $myBranches) {
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
-        session(['branch'=>array_keys($myBranches)[0]]);
+        session(['branch'=>$myBranches[0]]);
         
         $period = $this->period;
 
@@ -98,16 +99,12 @@ class OpportunityController extends BaseController
             );
 
         } else {
-            $person = $this->_getManagers();
+           
             $managers = $person->load('directReports')->directReports;
-          
-            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches));
-            
-            $data['period'] = $period;
-
+           
             return response()->view(
                 'opportunities.summary', 
-                compact('data', 'activityTypes', 'myBranches', 'managers', 'person')
+                compact('managers', 'person', 'period')
             );
         }
              
@@ -229,7 +226,7 @@ class OpportunityController extends BaseController
     private function _getBranchSummaryData(array $branches)
     {
         return $this->branch->summaryOpportunities($this->period)
-            ->whereIn('id', $branches)
+            ->whereIn('branches.id', $branches)
             ->get();
     } 
     /**

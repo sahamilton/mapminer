@@ -75,21 +75,6 @@ class BranchesController extends BaseController {
      */
     public function index()
     {
-
-        /*$branches = $this->branch
-            ->with(
-                'region', 'manager', 
-                'relatedPeople', 'relatedPeople.userdetails.roles', 
-                'servicelines'
-            )
-            ->whereHas(
-                'servicelines', function ($q) {
-                        $q->whereIn('serviceline_id', $this->userServiceLines);
-
-                }
-            )
-            ->orderBy('id')
-            ->get();*/
        
         return response()->view('branches.index');
     }
