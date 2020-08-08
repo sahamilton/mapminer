@@ -22,8 +22,7 @@
          
         <tr>
           <td>
-           
-           @if(isset($location) && array_intersect($myBranches,$location->assignedToBranch->pluck('id')->toArray()) or auth()->user()->hasRole(['admin', 'sales_operations']))
+           @if($owned)
             
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i 
@@ -45,7 +44,7 @@
 
             {{$statuses[$opportunity->closed]}}
           
-             @if(isset($owned) && $opportunity->closed ==0)
+             @if($owned && $opportunity->closed ==0)
            
             <button class="btn btn-danger" 
                     data-href="{{route('opportunity.close',$opportunity->id)}}"

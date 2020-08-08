@@ -33,5 +33,6 @@
 
 </div>
 @include('partials._modal')
+@include('partials._scripts')
 @include('opportunities.partials._closemodal')
 @endsection	
