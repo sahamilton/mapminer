@@ -25,9 +25,7 @@
            @if($owned)
             
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
-            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i 
-            title="This is an opportunity for the CSP Application Workshop."
-            class="fas fa-edit text text-info"></i></a>
+            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} </a>
           
               @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
