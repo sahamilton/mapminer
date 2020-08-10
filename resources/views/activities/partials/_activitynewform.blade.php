@@ -47,7 +47,7 @@
                   name="activity_date" 
                   autocomplete='off' 
                   id="activitydate" 
-                  value="{{  old('activity_date', date('m/d/Y')) }}"/>
+                  value="{{  old('activity_date', date('Y-m-d')) }}"/>
               <span class="help-block">
                   <strong>{{$errors->has('activity_date') ? $errors->first('activity_date')  : ''}}</strong>
               </span>
