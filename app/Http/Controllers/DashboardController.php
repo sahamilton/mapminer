@@ -27,7 +27,8 @@ class DashboardController extends Controller
         Dashboard $dashboard,
         Person $person,
         Branch $branch,
-        User $user)
+        User $user
+        )
     {
         $this->dashboard = $dashboard;
         $this->person = $person;
@@ -209,25 +210,27 @@ class DashboardController extends Controller
         ];
 
         foreach ($this->myBranches as $branch) {
-            if (gettype($branch) != 'string') {
-                settype($branch, 'string');
+            if (gettype($branch) == 'string') {
+                settype($branch, 'integer');
             }
             $newBranch[]=$branch;
         }
 
+        $newBranch = $this->myBranches;
         // get lead stats
         // get opportunity stats
         // get activity stats
         // merge collections
-        $leads = $this->branch->select('branches.id', 'branches.branchname')
-            ->summaryLeadStats($this->period, $leadFields)
+        $leads = $this->branch
+            ->select('branches.*')
+            ->summaryLeads($this->period, $leadFields)
             ->whereIn('branches.id', $newBranch)
             ->get();
-        $activities =  $this->branch->select('branches.id', 'branches.branchname')
+        $activities =  $this->branch
             ->summaryActivities($this->period, $activityFields)
             ->whereIn('branches.id', $newBranch)
             ->get();
-        $opportunities =  $this->branch->select('branches.id', 'branches.branchname')
+        $opportunities =  $this->branch
             ->summaryOpportunities($this->period, $opportunityFields)
             ->whereIn('branches.id', $newBranch)
             ->get();

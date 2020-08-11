@@ -1001,20 +1001,20 @@ class Branch extends Model
          */
         $this->fields = $fields;
 
-        $query->leftJoin('opportunities','opportunities.branch_id','=','branches.id')
+        $query->leftJoin('opportunities', 'opportunities.branch_id', '=', 'branches.id')
         
-        ->select('branchname','branches.id')
+            ->select('branchname', 'branches.id')
 
-        ->selectRaw("COUNT(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN 1  END) AS open_opportunities")
-        ->selectRaw("SUM(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN `value`  else 0 END) AS open_value")
-        ->selectRaw("COUNT(CASE WHEN closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS new_opportunities")
-        ->selectRaw("SUM(CASE WHEN closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' THEN `value` else 0  END) AS new_value")
-        ->selectRaw("COUNT(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS won_opportunities")
-        ->selectRaw("SUM(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  else 0  END) AS won_value")
-        ->selectRaw("COUNT(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from'] ."' and '".$this->period['to']."' THEN 1  END) AS lost_opportunities")
-        ->selectRaw("SUM(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  END) AS lost_value")
+            ->selectRaw("COUNT(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN 1  END) AS open_opportunities")
+            ->selectRaw("SUM(CASE WHEN (actual_close is null or actual_close > '".$this->period['to']. "') and opportunities.created_at <= '".$this->period['to']."' THEN `value`  else 0 END) AS open_value")
+            ->selectRaw("COUNT(CASE WHEN closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS new_opportunities")
+            ->selectRaw("SUM(CASE WHEN closed = 0 and opportunities.created_at between '".$this->period['from']."' and '".$this->period['to']."' THEN `value` else 0  END) AS new_value")
+            ->selectRaw("COUNT(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS won_opportunities")
+            ->selectRaw("SUM(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  else 0  END) AS won_value")
+            ->selectRaw("COUNT(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from'] ."' and '".$this->period['to']."' THEN 1  END) AS lost_opportunities")
+            ->selectRaw("SUM(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  END) AS lost_value")
 
-        ->groupBy('branches.id');
+            ->groupBy('branches.id');
         
 
     }
@@ -1157,28 +1157,29 @@ class Branch extends Model
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryActivities($query, $period, $fields = null)
+    public function scopeSummaryActivities($query, $period)
     {
+
         $this->period = $period;
-     
-        $query->leftJoin('activities', 'activities.branch_id', '=', 'branches.id')
-            ->select('branchname', 'branches.id')
-            ->selectRaw("COUNT( CASE WHEN activitytype_id = 4 THEN 1 else 0 END) AS sales_appointment")
-            ->selectRaw("COUNT(CASE WHEN activitytype_id = 5 THEN 1  else 0 END) AS stop_by") 
-            ->selectRaw("COUNT(CASE WHEN activitytype_id = 7 THEN 1  else 0 END) AS proposal") 
-            ->selectRaw("COUNT(CASE WHEN activitytype_id = 10 THEN 1 else 0  END ) AS site_visit")
-            ->selectRaw("COUNT(CASE WHEN activitytype_id = 13 THEN 1 else 0  END) AS log_a_call")
-            ->selectRaw("COUNT(CASE WHEN activitytype_id = 14 THEN 1  else 0 END) AS in_person") 
-            ->selectRaw("COUNT(*) AS all_activities")
-            ->where('completed', 1)
+        $query->join('activities', 'activities.branch_id', '=', 'branches.id')
+            ->select('branches.id')
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 4 THEN 1 END) AS sales_appointment")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 10 THEN 1 END) AS site_visit")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person")
+            ->selectRaw("count(`activities`.`id`) as all_activities")
+            ->whereNotNull('completed')
             ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-            ->groupBy('branches.id');          
+            ->groupBy('branches.id');
+
 
 
 
     }
 
-    public function scopeSummaryLeadStats($query,$period, $fields = null)
+    public function scopeSummaryLeads($query,$period, $fields = null)
     {
         $this->period = $period;
         if (! $fields) {
@@ -1195,7 +1196,7 @@ class Branch extends Model
          */
         $query
             ->join('address_branch', 'branches.id', '=', 'address_branch.branch_id')
-            ->select('branches.id', 'branchname')
+            
             ->selectRaw(
                 "COUNT(CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to'] . "' THEN 1  END ) AS new_leads"
             )
@@ -1217,12 +1218,9 @@ class Branch extends Model
         $query
             ->join('address_branch', 'branches.id', '=', 'address_branch.branch_id')
             ->select('branches.id', 'branchname')
-            ->selectRaw("COUNT(
-            CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' THEN 1  END ) AS new_leads")
-            ->selectRaw("COUNT(
-            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' THEN 1 END) AS all_leads")
-            ->selectRaw("COUNT(
-            CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1 END ) AS active_leads")
+            ->selectRaw("COUNT(CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' THEN 1  END ) AS new_leads")
+            ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' THEN 1 END) AS all_leads")
+            ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1 END ) AS active_leads")
             ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1 END) AS inactive_leads")
             ->groupBy('branches.id');
 
