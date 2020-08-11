@@ -206,7 +206,7 @@ class DashboardController extends Controller
             '13'=>'Log a call',
             '14'=>'In Person'
 
-    ];
+        ];
 
         foreach ($this->myBranches as $branch) {
             if (gettype($branch) != 'string') {
@@ -214,16 +214,25 @@ class DashboardController extends Controller
             }
             $newBranch[]=$branch;
         }
-        
-        return $this->branch->select('branches.id', 'branches.branchname')
-            ->summaryLeadStats($this->period, $leadFields)
-            ->summaryOpportunities($this->period, $opportunityFields)
-            
-            ->summaryActivities($this->period, $activityFields)
-            ->with('manager', 'manager.reportsTo')
-            ->whereIn('branches.id', $newBranch)
 
-            ->get(); 
+        // get lead stats
+        // get opportunity stats
+        // get activity stats
+        // merge collections
+        $leads = $this->branch->select('branches.id', 'branches.branchname')
+            ->summaryLeadStats($this->period, $leadFields)
+            ->whereIn('branches.id', $newBranch)
+            ->get();
+        $activities =  $this->branch->select('branches.id', 'branches.branchname')
+            ->summaryActivities($this->period, $activityFields)
+            ->whereIn('branches.id', $newBranch)
+            ->get();
+        $opportunities =  $this->branch->select('branches.id', 'branches.branchname')
+            ->summaryOpportunities($this->period, $opportunityFields)
+            ->whereIn('branches.id', $newBranch)
+            ->get();
+
+        dd(218, $leads, $activities, $opportunities); 
 
     }
 

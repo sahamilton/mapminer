@@ -223,7 +223,7 @@ class MgrDashboardController extends DashboardController
         
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
-    
+        dd(226, $data);
         if (! $data['team']= $this->_myTeamsOpportunities($data['branches'])) {
             
             return false;
@@ -372,6 +372,7 @@ class MgrDashboardController extends DashboardController
 
     private function _getSummaryBranchActivitiesByType(Collection $mybranchdata)
     {
+        dd($mybranchdata);
         $types =$mybranchdata->first()->activityFields;
         foreach ($types as $type) {
             $type=str_replace(" ", "_",strtolower($type));
