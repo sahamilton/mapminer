@@ -143,7 +143,7 @@ class Imports extends Model
      */
     private function _importCSV()
     {
-        $filename =  str_replace("\\","/",storage_path('app/'. $this->importfilename));
+        $filename =  str_replace("\\", "/", storage_path('app/'. $this->importfilename));
  
         $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
 
