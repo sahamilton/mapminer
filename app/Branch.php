@@ -1012,9 +1012,7 @@ class Branch extends Model
             ->selectRaw("COUNT(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS won_opportunities")
             ->selectRaw("SUM(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  else 0  END) AS won_value")
             ->selectRaw("COUNT(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from'] ."' and '".$this->period['to']."' THEN 1  END) AS lost_opportunities")
-            ->selectRaw("SUM(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  END) AS lost_value")
-
-            ->groupBy('branches.id');
+            ->selectRaw("SUM(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  END) AS lost_value");
         
 
     }
@@ -1171,8 +1169,7 @@ class Branch extends Model
             ->selectRaw("COUNT( CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person")
             ->selectRaw("count(`activities`.`id`) as all_activities")
             ->whereNotNull('completed')
-            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-            ->groupBy('branches.id');
+            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
 
 
 
