@@ -42,7 +42,7 @@ class LocationsImportController extends ImportController
     public function import(Request $request) 
     {
         $data = request()->except('_token');
-        
+
         $title="Map the locations import file fields";
         $data = array_merge($data, $this->uploadfile(request()->file('upload')));
         $data['additionaldata'] = null;
@@ -55,9 +55,10 @@ class LocationsImportController extends ImportController
         if (request()->filled('company')) {
                 $data['additionaldata']['company_id'] = request('company');
                 $this->import->setDontCreateTemp(true); 
-
+                $company_id = request('company');
         } else {
                 $this->import->setDontCreateTemp(false);
+                $company_id = null;
         }
         
         $fields = $this->getFileFields($data);

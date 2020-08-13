@@ -48,7 +48,11 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->sundays()
                 ->at('20:45');
-           
+
+            $schedule->command('monitor:check-uptime')->everyMinute();
+            
+            $schedule->command('monitor:check-certificate')->daily();
+
             $schedule->job(new RebuildPeople())
                 ->dailyAt('21:12');
 
