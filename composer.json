@@ -14,6 +14,7 @@
         
         "bugsnag/bugsnag-laravel": "^2.4",
         
+        "baum/baum":"v2.x-dev",
         "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "~4.0",
         "guzzlehttp/guzzle": "~6.0",

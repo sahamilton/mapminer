@@ -99,6 +99,13 @@
       0 => 'Blueprint\\BlueprintServiceProvider',
     ),
   ),
+  'laravel/slack-notification-channel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Illuminate\\Notifications\\SlackChannelServiceProvider',
+    ),
+  ),
   'laravel/tinker' => 
   array (
     'providers' => 
@@ -175,13 +182,6 @@
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
-  'spatie/laravel-backup' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\Backup\\BackupServiceProvider',
-    ),
-  ),
   'spatie/laravel-fractal' => 
   array (
     'providers' => 
@@ -191,6 +191,13 @@
     'aliases' => 
     array (
       'Fractal' => 'Spatie\\Fractal\\FractalFacade',
+    ),
+  ),
+  'spatie/laravel-uptime-monitor' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\UptimeMonitor\\UptimeMonitorServiceProvider',
     ),
   ),
   'toin0u/geocoder-laravel' => 
