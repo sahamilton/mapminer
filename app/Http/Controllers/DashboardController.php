@@ -183,59 +183,52 @@ class DashboardController extends Controller
      * 
      * @return [type]           [description]
      */
-    protected function getSummaryBranchData() 
+    protected function getSummaryBranchData($fields = null) 
     {
        
-        
-        $leadFields = [
-            'leads',
-        ];
-        $opportunityFields =[
-            "lost_opportunities",
-            "open_opportunities",
-            "top25_opportunities",
-            "won_opportunities",
-            "active_value",
-            "lost_value",
-            "won_value",
-        ];
-        $activityFields = [
-            '4'=>'Sales Appointment',
-            '5'=>'Stop By',
-            '7'=>'Proposal',
-            '10'=>'Site Visit',
-            '13'=>'Log a call',
-            '14'=>'In Person'
+        if(! $fields) {
+            $fields['leadFields'] = [
+                'leads',
+                'new_leads',
+                'stale_leads',
+                'active_leads',
+            ];
+            $fields['opportunityFields'] =[
+                "lost_opportunities",
+                "open_opportunities",
+                "top25_opportunities",
+                "won_opportunities",
+                "active_value",
+                "lost_value",
+                "won_value",
+            ];
+            $fields['activityFields'] = [
+                '4'=>'Sales Appointment',
+                '5'=>'Stop By',
+                '7'=>'Proposal',
+                '10'=>'Site Visit',
+                '13'=>'Log a call',
+                '14'=>'In Person'
 
-        ];
-
-        foreach ($this->myBranches as $branch) {
-            if (gettype($branch) == 'string') {
-                settype($branch, 'integer');
-            }
-            $newBranch[]=$branch;
+            ];
         }
-
-        $newBranch = $this->myBranches;
+        
         // get lead stats
         // get opportunity stats
         // get activity stats
         // merge collections
-        $leads = $this->branch
-            ->select('branches.*')
-            ->summaryLeads($this->period, $leadFields)
-            ->whereIn('branches.id', $newBranch)
-            ->get();
-        $activities =  $this->branch
-            ->summaryActivities($this->period, $activityFields)
-            ->whereIn('branches.id', $newBranch)
-            ->get();
-        $opportunities =  $this->branch
-            ->summaryOpportunities($this->period, $opportunityFields)
-            ->whereIn('branches.id', $newBranch)
-            ->get();
-
-        dd(218, $leads, $activities, $opportunities); 
+        $stats =[];
+        if (isset($fields['leadFields'])) {
+            $stats['leads'] = $this->_getLeadStats($fields['leadFields']);
+        }
+        if (isset($fields['activityFields'])) {
+            $stats['activities'] = $this->_getActivityStats($fields['activityFields']);
+        }
+        if (isset($fields['opportunityFields'])) {
+            $stats['opportunities'] = $this->_getOpportunityStats($fields['opportunityFields']);
+        }
+        return $stats;
+         
 
     }
 
@@ -243,5 +236,32 @@ class DashboardController extends Controller
     {
         return $this->person->managers([3,4,6,7,9]);
     }
-   
+
+    private function _getLeadStats($fields)
+    {
+        return $this->branch
+            ->select('branches.id', 'branches.branchname')
+            ->summaryLeads($this->period, $fields)
+            ->whereIn('branches.id', $this->myBranches)
+            ->groupBy('branches.id')
+            ->get();
+    }
+    private function _getActivityStats($fields)
+    {
+        return $this->branch
+            ->summaryActivities($this->period, $fields)
+            ->whereIn('branches.id', $this->myBranches)
+            ->groupBy('branches.id')
+            ->get();
+    }
+
+    private function _getOpportunityStats($fields)
+    {
+        return $this->branch
+            ->summaryOpportunities($this->period, $fields)
+            ->whereIn('branches.id', $this->myBranches)
+            ->groupBy('branches.id')
+            ->get();
+    }
+
 }

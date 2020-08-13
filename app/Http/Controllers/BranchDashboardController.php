@@ -189,7 +189,7 @@ class BranchDashboardController extends DashboardController
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-    
+        
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns'));
 
     }
@@ -213,13 +213,13 @@ class BranchDashboardController extends DashboardController
 
 
         $data['summary'] = $this->getSummaryBranchData();
-   
+      
         $data['activitychart'] = $this->chart->getBranchActivityByTypeChart(
             $this->_getActivityTypeChartData()
         );
        
         $data['pipelinechart'] = $this->_getPipeLine();
-
+        // this should move over to Calendar
         $data['calendar'] = $this->_getUpcomingCalendar($this->_getActivities());
 
         $data['period'] = $this->period;
@@ -286,8 +286,7 @@ class BranchDashboardController extends DashboardController
     }
     /**
      * [_getActivityTypeChartData description]
-     * 
-     * @return [type]           [description]
+     *     * @return [type]           [description]
      */
     private function _getActivityTypeChartData()
     {

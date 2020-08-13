@@ -294,3 +294,11 @@ select `id`, `branchname`,  (select count(*) from `activities` where `branches`.
 ->whereNull('mgr.deleted_at')
 ->where('branch_person.role_id','=',9)
 ->groupBy('manager')
+
+ COUNT(CASE WHEN address_branch.created_at BETWEEN '2020-07-13 07:29:26' AND '2020-08-13 07:29:26' THEN 1  END ) AS new_leads, 
+ COUNT( CASE WHEN address_branch.created_at <=  '2020-08-13 07:29:26' THEN 1 END) AS all_leads, 
+ COUNT(CASE WHEN address_branch.created_at <=  '2020-08-13 07:29:26' and address_branch.last_activity BETWEEN '2020-07-13 07:29:26' AND '2020-08-13 07:29:26'  THEN 1 END ) AS active_leads, 
+ COUNT(CASE WHEN address_branch.created_at <=  '2020-08-13 07:29:26' and (address_branch.last_activity NOT BETWEEN '2020-07-13 07:29:26' AND '2020-08-13 07:29:26' or last_activity is null)  THEN 1 END) AS inactive_leads
+
+
+ COUNT(CASE WHEN (actual_close is null or actual_close > '2020-08-13 07:29:26') and opportunities.created_at <= '2020-08-13 07:29:26' THEN 1  END) AS open_opportunities, SUM(CASE WHEN (actual_close is null or actual_close > '2020-08-13 07:29:26') and opportunities.created_at <= '2020-08-13 07:29:26' THEN `value`  else 0 END) AS open_value, COUNT(CASE WHEN closed = 0 and opportunities.created_at between '2020-07-13 07:29:26' and '2020-08-13 07:29:26' THEN 1  END) AS new_opportunities, SUM(CASE WHEN closed = 0 and opportunities.created_at between '2020-07-13 07:29:26' and '2020-08-13 07:29:26' THEN `value` else 0  END) AS new_value, COUNT(CASE WHEN closed = 1 and opportunities.actual_close between '2020-07-13 07:29:26' and '2020-08-13 07:29:26' THEN 1  END) AS won_opportunities, SUM(CASE WHEN closed = 1 and opportunities.actual_close between '2020-07-13 07:29:26' and '2020-08-13 07:29:26' THEN `value`  else 0  END) AS won_value, COUNT(CASE WHEN closed = 2 and opportunities.actual_close between '2020-07-13 07:29:26' and '2020-08-13 07:29:26' THEN 1  END) AS lost_opportunities, SUM(CASE WHEN closed = 2 and opportunities.actual_close between '2020-07-13 07:29:26' and '2020-08-13 07:29:26' THEN `value`  END) AS lost_value, COUNT(CASE WHEN closed = 0 and opportunities.Top25 =1 THEN 1  END) AS top25_opportunities, SUM(CASE WHEN closed = 0 and opportunities.Top25 =1 THEN `value`  END) AS top25_value

@@ -15,7 +15,7 @@
              {{$lead->leadsource->source}}
             @endif
         </td>
-        @if ($branch->currentcampaigns->count())
+        
         <td>
             @foreach ($lead->currentcampaigns as $campaign)
                
@@ -34,7 +34,7 @@
             </a>
            @endif
         </td>
-        @endif
+      
         <td>
             @if($lead->lastActivity)
                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
@@ -49,13 +49,7 @@
         <td>
        
             
-            <a 
-                data-href="{{route('branchleads.destroy',$lead->assignedToBranch->where('id', $this->branch->id)->first()->pivot->id)}}" 
-                data-toggle="modal" 
-                data-target="#delete-lead" 
-                data-title = "  {{$lead->businessname}} lead from your branch" 
-                href="#"><i class="fas fa-trash-alt text-danger"></i>
-            </a>  
+             
         </td>
        @endif
     </tr>

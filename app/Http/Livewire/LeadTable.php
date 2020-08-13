@@ -16,6 +16,7 @@ class LeadTable extends Component
     public $sortAsc = true;
     public $search = '';
     public $branch_id;
+
     public $myBranches;
 
  
@@ -33,11 +34,14 @@ class LeadTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch)
+    public function mount($branch_id)
     {
-        $this->branch_id = $branch;
+        
+        $this->branch_id = $branch_id;
         $person = new Person();
         $this->myBranches = $person->myBranches();
+        
+     
     }
     public function render()
     {

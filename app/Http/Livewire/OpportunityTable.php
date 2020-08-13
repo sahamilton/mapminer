@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\Opportunity;
 use App\Branch;
+use App\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
 

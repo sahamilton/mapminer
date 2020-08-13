@@ -1012,7 +1012,9 @@ class Branch extends Model
             ->selectRaw("COUNT(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN 1  END) AS won_opportunities")
             ->selectRaw("SUM(CASE WHEN closed = 1 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  else 0  END) AS won_value")
             ->selectRaw("COUNT(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from'] ."' and '".$this->period['to']."' THEN 1  END) AS lost_opportunities")
-            ->selectRaw("SUM(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  END) AS lost_value");
+            ->selectRaw("SUM(CASE WHEN closed = 2 and opportunities.actual_close between '".$this->period['from']."' and '".$this->period['to']."' THEN `value`  END) AS lost_value")
+            ->selectRaw("COUNT(CASE WHEN closed = 0 and opportunities.Top25 =1 THEN 1  END) AS top25_opportunities")
+            ->selectRaw("SUM(CASE WHEN closed = 0 and opportunities.Top25 =1 THEN `value`  END) AS top25_value");
         
 
     }
@@ -1167,7 +1169,7 @@ class Branch extends Model
             ->selectRaw("COUNT( CASE WHEN activitytype_id = 10 THEN 1 END) AS site_visit")
             ->selectRaw("COUNT( CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call")
             ->selectRaw("COUNT( CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person")
-            ->selectRaw("count(`activities`.`id`) as all_activities")
+            ->selectRaw("count(`activities`.`id`) as activities_count")
             ->whereNotNull('completed')
             ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
 
@@ -1198,7 +1200,7 @@ class Branch extends Model
                 "COUNT(CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to'] . "' THEN 1  END ) AS new_leads"
             )
             ->selectRaw(
-                "COUNT( CASE WHEN address_branch.created_at <=  '".$this->period['to']."' THEN 1 END) AS all_leads"
+                "COUNT( CASE WHEN address_branch.created_at <=  '".$this->period['to'] . "' THEN 1 END) AS all_leads"
             )
             ->selectRaw(
                 "COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1 END ) AS active_leads"
@@ -1214,13 +1216,29 @@ class Branch extends Model
         $this->period = $period;
         $query
             ->join('address_branch', 'branches.id', '=', 'address_branch.branch_id')
-            ->select('branches.id', 'branchname')
-            ->selectRaw("COUNT(CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' THEN 1  END ) AS new_leads")
-            ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' THEN 1 END) AS all_leads")
-            ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1 END ) AS active_leads")
-            ->selectRaw("COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1 END) AS inactive_leads")
-            ->groupBy('branches.id');
-
+            ->selectRaw(
+                "COUNT(CASE WHEN address_branch.created_at BETWEEN '".$this->period['from']."' AND '".$this->period['to'] . "' THEN 1  END ) AS new_leads"
+            )
+            ->selectRaw(
+                "COUNT( CASE WHEN address_branch.created_at <=  '".$this->period['to'] . "' THEN 1 END) AS all_leads"
+            )
+            ->selectRaw(
+                "COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and address_branch.last_activity BETWEEN '".$this->period['from']."' AND '".$this->period['to']."'  THEN 1 END ) AS active_leads"
+            )
+            ->selectRaw(
+                "COUNT(CASE WHEN address_branch.created_at <=  '".$this->period['to']."' and (address_branch.last_activity NOT BETWEEN '".$this->period['from']."' AND '".$this->period['to']."' or last_activity is null)  THEN 1 END) AS inactive_leads"
+            )
+            ->leftJoin('activities', 'activities.branch_id', '=', 'branches.id')
+         
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 4 THEN 1 END) AS sales_appointment")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 10 THEN 1 END) AS site_visit")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call")
+            ->selectRaw("COUNT( CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person")
+            ->selectRaw("count(`activities`.`id`) as all_activities")
+            ->whereNotNull('completed')
+            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
 
     }
     /**

@@ -1,4 +1,14 @@
 <div>
+    <div class="row mb4" style="padding-bottom: 10px">
+            
+            <div class="col mb8">
+                <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+        
+                <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
+            </div></div>
+        </div>
+
     <div class="row mb-4 ">
         @include('livewire.partials._perpage')
         <div class="col form-inline">
@@ -11,11 +21,12 @@
                 
             </select>
         </div>
+        @include('livewire.partials._periodselector')
          <div class="col form-inline">
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 
             class="form-control">
-                <option value="All">All</options>
+                <option value="All">All</option>
                 @foreach ($activitytypes as $type)
                     <option {{$activitytype== $type->id ? 'selected' :''}} value="{{$type->id}}">{{$type->activity}}</option>
                 @endforeach
@@ -25,9 +36,7 @@
 
         </div>
 
-        <div class="col">
-            <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
-        </div>
+    
     </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>

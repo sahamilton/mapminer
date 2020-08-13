@@ -24,24 +24,26 @@
 		<thead style="background-color:#E77C22;  color:#fff;">
 			<th colspan=6 class="text-center">Summary</th>
 			<tr>
-				<th class="text-center">Top 25 Open Opportunities</th>
 				<th class="text-center">All Open Opportunities</th>
+				<th class="text-center">Top 25 Open Opportunities</th>
+				
 				<th class="text-center">Won</th>
 				<th class="text-center">Lost</th>
-				<th class="text-center">Leads</th>
-				<th class="text-center">Activities</th>
+				<th class="text-center">Active Leads</th>
+				<th class="text-center">Period Activities</th>
 			</tr>
 		</thead>
 		<tbody>
 			<td class="text-center">
-				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->top25_opportunities}}</a></td>
-			<td class="text-center">{{$data['summary']->first()->open_opportunities}}</td>
-			<td class="text-center">{{$data['summary']->first()->won_opportunities}}</td>
-			<td class="text-center">{{$data['summary']->first()->lost_opportunities}}</td>
+				<a href="{{route('opportunity.index')}}">
+					{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->open_opportunities : 0 }}</a></td>
+			<td class="text-center">{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->top25_opportunities : 0}}</td>
+			<td class="text-center">{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->won_opportunities :0}}</td>
+			<td class="text-center">{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->lost_opportunities : 0}}</td>
 			<td class="text-center">
-				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
+				<a href="{{route('branch.leads')}}">{{$data['summary']['leads']->count() ? $data['summary']['leads']->first()->active_leads : 0}}</a></td>
 			<td class="text-center">
-				<a href="{{route('activity.index')}}">{{$data['summary']->first()->activities_count}}</a></td>	
+				<a href="{{route('activity.index')}}">{{$data['summary']['activities']->count() ? $data['summary']['activities']->first()->activities_count : 0}}</a></td>	
 		</tbody>
 	</table>
 </div>

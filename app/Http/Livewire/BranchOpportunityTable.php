@@ -15,7 +15,7 @@ class BranchOpportunityTable extends Component
     public $sortAsc = true;
     public $search = '';
     public $branch;
-    public $period;
+    public $period = 'All';
     public $setPeriod;
     public $myBranches;
     public $manager;

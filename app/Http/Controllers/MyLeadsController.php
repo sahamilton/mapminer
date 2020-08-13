@@ -61,7 +61,7 @@ class MyLeadsController extends BaseController
 
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
      
-        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaigns'));
+        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns'));
         
     }
 

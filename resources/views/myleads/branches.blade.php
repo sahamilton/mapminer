@@ -1,8 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h1>{{$branch->branchname . " leads"}}</h1>
-<p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
 @if(count($myBranches) > 1)
     <div class="col-sm-4">
@@ -27,7 +25,7 @@
             class="btn btn-info float-right" 
             data-toggle="modal" 
             data-target="#add_lead">
-              Add Lead
+              Add Lead!
         </button>
     </div>
 
@@ -36,7 +34,7 @@
     @include('branchleads.partials._mylead') 
 
 
-    @livewire('lead-table', ['branch'=>$branch->id])
+    @livewire('lead-table', ['branch_id'=>$branch->id])
 @include('addresses.partials._deleteleadmodal') 
 @include('branchleads.partials._branchleadmodal')
 @include('branchleads.partials._branchcampaignmodal')
