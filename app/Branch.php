@@ -1387,118 +1387,120 @@ class Branch extends Model implements HasPresenter
         return $query->withCount(       
             [
                 'leads'=>function ($query) {
-                $query->where('address_branch.created_at', '<=', $this->period['to'])
-                    ->where(
-                        function ($q) {
-                            $q->whereDoesntHave('opportunities')
-                                ->orWhereHas(
-                                    'opportunities', function ($q1) {
-                                        $q1->where(
-                                            'opportunities.created_at', '>', $this->period['to']
-                                        );
-                                    }
-                                );
-                        }
-                    );
-            },
-            'offeredLeads'=>function ($query) {
-                $query->whereHas(
-                    'assignedToBranch', function ($q) {
+                    $query->where('address_branch.created_at', '<=', $this->period['to'])
+                        ->where(
+                            function ($q) {
+                                $q->whereDoesntHave('opportunities')
+                                    ->orWhereHas(
+                                        'opportunities', function ($q1) {
+                                            $q1->where(
+                                                'opportunities.created_at', '>', $this->period['to']
+                                            );
+                                        }
+                                    );
+                            }
+                        );
+                },
+                'offeredLeads'=>function ($query) {
+                    $query->whereHas(
+                        'assignedToBranch', function ($q) {
 
-                        $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
-                    }
-                );
-            },
-            'neglectedLeads',
-            'leads as newbranchleads'=>function ($query) {
-                $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
-                    ->where(
-                        function ($q) {
-                            $q->where('lead_source_id', 4);
+                            $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                         }
                     );
-            },
-            'activities'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('completed', 1);
-            },
-            'activities as openactivities'=>function ($query) {
-                $query->where('completed', 0)->orWhereNull('completed');
-                    
-            },
-            
-            'activities as salesapptsscheduled'=>function ($query) {
-                $query->whereBetween(
-                    'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('activitytype_id', 4);
-            },
-            'opportunities as opened'=>function ($query) {
-                $query->whereBetween(
-                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
-                );
-            },
-            'opportunities as won'=>function ($query) {
-                $query->whereClosed(1)
-                    ->whereBetween(
-                        'actual_close', [$this->period['from'],$this->period['to']]
+                },
+                'neglectedLeads',
+                'leads as newbranchleads'=>function ($query) {
+                    $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
+                        ->where(
+                            function ($q) {
+                                $q->where('lead_source_id', 4);
+                            }
+                        );
+                },
+                'activities'=>function ($query) {
+                    $query->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )->where('completed', 1);
+                },
+                'activities as salesappts'=>function ($query) {
+                    $query->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )->where('activitytype_id', 4);
+                },
+                'activities as sitevisits'=>function ($query) {
+                    $query->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )
+                        ->where('completed', 1)
+                        ->where('activitytype_id', 10);
+                },
+                'opportunities as opened'=>function ($query) {
+                    $query->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
                     );
-            },
-            'opportunities as lost'=>function ($query) {
-                $query->whereClosed(2)
-                    ->whereBetween(
-                        'actual_close', [$this->period['from'],$this->period['to']]
-                    );
-            },
-            'opportunities as Top25'=>function ($query) {
-                $query->where('opportunities.Top25',  1)
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            },
-            'opportunities as Top25value'=>function ($query) {
-                $query->select(\DB::raw("SUM(value) as Top25value"))
-                    ->where('opportunities.Top25',  1)
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            },
-            'opportunities as open'=>function ($query) {
-                $query->whereClosed(0)        
-                    ->OrWhere(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            },
-            'opportunities as wonvalue' => function ($query) {
-                $query->select(\DB::raw("SUM(value) as wonvalue"))
-                    ->where('closed', 1)
-                    ->whereBetween(
-                        'actual_close', [$this->period['from'],$this->period['to']]
-                    );
-            },
-            'opportunities as openvalue' => function ($query) {
-                $query->select(\DB::raw("SUM(value) as wonvalue"))
-                    ->whereClosed(0)        
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-            }
+                },
+                'opportunities as won'=>function ($query) {
+                    $query->whereClosed(1)
+                        ->whereBetween(
+                            'actual_close', [$this->period['from'],$this->period['to']]
+                        );
+                },
+                'opportunities as lost'=>function ($query) {
+                    $query->whereClosed(2)
+                        ->whereBetween(
+                            'actual_close', [$this->period['from'],$this->period['to']]
+                        );
+                },
+                'opportunities as Top25'=>function ($query) {
+                    $query->where('opportunities.Top25',  1)
+                        ->where(
+                            function ($q) {
+                                $q->where('actual_close', '>', $this->period['to'])
+                                    ->orwhereNull('actual_close');
+                            }
+                        )
+                    ->where('opportunities.created_at', '<', $this->period['to']);
+                },
+                'opportunities as Top25value'=>function ($query) {
+                    $query->select(\DB::raw("SUM(value) as Top25value"))
+                        ->where('opportunities.Top25',  1)
+                        ->where(
+                            function ($q) {
+                                $q->where('actual_close', '>', $this->period['to'])
+                                    ->orwhereNull('actual_close');
+                            }
+                        )
+                    ->where('opportunities.created_at', '<', $this->period['to']);
+                },
+                'opportunities as open'=>function ($query) {
+                    $query->whereClosed(0)        
+                        ->OrWhere(
+                            function ($q) {
+                                $q->where('actual_close', '>', $this->period['to'])
+                                    ->orwhereNull('actual_close');
+                            }
+                        )
+                    ->where('opportunities.created_at', '<', $this->period['to']);
+                },
+                'opportunities as wonvalue' => function ($query) {
+                    $query->select(\DB::raw("SUM(value) as wonvalue"))
+                        ->where('closed', 1)
+                        ->whereBetween(
+                            'actual_close', [$this->period['from'],$this->period['to']]
+                        );
+                },
+                'opportunities as openvalue' => function ($query) {
+                    $query->select(\DB::raw("SUM(value) as wonvalue"))
+                        ->whereClosed(0)        
+                        ->where(
+                            function ($q) {
+                                $q->where('actual_close', '>', $this->period['to'])
+                                    ->orwhereNull('actual_close');
+                            }
+                        )
+                    ->where('opportunities.created_at', '<', $this->period['to']);
+                }
             ]
         );
     }
