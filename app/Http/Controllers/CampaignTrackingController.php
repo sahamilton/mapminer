@@ -79,14 +79,17 @@ class CampaignTrackingController extends Controller
      */
     public function show(Campaign $campaign)
     {
+        
         $campaign->load('companies', 'branches');
 
         $branches = $this->_getBranchesInCampaign($campaign);
+       
         //$branches = $campaign->branches->pluck('id')->toArray();
         $team = $this->_getCampaignBranchTeam($campaign);
+
+        $campaigns = $this->campaign->current($branches->pluck('id')->toArray())->get(); 
+
         
-      
-        $campaigns = $this->campaign->current($branches->pluck('id')->toArray())->get();
         if($campaign->type=== 'open') {
             $fields =  $this->openfields;
         }else{
@@ -242,7 +245,7 @@ class CampaignTrackingController extends Controller
         if (! $manager) {
             $manager= $campaign->manager_id;
         }
-        
+       
         return $this->campaign->getSalesTeamFromManager($manager, $servicelines);
     }
 
