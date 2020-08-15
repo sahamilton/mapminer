@@ -144,7 +144,7 @@ class CampaignTrackingController extends Controller
                 ];
     
         $team = $this->_getCampaignBranchTeam($campaign, $manager);
-        $companies = $this->company->whereIn('id', $companies)->leadSummary($period)->opportunitySummary($period)->get();
+        $companies = $this->company->whereIn('id', $companies)->leadSummary($period, $branches)->opportunitySummary($period, $branches)->get();
         return response()->view('campaigns.companysummary', compact('companies', 'campaigns', 'campaign', 'team', 'fields'));
     }
 
