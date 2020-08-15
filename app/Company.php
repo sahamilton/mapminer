@@ -319,8 +319,113 @@ class Company extends NodeModel
         }
         $this->fields = $fields;
         $this->period = $period;
-    
-        return $query->when(
+        /*
+            'open_leads',
+            'active_leads',
+            "supplied_leads",
+            "offered_leads",
+            "worked_leads",
+            "rejected_leads",
+            "touched_leads",
+
+         */
+        return $query
+            ->when(
+                in_array('open_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as open_leads'=>function ($query) {
+                                $query->openLeads($this->period);
+
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                // note that this and touched leads should return the same
+                // consider merging.
+                in_array('active_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as active_leads'=>function ($query) {
+                                $query->activeLeads($this->period);
+
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('supplied_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as supplied_leads'=>function ($query) {
+                                $query->suppliedLeads($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('offered_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as offered_leads'=>function ($query) {
+                                $query->offeredLeads($this->period);
+                            
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('worked_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as worked_leads'=>function ($query) {
+                                $query->workedLeads($this->period);
+                            }
+                        ]
+                    );
+                }
+            )->when(
+                in_array('touched_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as touched_leads'=>function ($query) {
+                                $query->touchedLeads($this->period);
+                            }
+                        ]
+                    );
+                }
+            )->when(
+                in_array('rejected_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as rejected_leads'=>function ($query) {
+                                $query->rejectedLeads($this->period);
+                                
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('new_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as new_leads'=>function ($query) {
+
+                                $query->newLeads($this->period);
+                                    
+                               
+                            }
+                        ]
+                    );
+                }
+            )
+        ->when(
             in_array('unassigned_leads', $this->fields), function ($q) {
                 $q->withCount(       
                     [
@@ -348,31 +453,8 @@ class Company extends NodeModel
                 );
             }
         )
+        
         ->when(
-            in_array('new_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as new_leads'=>function ($query) {
-
-                            $query->newLeads($this->period);
-                                
-                           
-                        }
-                    ]
-                );
-            }
-        )
-        ->when(
-            in_array('supplied_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as supplied_leads'=>function ($query) {
-                            $query->suppliedLeads($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
             in_array('open_leads', $this->fields), function ($q) {
                 $q->withCount(       
                     [
@@ -383,62 +465,8 @@ class Company extends NodeModel
                     ]
                 );
             }
-        )->when(
-            in_array('offered_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as offered_leads'=>function ($query) {
-                            $query->offeredLeads($this->period);
-                        
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('worked_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as worked_leads'=>function ($query) {
-                            $query->workedLeads($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            // note that this and touched leads should return the same
-            // consider merging.
-            in_array('active_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as active_leads'=>function ($query) {
-                            $query->activeLeads($this->period);
-
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('touched_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as touched_leads'=>function ($query) {
-                            $query->touchedLeads($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('rejected_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as rejected_leads'=>function ($query) {
-                            $query->rejectedLeads($this->period);
-                            
-                        }
-                    ]
-                );
-            }
-        );
+        )
+        ;
 
         
     }

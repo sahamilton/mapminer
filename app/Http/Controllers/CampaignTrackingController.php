@@ -125,14 +125,26 @@ class CampaignTrackingController extends Controller
         $campaigns = $this->campaign->active()->get();
         $companies = $campaign->companies->pluck('id')->toarray();
         $branches =  $campaign->branches->pluck('id')->toArray();
+       
         $period = $this->_getCampaignPeriod($campaign);
         if (! $manager) {
             $manager = $campaign->manager_id;
         }
-        $fields = $this->fields;
+        $fields = [  
+                    "supplied_leads",
+                    "offered_leads",
+                    "worked_leads",
+                    "rejected_leads",
+                    "touched_leads",
+                    "new_opportunities",
+                    "won_opportunities",
+                    "opportunities_open",
+                    "won_value",
+                    "open_value"
+                ];
     
         $team = $this->_getCampaignBranchTeam($campaign, $manager);
-        $companies = $this->company->whereIn('id', $companies)->summaryStats($period, $branches)->get();
+        $companies = $this->company->whereIn('id', $companies)->leadSummary($period)->opportunitySummary($period)->get();
         return response()->view('campaigns.companysummary', compact('companies', 'campaigns', 'campaign', 'team', 'fields'));
     }
 

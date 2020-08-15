@@ -13,7 +13,6 @@
 
         @foreach ($companies as $company)
         
-
        
         <tr>
             <td>
