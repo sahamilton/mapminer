@@ -74,6 +74,23 @@
             </span>
         </div>
     </div>
+    <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label">Servicelines</label>
+    <div class="input-group input-group-lg">
+        <select multiple class="form-control" 
+            required
+            name='serviceline[]'>
+            @foreach ($servicelines as $serviceline))
+                <option value="{{$serviceline->id}}">{{$serviceline->ServiceLine}}</option>
+            @endforeach
+        </select>
+        <span class="help-block">
+            <strong>{{ $errors->has('serviceline') ? $errors->first('serviceline') : ''}}</strong>
+        </span>
+    </div>
+</div>
+
+
     <legend>Industry Verticals</legend>
     <div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label" for="vertical">Industry Verticals</label>

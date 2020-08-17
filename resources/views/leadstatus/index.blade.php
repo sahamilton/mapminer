@@ -38,9 +38,7 @@
         </a>
     </td>
     <td>
-        @if($status->leads->count()>0)
-        {{number_format($status->leads->sum('pivot.rating') / $status->leads->count(),2)}}
-        @endif
+       
     </td>
     <td>{{$status->leads->count()}}
 

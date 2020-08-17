@@ -12,27 +12,62 @@ class LeadSource extends Model
     public $dates = ['created_at','updated_at','datefrom','dateto'];
     public $fillable = ['source','description','reference','datefrom','dateto','user_id','filename','type'];
 
-
+    /**
+     * [verticals description]
+     * 
+     * @return [type] [description]
+     */
     public function verticals()
     {
         return $this->belongsToMany(SearchFilter::class, 'leadsource_searchfilter', 'leadsource_id', 'searchfilter_id');
     }
-
+    /**
+     * [leads description]
+     * 
+     * @return [type] [description]
+     */
     public function leads()
     {
         return $this->hasMany(Address::class, 'lead_source_id');
     }
+    /**
+     * [scopeSummary description]
+     * 
+     * @param Builder $query [description]
+     * 
+     * @return Builder        [description]
+     */
+    public function scopeSummary($query)
+    {
 
-    
+        $query->withCount(
+            [
+              'leads', 
+              'leads as unassigned'=>function ($q) {
+                  $q->doesntHave('assignedToBranch');
+              },
+              'leads as assigned'=>function ($q) {
+                  $q->has('assignedToBranch');
+              },
+
+            ]
+        );
+
+
+    }
+    /**
+     * [assigned description]
+     * 
+     * @return [type] [description]
+     */
     public function assigned()
     {
 
         return $this->whereHas(
-            'addresses', function ($q) {
+            'leads', function ($q) {
                 $q->has('assignedToBranch');
             }
-        )
-        ->with('addresses');
+        );
 
      /* return $this->selectRaw('`leadsources`.*, count(`address`.`id`) as assigned')
           ->join('leads','leadsources.id','=','leads.lead_source_id')
@@ -40,25 +75,54 @@ class LeadSource extends Model
           ->groupBy('leadsources.id');
 */
     }
-
+    /**
+     * [branchleads description]
+     * 
+     * @return [type] [description]
+     */
     public function branchleads()
     {
 
       return $this->hasManyThrough(AddressBranch::class, Address::class, 'lead_source_id', 'address_id');
     }
+    /**
+     * [unassigned description]
+     * @return [type] [description]
+     */
     public function unassigned()
     {
 
-        return $this->whereHas('addresses', function ($q) {
-            $q->doesntHave('assignedToBranch');
-        });
+        return $this->whereHas(
+            'leads', function ($q) {
+                $q->doesntHave('assignedToBranch');
+            }
+        );
     }
+    /**
+     * [addresses description]
+     * 
+     * @return [type] [description]
+     */
     public function addresses()
     {
         return $this->hasMany(Address::class, 'lead_source_id', 'id');
     }
-    
+    /**
+     * [serviceline description]
+     * 
+     * @return [type] [description]
+     */
+    public function servicelines()
+    {
+      
+      return $this->belongsToMany(ServiceLine::class);
 
+    }
+    /**
+     * [author description]
+     * 
+     * @return [type] [description]
+     */
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->with('person');
@@ -114,21 +178,37 @@ class LeadSource extends Model
         }
         return $salesreps;
     }
-
+    /**
+     * [unassignedLeads description]
+     * @return [type] [description]
+     */
     public function unassignedLeads()
     {
         return $this->hasMany(Lead::class, 'lead_source_id')->doesntHave('salesteam');
     }
+    /**
+     * [closedLeads description]
+     * 
+     * @return [type] [description]
+     */
     public function closedLeads()
     {
         return $this->hasMany(Lead::class, 'lead_source_id')->has('closedLead');
     }
-    
+    /**
+     * [assignedLeads description]
+     * 
+     * @return [type] [description]
+     */
     public function assignedLeads()
     {
             return $this->hasMany(Lead::class, 'lead_source_id')->has('salesteam');
     }
-
+    /**
+     * [leadStatusSummary description]
+     * 
+     * @return [type] [description]
+     */
     public function leadStatusSummary()
     {
 

@@ -318,19 +318,31 @@ class LeadsAssignController extends Controller
      */
     private function _assignBranchesToLeads(LeadSource $leadsource)
     {
-     
+        $leadsource->load('servicelines');
         $addresses = $this->_unassignedLeads($leadsource);
         // add assingment query here
         foreach ($addresses as $address) {
             $branches = $this->branch
+                
+                ->when(
+                    $leadsource->servicelines->count(), function ($q) use ($leadsource) {
+                        $q->whereHas(
+                            'servicelines', function ($q) use ($leadsource) {
+                                $q->whereIn('serviceline_id', [$leadsource->servicelines->pluck('id')->toarray()]);
+                            }
+                        );
+                    }
+                )
                 ->nearby($address, $this->distance, $this->limit)
                 ->pluck('id')
                 ->toArray();
+            
             if (count($branches)>0) {
                 foreach ($branches as $branch_id) {
                     $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id];
                 }
             }
+        
         }
         AddressBranch::insert($data);
         return $addresses->count();              
