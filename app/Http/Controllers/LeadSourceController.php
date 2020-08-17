@@ -270,7 +270,8 @@ class LeadSourceController extends Controller
         $leadsource = $this->leadsource
             ->with(
                 ['addresses' => function ($query) use ($state) {
-                    $query->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson')
+                    $query->whereDoesntHave('assignedToBranch')
+                        ->whereDoesntHave('assignedToPerson')
                         ->where('state', trim($state));
                 }], 
                 'addresses.state'
@@ -571,7 +572,7 @@ class LeadSourceController extends Controller
      */
     public function assignLeads(LeadSource $leadsource)
     {
-        dd($leadsource);
+        
         $leads = $this->lead->where('lead_source_id', '=', $leadsource->id)
             ->with('leadsource')
             ->whereNotNull('lat')

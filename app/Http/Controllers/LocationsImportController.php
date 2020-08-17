@@ -7,6 +7,7 @@ use App\Company;
 use App\Address;
 use App\Branch;
 use App\LocationImport;
+use App\Serviceline;
 use App\Http\Requests\LocationImportFormRequest;
 use Excel;
 
@@ -29,7 +30,8 @@ class LocationsImportController extends ImportController
         $requiredFields = $this->import->requiredFields;
        // $branches = Branch::orderBy('id')->get();
         $companies = $this->company->orderBy('companyname')->pluck('companyname', 'id');
-        return response()->view('locations.import', compact('companies', 'requiredFields'));
+        $servicelines = Serviceline::all();
+        return response()->view('locations.import', compact('companies', 'requiredFields', 'servicelines'));
     }
 
     /**
@@ -49,7 +51,8 @@ class LocationsImportController extends ImportController
         $data['route'] = 'locations.mapfields';
         // only create a lead source if non included and no company selected.
         if (! request()->has('lead_source_id')) {
-            $data['lead_source_id'] = $this->import->createLeadSource($data)->id;
+
+            $data['lead_source_id'] = $this->import->createLeadSource($data);
         }
         
         if (request()->filled('company')) {
@@ -65,6 +68,7 @@ class LocationsImportController extends ImportController
         $skip = ['id','created_at','updated_at','lead_source_id','serviceline_id','addressable_id','user_id','addressable_type','import_ref'];
         $columns = $this->location->getTableColumns($this->table, $skip);
         $requiredFields = $this->import->requiredFields;
+
         if (isset($data['contacts'])) {
             $skip = ['id','created_at','updated_at','address_id','location_id','user_id'];
             $columns = array_merge($columns, $this->location->getTableColumns('contacts', $skip));
@@ -72,7 +76,7 @@ class LocationsImportController extends ImportController
         if (isset($data['branch'])) {
             $data['branch_ids'] = implode(',', $data['branch']);
         }
-        
+       
         return response()->view(
             'imports.mapfields', compact(
                 'columns',

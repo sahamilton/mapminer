@@ -344,8 +344,11 @@ class LeadsAssignController extends Controller
             }
         
         }
-        AddressBranch::insert($data);
-        return $addresses->count();              
+        if (isset($data)) {
+            AddressBranch::insert($data);
+            return $addresses->count();   
+        }
+        return 0;    
     }
 
     /**

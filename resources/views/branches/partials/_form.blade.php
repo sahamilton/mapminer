@@ -77,7 +77,7 @@ $states = $state->getStates();
         </span>
     </div>
 </div>
-
+<!----- state --------->
 
 <div class="form-group{{ $errors->has('state)') ? ' has-error' : '' }}">
     <label class="col-md-2 control-label">States:</label>
@@ -121,7 +121,7 @@ $states = $state->getStates();
         </span>
     </div>
 </div>
-
+<!---------- Servicelines   ---------------->
 <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
     <label class="col-md-2 control-label">Servicelines</label>
     <div class="input-group input-group-lg">

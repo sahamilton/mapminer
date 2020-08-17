@@ -63,6 +63,7 @@
 
 </tbody>
 </table>
+
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Map Fields" />
 
@@ -71,8 +72,7 @@
     <input type="hidden" name="additionaldata[{{$key}}]" value="{{$value}}" />
     @endforeach
 @endif
-@php $hidden = ['lead_source_id', 'serviceline', 'step', 'contacts', 'branch_ids', 'file', 'type', 'table']; @endphp
-
+@php $hidden = ['lead_source_id', 'step', 'contacts', 'branch_ids', 'file', 'type', 'table']; @endphp
 @foreach ($hidden as $hide)
     @if(isset($data[$hide]))
         <input type="hidden" name="{{$hide}}" value="{{$data[$hide]}}" />

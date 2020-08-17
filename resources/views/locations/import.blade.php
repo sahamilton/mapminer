@@ -99,6 +99,20 @@
                 </span>
         </div>
     </div>
+    <!---------- Servicelines   ---------------->
+<div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label">Servicelines</label>
+    <div class="input-group input-group-lg">
+        <select multiple required class="form-control" name='serviceline[]'>
+            @foreach ($servicelines as $serviceline))
+                <option value="{{$serviceline->id}}">{{$serviceline->ServiceLine}}</option>
+            @endforeach
+        </select>
+        <span class="help-block">
+            <strong>{{ $errors->has('serviceline') ? $errors->first('serviceline') : ''}}</strong>
+        </span>
+    </div>
+</div>
     <!-----/ Contacts-->
 <div class="form-group{{ $errors->has('contacts)') ? ' has-error' : '' }}">
     <label class="col-md-4 control-label  radio-inline">With Contacts?:</label>

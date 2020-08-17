@@ -41,13 +41,28 @@ class AddressImportController extends ImportController
                 'phone',
                 'created_at'
     ];
+    /**
+     * [__construct description]
+     * 
+     * @param Address    $address    [description]
+     * @param LeadSource $leadsource [description]
+     * @param LeadImport $import     [description]
+     */
     public function __construct(Address $address, LeadSource $leadsource, LeadImport $import)
     {
         $this->address = $address;
         $this->import = $import;
         $this->leadsources = $leadsource;
     }
-
+    /**
+     * [getFile description]
+     * 
+     * @param  Request $request [description]
+     * 
+     * @param  [type]  $id      [description]
+     * @param  [type]  $type    [description]
+     * @return [type]           [description]
+     */
     public function getFile(Request $request, $id = null, $type = null)
     {
 
@@ -66,7 +81,13 @@ class AddressImportController extends ImportController
         return response()->view('leads.import', compact('sources', 'leadsource', 'requiredFields', 'type'));
     }
 
-
+    /**
+     * [import description]
+     * 
+     * @param LeadImportFormRequest $request [description]
+     * 
+     * @return [type]                         [description]
+     */
     public function import(LeadImportFormRequest $request)
     {
   
@@ -93,7 +114,13 @@ class AddressImportController extends ImportController
         $skip = ['id','deleted_at','created_at','updated_at','lead_source_id','pr_status'];
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'skip', 'title', 'requiredFields'));
     }
-    
+    /**
+     * [mapfields description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function mapfields(Request $request)
     {
 
@@ -101,13 +128,19 @@ class AddressImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if ($this->import->import()) {
-            $this->postimport($request);
+            $this->_postimport($request);
         
             return redirect()->route('leadsource.index')->with('success', 'Leads imported');
         }
     }
-    
-    private function postimport(Request $request)
+    /**
+     * [_postimport description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _postimport(Request $request)
     {
         
         /*

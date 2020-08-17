@@ -262,7 +262,13 @@ class Imports extends Model
         } else {
             $lead_import_id['source']="Import". date('YzHis');
         }
-        return LeadSource::create($lead_import_id);
+        $leadsource = LeadSource::create($lead_import_id);
+       
+        if ($data['serviceline']) {
+            $leadsource->servicelines()->sync($data['serviceline']);
+        }
+        
+        return $leadsource->id;
     }
 
    
