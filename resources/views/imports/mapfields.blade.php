@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 @if(! isset($data['route']))
-<?php $data['route'] = 'imports.mapfields';?>
+@php  $data['route'] = 'imports.mapfields';@endphp
 @endif
 <div class="container" style="margin-bottom:80px">
 <h2>@if(isset($title)) {{$title}} @endif</h2>
