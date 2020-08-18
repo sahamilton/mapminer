@@ -46,7 +46,10 @@ class AddressController extends BaseController
     public function index()
     {
        
-        $addresses = $this->address->filtered()->nearby($this->address->getMyPosition(), 10)->get();
+        $addresses = $this->address
+            ->filtered()
+            ->nearby($this->address->getMyPosition(), 10)
+            ->get();
         
         return response()->view('addresses.index', compact('addresses'));
     }
@@ -110,7 +113,7 @@ class AddressController extends BaseController
        
         if ($location->lat && $location->lng) {
 
-           $branches = $this->branch->nearby($location, 25, 5)->orderBy('distance')->get();
+            $branches = $this->branch->nearby($location, 25, 5)->orderBy('distance')->get();
             
             $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 25, 5)->get();
 
@@ -124,21 +127,25 @@ class AddressController extends BaseController
      
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-        //if ($myBranches) {
+        
         $owned = $this->_checkIfOwned($address, $myBranches);
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
         $campaigns = Campaign::currentOpen($myBranches)->select('id', 'title')->get();
    
-        return response()->view('addresses.show', compact('location', 
-            'branches', 
-            'rankingstatuses', 
-            'people', 
-            'myBranches', 
-            'ranked', 
-            'notes', 
-            'owned', 
-            'fields', 
-            'campaigns'));
+        return response()->view(
+            'addresses.show', compact(
+                'location', 
+                'branches', 
+                'rankingstatuses', 
+                'people', 
+                'myBranches', 
+                'ranked', 
+                'notes', 
+                'owned', 
+                'fields', 
+                'campaigns'
+            )
+        );
     }
 
     /**
@@ -206,10 +213,18 @@ class AddressController extends BaseController
        
         $location = $this->getLocationLatLng($latlng);
         $myBranches = auth()->user()->person->getMyBranches();
-        $myLeads = $this->address->filtered()->myLeads()->nearby($location, $distance)
-            ->withCount('assignedToBranch', 'openOpportunities')->get();
+        $myLeads = $this->address
+            ->filtered()
+            ->myLeads()
+            ->nearby($location, $distance)
+            ->withCount('assignedToBranch', 'openOpportunities')
+            ->get();
 
-        $unassignedLeads = $this->address->filtered()->unassigned()->nearby($location, $distance)->get();
+        $unassignedLeads = $this->address
+            ->filtered()
+            ->unassigned()
+            ->nearby($location, $distance)
+            ->get();
         
         $result = $myLeads->merge($unassignedLeads);
         
@@ -228,7 +243,9 @@ class AddressController extends BaseController
         $data=request()->only('ranking', 'comments');
         $person_id = auth()->user()->person->id;
         $address->ranking()->attach($person_id, $data);
-        return redirect()->route('address.show', $address->id)->withMessasge("Thanks for rating this location");
+        return redirect()
+            ->route('address.show', $address->id)
+            ->withMessasge("Thanks for rating this location");
     }
     
     /**

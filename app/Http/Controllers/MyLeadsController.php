@@ -154,7 +154,9 @@ class MyLeadsController extends BaseController
         // send this to a job
         if (request('notify')==1) {
             // 
-            $branches = \App\Branch::with('manager', 'manager.userdetails')->whereIn('id', array_keys($data['branch']))->get();
+            $branches = \App\Branch::with('manager', 'manager.userdetails')
+                ->whereIn('id', array_keys($data['branch']))
+                ->get();
            
             foreach ($branches as $branch) {
                 foreach ($branch->manager as $manager) {
@@ -366,7 +368,6 @@ class MyLeadsController extends BaseController
         $address->load('assignedToBranch');
       
         $this->_notifyLeadReassignment($branch, $address);
-        
 
         return redirect()->back()->withSuccess('Lead reassigned');
     }
@@ -431,7 +432,7 @@ class MyLeadsController extends BaseController
         if ($address->openOpportunities->count()) {
             $this->_reassignOpportunities($address->openOpportunities, $branches);
         }
-        foreach ($branches as $branch){
+        foreach ($branches as $branch) {
             $data[$branch]= ['status_id'=>1];
         }
        
