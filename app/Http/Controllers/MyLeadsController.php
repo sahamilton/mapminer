@@ -122,10 +122,12 @@ class MyLeadsController extends BaseController
         $address = $this->lead->create($data['lead']);
         
         $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
-        
+
         if (request()->filled('campaign')) {
-            $address->campaigns()->attach(request('campaign'));
+            $this->_assignToCampaign($address, request('campaign'));
         }
+    
+       
         $dupes = $this->_getDuplicateLeads($data);
       
         if (isset($data['contact'])) {
@@ -197,6 +199,35 @@ class MyLeadsController extends BaseController
        
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
+    /**
+     * [_assignToCampaign Remove null campaign and assign address]
+     * 
+     * @param  Address $address   [description]
+     * @param  array   $campaigns [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _assignToCampaign(Address $address, array $campaigns)
+    {
+
+        if (($key = array_search(0, $campaigns)) !== false) {
+            
+            unset($campaigns[$key]);
+
+        }
+        
+        if (count($campaigns) >0) {
+            $address->campaigns()->sync($campaigns); 
+        }
+        return $address;
+    }
+    /**
+     * [_getBranchLeadData description]
+     * 
+     * @param  [type] $branch_id [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _getBranchLeadData($branch_id)
     {
         return $this->branch

@@ -146,7 +146,7 @@ class BranchLeadController extends Controller
         $data['address_id'] = $branchLead->address_id;
         $this->note->create($data);
         $branchLead->delete();
-        return redirect()->back()->withMessage('Lead removed');
+        return redirect()->back()->withMessage('Lead removed from branch '. $branchLead->branch_id);
     }
     /**
      * [assign description]
