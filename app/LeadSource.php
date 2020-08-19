@@ -69,11 +69,7 @@ class LeadSource extends Model
             }
         );
 
-     /* return $this->selectRaw('`leadsources`.*, count(`address`.`id`) as assigned')
-          ->join('leads','leadsources.id','=','leads.lead_source_id')
-          ->join('lead_person_status','leads.id','=','lead_person_status.related_id')
-          ->groupBy('leadsources.id');
-*/
+     
     }
     /**
      * [branchleads description]
@@ -127,7 +123,11 @@ class LeadSource extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->with('person');
     }
-
+    /**
+     * [salesteam description] obsolete
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function salesteam($id)
     {
         $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`address_person`.`status_id`, count(*) as count
@@ -156,17 +156,12 @@ class LeadSource extends Model
         ->select('branch_id', DB::raw('count(*) as leads'))
              ->groupBy('branch_id')->with('branch')->get();
    
-     /* $query ="SELECT branches.id as id,branchname,`address_branch`.`status_id`, count(*) as count
-              FROM `address_branch` ,addresses,branches
-              where address_id = addresses.id 
-              and branch_id = branches.id
-              and addresses.lead_source_id = ". $id . "
-              group by branchname,id,address_branch.status_id
-              order by branches.id,address_branch.status_id";
-
-         return \DB::select($query); */
     }
-
+    /**
+     * [assignedTo description] obsolete
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function assignedTo($id = null)
     {
         $leads = $this->with('leads')->findOrFail($id);
@@ -214,19 +209,7 @@ class LeadSource extends Model
 
         return $this->withCount('addresses');
 
-     
-     /*return $this->select(array('leadsources.*',
-                \DB::raw('COUNT(leads.id) as allleads,
-                  COUNT(b.related_id) as ownedleads,
-                  COUNT(a.related_id) as closedleads,
-                  avg(a.rating) as ranking')))
-              ->leftjoin('leads', 'leads.lead_source_id', '=', 'leadsources.id')
-              ->leftjoin('lead_person_status as a', function($join){
-                  $join->on('leads.id', '=', 'a.related_id')->where('a.status_id','=',3);
-              })
-              ->leftjoin('lead_person_status as b','leads.id', '=', 'b.related_id')
-              ->groupBy('leadsources.id');
-              */
+    
     }
     /**
      * [leadRepStatusSummary description]
