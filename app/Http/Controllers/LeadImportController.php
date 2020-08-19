@@ -128,7 +128,7 @@ class LeadImportController extends ImportController
        
         if ($this->import->import()) {
             $this->_postimport();
-        
+
             return redirect()->route('leadsource.index')->with('success', 'Leads imported');
         }
     }
