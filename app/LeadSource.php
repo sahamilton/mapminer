@@ -115,7 +115,7 @@ class LeadSource extends Model
     public function servicelines()
     {
       
-      return $this->belongsToMany(ServiceLine::class);
+      return $this->belongsToMany(Serviceline::class);
 
     }
     /**

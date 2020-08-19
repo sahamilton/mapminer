@@ -14,7 +14,7 @@ class BranchImport extends Imports
     
     public function servicelines()
     {
-        return $this->belongsToMany(ServiceLine::class, 'branch_serviceline', 'branch_id');
+        return $this->belongsToMany(Serviceline::class, 'branch_serviceline', 'branch_id');
     }
 
     public function branches()
