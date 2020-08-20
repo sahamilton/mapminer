@@ -11,7 +11,7 @@
 @endcomponent
 
 <em> If you’re having trouble clicking the  button, copy and paste the URL below
-into your web browser: [{{ route('branch.leads',$branch->id)}}]({{ route(branch.leads',$branch->id)}}) </em>
+into your web browser: [{{ route('branch.leads',$branch->id)}}]({{ route('branch.leads',$branch->id)}}) </em>
 
 Sincerely
         
