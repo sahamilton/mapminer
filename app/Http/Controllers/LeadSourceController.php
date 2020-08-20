@@ -463,11 +463,18 @@ class LeadSourceController extends Controller
      *
      * @return Response view
      */
-    public function addLeads(LeadSource $leadsource)
+    /*public function addLeads(LeadSource $leadsource)
     {
-        
+        // return the getFile info with the leadsource filled
+        //
+        $requiredFields = $this->import->requiredFields;
+       // $branches = Branch::orderBy('id')->get();
+        $companies = $this->company->orderBy('companyname')->pluck('companyname', 'id');
+        $servicelines = Serviceline::all(); 
+        // 
+        // 
         return response()->view('leadsource.addleads', compact('leadsource'));
-    }
+    }*/
     
     /**
      * [importLeads description]

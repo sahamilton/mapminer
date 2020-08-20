@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Company;
 use App\Address;
 use App\Branch;
+use App\Model;
 use App\LocationImport;
 use App\Serviceline;
 use App\Http\Requests\LocationImportFormRequest;
@@ -27,6 +28,7 @@ class LocationsImportController extends ImportController
 
     public function getFile()
     {
+        
         $requiredFields = $this->import->requiredFields;
        // $branches = Branch::orderBy('id')->get();
         $companies = $this->company->orderBy('companyname')->pluck('companyname', 'id');
@@ -44,7 +46,7 @@ class LocationsImportController extends ImportController
     public function import(Request $request) 
     {
         $data = request()->except('_token');
-
+     
         $title="Map the locations import file fields";
         $data = array_merge($data, $this->uploadfile(request()->file('upload')));
         $data['additionaldata'] = null;

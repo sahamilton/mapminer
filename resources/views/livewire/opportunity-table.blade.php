@@ -1,6 +1,6 @@
 <div>
     
-<div class="row mb-4">
+    <div class="row mb-4">
         <div class="col form-inline">
             Per Page: &nbsp;
             <select wire:model="perPage" class="form-control">
@@ -96,4 +96,5 @@
         </div>
     </div>
 </div>
+@include('opportunities.partials._activitiesmodal')
 

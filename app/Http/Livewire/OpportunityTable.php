@@ -61,20 +61,3 @@ class OpportunityTable extends Component
         );
     }
 }
-
-/*
-return view('livewire.invoice-table', [
-        
-                'invoices' => Invoice::query()->select('invoices.*')
-                ->join('clients', 'clients.id', '=', 'invoices.client_id')
-                ->when(
-                    $this->client, function ($q) {
-                        $q->where('client_id', $this->client);
-                    }
-                )
-                ->summary()
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                ->paginate($this->perPage),
-
-                ]
- */

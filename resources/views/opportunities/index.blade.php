@@ -6,7 +6,7 @@
 
 <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch {{$branch->id}} Dashboard</a></p>
 
-@php $activityTypes = \App\ActivityType::all(); @endphp
+
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">
@@ -32,7 +32,7 @@
 
 @include('opportunities.partials._closemodal')
 @include('partials._opportunitymodal')
-@include('opportunities.partials._activitiesmodal')
+
 
 @include('partials._scripts')
 @endsection
