@@ -344,11 +344,11 @@ class LeadsAssignController extends Controller
             if (count($branches) > 0) {
                 foreach ($branches as $branch_id) {
                     
-                    if ($this->limit = 1) {
+                    if ($this->limit == 1) {
                     
-                        $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id, 'status_id'=>1];
-                    } else {
                         $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id, 'status_id'=>2];
+                    } else {
+                        $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id, 'status_id'=>1];
                     }
                 }
             }
