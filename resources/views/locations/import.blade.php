@@ -86,20 +86,37 @@
 <!-----/ description-->
 <!-- Lead Source -->
 <div class="form-group{{ $errors->has('leadsource)') ? ' has-error' : '' }}">
-    
-        <label class="col-md-2 control-label radio-inline">Create LeadSource?:</label>
-        
-            <div class="form-group  radio-inline">
-                <input class="form-control" type="checkbox" @if(old('leadsource')) checked @endif 
-                name="leadsource" 
-                 />
-         
-            <span class="help-block">
-                <strong>{{ $errors->has('leadsource') ? $errors->first('leadsource') : ''}}</strong>
-                </span>
-        </div>
+    <label class="col-md-2 control-label">LeadSource</label>
+    <div class="input-group input-group-lg">
+        <select  class="form-control" name='lead_source_id'>
+            <option ></option>
+            @foreach ($leadsources as $leadsource))
+                <option value="{{$leadsource->id}}">{{$leadsource->source}}</option>
+            @endforeach
+        </select>
+        <span class="help-block">
+            <strong>{{ $errors->has('leadsource') ? $errors->first('leadsource') : ''}}</strong>
+        </span>
     </div>
-    <!---------- Servicelines   ---------------->
+</div>
+<div class="form-inline{{ $errors->has('newleadsource)') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label radio-inline">Create New LeadSource?:</label>
+    <div class="form-group">
+        <input 
+            type="checkbox" 
+            name="newleadsource" 
+            class="form-control" />
+        <input 
+            type="text" 
+            placeholder="Enter a name for leadsource ..." 
+            name="newleadsourcename" 
+            class="form-control" />
+        <span class="help-block">
+            <strong>{{ $errors->has('leadsource') ? $errors->first('leadsource') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<!---------- Servicelines   ---------------->
 <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
     <label class="col-md-2 control-label">Servicelines</label>
     <div class="input-group input-group-lg">

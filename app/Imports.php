@@ -256,12 +256,7 @@ class Imports extends Model
             'dateto'=>Carbon::now()->addYear(),
             'filename'=>$data['filename'],
         ];
-        if (isset($data['company'])) {
-            $company = Company::findOrFail($data['company']);
-            $lead_import_id['source']= $company->companyname ." | ". date('YzHis');
-        } else {
-            $lead_import_id['source']="Import". date('YzHis');
-        }
+        $lead_import_id['source'] = $this->_createLeadSourceName($data);
         $leadsource = LeadSource::create($lead_import_id);
        
         if ($data['serviceline']) {
@@ -271,7 +266,17 @@ class Imports extends Model
         return $leadsource->id;
     }
 
-   
+    private function _createLeadSourceName($data)
+    {
+        if (isset($data['company'])) {
+            $company = Company::findOrFail($data['company']);
+            return $company->companyname ." | ". date('YzHis');
+        } elseif (isset($data['newleadsourcename'])) {
+            return $data['newleadsourcename'] ." Import". date('YzHis');
+        } else { 
+            return "Import". date('YzHis');
+        }
+    }
 
     // we should dedupe here 
     /**

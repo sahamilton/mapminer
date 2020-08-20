@@ -7,6 +7,7 @@ use App\Company;
 use App\Address;
 use App\Branch;
 use App\Model;
+use App\LeadSource;
 use App\LocationImport;
 use App\Serviceline;
 use App\Http\Requests\LocationImportFormRequest;
@@ -33,7 +34,8 @@ class LocationsImportController extends ImportController
        // $branches = Branch::orderBy('id')->get();
         $companies = $this->company->orderBy('companyname')->pluck('companyname', 'id');
         $servicelines = Serviceline::all();
-        return response()->view('locations.import', compact('companies', 'requiredFields', 'servicelines'));
+        $leadsources = LeadSource::active()->orderBy('source')->get();
+        return response()->view('locations.import', compact('companies', 'requiredFields', 'servicelines', 'leadsources'));
     }
 
     /**
@@ -46,13 +48,13 @@ class LocationsImportController extends ImportController
     public function import(Request $request) 
     {
         $data = request()->except('_token');
-     
+   
         $title="Map the locations import file fields";
         $data = array_merge($data, $this->uploadfile(request()->file('upload')));
         $data['additionaldata'] = null;
         $data['route'] = 'locations.mapfields';
         // only create a lead source if non included and no company selected.
-        if (! request()->has('lead_source_id')) {
+        if (! request()->filled('lead_source_id')) {
 
             $data['lead_source_id'] = $this->import->createLeadSource($data);
         }

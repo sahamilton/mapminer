@@ -211,6 +211,11 @@ class LeadSource extends Model
 
     
     }
+    public function scopeActive()
+    {
+        return $this->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
+    }
     /**
      * [leadRepStatusSummary description]
      * 
