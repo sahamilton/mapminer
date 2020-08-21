@@ -43,16 +43,19 @@ class MobileController extends Controller
         if (count($myBranches)==0) {
             return redirect()->route('welcome')->withMessage("Sorry you don't have assigned branches");
         }
+    
         $branches = $this->branch->whereIn('id', array_keys($myBranches))->get();
         $branch = $this->_getBranchData($branches->first());
+
         $this->branch->setGeoBranchSession($branch, $branch->radius);
         $address = new Address($branch->toArray());
         $type="activities";
         $distance = 1;
         $results = $this->_getDataByType($branch, $address, $distance, $type);
+        
         $searchaddress = $branch->fullAddress();
         $markers = $this->_getMapMarkers($results, $type);
-
+    
         return response()->view('mobile.index', compact('person', 'branch', 'branches', 'results', 'type', 'distance', 'markers', 'searchaddress'));
     }
 
@@ -330,7 +333,9 @@ class MobileController extends Controller
      * @return [type]            [description]
      */
     private function _getNearbyOpenLeads(
-        Branch $branch, Address $address, $distance
+        Branch $branch, 
+        Address $address, 
+        $distance
     ) {
 
         return $branch->leads()
@@ -338,6 +343,8 @@ class MobileController extends Controller
             ->with('lastActivity')
             ->get();
     }
+
+
     /**
     /**
      * [_getNearbyActivities description]
@@ -355,9 +362,9 @@ class MobileController extends Controller
             ->whereHas(
                 'relatesToAddress', function ($q) use ($address, $distance) {
                     $q->nearby($address, $distance);
-                }
-            )
-            ->with('relatesToAddress')->get();
+                }            
+            )->with('relatesToAddress')
+            ->get();
     }
     /**
      * [_getNearbyOpenOpportunities description]
@@ -371,6 +378,7 @@ class MobileController extends Controller
     private function _getNearbyOpenOpportunities(
         Branch $branch, Address $address, $distance
     ) {
+        
         $opportunities = $branch->openOpportunities()->whereHas(
             'address', function ($q) use ($address, $distance) {
                 $q->whereHas(

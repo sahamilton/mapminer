@@ -1219,7 +1219,7 @@ class Branch extends Model implements HasPresenter
      */
     public function scopeMobileStats($query)
     {
-        return $query->with(       
+        return $query->withCount(       
             ['leads'=>function ($query) {
                 $query->where(
                     function ($q) {
@@ -1231,7 +1231,7 @@ class Branch extends Model implements HasPresenter
             'activities'=>function ($query) {
                 $query->where('completed', 0);
             },
-            'activities.address',
+
             'opportunities'=>function ($query) {
                 $query->whereClosed(0)        
                     ->where(
@@ -1241,9 +1241,7 @@ class Branch extends Model implements HasPresenter
                         }
                     )
                 ->where('opportunities.created_at', '<', now());
-            },
-            'opportunities.address'
-
+            }
             ]
         );
 
@@ -1422,6 +1420,9 @@ class Branch extends Model implements HasPresenter
                     $query->whereBetween(
                         'activity_date', [$this->period['from'],$this->period['to']]
                     )->where('completed', 1);
+                },
+                'activities as openactivities'=>function ($query) {
+                    $query->whereNull('completed');
                 },
                 'activities as salesappts'=>function ($query) {
                     $query->whereBetween(
