@@ -316,7 +316,7 @@ class MobileController extends Controller
             return $this->_getNearbyOpenOpportunities($branch, $address, $distance);
             break;
         default: 
-            dd('Error');
+            return back()->withError('That is an unknown type: '. $type);
             break;
 
         }
