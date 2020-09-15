@@ -2,6 +2,7 @@
 
 namespace App;
 use Carbon\Carbon;
+
 class Address extends Model
 {
     use Geocode,Filters, FullTextSearch;

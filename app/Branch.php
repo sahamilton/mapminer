@@ -1,6 +1,8 @@
 <?php
 namespace App;
 
+//use App\Presenters\LocationPresenter;
+//use McCool\LaravelAutoPresenter\HasPresenter;
 use App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Http\Request;

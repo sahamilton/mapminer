@@ -70,6 +70,7 @@ Route::group(
         Route::get('/branch/{branch}/map', ['as'=>'branch.map', 'uses'=>'BranchesController@map']);
         Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);
         Route::get('branches/{branch}/shownearby', ['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
+        Route::get('/branch/newleads', ['as'=>'branch.newleads', 'uses'=>'BranchesController@newleads']);
         //Route::get('branches/{state}/showstate', ['as' => 'showstate.branch', 'uses' => 'BranchesController@getStateBranches']);
         Route::get('branches/{branch}/nearby', ['as' => 'nearby.branch', 'uses' => 'BranchesController@getNearbyBranches']);
         //Route::get('branches/{branch}/locations', ['as' => 'branch.locations', 'uses' => 'BranchesController@getLocationsServed']);

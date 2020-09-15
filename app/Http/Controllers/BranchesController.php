@@ -19,7 +19,8 @@ use App\Http\Requests\BranchReassignFormRequest;
 use App\Http\Requests\BranchImportFormRequest;
 use App\Exports\BranchTeamExport;
 
-class BranchesController extends BaseController {
+class BranchesController extends BaseController
+{
 
     /**
      * Display a listing of branches
@@ -77,6 +78,12 @@ class BranchesController extends BaseController {
     {
        
         return response()->view('branches.index');
+    }
+
+    public function newleads()
+    {
+        $myBranches = ['1201', '1204'];
+        return response()->view('branches.test', compact('myBranches'));
     }
     
     /**

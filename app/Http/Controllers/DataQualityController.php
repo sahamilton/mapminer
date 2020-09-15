@@ -40,7 +40,7 @@ class DataQualityController extends Controller
         } else {
             $branch = $this->branch->findOrFail(session('branch'));
         }
-        
+      
         $data = $this->_getSummaryDataMetrics($branch);
 
         return response()->view(
@@ -54,71 +54,7 @@ class DataQualityController extends Controller
         );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\DataQuality  $dataQuality
-     * @return \Illuminate\Http\Response
-     */
-    public function show(DataQuality $dataQuality)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\DataQuality  $dataQuality
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DataQuality $dataQuality)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\DataQuality  $dataQuality
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, DataQuality $dataQuality)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\DataQuality  $dataQuality
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(DataQuality $dataQuality)
-    {
-        //
-    }
+    
     /**
      * [branch description]
      * 
@@ -132,6 +68,7 @@ class DataQualityController extends Controller
         $branches = auth()->user()->person->myBranches();
         $branch = $this->branch->findOrFail(request('branch'));
         session(['branch'=>$branch->id]);
+   
         $data = $this->_getSummaryDataMetrics($branch);
         return response()->view(
             'dataquality.index', 
@@ -166,6 +103,7 @@ class DataQualityController extends Controller
     private function _getSummaryDataMetrics($branch)
     {
         foreach ($this->metrics as $metric) {
+            
             $dataquality = $this->_dataQualityModel($metric);
             $data[$metric] = $dataquality->count($branch);
 

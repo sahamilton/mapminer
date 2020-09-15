@@ -153,7 +153,7 @@ use Illuminate\Http\Request;
         Route::get('locationnotes', ['as'=>'locations.notes', 'uses'=>'NotesController@index']);
 
         //     Search Filters
-
+        Route::get('htfimport', ['as'=>'htfimport', 'uses'=>'HowtofieldsController@import']);
         Route::get('searchfilters/analysis/{id?}', ['as'=>'vertical.analysis', 'uses'=>'SearchFiltersController@filterAnalysis']);
         Route::get('searchfilters/export/{id?}', ['as'=>'vertical.export', 'uses'=>'SearchFiltersController@export']);
         Route::get('searchfilters/promote/{filterid}', ['as'=>'admin.searchfilter.promote', 'uses'=>'SearchFiltersController@promote']);

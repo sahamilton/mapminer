@@ -2,8 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Howtofield;
+use App\HowtofieldImport;
 use App\Http\Requests\HowtofieldsFormRequest;
 use Carbon\Carbon;
+use App\Company;
 use Illuminate\Http\Request;
 class HowtofieldsController extends BaseController
 {
@@ -148,5 +150,55 @@ class HowtofieldsController extends BaseController
         $this->howtofield->rebuild();
     }
 
+    /**
+     * [import description]
+     * 
+     * @return [type] [description]
+     */
+    public function import()
+    {
+        
+        $queries = HowtofieldImport::all();
+        $vertical = null;
+        $count['queries'] = $queries->count();
 
+        foreach ($queries as $query) {
+            
+            if ($vertical != $query->vertical) {
+
+                $vertical = $query->vertical;
+                
+                $companies = $this->_getCompanies($vertical);
+                $count['companies'][$vertical] = $companies->count();
+            }
+            $this->_addHowtofields($companies, $query);
+            
+        }
+        dd('All done', $count);
+    }
+    /**
+     * [_getCompanies retrieve companies in vertical]
+     * 
+     * @param  [type] $vertical [description]
+     * @return [type]           [description]
+     */
+    private function _getCompanies($vertical)
+    {
+        return Company::whereVertical($vertical)->get();
+    }
+    /**
+     * [_addHowtofields Insert how to fields for companies]
+     * 
+     * @param [type] $companies [description]
+     * @param [type] $query     [description]
+     *
+     * @return count             
+     */
+    private function _addHowtofields($companies, $query) 
+    {
+        foreach ($companies as $company) {
+            
+            $company->salesnotes()->attach($query->fieldid, ['fieldvalue' => $query->fieldvalue]);
+        }
+    }
 }

@@ -2,10 +2,10 @@
 namespace App;
 
 use App\Presenters\LocationPresenter;
-use McCool\LaravelAutoPresenter\HasPresenter;
+//use McCool\LaravelAutoPresenter\HasPresenter;
 
 
-class Location extends Model implements HasPresenter
+class Location extends Model 
 {
 
     use Geocode,Addressable;

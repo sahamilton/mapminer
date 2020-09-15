@@ -1,12 +1,12 @@
 <?php
 namespace App;
 
-use App\Presenters\LocationPresenter;
+//use App\Presenters\LocationPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use McCool\LaravelAutoPresenter\HasPresenter;
+//use McCool\LaravelAutoPresenter\HasPresenter;
 
 
-class Person extends NodeModel implements HasPresenter
+class Person extends NodeModel
 {
     use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch;
     public $salesroles = ['5','9'];

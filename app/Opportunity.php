@@ -339,7 +339,7 @@ class Opportunity extends Model
     {
 
         return $query->where('closed', 0)
-            ->where('expected_close', '<', now()->subMOnths(2));
+            ->where('expected_close', '<', now()->subMonths(2));
            
 
 

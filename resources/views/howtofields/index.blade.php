@@ -19,7 +19,7 @@ class="btn btn-small btn-info iframe">
         
         <li class="dd-item" data-id="{{$field->id}}">
                 <ol class="dd-list">
-                    @foreach ($field->immediateDescendants()->get() as $subField)
+                    @foreach ($field->descendants()->limitDepth(1)->get() as $subField)
                     
                     <li class="dd-item" data-id="{{$subField->id}}">
                         <div class="dd-handle">
