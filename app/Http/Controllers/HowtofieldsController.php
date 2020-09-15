@@ -158,12 +158,12 @@ class HowtofieldsController extends BaseController
     public function import()
     {
         
-        $queries = HowtofieldImport::all();
+        $queries = HowtofieldImport::orderBy('vertical')->get();
         $vertical = null;
-        $count['queries'] = $queries->count();
+        $count['queries'] = 0;
 
         foreach ($queries as $query) {
-            
+            $count['queries']++;
             if ($vertical != $query->vertical) {
 
                 $vertical = $query->vertical;
@@ -171,8 +171,9 @@ class HowtofieldsController extends BaseController
                 $companies = $this->_getCompanies($vertical);
                 $count['companies'][$vertical] = $companies->count();
             }
+
             $this->_addHowtofields($companies, $query);
-            
+           
         }
         dd('All done', $count);
     }

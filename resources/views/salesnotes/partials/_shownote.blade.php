@@ -28,7 +28,7 @@
                           <strong>{{$field->fieldname}}</strong>
                         </p>
                           @if($salesnote->where('howtofield_id', $field->id)->count() > 0)
-                            <p>{!! $salesnote->where('howtofield_id', $field->id)->first()->fieldvalue!!} </p>
+                            <p>{!! $salesnote->where('howtofield_id', $field->id)->first()->fieldvalue !!} <br /></p>
                           @endif
                     
                     @endforeach
