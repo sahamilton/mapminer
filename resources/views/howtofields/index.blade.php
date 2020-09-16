@@ -28,7 +28,7 @@ class="btn btn-small btn-info iframe">
                                 <del class="text-danger">{{$subField->fieldname}} </del>
                             @else
                                <span class="text-success" >
-                                {{$subField->fieldname}} {{$subField->id}}
+                                {{$subField->parent()->first()->fieldname}} - {{$subField->fieldname}} ({{$subField->id}}) 
                                 </span>
                              @endif
                             

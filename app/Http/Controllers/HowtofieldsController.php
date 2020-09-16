@@ -27,7 +27,8 @@ class HowtofieldsController extends BaseController
             ->whereNull('parent_id')
             ->first()->getDescendants();
       
-        
+      
+      
         
         return response()->view('howtofields.index', compact('howtofields'));
     }
@@ -128,18 +129,24 @@ class HowtofieldsController extends BaseController
     public function reorder(Request $request)
     {
         $data = json_decode(request('id'));
+        
         $n = 0;
         foreach ($data as $el) {
 
             $n++;
             $item[$el->id] = ['parent_id'=>43, 'sequence'=>$n];
             $c=0;
-            foreach ($el->children as $child) {
-                
-                $c++;
-                $item[$child->id] = ['parent_id'=>$el->id, 'sequence'=>$c];
+            if (isset($el->children)) {
+                foreach ($el->children as $child) {
+               
+                    $c++;
+                    $item[$child->id] = ['parent_id'=>$el->id, 'sequence'=>$c];
+                }
             }
+            
+           
         }
+        
         foreach ($item as $key=>$value) {
             $field = $this->howtofield->findOrFail($key);
             $field->update($value);
