@@ -349,7 +349,7 @@ class AdminUsersController extends BaseController
     {
         if (request()->filled('serviceline')) {
             
-            $user->serviceline()->request('serviceline');
+            $user->serviceline()->sync(request('serviceline'));
 
         } else {
             $user->serviceline()->sync([]);
