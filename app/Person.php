@@ -2,6 +2,7 @@
 namespace App;
 
 use App\Presenters\LocationPresenter;
+use App\Http\Requests\UserFormRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
@@ -151,10 +152,10 @@ class Person extends NodeModel implements HasPresenter
                 }
             )->pluck('id')->toArray();
         } else {
-            $branches = $this->descendantsAndSelf()->withRoles([9]);
+            $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
         }
         
-        $branches = $branches->with('branchesServiced')
+        $branches = $branchMgrs->with('branchesServiced')
             ->when(
                 $servicelines, function ($q) use ($servicelines) {
                     $q->whereHas(
@@ -866,11 +867,11 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return [type]       [description]
      */
-    public function updatePersonsAddress($data)
+    public function updatePersonsAddress(UserFormRequest $request)
     {
-        if (! empty($data['address'])) {
-            $data = $this->getGeoCode(app('geocoder')->geocode($data['address'])->get());
-            unset($data['fulladdress']);
+        if (request()->filled('address')) {
+            $data = $this->getGeoCode(app('geocoder')->geocode(request('address'))->get());
+            
         } else {
             $data['address']=null;
             $data['city']=null;

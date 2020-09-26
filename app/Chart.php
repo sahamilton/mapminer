@@ -52,13 +52,13 @@ class Chart extends Model
             }
         );
         $activitydata = collect($data['data'])->pluck('activitiestype');      
-        $labels = implode("','",$labels->pluck('name')->toArray());
+        $labels = implode("','", $labels->pluck('name')->toArray());
         $chart['labels'] = $labels;
-        foreach($full as $color=>$activity) {
+        foreach ($full as $color=>$activity) {
             $chart['data'][$activity]['color']=$color;
             $chart['data'][$activity]['labels']=$labels;
-            $type = str_replace(" ", "_",strtolower($activity));
-            $chart['data'][$activity]['data'] = implode(",",$activitydata->pluck($type)->toArray());
+            $type = str_replace(" ", "_", strtolower($activity));
+            $chart['data'][$activity]['data'] = implode(",", $activitydata->pluck($type)->toArray());
         }
         
         return $chart;

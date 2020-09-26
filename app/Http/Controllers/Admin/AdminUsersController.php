@@ -207,39 +207,23 @@ class AdminUsersController extends BaseController
      */
     public function store(UserFormRequest $request)
     {
-
-        
+       
         $user = $this->user->create(request()->all());
         $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
-        $this->_updatePassword($request, $user);
+        
         if (request()->filled('confirm')) {
             $user->confirmed = request('confirm');
         }
 
         if ($user->save()) {
-            // need to get the lat lng;
-            $name = request(['firstname','lastname','phone','business_title']);
-            if (request()->filled('address')) {
-
-                $geoCode = app('geocoder')->geocode(request('address'))->get();
-                
-                $person = $this->person->getGeoCode($geoCode);
-            } else {
-                $person['lat']=null;
-                $person['lng']=null;
-                $person['position'] = null;
-            }
-            
-            $person = array_merge($person, $name);
-            $user->person()->create($person);
-            $person = $user->person;
-            $person = $this->_updateAssociatedPerson($person, request()->all());
-            $person = $this->_associateBranchesWithPerson($person, request()->all());
-            $track=Track::create(['user_id'=>$user->id]);
             $user->saveRoles(request('roles'));
-            $user->serviceline()->attach(request('serviceline'));
-            $person->rebuild();
+            $this->_updatePassword($request, $user);
+            $this->_updateServicelines($request, $user);
+            $person = $this->person->create($this->_createPersonData($request, $user));
+            $this->_updateIndustryVertical($request, $person);
+            $this->_associateBranchesWithPerson($request, $person);
+            $track=Track::create(['user_id'=>$user->id]);
             return redirect()->route('person.details', $person->id)
                 ->with('success', 'User created succesfully');
         } else {
@@ -310,21 +294,20 @@ class AdminUsersController extends BaseController
      */
     public function update(UserFormRequest $request, User $user)
     {
-      
-        $user->load('person');
-        $oldUser = clone($user);
-
-        $this->_updatePassword($request, $user);
+        // note no update of address / geocoding!
+        //$user->load('person');
+        //$oldUser = clone($user);
 
         if ($user->update(request()->except('password'))) {
-
-            $person = $this->_updateAssociatedPerson($user->person, request()->all());
-            $person = $this->_associateBranchesWithPerson($person, request()->all());        
+            $user->load('person');
             $user->saveRoles(request('roles'));
+            $this->_updatePassword($request, $user);
             $this->_updateServicelines($request, $user);
-
-            $this->_updateIndustryVertical($request, $person);
-            return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
+            $user->person->update($this->_createPersonData($request, $user));
+            $this->_updateIndustryVertical($request, $user->person);
+            $this->_associateBranchesWithPerson($request, $user->person);
+            return redirect()->route('person.details', $user->person->id)
+                ->with('success', 'User updated succesfully');
         } else {
             return redirect()->to('admin/users/' . $user->id . '/edit')
                 ->with('error', 'Unable to update user');
@@ -346,6 +329,14 @@ class AdminUsersController extends BaseController
             $user->save();
         }
     }
+
+    private function _createPersonData(Request $request, User $user)
+    {
+        $personName = request(['firstname','lastname','phone','business_title']);
+        $personGeo = $this->person->updatePersonsAddress($request);
+        return array_merge($personGeo, $personName, ['user_id'=>$user->id]);
+        
+    }
     /**
      * [_updateServicelines description]
      * 
@@ -356,12 +347,12 @@ class AdminUsersController extends BaseController
      */
     private function _updateServicelines(UserFormRequest $request, User $user)
     {
-
         if (request()->filled('serviceline')) {
+            
+            $user->serviceline()->request('serviceline');
 
-
-                $user->serviceline()->sync(request('serviceline'));
-
+        } else {
+            $user->serviceline()->sync([]);
         }
     }
     /**
@@ -375,9 +366,9 @@ class AdminUsersController extends BaseController
     private function _updateIndustryVertical(UserFormRequest $request, Person $person)
     {
         if (request()->filled('vertical')) {
-                $verticals = request('vertical');
+            $verticals = request('vertical');
 
-            if ($verticals[0]==0) {
+            if ($verticals[0] == 0) {
                 $person->industryfocus()->sync([]);
             } else {
                 $person->industryfocus()->sync(request('vertical'));
@@ -406,20 +397,20 @@ class AdminUsersController extends BaseController
     /**
      * [_associateBranchesWithPerson description]
      * 
-     * @param [type] $person [description]
-     * @param [type] $data   [description]
+     * @param Request $request [description]
+     * @param Person  $person  [description]
      * 
-     * @return [type]         [description]
+     * @return Person          [description]
      */
-    private function _associateBranchesWithPerson($person, $data)
+    private function _associateBranchesWithPerson(Request $request, Person $person)
     {
   
         $syncData=[];
-        if (isset($data['branchstring'])) {
-            $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
+        if (request()->filled('branchstring')) {
+            $data['branches'] = $this->branch->getBranchIdFromid(request('branchstring'));
         }
 
-        if (isset($data['branches']) && count($data['branches'])>0 && $data['branches'][0]!=0) {
+        if (isset($data['branches']) && count($data['branches']) > 0 && $data['branches'][0] != 0) {
             foreach ($data['branches'] as $branch) {
                 if ($data['roles']) {
                     foreach ($data['roles'] as $role) {
@@ -431,7 +422,6 @@ class AdminUsersController extends BaseController
         
         $person->branchesServiced()->sync($syncData);
 
-        return $person;
     }
     /**
      * [_updateAssociatedPerson description]
@@ -450,7 +440,7 @@ class AdminUsersController extends BaseController
         $data = array_merge($data, $geodata);
         $person->update($data);
 
-        if (isset($data['vertical'])&& $data['vertical'][0]!=0) {
+        if (isset($data['vertical']) && $data['vertical'][0]!=0) {
             $person->industryfocus()->sync($data['vertical']);
         }
 

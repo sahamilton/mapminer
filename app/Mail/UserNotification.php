@@ -24,10 +24,10 @@ class UserNotification extends Mailable
      */
     public function __construct(User $user)
     {
-        $this->user = $user->with('person')->first();
-        //$this->person = Person::where('id','=',$this->user->person_id)->first();
+        $this->user = $user->load('person');
+
     
-        dd($this->user);
+        
     }
 
     /**
@@ -37,11 +37,11 @@ class UserNotification extends Mailable
      */
     public function build()
     {
-    
-        if ($this->user->status == 'active') {
-            return $this->markdown('emails.usernotification')
-                ->to($this->user->email);
-        }
-        //return $this->markdown('emails.usernotification');
+        return $this->from(config('mail.from'))
+            ->markdown('emails.usernotification')
+            ->to($this->user->email, $this->user->person->fullname())
+            ->subject("Welcome to Mapminer");
+        
+        
     }
 }

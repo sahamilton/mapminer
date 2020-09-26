@@ -20,17 +20,28 @@
     <div class="tab-content" id="nav-tabContent">  
         @foreach ($fields->where('depth', 1) as $tab)
             <div id="{{$tab->fieldname}}" 
-                class="tab-pane show @if($loop->first) active @endif" >
+                class="tab-pane show @if($loop->first) active @endif " >
                 @foreach ($tab->getDescendants() as $field)
                 
                 
-                    <strong><label for="{{$field->fieldname}}">{{$field->fieldname}}</label></strong>@foreach($company->salesnotes->where('id', $field->id) as $notelet)
-                        <div class="form-group">
+                    <strong>
+                        <label for="{{$field->fieldname}}">{{$field->fieldname}} 
+                            <i onclick="addRow(this.form);" 
+                            title="Add row" 
+                            class="fas fa-plus-circle text-primary">
+                                
+                            </i>
+                        </label>
+                    </strong>
+
+                    @foreach($company->salesnotes->where('id', $field->id) as $notelet)
+                        <div class="form-group" id = "{{$field->id}}{{$loop->index}}">
                             @php $fieldvalue = str_replace("<br />", "\r\n", $notelet->pivot->fieldvalue); @endphp
-                    
+                            
                             @if($field->type =='text')
         
                                 <input class="col-md-6"
+
                                     type="text"
                                     @if($field->required ==1)
                                     required
@@ -38,24 +49,20 @@
                                     class="form-control"
                                     name="{{$field->id}}[]"
                                     value="{!!$fieldvalue!!}"
-                                    /><input class="col-md-1 btn btn-danger" 
-                                    onclick="deleteRow(this.form);" 
-                                    type="button" 
-                                    value="Delete row" />
+                                    />
+                                    
+                                    
                                 @elseif($field->type == 'textarea')
 
-                                <textarea 
-                                
+                                <div class= "summernote col-md-6" 
+                                    
                                     name="{{$field->id}}[]" 
-                                    class="col-md-6"
+                                    
                                     @if($field->required ==1)
                                     required
                                     @endif
-                                    >{!! $fieldvalue !!}</textarea>
-                                    <button class="col-md-1 btn btn-danger" 
-                                    onclick="deleteRow(this.form);" 
-                                   
-                                    ty><i class="fas fa-trash-alt"></i></button>
+                                    >{!! $fieldvalue !!}</div>
+                                    
                         
                         
                                 @elseif ($field->type == 'select')
@@ -83,10 +90,7 @@
                                         name="{{$field->id}}[]"
                                         value="{!! $fieldvalue !!}"
                                     />
-                                    <input onclick="deleteRow(this.form);" 
-                                    class="btn btn-danger"
-                                    type="button" 
-                                    value="Delete row" />
+                                    
                                 @endif 
 
                             <span class="help-block">
@@ -94,6 +98,11 @@
                                     {{ $errors->has($field->id) ? $errors->first($field->id) : ''}}
                                 </strong>
                             </span>
+                        
+                        
+                                    <i onclick="delRow(this.form);" 
+                                    title="Delete row" 
+                                    class="fas fa-trash-alt btn"></i>
                         </div>
 
                     @endforeach
@@ -105,5 +114,9 @@
         @endforeach 
     </div>
 </div>
-
-   
+<script>
+    $(document).ready(function() 
+    {
+        $('.summernote').summernote();
+    });
+</script>
