@@ -46,7 +46,8 @@
         "awobaz/compoships": "^1.1",
         "morrislaptop/laravel-queue-clear": "^1.2",
         "laravel/helpers": "^1.2",
-        "spatie/laravel-uptime-monitor": "^3.8"
+        "spatie/laravel-uptime-monitor": "^3.8",
+        "binarytorch/larecipe": "^2.4"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

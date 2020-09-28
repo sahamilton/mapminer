@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
         Route::post('branchassignments/send', ['as'=>'branchassignments.send', 'uses'=>'Admin\BranchManagementController@emailAssignments']);
         Route::get('branch/manage', ['as'=>'branch.management', 'uses'=>'Admin\BranchManagementController@index']);
         Route::get('branch/manage/export/{type?}', ['as'=>'branches.manage.export', 'uses'=>'Admin\BranchManagementController@export']);
-        Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
+        Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'BranchAssignmentController@checkBranchReporting']);
         
 
         // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
