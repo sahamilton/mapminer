@@ -2,7 +2,7 @@
 @section('content')
 @php $importtypes = ['location'] @endphp
 <div class="container">
-<h2>Steps to import locations for  accounts:</h2>
+<h2>Steps to import locations for  leadsource {{$leadsource->source}}:</h2>
 <ol>
 <li>First create your csv file of leads from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to these fields:
             <ul>
@@ -84,38 +84,6 @@
         
     </div>
 <!-----/ description-->
-<!-- Lead Source -->
-<div class="form-group{{ $errors->has('leadsource)') ? ' has-error' : '' }}">
-    <label class="col-md-2 control-label">LeadSource</label>
-    <div class="input-group input-group-lg">
-        <select  class="form-control" name='lead_source_id'>
-            <option ></option>
-            @foreach ($leadsources as $leadsource))
-                <option value="{{$leadsource->id}}">{{$leadsource->source}}</option>
-            @endforeach
-        </select>
-        <span class="help-block">
-            <strong>{{ $errors->has('leadsource') ? $errors->first('leadsource') : ''}}</strong>
-        </span>
-    </div>
-</div>
-<div class="form-inline{{ $errors->has('newleadsource)') ? ' has-error' : '' }}">
-    <label class="col-md-2 control-label radio-inline">Create New LeadSource?:</label>
-    <div class="form-group">
-        <input 
-            type="checkbox" 
-            name="newleadsource" 
-            class="form-control" />
-        <input 
-            type="text" 
-            placeholder="Enter a name for leadsource ..." 
-            name="newleadsourcename" 
-            class="form-control" />
-        <span class="help-block">
-            <strong>{{ $errors->has('leadsource') ? $errors->first('leadsource') : ''}}</strong>
-        </span>
-    </div>
-</div>
 <!---------- Servicelines   ---------------->
 <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
     <label class="col-md-2 control-label">Servicelines</label>
@@ -161,7 +129,7 @@
     </div>
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Import Locations" />
-
+<input type="hidden" name="lead_source_id" value="{{$leadsource->id}}" />
 </form>
 </div>
 

@@ -12,7 +12,7 @@
 
 @include('opportunities.partials._closemodal')
 @include('partials._opportunitymodal')
-@include('opportunities.partials._activitiesmodal')
+
 
 @include('partials._scripts')
 @endsection

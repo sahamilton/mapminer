@@ -242,7 +242,12 @@ class LeadsAssignController extends Controller
         Request $request, 
         LeadSource $leadsource
     ) {
-     
+        // check if multi branch in which case 'offer' the lead else give the lead.
+        if (count(request('branch')) >1) {
+            $status_id = 1;
+        } else {
+            $status_id = 2;
+        }
         $addresses = $this->address
             ->where('lead_source_id', $leadsource->id)
             ->doesntHave('assignedToBranch')
@@ -253,7 +258,7 @@ class LeadsAssignController extends Controller
         foreach (request('branch') as $branch) {
             $branch = $this->branch->findOrFail($branch);
 
-            $branch->locations()->attach($addresses);
+            $branch->locations()->attach($addresses, ['status_id'=>$status_id]);
         }
 
         return  count($addresses) . " leads assigned to " . count(request('branch')) . ' branches';
@@ -272,8 +277,7 @@ class LeadsAssignController extends Controller
         Array $box, 
         Array $roles
     ) {
-        //dd($leadsource, $box, $roles);
-        //$addresses = $this->_unassignedLeads($leadsource);
+        
         $count = [];
         // move this to a queued job
         $this->address->where('lead_source_id', $leadsource->id)
@@ -318,22 +322,43 @@ class LeadsAssignController extends Controller
      */
     private function _assignBranchesToLeads(LeadSource $leadsource)
     {
-     
+        $leadsource->load('servicelines');
         $addresses = $this->_unassignedLeads($leadsource);
         // add assingment query here
         foreach ($addresses as $address) {
             $branches = $this->branch
+                
+                ->when(
+                    $leadsource->servicelines->count(), function ($q) use ($leadsource) {
+                        $q->whereHas(
+                            'servicelines', function ($q) use ($leadsource) {
+                                $q->whereIn('serviceline_id', [$leadsource->servicelines->pluck('id')->toarray()]);
+                            }
+                        );
+                    }
+                )
                 ->nearby($address, $this->distance, $this->limit)
                 ->pluck('id')
                 ->toArray();
-            if (count($branches)>0) {
+            
+            if (count($branches) > 0) {
                 foreach ($branches as $branch_id) {
-                    $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id];
+                    
+                    if ($this->limit == 1) {
+                    
+                        $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id, 'status_id'=>2];
+                    } else {
+                        $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id, 'status_id'=>1];
+                    }
                 }
             }
+        
         }
-        AddressBranch::insert($data);
-        return $addresses->count();              
+        if (isset($data)) {
+            AddressBranch::insert($data);
+            return $addresses->count();   
+        }
+        return 0;    
     }
 
     /**

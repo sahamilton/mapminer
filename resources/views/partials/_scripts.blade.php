@@ -117,6 +117,9 @@ $(document).ready(function()
 	    checkboxes.prop('checked', $(this).is(':checked'));
 	});
 
+  
+
+
 	$( "#activitydate" ).datepicker( {altField : "#activitydate",
     altFormat: "yy-mm-dd"});
 

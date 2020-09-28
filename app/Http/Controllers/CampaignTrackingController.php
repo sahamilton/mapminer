@@ -79,14 +79,17 @@ class CampaignTrackingController extends Controller
      */
     public function show(Campaign $campaign)
     {
+        
         $campaign->load('companies', 'branches');
 
         $branches = $this->_getBranchesInCampaign($campaign);
+       
         //$branches = $campaign->branches->pluck('id')->toArray();
         $team = $this->_getCampaignBranchTeam($campaign);
+
+        $campaigns = $this->campaign->current($branches->pluck('id')->toArray())->get(); 
+
         
-      
-        $campaigns = $this->campaign->current($branches->pluck('id')->toArray())->get();
         if($campaign->type=== 'open') {
             $fields =  $this->openfields;
         }else{
@@ -122,14 +125,26 @@ class CampaignTrackingController extends Controller
         $campaigns = $this->campaign->active()->get();
         $companies = $campaign->companies->pluck('id')->toarray();
         $branches =  $campaign->branches->pluck('id')->toArray();
+       
         $period = $this->_getCampaignPeriod($campaign);
         if (! $manager) {
             $manager = $campaign->manager_id;
         }
-        $fields = $this->fields;
+        $fields = [  
+                    "supplied_leads",
+                    "offered_leads",
+                    "worked_leads",
+                    "rejected_leads",
+                    "touched_leads",
+                    "new_opportunities",
+                    "won_opportunities",
+                    "opportunities_open",
+                    "won_value",
+                    "open_value"
+                ];
     
         $team = $this->_getCampaignBranchTeam($campaign, $manager);
-        $companies = $this->company->whereIn('id', $companies)->summaryStats($period, $branches)->get();
+        $companies = $this->company->whereIn('id', $companies)->leadSummary($period, $branches)->opportunitySummary($period, $branches)->get();
         return response()->view('campaigns.companysummary', compact('companies', 'campaigns', 'campaign', 'team', 'fields'));
     }
 
@@ -242,7 +257,7 @@ class CampaignTrackingController extends Controller
         if (! $manager) {
             $manager= $campaign->manager_id;
         }
-        
+       
         return $this->campaign->getSalesTeamFromManager($manager, $servicelines);
     }
 

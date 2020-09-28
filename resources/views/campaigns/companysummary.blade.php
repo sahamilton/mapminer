@@ -11,7 +11,10 @@
         </a>
     </p>
     @php $route = 'campaigns.companyreport'; @endphp
-    @include('campaigns.partials._teamselector')
+    @if($team) 
+        @include('campaigns.partials._teamselector')
+    @endif
+    
     @if (auth()->user()->hasRole(['admin', 'sales_operations']))
         <p>
             <a href="{{route('campaigns.index')}}">Return to all campaigns</a>

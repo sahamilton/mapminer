@@ -14,6 +14,7 @@ class Company extends NodeModel
     ];
     public $limit = 2000;
     public $period;
+    public $branches;
     public $activityFields = [
             '4'=>'Sales Appointment',
             '5'=>'Stop By',
@@ -304,14 +305,14 @@ class Company extends NodeModel
         return $this->ancestors();
     }
     /**
-     * [scopeSummaryStats description]
+     * [scopeLeadSummary description]
      * 
      * @param [type] $query  [description]
      * @param [type] $period [description]
      * 
      * @return [type]         [description]
      */
-    public function scopeLeadSummary($query,$period, $fields = null)
+    public function scopeLeadSummary($query,$period, $branches, $fields = null)
     {
 
         if (! $fields) {
@@ -319,8 +320,146 @@ class Company extends NodeModel
         }
         $this->fields = $fields;
         $this->period = $period;
-    
-        return $query->when(
+        $this->branches = $branches;
+        /*
+            'open_leads',
+            'active_leads',
+            "supplied_leads",
+            "offered_leads",
+            "worked_leads",
+            "rejected_leads",
+            "touched_leads",
+
+         */
+        return $query
+            ->when(
+                in_array('open_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as open_leads'=>function ($query) {
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->openLeads($this->period);
+
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                // note that this and touched leads should return the same
+                // consider merging.
+                in_array('active_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as active_leads'=>function ($query) {
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->activeLeads($this->period);
+
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('supplied_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as supplied_leads'=>function ($query) {
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->suppliedLeads($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('offered_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as offered_leads'=>function ($query) {
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->offeredLeads($this->period);
+                            
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('worked_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as worked_leads'=>function ($query) {
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->workedLeads($this->period);
+                            }
+                        ]
+                    );
+                }
+            )->when(
+                in_array('touched_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as touched_leads'=>function ($query) {
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->touchedLeads($this->period);
+                            }
+                        ]
+                    );
+                }
+            )->when(
+                in_array('rejected_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as rejected_leads'=>function ($query) {
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->rejectedLeads($this->period);
+                                
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('new_leads', $this->fields), function ($q) {
+                    $q->withCount(       
+                        [
+                            'locations as new_leads'=>function ($query) {
+
+                                $query->whereHas(
+                                    'assignedToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->branches);
+                                    }
+                                )->newLeads($this->period);
+                                    
+                               
+                            }
+                        ]
+                    );
+                }
+            )
+        ->when(
             in_array('unassigned_leads', $this->fields), function ($q) {
                 $q->withCount(       
                     [
@@ -348,117 +487,45 @@ class Company extends NodeModel
                 );
             }
         )
+        
         ->when(
-            in_array('new_leads', $this->fields), function ($q) {
+            in_array('open_leads', $this->fields), function ($q) {
                 $q->withCount(       
                     [
-                        'locations as new_leads'=>function ($query) {
+                        'locations as open_leads'=>function ($query) {
+                            $query->whereHas(
+                                'assignedToBranch', function ($q) {
+                                    $q->whereIn('branches.id', $this->branches);
+                                }
+                            )->openLeads($this->period);
 
-                            $query->newLeads($this->period);
-                                
-                           
                         }
                     ]
                 );
             }
         )
-        ->when(
-            in_array('supplied_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as supplied_leads'=>function ($query) {
-                            $query->suppliedLeads($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('open_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as open_leads'=>function ($query) {
-                            $query->openLeads($this->period);
-
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('offered_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as offered_leads'=>function ($query) {
-                            $query->offeredLeads($this->period);
-                        
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('worked_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as worked_leads'=>function ($query) {
-                            $query->workedLeads($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            // note that this and touched leads should return the same
-            // consider merging.
-            in_array('active_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as active_leads'=>function ($query) {
-                            $query->activeLeads($this->period);
-
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('touched_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as touched_leads'=>function ($query) {
-                            $query->touchedLeads($this->period);
-                        }
-                    ]
-                );
-            }
-        )->when(
-            in_array('rejected_leads', $this->fields), function ($q) {
-                $q->withCount(       
-                    [
-                        'locations as rejected_leads'=>function ($query) {
-                            $query->rejectedLeads($this->period);
-                            
-                        }
-                    ]
-                );
-            }
-        );
+        ;
 
         
     }
 
 
-    public function scopeOpportunitySummary($query, $period, $fields = null)
+    public function scopeOpportunitySummary($query, $period, $branches, $fields = null)
     {
     
         if (! $fields) {
             $fields = $this->opportunityFields;
         }
         $this->period = $period;
-
+        $this->branches = $branches;
         $this->fields = $fields;
         return $query->when(
             in_array('active_opportunities', $this->fields), function ($q) {
                 $q->withCount(       
                     [
                         'opportunities as active_opportunities'=>function ($q1) {
-                            $q1->currentlyActive($this->period);
+                            $q1->currentlyActive($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);
                         }
                     ]
                 );
@@ -468,7 +535,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as lost_opportunities'=>function ($q1) {
-                            $q1->lost($this->period);
+                            $q1->lost($this->period)
+                            ->whereIn('opportunities.branch_id', $this->branches);;
                         }
                     ]
                 );
@@ -480,7 +548,8 @@ class Company extends NodeModel
                     [
                         'opportunities as new_opportunities'=>function ($q1) {
                 
-                            $q1->newOpportunities($this->period);
+                            $q1->newOpportunities($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                                 
                         }
                     ]
@@ -492,7 +561,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as open_opportunities'=>function ($q1) {
-                            $q1->open($this->period);
+                            $q1->open($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                         }
                     ]
                 );
@@ -503,7 +573,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as top_25opportunities'=>function ($q1) {
-                            $q1->top25($this->period);
+                            $q1->top25($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                         }
                     ]
                 );
@@ -514,7 +585,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as won_opportunities'=>function ($q1) {
-                            $q1->won($this->period);
+                            $q1->won($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                         }
                     ]
                 );
@@ -525,7 +597,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as active_value'=>function ($query) {
-                            $query->activeValue($this->period);
+                            $query->activeValue($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                         }
                     ]
                 );
@@ -537,7 +610,8 @@ class Company extends NodeModel
                     [
                         'opportunities as lost_value'=>function ($query) {
                 
-                            $query->lostValue($this->period);
+                            $query->lostValue($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                                 
                            
                         }
@@ -551,7 +625,8 @@ class Company extends NodeModel
                     [
                         'opportunities as new_value'=>function ($query) {
                 
-                            $query->newValue($this->period);
+                            $query->newValue($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                                 
                            
                         }
@@ -564,7 +639,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as open_value' => function ($q1) {
-                            $q1->openValue($this->period);
+                            $q1->openValue($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                                 
                         }
                     ]
@@ -576,7 +652,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as top_25value'=>function ($query) {
-                            $query->top25Value($this->period);;
+                            $query->top25Value($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);
                         }
                     ]
                 );
@@ -588,7 +665,8 @@ class Company extends NodeModel
                     [
                         'opportunities as won_value'=>function ($query) {
                 
-                            $query->wonValue($this->period);
+                            $query->wonValue($this->period)
+                                ->whereIn('opportunities.branch_id', $this->branches);;
                                 
                            
                         }

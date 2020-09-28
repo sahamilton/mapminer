@@ -1121,7 +1121,7 @@ class Branch extends Model
      */
     public function scopeMobileStats($query)
     {
-        return $query->with(       
+        return $query->withCount(       
             ['leads'=>function ($query) {
                 $query->where(
                     function ($q) {
@@ -1133,7 +1133,7 @@ class Branch extends Model
             'activities'=>function ($query) {
                 $query->where('completed', 0);
             },
-            'activities.address',
+
             'opportunities'=>function ($query) {
                 $query->whereClosed(0)        
                     ->where(
@@ -1143,9 +1143,7 @@ class Branch extends Model
                         }
                     )
                 ->where('opportunities.created_at', '<', now());
-            },
-            'opportunities.address'
-
+            }
             ]
         );
 

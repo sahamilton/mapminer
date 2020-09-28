@@ -106,4 +106,5 @@
         </div>
     </div>
 </div>
+@include('opportunities.partials._activitiesmodal')
 

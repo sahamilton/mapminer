@@ -1,7 +1,8 @@
 <?php
 namespace App;
 
-//use App\Presenters\LocationPresenter;
+use App\Presenters\LocationPresenter;
+use App\Http\Requests\UserFormRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
 //use McCool\LaravelAutoPresenter\HasPresenter;
 
@@ -155,10 +156,10 @@ class Person extends NodeModel
                 }
             )->pluck('id')->toArray();
         } else {
-            $branches = $this->descendantsAndSelf()->withRoles([9]);
+            $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
         }
         
-        $branches = $branches->with('branchesServiced')
+        $branches = $branchMgrs->with('branchesServiced')
             ->when(
                 $servicelines, function ($q) use ($servicelines) {
                     $q->whereHas(
@@ -921,11 +922,11 @@ class Person extends NodeModel
      * 
      * @return [type]       [description]
      */
-    public function updatePersonsAddress($data)
+    public function updatePersonsAddress(UserFormRequest $request)
     {
-        if (! empty($data['address'])) {
-            $data = $this->getGeoCode(app('geocoder')->geocode($data['address'])->get());
-            unset($data['fulladdress']);
+        if (request()->filled('address')) {
+            $data = $this->getGeoCode(app('geocoder')->geocode(request('address'))->get());
+            
         } else {
             $data['address']=null;
             $data['city']=null;
@@ -1050,23 +1051,24 @@ class Person extends NodeModel
         $this->period = $period;
 
         $query
-        ->join('persons as manager', 'persons.id', '=', 'manager.reports_to')
-        ->join('persons as reports',function ($join) {
-            $join->on('reports.lft', '>=', 'manager.lft')
-            ->on('reports.rgt', '<=', 'manager.rgt');
-        })
-        ->join('activities','reports.user_id', '=', 'activities.user_id')
-        ->where('completed',1)
-        ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-        ->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
-        ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
-        ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
-        ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
-        ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
-        ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
-        ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
-        ->selectRaw('COUNT(*) AS all_activities')
-        ->groupBy('manager');
+            ->join(
+                'persons as reports', function ($join) {
+                    $join->on('reports.lft', '>=', 'persons.lft')
+                        ->on('reports.rgt', '<=', 'persons.rgt');
+                }
+            )
+            ->join('activities', 'reports.user_id', '=', 'activities.user_id')
+            ->where('completed', 1)
+            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+            ->selectRaw('concat_ws(" ", persons.firstname, persons.lastname) as manager')
+            ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
+            ->selectRaw('COUNT(*) AS all_activities')
+            ->groupBy('manager');
 
     }
     

@@ -4,6 +4,7 @@
 <h2>Notify Branches</h2>
 <h3>for the {{$source->title}} leads</h3>
 <h4>from {{$source->datefrom->format('M j, Y')}} to {{$source->dateto->format('M j, Y')}}</h4>
+
 <!---- Tab message -->
 <ul class="nav nav-tabs">
   <li class="nav-item ">
@@ -19,7 +20,7 @@
   </li>
   <li class="nav-item">
     <a class="nav-link"  data-toggle="tab" href="#menu2">
-      Sales Teams ({{$data['people']->count()}})
+      Sales Teams 
     </a>
   </li>
 </ul>
@@ -86,13 +87,16 @@
         <td>{{$data[$branch->id]}}</td>
         <td>
         @foreach ($branch->manager as $manager)
+
             {{$manager->fullName()}}<br />
-          @endforeach
+        @endforeach
         </td>
         <td>
-          @if(isset($manager))
-           {{ $manager->reportsTo->fullName()}};
-          @endif
+          @foreach ($branch->manager as $manager)
+            @if(isset($manager))
+             {{ $manager->reportsTo->fullName()}};
+            @endif
+          @endforeach
         </td>
 
         </tr>
@@ -102,30 +106,7 @@
   </div>
 
   <div id="menu2" class="tab-pane fade">
-  <!---- Tab team -->
-    <table id="sorttable2" class="table table-striped">
-        <thead>
-        <tr>
-        <th>Person</th>
-        <th>Lead Count</th>
-        <th>Reports To</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        
-        @foreach ($data['people'] as $person)
-        
-        <tr>
-          <td>{{$person->fullName()}}</td>
-          <td>{{$person->leads_count}}</td>
-          <td>{{$person->reportsTo->fullName()}}</td>
-        
-
-        </tr>
-        @endforeach
-        </tbody>
-    </table>
+  
   </div>
 
 

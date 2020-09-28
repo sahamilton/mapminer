@@ -99,11 +99,13 @@
       <input type="hidden" 
       name="branch_id" 
       value = "{{$myBranches[0]}}" />
-    @else
+    @else 
+    <select name="branch_id">
       @foreach ($myBranches as $branch_id)
-        Branch {{$branch_id}}:
-        <input type="radio" {{$loop->first ? 'checked' : ''}} name="branch_id" value="{{$branch_id}}" />
+        <option  value="{{$branch_id}}" >{{$branch_id}}</option>
+      
       @endforeach
+    </select>
     @endif
     
     <input type="submit" 

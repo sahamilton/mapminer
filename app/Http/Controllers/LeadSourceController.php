@@ -12,7 +12,8 @@ use App\Lead;
 use App\LeadSource;
 use App\LeadStatus;
 use App\Person;
-use App\SearchFilter;;
+use App\SearchFilter;
+use App\Serviceline;
 
 
 use Excel;
@@ -85,10 +86,12 @@ class LeadSourceController extends Controller
         $leadsources = $this->leadsource->withCount(
             ['addresses',
             'addresses as assigned'=>function ($query) {
-                $query->has('assignedToBranch')->orHas('assignedToPerson');
+                $query->has('assignedToBranch')
+                    ->orHas('assignedToPerson');
             },
             'addresses as unassigned' => function ($query) {
-                $query->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson');
+                $query->whereDoesntHave('assignedToBranch')
+                    ->whereDoesntHave('assignedToPerson');
             },
             'addresses as closed' => function ($query) {
                     $query->has('closed');
@@ -106,7 +109,8 @@ class LeadSourceController extends Controller
     public function create()
     {
          $verticals = $this->vertical->industrysegments();
-         return response()->view('leadsource.create', compact('verticals'));
+         $servicelines = Serviceline::all();
+         return response()->view('leadsource.create', compact('verticals', 'servicelines'));
     }
 
     /**
@@ -128,6 +132,7 @@ class LeadSourceController extends Controller
             ]
         );
         $leadsource->verticals()->sync(request('vertical'));
+        $leadsource->servicelines()->sync(request('serviceline'));
 
         return redirect()->route('leadsource.index');
     }
@@ -139,26 +144,15 @@ class LeadSourceController extends Controller
      * 
      * @return [type]             [description]
      */
-    public function show($leadsource)
+    public function show(LeadSource $leadsource)
     {
 
 
-        $leadsource = $leadsource->whereId($leadsource->id)
-            ->withCount(
-                ['addresses',
-                'addresses as assigned'=>function ($query) {
-                    $query->has('assignedToBranch');
-                },
-                'addresses as unassigned' => function ($query) {
-                    $query->whereDoesntHave('assignedToBranch');
-                },
-                'addresses as closed' => function ($query) {
-                        $query->has('closed');
-                }]
-            )->first();
-       
+        $leadsource = $leadsource->summary()->findOrFail($leadsource->id);
+     
         $teamStats=[];
         $team = $leadsource->salesteam($leadsource->id);
+
         foreach ($team as $person) {
             $teamStats[$person->id][$person->status_id]= $person->count;
             $teamStats[$person->id]['name'] = $person->name;
@@ -278,7 +272,8 @@ class LeadSourceController extends Controller
         $leadsource = $this->leadsource
             ->with(
                 ['addresses' => function ($query) use ($state) {
-                    $query->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson')
+                    $query->whereDoesntHave('assignedToBranch')
+                        ->whereDoesntHave('assignedToPerson')
                         ->where('state', trim($state));
                 }], 
                 'addresses.state'
@@ -299,9 +294,9 @@ class LeadSourceController extends Controller
     public function edit(LeadSource $leadsource)
     {
         $leadsource->load('leads', 'verticals');
-
+        $servicelines = Serviceline::all();
         $verticals = $this->vertical->industrysegments();
-        return response()->view('leadsource.edit', compact('leadsource', 'verticals'));
+        return response()->view('leadsource.edit', compact('leadsource', 'verticals', 'servicelines'));
     }
 
     /**
@@ -322,6 +317,7 @@ class LeadSourceController extends Controller
             'dateto'=>Carbon::createFromFormat('m/d/Y', request('dateto'))]
         );
         $leadsource->verticals()->sync(request('vertical'));
+        $leadsource->servicelines()->sync(request('serviceline'));
         return redirect()->route('leadsource.index');
     }
 
@@ -469,11 +465,18 @@ class LeadSourceController extends Controller
      *
      * @return Response view
      */
-    public function addLeads(LeadSource $leadsource)
+    /*public function addLeads(LeadSource $leadsource)
     {
-        
+        // return the getFile info with the leadsource filled
+        //
+        $requiredFields = $this->import->requiredFields;
+       // $branches = Branch::orderBy('id')->get();
+        $companies = $this->company->orderBy('companyname')->pluck('companyname', 'id');
+        $servicelines = Serviceline::all(); 
+        // 
+        // 
         return response()->view('leadsource.addleads', compact('leadsource'));
-    }
+    }*/
     
     /**
      * [importLeads description]
@@ -576,9 +579,9 @@ class LeadSourceController extends Controller
      * 
      * @return [type]             [description]
      */
-    public function assignLeads($leadsource)
+    public function assignLeads(LeadSource $leadsource)
     {
-     
+        
         $leads = $this->lead->where('lead_source_id', '=', $leadsource->id)
             ->with('leadsource')
             ->whereNotNull('lat')

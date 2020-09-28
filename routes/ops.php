@@ -169,7 +169,7 @@ use Illuminate\Http\Request;
         Route::get('leadsource/{leadsource}/assign', ['as'=>'leadsource.assign', 'uses'=>'LeadsAssignController@assignLeads']);
         Route::get('leadsource/{leadsource}/branch', ['as'=>'leadsource.branches', 'uses'=>'LeadSourceController@branches']);
         Route::get('leadsource/{leadsource}/unassigned', ['as'=>'leadsource.unassigned', 'uses'=>'LeadSourceController@unassigned']);
-        Route::get('leadsource/{leadsource}/addleads', ['as'=>'leadsource.addleads', 'uses'=>'LocationsImportController@getFile']);
+        Route::get('leadsource/{leadsource}/addleads', ['as'=>'leadsource.addleads', 'uses'=>'LeadSourceImportController@getFile']);
         
         Route::get('leadsource/{leadsource}/state/{state}', ['as'=>'leadsource.unassigned.state', 'uses'=>'LeadSourceController@unassignedstate']);
         Route::get('leadsource/flush', ['as'=>'leadsource.flush', 'uses'=>'LeadSourceController@flushManagerLeads']);

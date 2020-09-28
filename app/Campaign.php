@@ -286,27 +286,31 @@ class Campaign extends Model
             $manager = auth()->user()->person->id;
      
         }
-        return Person::whereId($manager)->firstOrFail()
-            ->descendantsAndSelf()
+        $manager = Person::whereId($manager)->first();
+        if ($manager) {
+            return $manager->descendantsAndSelf()
      
-            ->whereHas(
-                'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['3','7','6']);
-                }
-            )
-            ->with(
-                ['branchesServiced'=>function ($q)  {
-                    $q->whereHas(
-                        'servicelines', function ($q1){
-                            $q1->whereIn('id', $this->servicelines->pluck('id')->toarray());
-                        }
-                    );
-                }
-                ]
-            )
+                ->whereHas(
+                    'userdetails.roles', function ($q) {
+                            $q->whereIn('roles.id', ['3','7','6']);
+                    }
+                )
+                ->with(
+                    ['branchesServiced'=>function ($q) {
+                        $q->whereHas(
+                            'servicelines', function ($q1) {
+                                $q1->whereIn('id', $this->servicelines->pluck('id')->toarray());
+                            }
+                        );
+                    }
+                    ]
+                )
             ->orderBy('lastname')
             ->orderBY('firstname')
             ->get();
+        } else {
+            return false;
+        }
     }
     /**
      * [author description]

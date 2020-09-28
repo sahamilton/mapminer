@@ -43,7 +43,8 @@ class SalesNotesController extends BaseController {
         if (isset($companyid)) {
             return redirect()->route('salesnotes', $companyid);
         }
-        $companies = $this->company->with('salesNotes', 'serviceline')
+
+        $companies = $this->company->with('serviceline')->withCount('salesNotes')
             ->orderBy('companyname', 'asc')->get();
         return response()->view('salesnotes.index', compact('companies'));
             
@@ -74,6 +75,7 @@ class SalesNotesController extends BaseController {
      */
     public function store(SalesNotesFormRequest $request)
     {
+      
         if (isset($companyid)) {
             return redirect()->route('salesnotes', $companyid);
         }
@@ -131,7 +133,12 @@ class SalesNotesController extends BaseController {
     {
        
         $data = $this->_reformatRequestData($request);
-        $company->salesnotes()->sync($data);
+
+        $company->salesnotes()->detach();
+        foreach ($data as $field) {
+           
+            $company->salesnotes()->attach($field);
+        }
         return redirect()->route('salesnotes.show', $company->id);
     }
 
@@ -264,9 +271,10 @@ class SalesNotesController extends BaseController {
      */
     private function _reformatRequestData(Request $request)
     {
+        //dd(request()->all());
         foreach (request()->except(['_token', 'submit','_method']) as $key=>$value) {
-            if ($value) {
-                $data[$key] = ['fieldvalue'=>$value];
+            foreach ($value as $val) {
+                $data[][$key] = ['fieldvalue'=>$val];
             }
         }
         return $data;

@@ -13,8 +13,6 @@
         "algolia/algoliasearch-client-php": "^1.18",
         
         "bugsnag/bugsnag-laravel": "^2.4",
-        
-        "baum/baum":"v2.x-dev",
         "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "~4.0",
         "guzzlehttp/guzzle": "~6.0",
@@ -39,7 +37,7 @@
         "spatie/flysystem-dropbox": "^1.0",
         "jenssegers/agent": "^2.6",
         "predis/predis": "^1.1",
-        "doctrine/dbal": "^2.10",
+        "doctrine/dbal": "2.10.4",
         "pda/pheanstalk": "^4.0",
         "dionera/laravel-beanstalkd-ui": "^2.0",
         "livewire/livewire": "^1.0",
@@ -56,8 +54,7 @@
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^7.5",
         "barryvdh/laravel-debugbar": "^3.2",
-        "laracasts/generators": "^1.1",
-        "laravel-shift/blueprint": "^1.13"
+        "laracasts/generators": "^1.1"
     },
     "autoload": {
         "files": [

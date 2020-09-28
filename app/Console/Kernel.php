@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('monitor:check-certificate')->daily();
 
             $schedule->job(new RebuildPeople())
-                ->dailyAt('21:12');
+                ->dailyAt('21:51');
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');

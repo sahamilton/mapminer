@@ -15,7 +15,7 @@
 
 @foreach ($companies as $company)
 
- @if($company->salesnotes->count()>0)
+ @if($company->sales_notes_count >0)
                 <tr class='success'>
                  @else
                <tr class='danger'>
@@ -25,7 +25,7 @@
 <a href="{{route('salesnotes.show',$company->id)}}">{{$company->companyname}}</a>
 </td>
 
-<td>  @if($company->salesnotes->count()>0)
+<td>  @if($company->sales_notes_count >0)
 
         Yes
         @else
@@ -46,7 +46,7 @@
         <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
-       @if($company->salesnotes->count()>0)
+       @if($company->sales_notes_count >0)
 
         <a class="dropdown-item" 
         href="{{route('salesnotes.edit',$company->id)}}"
