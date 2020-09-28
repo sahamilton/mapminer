@@ -404,13 +404,15 @@ class AdminUsersController extends BaseController
      */
     private function _associateBranchesWithPerson(Request $request, Person $person)
     {
-  
+        
         $syncData=[];
+
         if (request()->filled('branchstring')) {
             $data['branches'] = $this->branch->getBranchIdFromid(request('branchstring'));
         }
-
+        
         if (isset($data['branches']) && count($data['branches']) > 0 && $data['branches'][0] != 0) {
+            $data['roles'] = $person->userdetails->roles->pluck('id')->toArray();
             foreach ($data['branches'] as $branch) {
                 if ($data['roles']) {
                     foreach ($data['roles'] as $role) {

@@ -13,7 +13,6 @@
         "algolia/algoliasearch-client-php": "^1.18",
         "baum/baum": "v2.x-dev",
         "bugsnag/bugsnag-laravel": "^2.4",
-        
         "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "~4.0",
         "guzzlehttp/guzzle": "~6.0",
@@ -22,8 +21,6 @@
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",
-        
-        
         "smalot/pdfparser": "^0.14.0",
         "toin0u/geocoder-laravel": "^4.0",
         "dompdf/dompdf": "~0.6.1",
@@ -46,8 +43,7 @@
         "awobaz/compoships": "^1.1",
         "morrislaptop/laravel-queue-clear": "^1.2",
         "laravel/helpers": "^1.2",
-        "spatie/laravel-uptime-monitor": "^3.8",
-        "binarytorch/larecipe": "^2.4"
+        "spatie/laravel-uptime-monitor": "^3.8"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
@@ -56,8 +52,7 @@
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^8.5",
         "barryvdh/laravel-debugbar": "^3.2",
-        "laracasts/generators": "^1.1",
-        "laravel-shift/blueprint": "^1.13"
+        "laracasts/generators": "^1.1"
     },
     "autoload": {
         "files": [
