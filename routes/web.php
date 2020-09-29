@@ -34,7 +34,8 @@ Route::get('/home', ['as'=>'home', 'uses'=>'HomeController@index']);
 
 Route::group(
     ['middleware' => 'auth'], function () {
-        Route::get('/company/find', 'SearchController@searchCompanies');
+        Route::get('/company/find', '
+            @searchCompanies');
         Route::get('/myleads/find', 'SearchController@searchMyLeads');
         //     About
         Route::get('about', ['as'=>'about', 'uses'=>'AdminAboutController@getInfo']);
