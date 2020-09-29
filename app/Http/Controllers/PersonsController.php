@@ -264,32 +264,34 @@ class PersonsController extends BaseController
      * 
      * @return [type]     [description]
      */
-    public function showmap($id)
+    public function showmap(Person $person)
     {
 
-        $data['people'] = $this->persons->with('manages')->findorFail($id);
+        $person->load('manages');
 
-        /// We need to calculate the persons 'center point' based on their branches.
-        // This should be moved to the model and maybe to a Maps model and made more generic.
-        // or we could have a 'home' location as a field on every persons i.e. their lat / lng.
+        // We need to calculate the persons 'center point' 
+        // if they do not have a lat / lng
+        // based on their branches.
+        // This should be moved to the model and 
+        // maybe to a Maps model and made more generic.
+        // or we could have a 'home' location as 
+        // a field on every persons i.e. their lat / lng.
 
-        if ($data['people']->lat) {
-            $data['lat'] = $data['people']->lat;
-            $data['lng'] = $data['people']->lng;
-        } else {
+        if (! $person->lat) {
+            
             $latSum = $lngSum = $n = '';
-            foreach ($data['people']->manages as $branch) {
+            foreach ($person->manages as $branch) {
                 $n++;
                 $latSum = $latSum + $branch->lat;
                 $lngSum = $lngSum + $branch->lng;
             }
             $avgLat = $latSum / $n;
             $avgLng = $lngSum / $n;
-            $data['lat'] = $avgLat;
-            $data['lng'] = $avgLng;
+            $person->lat = $avgLat;
+            $person->lng = $avgLng;
         }
 
-        return response()->view('persons.showmap', compact('data'));
+        return response()->view('persons.showmap', compact('person'));
     }
 
 

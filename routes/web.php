@@ -225,7 +225,7 @@ Route::group(
         
         //     People
         
-        Route::get('person/{personId}/showmap', ['as'=>'showmap.person', 'uses'=>'PersonsController@showmap']);
+        Route::get('person/{person}/showmap', ['as'=>'showmap.person', 'uses'=>'PersonsController@showmap']);
         Route::get('people/map', ['as'=>'person.map', 'uses'=>'PersonsController@map']);
         Route::get('geocode/people', ['as'=>'person.geocode', 'uses'=>'PersonsController@geoCodePersons']);
         Route::get('person/{vertical}/vertical', ['as'=>'person.vertical', 'uses'=>'PersonsController@vertical']);

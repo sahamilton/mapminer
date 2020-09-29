@@ -677,9 +677,9 @@ class BranchesController extends BaseController {
     public function getMyBranches(Person $person)
     {    
         
-        $data['people'] = $person->load('manages', 'userdetails');
+        $person->load('manages', 'userdetails');
     
-        return response()->view('persons.showmap', compact('data'));
+        return response()->view('persons.showmap', compact('person'));
     }
     
     
