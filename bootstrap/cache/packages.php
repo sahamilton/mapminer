@@ -92,13 +92,6 @@
       0 => 'Laracasts\\Generators\\GeneratorsServiceProvider',
     ),
   ),
-  'laravel-shift/blueprint' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Blueprint\\BlueprintServiceProvider',
-    ),
-  ),
   'laravel/slack-notification-channel' => 
   array (
     'providers' => 

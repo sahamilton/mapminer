@@ -3,17 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Str;
 class NewsFormRequest extends FormRequest
 {
-    public function __construct()
-    {
-
-
-
-        FormRequest::merge(['slug' => strtolower(str_replace(" ", "_", FormRequest::get('title')))]);
-    }
-
+    
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -31,6 +24,7 @@ class NewsFormRequest extends FormRequest
      */
     public function rules()
     {
+       
         return [
          'title' => 'required|min:5',
          'news' => 'required',
@@ -40,4 +34,17 @@ class NewsFormRequest extends FormRequest
          'slug'=>'required|alpha_dash|unique:news,slug,'. $this->get('id'),
         ];
     }
+    /**
+     * [prepareForValidation description]
+     * 
+     * @return [type] [description]
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge(
+            [
+            'slug' => Str::slug($this->title),
+            ]
+        );
+    }   
 }

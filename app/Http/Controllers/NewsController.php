@@ -9,6 +9,7 @@ use App\Person;
 use App\Role;
 use App\SearchFilter;
 use App\Http\Requests\NewsFormRequest;
+use Illuminate\Support\Str;
 
 class NewsController extends BaseController
 {
@@ -101,6 +102,7 @@ class NewsController extends BaseController
         
 
         $data = request()->all();
+        $data['slug'] = Str::slug($data['title']);
         $data = $this->setDates($data);
         if ($news = $this->news->create($data)) {
             $news->serviceline()->attach(request('serviceline'));
@@ -151,14 +153,12 @@ class NewsController extends BaseController
      * 
      * @return Response
      */
-    public function edit($id)
+    public function edit(News $news)
     {
         $filters = new SearchFilter;
         $verticals = $filters->industrysegments();
 
-        $news= $this->news
-            ->with('author', 'author.person', 'serviceline', 'relatedRoles', 'relatedIndustries')
-            ->findOrFail($id);
+        $news->load('author', 'author.person', 'serviceline', 'relatedRoles', 'relatedIndustries');
         $mode='edit';
 
 
@@ -180,12 +180,12 @@ class NewsController extends BaseController
      * 
      * @return [type]                   [description]
      */
-    public function update(NewsFormRequest $request, $id)
+    public function update(NewsFormRequest $request, News $news)
     {
         
-        $news = $this->news->findOrFail($id);
-        $data = request()->all();
 
+        $data = request()->all();
+        $data['slug'] = Str::slug($data['title']);
         $data = $this->setDates($data);
 
         if ($news->update($data)) {
@@ -207,11 +207,12 @@ class NewsController extends BaseController
      * 
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(News $news)
     {
-        $this->news->destroy($id);
+        $title = $news->title;
+        $news->delete();
 
-        return redirect()->route('news.index');
+        return redirect()->route('news.index')->withMessage("News Item '".$title."' deleted.");
     }
     /**
      * [audience description]
@@ -220,10 +221,10 @@ class NewsController extends BaseController
      * 
      * @return [type]     [description]
      */
-    public function audience($id)
+    public function audience(News $news)
     {
-        $news = $this->news->findOrFail($id);
-        $people = $news->audience($id);
+        
+        $people = $news->load('audience')->audience;
         $audience = User::whereIn('id', $people)
             ->with('person', 'person.industryfocus', 'roles')
             ->get();

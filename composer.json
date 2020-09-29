@@ -11,7 +11,7 @@
     "require": {
         "php": ">=7.0.0",
         "algolia/algoliasearch-client-php": "^1.18",
-        
+        "baum/baum":"v2.x-dev",
         "bugsnag/bugsnag-laravel": "^2.4",
         "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "~4.0",

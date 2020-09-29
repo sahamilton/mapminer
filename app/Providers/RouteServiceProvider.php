@@ -46,6 +46,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('mobile', \App\Address::class);
         Route::model('mylead', \App\Mylead::class);
         Route::model('myleadsactivity', \App\MyLeadActivity::class);
+        Route::model('news', \App\News::class);
         Route::model('note', \App\Note::class);
         Route::model('opportunity', \App\Opportunity::class);
         Route::model('permission', \App\Permission::class);
