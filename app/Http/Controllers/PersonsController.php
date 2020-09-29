@@ -205,13 +205,11 @@ class PersonsController extends BaseController
      * 
      * @return [type]        [description]
      */
-    public function show($person)
+    public function show(Person $person)
     {
-     
+        
         $roles = $this->persons->findPersonsRole($person);
 
-
-        //note remove manages & manages.servicedby
         $people = $person->load(
             'directReports',
             'directReports.userdetails.roles',
@@ -240,15 +238,16 @@ class PersonsController extends BaseController
             );
 
         } elseif (in_array('market_manager', $roles)) {
-
+           
             return response()->view('persons.showlist', compact('people'));
 
         } else {
             if ($people->isLeaf()) {
-                // Show branches serviced by sales rep
-
+               
+               
                 return response()->view('persons.salesteam', compact('people'));
             } else {
+               
                 return response()->view('persons.salesmanager', compact('people'));
             }
         }

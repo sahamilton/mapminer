@@ -604,7 +604,7 @@ class BranchesController extends BaseController {
 
         }
         $allstates = $this->branch->allStates();
-        $data = $this->state->where('statecode', '=', $state)
+        $data = $this->state->where('statecode', $state)
             ->firstOrFail()->toArray();
         $data['type'] = 'branch';
         return response()->view(
