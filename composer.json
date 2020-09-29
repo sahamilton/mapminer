@@ -35,7 +35,7 @@
         "spatie/flysystem-dropbox": "^1.0",
         "jenssegers/agent": "^2.6",
         "predis/predis": "^1.1",
-        "doctrine/dbal": "2.10.4",
+        "doctrine/dbal": "^2.10",
         "pda/pheanstalk": "^4.0",
         "dionera/laravel-beanstalkd-ui": "^2.0",
         "livewire/livewire": "^1.0",
