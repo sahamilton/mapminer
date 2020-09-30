@@ -118,34 +118,23 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-        dd($this->user->withCount('usage')->withLastLoginId()->with('lastLogin')->get());
-        /* if (! $serviceline) {
-        
-            $servicelines = $this->userServiceLines;
-                $serviceline = 'All';
-                $title = 'People / User Management';
-        } else {
-           
-            
-            $title = $serviceline->ServiceLine ." users";
-        }
-            */
         $users = $this->user
-            ;
-           
-        /*if ($serviceline) {
-            $users = $users->whereHas(
-                'serviceline', function ($q) {
-                    $q->whereIn('serviceline_id', $this->userServiceLines);
-                }
-            );
-        }*/
-           
-         // $users = $users;
-         dd(145, $users);
+            ->withCount('usage')
+            ->withLastLoginId()
+            ->with('lastLogin', 'roles', 'serviceline', 'person')
+            ->when(
+                $serviceline, function ($q) use ($serviceline) {
+                    $q->whereHas(
+                        'serviceline', function ($q) use($serviceline) {
+                            $q->whereId($serviceline->id);
 
-        // Show the page
-        return response()->view('admin.users.index', compact('users', 'title', 'serviceline'));
+                        }
+                    );
+
+                }
+            )->get();
+
+        return response()->view('admin.users.index', compact('users', 'serviceline'));
     }
 
     /**

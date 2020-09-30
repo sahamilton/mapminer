@@ -1,17 +1,22 @@
 @extends('admin.layouts.default')
 {{-- Web site Title --}}
 @section('title')
-	{{{ $title }}} :: @parent
+	
 @endsection
  @include('partials/_modal')
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
-		<h3>{{ $title }}</h3>
+        @if($serviceline)
+		  <h3>{{$serviceline->serviceline}} Users</h3>
+            <h6><a href="{{route('users.index')}}">See All Users</a></h6>
+        @else
+            <h3>All Users</h3>
+        @endif
 			
 				
-			@if($serviceline != 'All')
-				<h6><a href="{{route('users.index')}}">See All Users</a></h6>
+			@if($serviceline)
+				
 			@endif
 			<div class="float-right">
 
@@ -62,7 +67,11 @@
     <ul>
     @foreach($user->roles as $role)
     
-    <li><a title="Show all {{$role->display_name}} users" href="{{route('roles.show',$role->id)}}">{{ $role->display_name }}</a></li>
+    <li>
+        <a title="Show all {{$role->display_name}} users" href="{{route('roles.show',$role->id)}}">
+            {{ $role->display_name }}
+        </a>
+    </li>
    
     @endforeach
     </ul>
