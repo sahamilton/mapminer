@@ -118,7 +118,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-        dd($this->user->with('roles', 'usage', 'person', 'serviceline')->get());
+        dd($this->user->all());
        /* if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
