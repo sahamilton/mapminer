@@ -118,7 +118,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-        dd($this->user->first());
+        dd($this->user->with('roles', 'usage', 'person', 'serviceline')->get());
        /* if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
@@ -131,7 +131,7 @@ class AdminUsersController extends BaseController
         }
             */
         $users = $this->user
-            ->with('roles', 'usage', 'person', 'serviceline')->get();
+            ;
            
         /*if ($serviceline) {
             $users = $users->whereHas(
