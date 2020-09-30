@@ -118,7 +118,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-        dd($this->userUser->withCount('usage')->withLastLoginId()->with('lastLogin')->get());
+        dd($this->user->withCount('usage')->withLastLoginId()->with('lastLogin')->get());
         /* if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
