@@ -131,7 +131,7 @@ class AdminUsersController extends BaseController
         }
             
         $users = $this->user
-            ->with('roles', 'usage', 'person', 'serviceline');
+            ->with('roles', 'usage', 'person', 'serviceline')->get();
            
         /*if ($serviceline) {
             $users = $users->whereHas(
@@ -141,8 +141,8 @@ class AdminUsersController extends BaseController
             );
         }*/
            
-          $users = $users->get();
-         dd($users);
+         // $users = $users;
+         dd(145, $users);
 
         // Show the page
         return response()->view('admin.users.index', compact('users', 'title', 'serviceline'));
