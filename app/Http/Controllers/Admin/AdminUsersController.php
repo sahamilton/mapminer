@@ -118,7 +118,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-        dd('hrerere');
+
         if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
@@ -142,7 +142,7 @@ class AdminUsersController extends BaseController
         }*/
            
           $users = $users->get();
-         
+         dd($users);
 
         // Show the page
         return response()->view('admin.users.index', compact('users', 'title', 'serviceline'));
