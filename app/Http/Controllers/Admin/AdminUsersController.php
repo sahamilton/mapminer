@@ -118,7 +118,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-
+        dd('hrerere');
         if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
