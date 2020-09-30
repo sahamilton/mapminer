@@ -73,7 +73,7 @@ class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings,
                 break;
 
             case 'reportsto':
-                $detail[] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
+                $detail[] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->fullName() :'';
                 break;
 
             default:
