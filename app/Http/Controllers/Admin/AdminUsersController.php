@@ -119,7 +119,7 @@ class AdminUsersController extends BaseController
     {
 
 
-        if (! $serviceline) {
+       /* if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
                 $serviceline = 'All';
@@ -129,7 +129,7 @@ class AdminUsersController extends BaseController
             
             $title = $serviceline->ServiceLine ." users";
         }
-            
+            */
         $users = $this->user
             ->with('roles', 'usage', 'person', 'serviceline')->get();
            
