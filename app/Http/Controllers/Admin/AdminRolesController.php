@@ -119,7 +119,8 @@ class AdminRolesController extends BaseController
                     $q->where('role_id', $role->id);
             }
         )
-        ->with('roles', 'usage', 'person', 'serviceline')
+        ->withLastLoginId()
+        ->with('lastLogin', 'roles', 'serviceline', 'person')
         ->get();
         $title =$role->name .' users';
         //$users = $this->role->findOrFail($role->id)->with('assignedRoles')->get();
