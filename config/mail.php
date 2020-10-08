@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'support@tbmapminer.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'support@okospartners.com'),
         'name' => env('MAIL_FROM_NAME', 'Sales Operations'),
     ],
 
