@@ -35,7 +35,7 @@ class BranchOpportunitiesReport extends Mailable
     public function build()
     {
     
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.branchopportunitiesreport')  
             ->subject('Branch Opportunities Weekly Report')
             ->attach(

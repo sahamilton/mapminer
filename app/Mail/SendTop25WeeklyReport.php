@@ -34,7 +34,7 @@ class SendTop25WeeklyReport extends Mailable
      */
     public function build()
     {
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.top25openopportunitiesreport')  
             ->subject('Top 25 Opportunities Weekly Report')
             ->attach(

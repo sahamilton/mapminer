@@ -35,7 +35,7 @@ class BranchStatsReport extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.branchstatsreport')
             ->subject('Branch Statistics Weekly Report')
             ->attach(

@@ -32,7 +32,7 @@ class SendCampaignLaunchedMail extends Mailable
      */
     public function build()
     {
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('campaigns.emails.campaignlaunched')  
             ->subject($this->campaign->title . ' Launched');
 

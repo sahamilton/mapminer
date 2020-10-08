@@ -35,7 +35,7 @@ class AccountActivitiesReport extends Mailable
     public function build()
     {
         
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails/accountactivities')
             ->subject($this->company->companyname .' Activities Report')
             ->attach(storage_path($this->file), ['mime' => 'application/xls']);
