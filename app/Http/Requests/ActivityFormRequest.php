@@ -24,7 +24,8 @@ class ActivityFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'activity_date'=>'date:required|before_or_equal:today',
+            'activity_date'=>'date:required',
+            'activity_date'=>'exclude_unless:completed,1|before_or_equal:today',
             'activitytype_id'=>'required',
             'note'=>'required',
             'followup_date'=>'date|nullable|after:activity_date',
