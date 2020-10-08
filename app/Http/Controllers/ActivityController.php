@@ -264,11 +264,14 @@ class ActivityController extends Controller
     {
         
         $data['activity'] = request()->only(
-            ['activitytype_id', 
-            'note', 'activity_date',
-             'address_id', 
-             'followup_date', 
-             'branch_id']
+            [
+                'activitytype_id', 
+                'note', 
+                'activity_date',
+                'address_id', 
+                'followup_date', 
+                'branch_id'
+            ]
         );
         
         // this should not be neccessary but some forms have
@@ -280,9 +283,9 @@ class ActivityController extends Controller
         $data['activity']['user_id'] = auth()->user()->id;
         // assume if activity date is in the past then completed
         if (request()->has('completed')) {
-            $data['activity']['completed']=1;
+            $data['activity']['completed'] = 1;
         } elseif ($data['activity']['activity_date'] <= Carbon::now()) {
-            $data['activity']['completed']=1;
+            $data['activity']['completed'] = 1;
         } else {
             $data['activity']['completed']=null;
         }

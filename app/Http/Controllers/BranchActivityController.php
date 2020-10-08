@@ -15,9 +15,9 @@ class BranchActivityController extends Controller
     {
        
         
-       if (!  $myBranches = $this->person->myBranches()) {
-        return redirect()->back()->withError('You are not assigned to any branches');
-       }
+        if (!  $myBranches = $this->person->myBranches()) {
+            return redirect()->back()->withError('You are not assigned to any branches');
+        }
        
         $branch = array_keys($myBranches);
 
@@ -68,7 +68,7 @@ class BranchActivityController extends Controller
      */
     private function _getBranchActivities(Array $branch) 
     {
-        $data['activities'] = $this->getUpcomingActivities($branch);
+        $data['activities'] = $this->_getUpcomingActivities($branch);
         $data['calendar'] = $this->getUpcomingCalendar($data['activities']);
 
         $data['branches'] = $this->_getBranches($branch);
@@ -103,13 +103,14 @@ class BranchActivityController extends Controller
      * @param  Array  $myBranches [description]
      * @return [Collection]     [description]
      */
-    private function getUpcomingActivities(Array $myBranches)
+    private function _getUpcomingActivities(Array $myBranches)
     {
             // should rename to open activities
-           $users =  $this->person->myBranchTeam($myBranches);
+        $users =  $this->person->myBranchTeam($myBranches);
 
-           return $this->activity->whereIn('user_id',$users)
-           ->where('completed','<>',1)->get();
+        return $this->activity
+            ->whereIn('user_id', $users)
+            ->where('completed', '<>', 1)->get();
 
     }
 
