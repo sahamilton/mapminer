@@ -19,7 +19,7 @@ class BackupDatabase extends Command
     protected $process;
     public $file;
     public $filename;
-    
+    /*
     /**
      * [__construct description]
      */
@@ -30,8 +30,7 @@ class BackupDatabase extends Command
         $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d-H-i-s');
         $this->path = storage_path('backups/');
         $this->file = $this->path.$this->filename.'.sql';
-        
-        $this->process = new Process(
+        $this->process = Process::fromShellCommandline(
             sprintf(
                 'mysqldump -u%s -p%s %s > %s',
                 config('database.connections.mysql.username'),
@@ -40,8 +39,6 @@ class BackupDatabase extends Command
                 $this->file
             )
         );
-
-        
     }
     /**
      * [handle description]
@@ -61,4 +58,5 @@ class BackupDatabase extends Command
             Mail::queue(new FailedBackup($this->file));
         }
     }
+ 
 }
