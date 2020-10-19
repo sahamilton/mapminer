@@ -405,6 +405,8 @@ class AdminUsersController extends BaseController
 
         if (request()->filled('branchstring')) {
             $data['branches'] = $this->branch->getBranchIdFromid(request('branchstring'));
+        } else {
+            $data['branches'] = request('branches');
         }
         
         if (isset($data['branches']) && count($data['branches']) > 0 && $data['branches'][0] != 0) {

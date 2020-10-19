@@ -49,7 +49,8 @@ class Person extends NodeModel implements HasPresenter
      */
     public function reportsTo()
     {
-        return $this->belongsTo(Person::class, 'reports_to', 'id');
+        return $this->belongsTo(Person::class, 'reports_to', 'id')
+            ->withDefault();
     }
     /**
      * [reportChain description]
@@ -194,7 +195,7 @@ class Person extends NodeModel implements HasPresenter
             ->withRoles([9])
                 
             ->with('branchesServiced.manager')->get();
-        
+       // dd(1968, $this, $this->descendants()->get());
         return $team->map(
             function ($people) {
                 return $people->branchesServiced;

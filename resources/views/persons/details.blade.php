@@ -87,7 +87,12 @@
 						<ul style="list-style-type: none;">
 						@if($person->reportsTo)
 							<li>Reports To:
-							<a href="{{route('person.details',$person->reportsTo->id)}}">{{$person->reportsTo->fullName()}}</a></li>
+								@if($person->reportsTo->id)
+							<a href="{{route('person.details',$person->reportsTo->id)}}">{{$person->reportsTo->fullName()}}</a>
+						@else
+							{{$person->reportsTo->fullName()}}
+						@endif
+				</li>
 						@endif
 						@if($person->directReports->count()>0)
 							<li>Team:</li>
