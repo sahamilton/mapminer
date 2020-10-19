@@ -61,11 +61,11 @@ class BranchAssignmentController extends Controller
             ->with('branchesServiced', 'reportsTo')
             ->get();
         foreach ($branchManagers as $person) {
-         
+            
             $data[$person->id]['id']= $person->id;
             $data[$person->id]['name']= $person->fullName();
             $data[$person->id]['address']= $person->fullAddress();
-            $data[$person->id]['manager'] = $person->reportsTo->fullName();
+            $data[$person->id]['manager'] = $person->reportsTo ? $person->reportsTo->fullName() : 'No Longer With Company';
             $data[$person->id]['manager_id'] = $person->reports_to;
             foreach ($person->branchesServiced as $branch) {
                 $distance = $this->person->distanceBetween($person->lat, $person->lng, $branch->lat, $branch->lng);

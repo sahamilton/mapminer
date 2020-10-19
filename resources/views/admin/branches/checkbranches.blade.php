@@ -17,7 +17,7 @@
                     <tr>
                         <td><a href="{{route('person.details',$person['id'])}}">{{$person['name']}}</a></td>
                         <td>{{$person['address']}}</td>
-                        <td><a href="{{route('person.details',$person['manager_id'])}}">{{$person['manager']}}</a></td>
+                        <td><a href="{{route('person.details',$person['manager_id'])}}">@if(isset($person['manager'])) {{$person['manager']}}@endif</a></td>
                         <td><a href="{{route('branches.show',$branch['id'])}}">{{$branch['branchname']}}</a></td>
                         <td class="text-right">{{number_format($branch['distance'],1)}}</td>
                     </tr>

@@ -44,6 +44,7 @@ class Kernel extends ConsoleKernel
         if (config('app.env') == 'production') {
             $period['from'] = Carbon::now();
             $period['to'] = Carbon::now()->addWeek();
+            
             $schedule->job(new WeeklyActivityReminder($period))
                 ->weekly()
                 ->sundays()

@@ -318,12 +318,19 @@ class AdminUsersController extends BaseController
             $user->save();
         }
     }
-
+    /**
+     * _createPersonData get the data for person model including geo coding address
+     * 
+     * @param Request $request [description]
+     * @param User    $user    [description]
+     * 
+     * @return array           combined array of person data
+     */
     private function _createPersonData(Request $request, User $user)
     {
-        $personName = request(['firstname','lastname','phone','business_title', 'reports_to']);
+        $person = request(['firstname','lastname','phone','business_title', 'reports_to']);
         $personGeo = $this->person->updatePersonsAddress($request);
-        return array_merge($personGeo, $personName, ['user_id'=>$user->id]);
+        return array_merge($personGeo, $person, ['user_id'=>$user->id]);
         
     }
     /**
