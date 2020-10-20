@@ -15,8 +15,8 @@
     <a href="mailto:{{$salesperson->userdetails->email}}" title="Email {{$salesperson->fullName()}}">{{$salesperson->userdetails->email}}</a> </p>
 
 @if ($salesperson->reportsTo->userdetails)
-<p>Reports to: <a href = "{{route('salesorg.list',$salesperson->reportsTo->id)}}" 
-title= "See {{$saleperson->reportsTo->fullName}}'s sales team"> {{$salesperson->reportsTo->fullName()}}  {{$salesperson->reportsTo->userdetails->roles->count() !=0 ? ' - ' . $salesperson->reportsTo->userdetails->roles->first()->name : ''}}</a>
+<p>Reports to: <a href = "{{route('salesorg.show',$salesperson->reportsTo->id)}}" 
+title= "See {{$salesperson->reportsTo->fullName}}'s sales team"> {{$salesperson->reportsTo->fullName()}}  {{$salesperson->reportsTo->userdetails->roles->count() !=0 ? ' - ' . $salesperson->reportsTo->userdetails->roles->first()->name : ''}}</a>
 @endif
 
 

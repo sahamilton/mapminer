@@ -85,15 +85,15 @@
 					<div class="list-group-item-text col-sm-4">
 						<p><strong>Reporting Structure</strong></p>
 						<ul style="list-style-type: none;">
-						@if($person->reportsTo)
+						@if($person->reportsTo->id)
 							<li>Reports To:
-								@if($person->reportsTo->id)
+		
 							<a href="{{route('person.details',$person->reportsTo->id)}}">{{$person->reportsTo->fullName()}}</a>
 						@else
 							{{$person->reportsTo->fullName()}}
 						@endif
-				</li>
-						@endif
+							</li>
+						
 						@if($person->directReports->count()>0)
 							<li>Team:</li>
 							@foreach ($person->directReports as $reports)

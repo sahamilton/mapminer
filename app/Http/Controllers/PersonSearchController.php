@@ -28,7 +28,7 @@ class PersonSearchController extends Controller
     public function find(Person $person)
     {
         
-        $user = User::withLastLoginId()->withCount('usage')->with('lastLogin', 'roles','serviceline' )->find($person->user_id);
+        $user = User::withLastLoginId()->withCount('usage')->with('lastLogin', 'roles', 'serviceline')->find($person->user_id);
 
         $branches = $person->branchesManaged();
         
@@ -38,13 +38,9 @@ class PersonSearchController extends Controller
         //note remove manages & manages.servicedby
         $person
             ->load(
-                
                 'directReports.userdetails.roles',
-                'reportsTo',
-                
                 'managesAccount.countlocations',
                 'managesAccount.industryVertical',
-                
                 'industryfocus'
             );
         

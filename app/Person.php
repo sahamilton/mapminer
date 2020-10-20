@@ -481,7 +481,9 @@ class Person extends NodeModel implements HasPresenter
      */
     public function postName()
     {
-
+        if (! isset($this->attributes['firstname'])) {
+            return 'No longer a Mapminer User';
+        }
         return addslashes($this->attributes['lastname']) . ', ' . addslashes($this->attributes['firstname']);
     }
     /**

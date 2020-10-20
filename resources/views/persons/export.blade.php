@@ -26,7 +26,7 @@
 			
 			<td>{{$person->userdetails->employee_id}}</td>
 			
-			@if(isset($person->reportsTo))
+			@if(isset($person->reportsTo->userdetails))
 				<td>{{$person->reportsTo->fullname()}}</td>
 				<td>{{$person->reportsTo->userdetails->employee_id}}</td>
 			@else
