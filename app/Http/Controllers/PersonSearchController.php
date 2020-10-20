@@ -31,9 +31,6 @@ class PersonSearchController extends Controller
         $user = User::withLastLoginId()->withCount('usage')->with('lastLogin', 'roles', 'serviceline')->find($person->user_id);
 
         $branches = $person->branchesManaged();
-        
-        
-
 
         //note remove manages & manages.servicedby
         $person
