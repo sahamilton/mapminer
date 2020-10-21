@@ -85,11 +85,11 @@ class SearchController extends Controller
     {
 
         $branches = auth()->user()->person->myBranches();
-
+        
         return Address::query()
             ->join('address_branch', 'address_id', '=', 'addresses.id')
             ->select('addresses.id', 'businessname', 'city')
-            ->where('branch_id', array_keys($branches))
+            ->whereIn('branch_id', array_keys($branches))
             ->search(request('q'))
             ->limit(20)
             ->get();
