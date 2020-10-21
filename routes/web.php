@@ -16,8 +16,8 @@ Route::get('/', ['as'=>'welcome','uses'=>'HomeController@index']);
 
     
         
-Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
-Route::get('testemail', ['as'=>'testemail', 'uses'=>'InboundMailController@testemail']);
+//Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
+//Route::get('testemail', ['as'=>'testemail', 'uses'=>'InboundMailController@testemail']);
     
     /*
     

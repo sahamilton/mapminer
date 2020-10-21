@@ -170,7 +170,7 @@ class ActivityController extends Controller
             ->where('completed', '=', 1)
             ->pluck('activities', 'yearweek')
             ->toArray();
-        
+      
         $data['summary'] = $this->activity->summaryData($weekCount);
         $activitytypes = $this->_getBranchActivititiesByType($branch);
         $data['activitychart'] = $this->chart->getBranchActivityByTypeChart($activitytypes);
