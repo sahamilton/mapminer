@@ -217,6 +217,7 @@
 @include('partials._modal')
 @if($owned)
 @include('addresses.partials._deleteleadmodal')
+@include('addresses.partials._removecampaignmodal')
 @endif
 @include('addresses.partials._addresscampaignmodal')
 
