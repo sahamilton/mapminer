@@ -201,6 +201,20 @@ class MyLeadsController extends BaseController
        
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
+
+    public function searchleads(Request $request)
+    {
+        $search = request('companyname');
+        $myBranches = auth()->user()->person->getMyBranches();
+        $leads = $this->lead->search($search)
+            ->whereHas(
+                'assignedToBranch', function ($q) use ($myBranches) {
+                    $q->whereIn('branches.id', $myBranches);
+                }
+            )
+        ->get();
+        return response()->view('myleads.search', compact('leads', 'search'));
+    }
     /**
      * [_assignToCampaign Remove null campaign and assign address]
      * 
@@ -304,6 +318,8 @@ class MyLeadsController extends BaseController
         return $lead;
 
     }
+
+
 
     /**
      * [_getAddress description]
