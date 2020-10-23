@@ -313,7 +313,7 @@ Route::group(
         //     New Leads
         Route::resource('myleads', 'MyLeadsController');
         Route::post('branch/{address}/remove', ['as'=>'branch.lead.remove', 'uses'=>'OpportunityController@remove']);
-        Route::get('myclosedleads', ['as'=>'myclosedleads', 'uses'=>'MyLeadsController@closedleads']);
+        //Route::get('myclosedleads', ['as'=>'myclosedleads', 'uses'=>'MyLeadsController@closedleads']);
         Route::post('mylead/{id}/close', ['as'=>'mylead.close', 'uses'=>'MyLeadsController@close']);
         Route::resource('myleadsactivity', 'MyLeadsActivityController');
         Route::resource('myleadscontact', 'MyLeadsContactController');
