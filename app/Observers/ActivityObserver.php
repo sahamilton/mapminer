@@ -15,8 +15,9 @@ class ActivityObserver
      */
     public function created(Activity $activity)
     {
-        if($activity->completed ==1) {
-            $addressBranch = AddressBranch::where('branch_id',$activity->branch_id)->where('address_id',$activity->address_id)->first();
+        if ($activity->completed ==1) {
+            $addressBranch = AddressBranch::where('branch_id', $activity->branch_id)
+                ->where('address_id', $activity->address_id)->first();
             $addressBranch->update(['last_activity'=>$activity->activity_date]);
         }
 

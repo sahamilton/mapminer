@@ -52,12 +52,12 @@ class Branch extends Model implements HasPresenter
     public $company_ids;
 
     public $activityFields = [
-            '4'=>'Sales Appointment',
-            '5'=>'Stop By',
-            '7'=>'Proposal',
-            '10'=>'Site Visit',
-            '13'=>'Log a call',
-            '14'=>'In Person'
+            '4'=>'sales_appointment',
+            '5'=>'stop_by',
+            '7'=>'proposal',
+            '10'=>'site_visit',
+            '13'=>'log_a_call',
+            '14'=>'in_person'
 
     ];
     public $leadFields = [
@@ -1262,30 +1262,29 @@ class Branch extends Model implements HasPresenter
         }
         $this->fields = $fields;
         foreach ($this->activityFields as $key=>$field) {
-            $label = str_replace(" ", "_",strtolower($field));
-            if(in_array($label, $this->fields)) {
-                $label = str_replace(" ", "_",strtolower($field));
+            if (in_array($field, $this->fields)) {
+                $label = str_replace(" ", "_", strtolower($field));
                 $query->withCount(
                     [
-                        'activities as '.$label=>function ($query) use($key) {
+                        'activities as '.$label=>function ($query) use ($key) {
                             $query->whereBetween(
                                 'activity_date', [$this->period['from'],$this->period['to']]
                             )->where('completed', 1)
-                            ->where('activitytype_id', $key);
+                                ->where('activitytype_id', $key);
                         }
                     ]
                 ); 
             }
         }
         $query->withCount(
-                [
-                    'activities'=>function ($query) use($key) {
-                        $query->whereBetween(
-                            'activity_date', [$this->period['from'],$this->period['to']]
-                        )->where('completed', 1);
-                    }
-                ]
-            );
+            [
+                'activities'=>function ($query) use ($key) {
+                    $query->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )->where('completed', 1);
+                }
+            ]
+        );
 
     }
 
