@@ -107,6 +107,8 @@ class Activity extends Model
     {
         return $this->activity_date;
     }
+
+    
     /**
      * [relatesToOpportunity description]
      * 
