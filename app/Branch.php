@@ -56,12 +56,12 @@ class Branch extends Model
     public $company_ids;
 
     public $activityFields = [
-            '4'=>'Sales Appointment',
-            '5'=>'Stop By',
-            '7'=>'Proposal',
-            '10'=>'Site Visit',
-            '13'=>'Log a call',
-            '14'=>'In Person'
+            '4'=>'sales_appointment',
+            '5'=>'stop_by',
+            '7'=>'proposal',
+            '10'=>'site_visit',
+            '13'=>'log_a_call',
+            '14'=>'in_person'
 
     ];
     public $leadFields = [

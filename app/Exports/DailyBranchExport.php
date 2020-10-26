@@ -82,12 +82,15 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
                 break;
             
             case 'manager':
-                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->postName() :'';
                 break;
 
             case 'reportsto':
-                $detail[] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
-                break;
+                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                        $detail[] =  $branch->manager->first()->reportsTo->fullName();
+                } else {
+                        $detail[] = 'No direct reporting manager';
+                }
             default:
                 $detail[]=$branch->$key;
                 break;

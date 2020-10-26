@@ -64,9 +64,11 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
                 break;
 
             case 'reportsto':
-                $detail[] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
-                break;
-
+                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                        $detail[] =  $branch->manager->first()->reportsTo->fullName();
+                } else {
+                        $detail[] = 'No direct reporting manager';
+                }
             default:
                 $detail[]=$branch->$key;
                 break;

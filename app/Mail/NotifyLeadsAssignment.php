@@ -41,7 +41,7 @@ class NotifyLeadsAssignment extends Mailable
     {
         
       
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.leadsnotify')
             ->subject('New Leads Assigned');
     }

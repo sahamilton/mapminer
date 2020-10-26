@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -25,6 +24,7 @@ class SearchController extends Controller
         
         return Person::search(request('q'))
             ->with('userdetails')
+            ->limit(20)
             ->get();
     }
     /**
@@ -51,6 +51,7 @@ class SearchController extends Controller
 
         ->search(request('q'))
             ->with('person')
+            ->limit(20)
             ->get();
     }
     
@@ -69,24 +70,35 @@ class SearchController extends Controller
         return Address::with('company')
             ->search(request('q'))
             ->nearby($person, 250)
-            
             ->orderBy('distance', 'asc')
+            ->limit(20)
             ->get();
     }
-
+    /**
+     * [searchMyLeads description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function searchMyLeads(Request $request)
     {
 
         $branches = auth()->user()->person->myBranches();
-
+        
         return Address::query()
-            ->join('address_branch', 'address_id','=','addresses.id')
-            ->select('addresses.id','businessname', 'city')
-            ->where('branch_id',array_keys($branches))
+            ->join('address_branch', 'address_id', '=', 'addresses.id')
+            ->select('addresses.id', 'businessname', 'city')
+            ->whereIn('branch_id', array_keys($branches))
             ->search(request('q'))
+            ->limit(20)
             ->get();
     }
-
+    /**
+     * [leads description]
+     * 
+     * @return [type] [description]
+     */
     public function leads()
     {
         $branches = array_keys(auth()->user()->person->myBranches());

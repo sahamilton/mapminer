@@ -54,7 +54,7 @@
 	<td>{{$branch->street}} {{$branch->address2}}</td>
 	<td>{{$branch->city}}</td>
 	<td>
-		<a href="{{route('branch.statemap',$branch->state)}}" title="See all {{$branch->state}} branches">
+		<a href="{{route('branches.showstatemap',$branch->state)}}" title="See all {{$branch->state}} branches">
 			{{$branch->state}}
 		</a>
 	</td>

@@ -42,7 +42,7 @@ class SendReport extends Mailable implements ShouldQueue
     public function build()
     {
         
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.reportsent')
             ->subject($this->report->report)
             ->attach(

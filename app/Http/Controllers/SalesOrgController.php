@@ -26,11 +26,14 @@ class SalesOrgController extends BaseController
      * @param Address $address [description]
      */
     public function __construct(
-        Branch $branch, Person $person, Address $address
+        Address $address,
+        Branch $branch, 
+        Person $person 
     ) {
-        $this->person = $person;
-        $this->branch = $branch;
+        
         $this->address = $address;
+        $this->branch = $branch;
+        $this->person = $person;
 
         //$this->person->rebuild();
     }
@@ -79,7 +82,7 @@ class SalesOrgController extends BaseController
      */
     public function getSalesOrgList($salesperson)
     {
-        // this could be combined with getSAlesBranches and
+        // this could be combined with getSalesBranches and
         // refactored to function show
             
             $salesperson->load('userdetails.roles', 'directReports', 'directReports.userdetails', 'directReports.userdetails.roles', 'reportsTo.userdetails.roles');
@@ -169,12 +172,10 @@ class SalesOrgController extends BaseController
      */
     public function noManager()
     {
-        $people = $this->person->whereNull('reports_to')
+        $people = $this->person->whereDoesntHave('reportsTo')
             ->with('userdetails', 'userdetails.roles')
             ->get();
         $title="Users with no manager";
-
-
         return response()->view('admin.users.nomanager', compact('people', 'title'));
     }
     /**

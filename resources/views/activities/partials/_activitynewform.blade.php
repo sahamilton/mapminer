@@ -51,9 +51,19 @@
               <span class="help-block">
                   <strong>{{$errors->has('activity_date') ? $errors->first('activity_date')  : ''}}</strong>
               </span>
-              
           </div>
-                  
+          <div class="form-group {!! $errors->has('completed') ? 'has-error' : '' !!}">
+            <label class="col-md-2 control-label" for="password_confirmation">Completed</label>
+            <div class="col-md-10">
+              <input 
+              class="form-control" 
+              type="checkbox" 
+              name="completed" 
+              id="completed" 
+              value="1" {{isset($user) && $user->completed==0 ? '' : 'checked'}}/>
+              {!! $errors->first('completed', '<span class="help-inline">:message</span>') !!}
+            </div>
+          </div>     
 
           <div class="form-group{{ $errors->has('followup_date)') ? ' has-error' : '' }}">
               <label class="col-md-4 control-label" for="followup_date">Followup Date</label>

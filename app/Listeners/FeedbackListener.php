@@ -29,10 +29,10 @@ class FeedbackListener
             Mail::to($event->feedback->providedBy->email)
                 ->cc(config('mapminer.system_contact'),config('mapminer.developer_email'))
                 ->queue(new FeedbackClosed($event->feedback));
-        }else{
+        } else {
 
             Mail::to($event->feedback->providedBy->email)
-                ->cc(config('mapminer.system_contact'),config('mapminer.developer_email'))
+                ->cc(config('mapminer.system_contact'), config('mapminer.developer_email'))
                 ->queue(new FeedbackComment($event->feedback));
 
         }

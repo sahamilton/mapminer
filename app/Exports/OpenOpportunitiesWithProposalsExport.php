@@ -67,7 +67,12 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                 case 'reportsto':
                     $detail[$n][] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
                     break;
-
+                case 'reportsto':
+                    if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                        $detail[$n][] =  $branch->manager->first()->reportsTo->fullName();
+                    } else {
+                        $detail[$n][] = 'No direct reporting manager';
+                    }
                 case 'businessname':
                     $detail[$n][]= $opportunity->address->address->businessname;
                     break;

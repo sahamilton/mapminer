@@ -555,7 +555,7 @@ class BranchesController extends BaseController
 
         }
         $allstates = $this->branch->allStates();
-        $data = $this->state->where('statecode', '=', $state)
+        $data = $this->state->where('statecode', $state)
             ->firstOrFail()->toArray();
         $data['type'] = 'branch';
         return response()->view(
@@ -625,13 +625,12 @@ class BranchesController extends BaseController
      * 
      * @return [type]     [description]
      */
-    public function getMyBranches($id)
+    public function getMyBranches(Person $person)
     {    
         
-        $data['people'] = $this->person->with('manages', 'userdetails')
-            ->findOrFail($id);
+        $person->load('manages', 'userdetails');
     
-        return response()->view('persons.showmap', compact('data', 'centerpos'));
+        return response()->view('persons.showmap', compact('person'));
     }
     
     

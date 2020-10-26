@@ -16,8 +16,8 @@ Route::get('/', ['as'=>'welcome','uses'=>'HomeController@index']);
 
     
         
-Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
-Route::get('testemail', ['as'=>'testemail', 'uses'=>'InboundMailController@testemail']);
+//Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
+//Route::get('testemail', ['as'=>'testemail', 'uses'=>'InboundMailController@testemail']);
     
     /*
     
@@ -70,13 +70,12 @@ Route::group(
         Route::get('/branch/{branch}/map', ['as'=>'branch.map', 'uses'=>'BranchesController@map']);
         Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);
         Route::get('branches/{branch}/shownearby', ['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
-        Route::get('/branch/newleads', ['as'=>'branch.newleads', 'uses'=>'BranchesController@newleads']);
-        //Route::get('branches/{state}/showstate', ['as' => 'showstate.branch', 'uses' => 'BranchesController@getStateBranches']);
+        //Route::get('branches/{state}/showstate', ['as' => 'showstate.branch', 'uses' => 'BranchesController@statemap']);
         Route::get('branches/{branch}/nearby', ['as' => 'nearby.branch', 'uses' => 'BranchesController@getNearbyBranches']);
         //Route::get('branches/{branch}/locations', ['as' => 'branch.locations', 'uses' => 'BranchesController@getLocationsServed']);
         Route::get('branches/{branch}/showlist', ['as' => 'showlist.locations', 'uses' => 'BranchesController@listNearbyLocations']);
         Route::get('branches/{branch}/salesteam', ['as' => 'showlist.salesteam', 'uses' => 'BranchesController@showSalesTeam']);
-        Route::get('branches/managed/{mgrId}', ['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);
+        Route::get('branches/managed/{person}', ['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);
         Route::get('branches/managedmap/{mgrId}', ['as'=>'managed.branchmap', 'uses'=>'BranchesController@mapMyBranches']);
         Route::resource('branches', 'BranchesController', ['only' => ['index', 'show']]);
         //   Branch Activities
@@ -226,7 +225,7 @@ Route::group(
         
         //     People
         
-        Route::get('person/{personId}/showmap', ['as'=>'showmap.person', 'uses'=>'PersonsController@showmap']);
+        Route::get('person/{person}/showmap', ['as'=>'showmap.person', 'uses'=>'PersonsController@showmap']);
         Route::get('people/map', ['as'=>'person.map', 'uses'=>'PersonsController@map']);
         Route::get('geocode/people', ['as'=>'person.geocode', 'uses'=>'PersonsController@geoCodePersons']);
         Route::get('person/{vertical}/vertical', ['as'=>'person.vertical', 'uses'=>'PersonsController@vertical']);
@@ -314,7 +313,7 @@ Route::group(
         //     New Leads
         Route::resource('myleads', 'MyLeadsController');
         Route::post('branch/{address}/remove', ['as'=>'branch.lead.remove', 'uses'=>'OpportunityController@remove']);
-        Route::get('myclosedleads', ['as'=>'myclosedleads', 'uses'=>'MyLeadsController@closedleads']);
+        //Route::get('myclosedleads', ['as'=>'myclosedleads', 'uses'=>'MyLeadsController@closedleads']);
         Route::post('mylead/{id}/close', ['as'=>'mylead.close', 'uses'=>'MyLeadsController@close']);
         Route::resource('myleadsactivity', 'MyLeadsActivityController');
         Route::resource('myleadscontact', 'MyLeadsContactController');
@@ -366,7 +365,7 @@ Route::group(
         Route::get('mobile/{address}/show', ['as'=>'mobile.show', 'uses'=>'MobileController@show']);
         Route::get('mobile/{address}/check', ['as'=>'mobile.checkaddress','uses'=>'MobileController@check']);
         Route::get('mobile/searchaddress', ['as'=>'mobile.searchaddress', 'uses'=>'MobileController@searchaddress']);
-
+        Route::post('searchleads',['as'=>'searchleads', 'uses'=>'MyLeadsController@searchleads']);
         Route::post('mobile/search', ['as'=>'mobile.search', 'uses'=>'MobileController@search']);
         Route::post('mobile/select', ['as'=>'mobile.select', 'uses'=>'MobileController@select']);
         Route::resource('mobile', 'MobileController');

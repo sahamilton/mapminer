@@ -11,6 +11,7 @@
 <fieldset><legend>Technical Details</legend>
 <p><strong>Mapminer Version:</strong> {{ucwords(exec('git describe --tags'))}} </p>
 <p><strong>Mapminer Branch:</strong> {{ ucwords(exec('git rev-parse --abbrev-ref HEAD'))}} </p>
+<p><a href ="https://pingping.io/PuUkRgfn" target="_blank"><strong>Status</strong></a></p>
 @if(auth()->user()->hasRole('admin'))
 <p><strong>Environment: </strong>
 {{App::environment()}} </p>
@@ -24,12 +25,13 @@
     <p><strong>PHP Version:</strong> {{ phpversion()}} </p>
     @php
     $results = \DB::select( \DB::raw("select version()") );
-$db_version = $results[0]->{'version()'};
-@endphp
+    $db_version = $results[0]->{'version()'};
+    @endphp
     <p><strong>Database Version:</strong> {{$db_version}}</p> 
     <p><strong>Server Address:</strong> {{$_SERVER['SERVER_ADDR']}}</p>
     <p><strong>Server Name:</strong> {{gethostname()}}</p>
     <p><strong>Database:</strong> {{env('DB_DATABASE')}}</p>
+
 @endif
 </fieldset>
 </div>

@@ -37,7 +37,7 @@ class DailyBranchReport extends Mailable
     public function build()
     {
         
-        return $this->from([['name'=> 'Sales Operations', 'email'=>'salesoperations@tbmapminer.com']])
+        return $this->from(config('mail.from'))
             ->markdown('emails.dailybranchreport')  
             ->subject('Daily Branches Report')
             ->attach(

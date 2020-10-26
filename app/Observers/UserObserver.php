@@ -14,7 +14,7 @@ class UserObserver
 {
     /**
 
-     */
+    */
 
     public $observableEventNames  = [
                 "creating",
@@ -47,7 +47,7 @@ class UserObserver
 
     public function deleted(User $user)
     {
-       
+        RebuildPeople::dispatch();
         Log::info($user->id . " Deleted: People rebuilt");
     }
     

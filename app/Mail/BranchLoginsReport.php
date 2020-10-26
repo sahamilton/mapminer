@@ -30,7 +30,7 @@ class BranchLoginsReport extends Mailable
      */
     public function build()
     {
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.branchloginsreport')  
             ->subject('Branch Logins Report')
             ->attach(

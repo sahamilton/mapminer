@@ -36,7 +36,7 @@ class DeadLeadsReport extends Mailable
     public function build()
     {
         
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.deadleadsreport')  
             ->subject('Dead Leads Report')
             ->attach(

@@ -75,6 +75,7 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     { 
         $n=0;
         foreach ($branch->opportunities as $item) {
+            
             foreach ($this->fields as $key=>$field) {
                 
                 switch($key) {
@@ -82,10 +83,19 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
                     $line[$n][] = $branch->branchname;
                     break;
                 case 'manager':
-                    $line[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                    if (! is_null($branch->manager){
+                        $line[$n][] = $branch->manager->first()->fullName(); 
+                    } else {
+                        $line[$n][] = 'No manager'; 
+                    }
                     break;
                 case 'reportsto':
-                     $line[$n][] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
+                    if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                        $line[$n][] =  $branch->manager->first()->reportsTo->fullName();
+                    } else {
+                        $line[$n][] = 'No direct reporting manager';
+                    }
+                            
                     break;
                 case 'businessname':
                     $line[$n][] = $item->address->address->businessname;
