@@ -94,6 +94,11 @@ use Illuminate\Http\Request;
 
 
         Route::resource('reports', 'ReportsController', ['except'=>['index','show']]);
+        
+        // User Tracking
+        
+        Route::get('usertracking', ['as'=>'usertracking', 'uses'=>'UserTrackingController@index']);
+        Route::post('usertracking/show', ['as'=>'usertracking.show', 'uses'=>'UserTrackingController@show']);
         //   User Role Management
 
         Route::resource('roles', 'Admin\AdminRolesController');

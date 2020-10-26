@@ -392,6 +392,20 @@ class Model extends \Eloquent
         }
         return true;
     }
+
+
+    public function scopeUserActions($query, User $user)
+    {
+        return $query->where('user_id', $user->id);
+    }
+
+    public function scopePeriodActions($query, array $period)
+    {
+        return $query->whereBetween('created_at', [$period['from'], $period['to']])
+            ->orWhereBetween('updated_at', [$period['from'], $period['to']]);
+    }
+
+    
     /**
      * [createOldColors description]
      * @param  [type] $num [description]
