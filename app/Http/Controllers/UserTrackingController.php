@@ -54,6 +54,6 @@ class UserTrackingController extends Controller
             }
         }
 
-        return view('admin.users.usertracking.show', compact('data'));
+        return view('admin.users.usertracking.show', compact('data', 'user', 'period'));
     }
 }
