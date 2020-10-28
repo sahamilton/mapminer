@@ -15,7 +15,7 @@ class UserTrackingController extends Controller
     //
     public function index()
     {
-        $persons = Person::select('id', 'firstname', 'lastname', 'user_id')->orderBy('lastname')->get();
+        $persons = $this->_getBranchManagers();
         $models = ['Activity', 'Address', 'Opportunity'];
         return view('admin.users.usertracking.index', compact('models', 'persons'));
     }
@@ -23,14 +23,14 @@ class UserTrackingController extends Controller
     public function show(Request $request)
     {
         
-        $models = request('model');
+        $selectModels = request('model');
         $setPeriod = request('setPeriod');
         
         $address = new Address;
         $period = $address->getPeriod($setPeriod);
         
         $user = User::findOrFail(request('person'));
-        foreach ($models as $model) {
+        foreach ($selectModels as $model) {
             switch($model) {
             case 'Activity':
                 $data['activities'] = Activity::userActions($user)
@@ -53,7 +53,20 @@ class UserTrackingController extends Controller
                 break;
             }
         }
+        $persons = $this->_getBranchManagers();
+        $models = ['Activity', 'Address', 'Opportunity'];
+        return view('admin.users.usertracking.show', compact('data', 'user', 'period', 'models', 'persons'));
+    }
 
-        return view('admin.users.usertracking.show', compact('data', 'user', 'period'));
+    private function _getBranchManagers()
+    {
+        return Person::whereHas(
+            'branchesServiced', function ($q) {
+                $q->where('role_id', 9);
+            }
+        )
+        ->select('id', 'firstname', 'lastname', 'user_id')
+        ->orderBy('lastname')
+        ->get();
     }
 }
