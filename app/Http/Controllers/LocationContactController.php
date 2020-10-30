@@ -111,7 +111,7 @@ class LocationContactController extends Controller
     public function store(Request $request)
     {
         $request = $this->_setRequestPrimaryContact($request);
-        request()->add(['user_id', auth()->user()->id]);
+        $request->request->add(['user_id', auth()->user()->id]);
         $contact = $this->contact->create(request()->all());
         if (request('primary')) {
             $this->_updatePrimaryContact($contact);
@@ -210,7 +210,7 @@ class LocationContactController extends Controller
     private function _setRequestPrimaryContact(Request $request)
     {
         if (! request('primary')) {
-            request()->add(['primary' => '0']);
+            $request->request->add(['primary' => '0']);
         }
         return $request;
     }
