@@ -144,6 +144,12 @@ class Address extends Model
     {
         return $this->hasMany(Contact::class, 'address_id', 'id');
     }
+
+    public function primaryContact()
+    {
+        return $this->hasMany(Contact::class, 'address_id', 'id')
+            ->where('primary', 1);
+    }
     /**
      * [company description]
      * 

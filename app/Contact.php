@@ -6,7 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-    protected $fillable=['id','fullname','firstname','lastname','title','email','contactphone','comments','location_id','user_id','address_id'];
+    protected $fillable=[
+        'address_id',
+        'contactphone',
+        'comments',
+        'email',
+        'firstname',
+        'lastname',
+        'fullname',
+        'location_id',
+        'primary',
+        'title',
+        'user_id',
+        ];
 
 
     public function location()
@@ -21,6 +33,9 @@ class Contact extends Model
 
     public function fullName()
     {
+        if (isset($this->fullname)) {
+            return $this->fullname;
+        }
         return $this->firstname . " " . $this->lastname;
     }
     public function relatedActivities()

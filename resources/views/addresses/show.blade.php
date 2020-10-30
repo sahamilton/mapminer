@@ -4,6 +4,7 @@
 @php $statuses = [1=>'Offered to',2=>'Owned by','4'=>'Owned by*']; @endphp
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
+
 <p>
     @if($location->company)
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>

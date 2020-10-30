@@ -26,6 +26,13 @@
             <tr>
                 <td>
                     {{$contact->fullname}}
+
+                    @if($location->primaryContact->count() && $location->primaryContact->first()->id == $contact->id)
+                    <i class="fas fa-user-check text-danger" title="primary contact"></i>
+                    @else
+                    <a href="{{route('contacts.primary',  $contact->id)}}" title="Click to make primary contact"><i class="fas fa-user" > </i>
+                    </a>
+                    @endif
                     <a href="{{route('contacts.edit',$contact->id)}}" >
                         <i class="fas fa-edit text-success float-right"></i>
                     </a>

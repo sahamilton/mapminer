@@ -22,22 +22,19 @@
             <select class="form-control" name='person' required>
                
             @foreach ($persons as $person))
-            <option
-                value="{{$person->user_id}}">
-                    {{$person->postName()}}
-            </option>
+                <option
+                    value="{{$person->user_id}}">
+                        {{$person->postName()}}
+                </option>
                 
             @endforeach
-
-
             </select>
             <span class="help-block{{ $errors->has('person)') ? ' has-error' : '' }}">
                 <strong>{{ $errors->has('person') ? $errors->first('person') : ''}}</strong>
-                </span>
+            </span>
         </div>
     </div>
 
-    
     <!-- select model -->
     <div class="form-group{{ $errors->has('model)') ? ' has-error' : '' }}">
         <label class="col-md-3 control-label">Actions</label>
