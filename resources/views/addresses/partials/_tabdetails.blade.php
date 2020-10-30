@@ -13,7 +13,7 @@
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			<p>
 			<i class="far fa-user" aria-hidden="true"></i>
-			 <b>Primary Contact:</b> <span id="primaryContact">{{$location->primaryContact->count() ? $location->primaryContact->first()->fullName() : ''}}
+			 <b>Primary Contact:</b> <span id="primaryContact">{{$location->primaryContact->count() ? $location->primaryContact->first()->fullName() ."," . $location->primaryContact->first()->contactphone : ''}}
 			 </span>
 			 </p>
 			<p>
