@@ -13,13 +13,21 @@
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			<p>
 			<i class="far fa-user" aria-hidden="true"></i>
-			 <b>Primary Contact:</b> <span id="primaryContact">{{$location->primaryContact->count() ? $location->primaryContact->first()->fullName() ."," . $location->primaryContact->first()->contactphone : ''}}
+			 <b>Primary Contact:</b> <span id="primaryContact">
+			 	{{$location->primaryContact->count() ? $location->primaryContact->first()->fullName() : ''}}
 			 </span>
 			 </p>
 			<p>
-			<i class="fas fa-map-marker" aria-hidden="true"></i>
-			 <b>Address:</b><br/>{{$location->fullAddress()}}</p>
-			<p><b><i class="fas fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
+				<i class="fas fa-map-marker" aria-hidden="true"></i>
+			 	<b>Address:</b>
+			 	<br/>{{$location->fullAddress()}}
+			 </p>
+			<p>
+				<b>
+					<i class="fas fa-phone" aria-hidden="true"></i> 
+					Phone:
+				</b>{{$location->phone ? $location->phone : $location->primaryContact->count() ? $location->primaryContact->first()->contactphone : ''}}
+			</p>
 			
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
 		 </fieldset>
