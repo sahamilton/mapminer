@@ -14,8 +14,10 @@
 @if($owned)
 @include('addresses.partials._ranking')
 @endif
-<p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
+<p><strong>Location Source:</strong> {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
+<p><strong>Type:</strong> {{ucwords($location->addressable_type)}}</p>
+<p><strong>Date Added:</strong> {{$location->created_at->format('Y-m-d')}}</p>
 
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
@@ -160,7 +162,7 @@
 
     </div>
     @endif
-        @if($location->addressable_type == 'weblead')
+    @if($location->addressable_type == 'weblead')
     <div id="weblead" class="tab-pane fade">
       
        @include('addresses.partials._tabwebleads') 
