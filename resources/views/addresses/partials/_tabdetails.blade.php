@@ -26,7 +26,14 @@
 				<b>
 					<i class="fas fa-phone" aria-hidden="true"></i> 
 					Phone:
-				</b>{{$location->phone }}
+				</b>
+				@if(isset($location->phone))
+					{{$location->phone}}
+				@elseif ($location->primaryContact->count() > 0)
+					{{$location->primaryContact->first()->contactphone}}
+				
+				@endif
+				
 			</p>
 			
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
