@@ -26,7 +26,7 @@
 				<b>
 					<i class="fas fa-phone" aria-hidden="true"></i> 
 					Phone:
-				</b>{{$location->phone ? $location->phone : $location->primaryContact->count() ? $location->primaryContact->first()->contactphone : ''}}
+				</b>{{$location->phone }
 			</p>
 			
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
