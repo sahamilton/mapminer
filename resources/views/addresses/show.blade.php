@@ -176,7 +176,7 @@
 
     </div>
 
-    <div id="contacts" class="tab-pane fade">
+    <div id="company" class="tab-pane fade">
       @include('projects.partials._companylist')
       
       
