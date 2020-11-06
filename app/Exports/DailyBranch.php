@@ -51,11 +51,15 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
        
         $this->period = $period;
         $this->branches = $branches;
-        $this->allFields = array_merge($this->fields, $this->leadFields,$this->activityFields);
+        $this->allFields = array_merge($this->fields, $this->leadFields, $this->activityFields);
 
        
     }
-        
+    /**
+     * [headings description]
+     * 
+     * @return [type] [description]
+     */
     public function headings(): array
     {
         return [
@@ -67,7 +71,13 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
         ];
     }
     
-    
+    /**
+     * [map description]
+     * 
+     * @param [type] $branch [description]
+     * 
+     * @return [type]         [description]
+     */
     public function map($branch): array
     {
         
@@ -92,7 +102,11 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
         }
         return $detail;
     }
-
+    /**
+     * [columnFormats description]
+     * 
+     * @return [type] [description]
+     */
     public function columnFormats(): array
     {
         return [
