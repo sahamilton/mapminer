@@ -14,7 +14,8 @@
   </h3>
   @endif
 
-  @if($salesteam->reportsTo)
+  @if($salesteam->reports_to)
+ 
   <h4>Reports to:<a href="{{route('salesorg.show',$salesteam->reportsTo->id)}}" 
   title="See {{$salesteam->reportsTo->firstname}} {{$salesteam->reportsTo->lastname}}'s sales team">
     {{$salesteam->reportsTo->fullName()}}

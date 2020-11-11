@@ -90,6 +90,7 @@ class AddressController extends BaseController
         $location = $address->load(
            
             'contacts.relatedActivities',
+            'primaryContact',
             'activities.type',
             'activities.relatedContact',
             'activities.user.person',

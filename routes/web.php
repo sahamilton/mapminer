@@ -145,7 +145,9 @@ Route::group(
         
         //   Contacts
         Route::get('contacts/{id}/vcard', ['as'=>'contacts.vcard', 'uses'=>'LocationContactController@vcard']);
+        Route::get('contacts/{contact}/primary', ['as'=>'contacts.primary', 'uses'=>'LocationContactController@makePrimaryContact']);
         Route::resource('contacts', 'LocationContactController');
+        
         Route::post('contact/branch', ['as'=>'contact.branch', 'uses'=>'LocationContactController@branchcontacts']);
         Route::get('contacts/branch/{branch}', ['as'=>'contacts.branch', 'uses'=>'LocationContactController@branchcontacts']);
         Route::resource('mycontacts', 'MyContactsController');

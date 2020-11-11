@@ -9,7 +9,7 @@ use App\Branch;
 use App\Campaign;
 use App\Person;
 use App\Opportunity;
-use \App\Locations;
+use \App\Address;
 use JeroenDesloovere\VCard\VCard;
 
 class LocationContactController extends Controller
@@ -33,18 +33,23 @@ class LocationContactController extends Controller
     public function index()
     {
         $myBranches = $this->person->myBranches();
-        $data = $this->getBranchContacts(array_keys($myBranches));
+        $data = $this->_getBranchContacts(array_keys($myBranches));
         $title = "Branch " . reset($myBranches) . " Contacts";
         $campaigns = Campaign::currentOpen([array_keys($myBranches)[0]])->get();
-         return response()->view('contacts.index', compact('data', 'title','myBranches', 'campaigns'));
+         return response()->view('contacts.index', compact('data', 'title', 'myBranches', 'campaigns'));
     }
-
+    /**
+     * [branchContacts description]
+     * 
+     * @param Branch  $branch  [description]
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function branchContacts(Branch $branch, Request $request)
     {
-     
-
         if (request()->has('branch')) {
-            $data = $this->getBranchContacts([request('branch')]);
+            $data = $this->_getBranchContacts([request('branch')]);
         } else {
             $data = $this->getBranchContact([$branch->id]);
         }
@@ -56,10 +61,16 @@ class LocationContactController extends Controller
         return response()->view('contacts.index', compact('data', 'title', 'myBranches'));
 
     }
-    private function getBranchContacts($branches)
+    /**
+     * [_getBranchContacts description]
+     * 
+     * @param [type] $branches [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getBranchContacts($branches)
     {
         $opportunity = Opportunity::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
-            
         $customer = AddressBranch::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
         $data['branches'] =$this->_getBranches($branches);
         $data['contacts']=$this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
@@ -99,27 +110,16 @@ class LocationContactController extends Controller
      */
     public function store(Request $request)
     {
-
-        $data = request()->all();
-
-        $data['user_id']= auth()->user()->id;
-        $contact = $this->contact->create($data);
-        
+        $request = $this->_setRequestPrimaryContact($request);
+        $request->request->add(['user_id', auth()->user()->id]);
+        $contact = $this->contact->create(request()->all());
+        if (request('primary')) {
+            $this->_updatePrimaryContact($contact);
+        }
         return redirect()->route('address.show', request('address_id'));
     }
 
-    /**
-     * [show description]
-     * 
-     * @param [type] $contact [description]
-     * 
-     * @return [type]          [description]
-     */
-    public function show($contact)
-    {
-        //
-    }
-
+    
     /**
      * [edit description]
      * 
@@ -127,8 +127,10 @@ class LocationContactController extends Controller
      * 
      * @return [type]          [description]
      */
-    public function edit($contact)
+    public function edit(Contact $contact)
     {
+        $contact->load('location');
+
         return response()->view('contacts.edit', compact('contact'));
     }
 
@@ -140,11 +142,14 @@ class LocationContactController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function update(Request $request, $contact)
+    public function update(Request $request, Contact $contact)
     {
-        
+        $request = $this->_setRequestPrimaryContact($request);
+      
         $contact->update(request()->all());
-
+        if (request('primary')) {
+            $this->_updatePrimaryContact($contact);
+        }
         return redirect()->route('address.show', $contact->address_id);
     }
 
@@ -183,4 +188,46 @@ class LocationContactController extends Controller
             $vcard->addURL(route('locations.show', $contact->location_id));
             $vcard->download();
     }
+    /**
+     * [makePrimaryContact description]
+     * 
+     * @param Contact $contact [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function makePrimaryContact(Contact $contact)
+    {
+        $contact->update(['primary'=>1]);
+        $this->_updatePrimaryContact($contact);
+        return redirect()->route('address.show', $contact->address_id);
+
+    }
+    /**
+     * [_setRequestPrimaryContact Set primary to false if not included]
+     * 
+     * @param Request $request [description]
+     */
+    private function _setRequestPrimaryContact(Request $request)
+    {
+        if (! request('primary')) {
+            $request->request->add(['primary' => '0']);
+        }
+        return $request;
+    }
+    /**
+     * [_updatePrimaryContact Switch all non primary contacts]
+     * 
+     * @param Contact $contact [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _updatePrimaryContact(Contact $contact)
+    {
+        $this->contact->where('address_id', $contact->address_id)
+            ->where('id', '!=', $contact->id)
+            ->update(['primary'=> 0]);
+    }
+    
+
+
 }

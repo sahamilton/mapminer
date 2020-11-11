@@ -4,6 +4,7 @@
 @php $statuses = [1=>'Offered to',2=>'Owned by','4'=>'Owned by*']; @endphp
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
+
 <p>
     @if($location->company)
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
@@ -13,8 +14,10 @@
 @if($owned)
 @include('addresses.partials._ranking')
 @endif
-<p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
+<p><strong>Location Source:</strong> {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
+<p><strong>Type:</strong> {{ucwords($location->addressable_type)}}</p>
+<p><strong>Date Added:</strong> {{$location->created_at->format('Y-m-d')}}</p>
 
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
@@ -159,7 +162,7 @@
 
     </div>
     @endif
-        @if($location->addressable_type == 'weblead')
+    @if($location->addressable_type == 'weblead')
     <div id="weblead" class="tab-pane fade">
       
        @include('addresses.partials._tabwebleads') 
@@ -173,7 +176,7 @@
 
     </div>
 
-    <div id="contacts" class="tab-pane fade">
+    <div id="company" class="tab-pane fade">
       @include('projects.partials._companylist')
       
       
@@ -216,8 +219,8 @@
   </div>
 @include('partials._modal')
 @if($owned)
-@include('addresses.partials._deleteleadmodal')
-@include('addresses.partials._removecampaignmodal')
+  @include('addresses.partials._deleteleadmodal')
+  @include('addresses.partials._removecampaignmodal')
 @endif
 @include('addresses.partials._addresscampaignmodal')
 @if($campaigns->count())

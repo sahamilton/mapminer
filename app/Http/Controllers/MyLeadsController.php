@@ -131,7 +131,7 @@ class MyLeadsController extends BaseController
         $dupes = $this->_getDuplicateLeads($data);
       
         if (isset($data['contact'])) {
-        
+            $data['contact']['primary'] = 1;
             $address->contacts()->create($data['contact']);
         }
         // probably do away with this....

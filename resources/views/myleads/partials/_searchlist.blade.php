@@ -14,7 +14,7 @@
                 <td>{{$lead->street}}</td>
                 <td>{{$lead->city}}</td>
                 <td>{{$lead->state}}</td>
-                <td>{{$lead->created_at->format('M j, Y')}}</td>
+                <td>{{$lead->created_at ? $lead->created_at->format('M j, Y') : 'Unknown'}}</td>
                 <td>{{$lead->leadsource->source}}</td>
             </tr>
            @endforeach
