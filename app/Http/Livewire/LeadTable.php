@@ -40,7 +40,6 @@ class LeadTable extends Component
         
         return view('livewire.lead-table', [
             'leads' => Address::query()
-                ->search($this->search)   
                 ->whereIn(
                     'addresses.id', function ($query) {
                         $query->select('address_id')
