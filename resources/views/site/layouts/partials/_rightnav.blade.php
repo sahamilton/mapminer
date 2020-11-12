@@ -2,11 +2,16 @@
       <ul class="flex justify-center items-center border-solid border-2 border-red-600 mr-8"> 
               
                <li class="nav-item">
-                <a  class="nav-link" href="#"
+               <button type="button" data-href="" 
+                data-toggle="modal" 
+                data-target="#add-feedback" class="text-gray-600 group inline-flex items-center space-x-2 text-base leading-6 font-medium hover:text-gray-900 focus:outline-none focus:text-gray-900 transition ease-in-out duration-150" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="text-sm">Feedback</span>
+          </button>
+                <!-- <a  class="nav-link" href="#"
                 data-href="" 
                 data-toggle="modal" 
                 data-target="#add-feedback" >
-                    <i class="" style=""> </i> Feedback</a>
+                    <i class="" style=""> </i> Feedback</a> -->
                 </li>
                 @php $news = new \App\News;@endphp
                 <li class="nav-item">
