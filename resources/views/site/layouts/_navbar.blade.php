@@ -19,7 +19,7 @@
     
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-search" aria-hidden="true"></i> Search<span class="caret"></span>
+          <i class="fas fa-search" aria-hidden="true"></i> Searchi<span class="caret"></span>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           
