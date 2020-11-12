@@ -1,22 +1,22 @@
 
-      <ul class="navbar-nav ml-auto justify-content-end" style="margin-right:60px"> 
+      <ul class="flex justify-center items-center border-solid border-2 border-red-600 mr-8"> 
               
                <li class="nav-item">
                 <a  class="nav-link" href="#"
                 data-href="" 
                 data-toggle="modal" 
                 data-target="#add-feedback" >
-                    <i class="fas fa-bullhorn" style="color:red"> </i> Feedback</a>
+                    <i class="" style=""> </i> Feedback</a>
                 </li>
                 @php $news = new \App\News;@endphp
                 <li class="nav-item">
                   
                   @if($news->currentNews()->count()>0)
                   <a  class="nav-link" href="{{route('currentnews')}}">
-                    <i class="fas fa-bell" aria-hidden="true" style="color:red"> </i> News</a>
+                    <i class="" aria-hidden="true" style="color:red"> </i> News</a>
                   @else
                   <a  class="nav-link" href="{{route('news.index')}}">
-                    <i class="far fa-bell" aria-hidden="true"> </i> News</a>
+                    <i class="" aria-hidden="true"> </i> News</a>
                   @endif
                    
                 </li>
@@ -25,7 +25,7 @@
 
                 <li class="nav-item">
                   <a  class="nav-link" href="{{{ route('dashboard') }}}">
-                  <i class="fas fa-tachometer-alt" aria-hidden="true"> </i> Admin </a>
+                  <i class="" aria-hidden="true"> </i> Admin </a>
                 </li>
                 @endif
 
@@ -33,7 +33,7 @@
 
               <li class="nav-item">
                 <a  class="nav-link" href="{{{ route('dashboard') }}}">
-                <i class="fas fa-tachometer-alt" aria-hidden="true"> </i> Ops </a>
+                <i class="" aria-hidden="true"> </i> Ops </a>
               </li>
                 @endif
            
