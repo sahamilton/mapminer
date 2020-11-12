@@ -200,11 +200,4 @@
       0 => 'Geocoder\\Laravel\\Providers\\GeocoderService',
     ),
   ),
-  'watson/aggregate' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Watson\\Aggregate\\AggregateServiceProvider',
-    ),
-  ),
 );

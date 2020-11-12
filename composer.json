@@ -19,7 +19,7 @@
         "laravelcollective/html": "^6.0",
         "laravel/ui": "^2.0",
         "maatwebsite/excel": "^3.1",
-        "watson/aggregate": "^2.0",
+       
         "smalot/pdfparser": "^0.14.0",
         "toin0u/geocoder-laravel": "^4.0",
         "dompdf/dompdf": "~0.6.1",

@@ -26,7 +26,9 @@ class LeadStatusController extends Controller
      */
     public function index()
     {
-        $leadstatuses = $this->leadstatus->withCount(['leads'])->get();
+        $leadstatuses = $this->leadstatus
+            ->select('id', 'status')
+            ->withCount(['leads'])->get();
  
         return response()->view('leadstatus.index', compact('leadstatuses'));
     }
@@ -63,9 +65,9 @@ class LeadStatusController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(LeadStatus $leadstatus)
     {
-        $leadstatus = $this->leadstatus->with('leads', 'leads.leadsource', 'leads.ownedBy')->findOrFail($id);
+        $leadstatus->load('leads', 'leads.leadsource', 'leads.ownedBy');
   
 
         return response()->view('leadstatus.show', compact('leadstatus'));
@@ -78,9 +80,9 @@ class LeadStatusController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(LeadStatus $leadstatus)
     {
-        $leadstatus = $this->leadstatus->findOrFail($id);
+        
         return response()->view('leadstatus.edit', compact('leadstatus'));
     }
 
@@ -92,10 +94,10 @@ class LeadStatusController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, LeadStatus $leadstatus)
     {
 
-        $this->leadstatus->where('id', '=', $id)->update(request()->except('_method', '_token'));
+        $leadstatus->update(request()->except('_method', '_token'));
 
         return redirect()->route('leadstatus.index');
     }
@@ -107,9 +109,9 @@ class LeadStatusController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(LeadStatus $leadstatu)
     {
-        $thisleadstatus->destroy($id);
+        $leadstatus->delete();
         return redirect()->route('leadstatus.index');
     }
 }

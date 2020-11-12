@@ -2,7 +2,7 @@
 namespace App;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+
 
 class Track extends Model
 {

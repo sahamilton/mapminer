@@ -43,23 +43,22 @@ class BranchTable extends Component
     public function render()
     {
         
-        return view('livewire.branch-table', [
-               'branches'=>Branch::query()
-                ->with(
-                    'region', 
-                    'manager', 
-                    'relatedPeople.userdetails.roles', 
-                    'servicelines'
-            )
-            ->when(
-                $this->state != 'All', function ($q) 
-                    {
-                        $q->where('state', $this->state);
-                    }
-                )
-            ->when(
-                $this->region != 'All', function ($q) 
-                    {
+        return view(
+            'livewire.branch-table', [
+                'branches'=>Branch::query()
+                    ->with(
+                        'region', 
+                        'manager', 
+                        'relatedPeople.userdetails.roles', 
+                        'servicelines'
+                    )
+                    ->when(
+                        $this->state != 'All', function ($q) {
+                                $q->where('state', $this->state);
+                        }
+                    )
+                ->when(
+                    $this->region != 'All', function ($q) {
                         $q->where('region_id', $this->region);
                     }
                 )
@@ -75,11 +74,10 @@ class BranchTable extends Component
             'allstates' => Branch::select('state')
                 ->distinct('state')
                 ->when(
-                    $this->region != 'All', function ($q) 
-                        {
+                    $this->region != 'All', function ($q) {
                             $q->where('region_id', $this->region);
-                        }
-                    )
+                    }
+                )
                 ->orderBy('state')
                 ->get(),
             'regions' => Region::select('id', 'region')->has('branches')->orderBy('region')->get(),
@@ -87,7 +85,8 @@ class BranchTable extends Component
             
 
 
-        ]);
+            ]
+        );
         
     }
 }

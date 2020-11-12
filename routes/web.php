@@ -350,6 +350,13 @@ Route::group(
         Route::resource('training', 'TrainingController', ['only' => ['index', 'show']]);
         //   Impersonate
         Route::impersonate();
+
+        // User Tracking
+        
+        Route::get('usertracking', ['as'=>'usertracking.index', 'uses'=>'UserTrackingController@index']);
+        Route::post('usertracking/show', ['as'=>'usertracking.show', 'uses'=>'UserTrackingController@show']);
+        Route::get('usertracking/{model}/detail', ['as'=>'usertracking.detail', 'uses'=>'UserTrackingController@detail']);
+        
         //     User (Profile) settings
         Route::resource('user', 'UsersController', ['only' => ['show', 'update']]);;
         

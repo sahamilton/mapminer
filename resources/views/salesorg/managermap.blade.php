@@ -31,8 +31,9 @@
 
   <p><i class="far fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam->userdetails->email}}" title="Email {{$salesteam->firstname}} {{$salesteam->lastname}}">{{$salesteam->userdetails->email}}</a> </p>
   @endif
+  
   <p><a href="{{route('salesorg.show',array($salesteam->id,'view'=>'list'))}}"
-  title="See list view of {{$salesteam->fullName}}'s sales team">
+  title="See list view of {{$salesteam->fullName()}}'s sales team">
   <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
 
       <div id="map-container">

@@ -303,13 +303,13 @@ class Person extends NodeModel
      */
     public function scopeMyReports($query)
     {
-        return $query->wheresummar;
+        return $query->descendantsAndSelf();
     }
     public function ownBranches()
     {
         return $this->descendantsAndSelf()
             ->whereHas(
-                'userdetails.roles',function ($q)  {
+                'userdetails.roles', function ($q)  {
                     $q->whereIn('role_id', [9]);
                 }
 
@@ -318,17 +318,25 @@ class Person extends NodeModel
     public function team(array $roles=null)
     {
         return $this->descendantsAndSelf()
-        ->when($roles, function ($q) use ($roles)
-            {
-                    $q->whereHas('userdetails.roles', function ($q) use ($roles) {
+            ->when(
+                $roles, function ($q) use ($roles) {
+                    $q->whereHas(
+                        'userdetails.roles', function ($q) use ($roles) {
 
-                        $q->whereIn('role_id', $roles);
-                    }
-                );
-            }
-        )->with('branchesServiced');
+                            $q->whereIn('role_id', $roles);
+                        }
+                    );
+                }
+            )
+            ->with('branchesServiced');
     }
-
+    /**
+     * [scopeMyImmediateReports description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeMyImmediateReports($query)
     {
         return $query->descendantsAndSelf($this->id)->limitDepth(1);

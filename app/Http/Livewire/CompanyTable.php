@@ -42,19 +42,21 @@ class CompanyTable extends Component
 
     public function render()
     {
-        return view('livewire.company-table', [
+        return view(
+            'livewire.company-table', [
             'companies' => Company::query()
                 ->search($this->search)
                 ->with('managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
                 ->withCount('locations')
                 ->when(
-                    $this->accounttype && $this->accounttype != 'All', function ($q){
-                        $q->whereHas('type', function($q) {
-                            $q->where('accounttypes.id', $this->accounttype);
-                        }
-                    );
-                }
-            )
+                    $this->accounttype && $this->accounttype != 'All', function ($q) {
+                        $q->whereHas(
+                            'type', function($q) {
+                                $q->where('accounttypes.id', $this->accounttype);
+                            }
+                        );
+                    }
+                )
            
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),

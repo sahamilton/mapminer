@@ -272,7 +272,7 @@ class MgrDashboardController extends DashboardController
      * 
      * @return [type]                 [description]
      */
-    private function _myTeamsData(Collection $branchdata)
+    private function _myTeamsData($branchdata)
     {
 
         $teamroles = [14,6,7,3,9];
