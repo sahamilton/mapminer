@@ -2,30 +2,40 @@
 
 namespace App\Jobs;
 
-use App\Exports\BranchStatsExport;
-use App\Mail\BranchStatsReport;
-use App\Report;
-use Carbon\Carbon;
+use Mail;
 use Excel;
+use App\Branch;
+use Carbon\Carbon;
+use App\Report;
+use App\Mail\BranchStatsReport;
+use App\Exports\BranchStatsExport;
+use App\JObs\SendBranchStatsReportJob;
 use Illuminate\Bus\Queueable;
+
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Mail;
 
 class BranchStats implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+    public $report;
+    public $file;
+    public $distribution;
+
+    public $timeout = 1200;
 
     /**
-     * [__construct description].
-     * @param array $period [description]
+     * [__construct description]
+     * @param Array $period [description]
      */
-    public function __construct(array $period)
+    public function __construct(Array $period)
     {
         $this->period = $period;
+        
+
     }
 
     /**
@@ -35,16 +45,20 @@ class BranchStats implements ShouldQueue
      */
     public function handle()
     {
-
-        // create the file
-        $file = '/public/reports/branchstatsrpt'.$this->period['to']->timestamp.'.xlsx';
-
-        Excel::store(new BranchStatsExport($this->period), $file);
-        $class = str_replace("App\Jobs\\", '', get_class($this));
+        
         $report = Report::with('distribution')
-            ->where('job', $class)
+            ->where('job', 'BranchStats')
             ->firstOrFail();
-        $distribution = $report->getDistribution();
-        Mail::to($distribution)->send(new BranchStatsReport($file, $this->period));
+        
+        // create the file
+        $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
+       
+        (new BranchStatsExport($this->period))->store($this->file)->chain(
+            [
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
+
+            ]
+        );
+        
     }
 }

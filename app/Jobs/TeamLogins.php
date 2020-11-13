@@ -2,29 +2,29 @@
 
 namespace App\Jobs;
 
+use Mail;
+use Excel;
+use App\Report;
 use App\Exports\TeamLoginsExport;
 use App\Mail\TeamLoginsReport;
-use App\Report;
-use Excel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Mail;
 
 class TeamLogins implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $manager;
     public $period;
-
+    
     /**
-     * [__construct description].
-     *
-     * @param array $period [description]
+     * [__construct description]
+     * 
+     * @param Array $period [description]
      */
-    public function __construct(array $period, array $manager)
+    public function __construct(Array $period, Array $manager)
     {
         $this->period = $period;
         $this->manager = $manager;
@@ -37,16 +37,20 @@ class TeamLogins implements ShouldQueue
      */
     public function handle()
     {
-        $file = '/public/reports/teamlogins'.$this->period['to']->timestamp.'.xlsx';
+        $file = '/public/reports/teamlogins'. $this->period['to']->timestamp. ".xlsx";
 
-        Excel::store(new TeamLoginsExport($this->period, $this->manager), $file);
-
-        $class = str_replace("App\Jobs\\", '', get_class($this));
+        
+        $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
-        $distribution = $report->getDistribution();
-        Mail::to($distribution)
-            ->send(new TeamLoginsReport($file, $this->period));
+        
+        (new TeamLoginsExport($this->period, $this->manager))->store($this->file)->chain(
+            [
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $this->report)
+
+            ]
+        );  
+
     }
 }

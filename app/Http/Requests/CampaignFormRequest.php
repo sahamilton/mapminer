@@ -23,15 +23,30 @@ class CampaignFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $type = $this->request->get('type'); 
+        $rules = [
             'title'=>'required',
             'description'=>'required',
             'datefrom'=>'required|date|before:dateto',
             'dateto'=>'required|date|after:datefrom',
-            'companies'=>'required_without:vertical',
-            'vertical'=>'required_without:companies',
-
-            'serviceline'=>'required',
+            'type'=>'required',
+            'serviceline'=>'required'
+        ];
+        if ($type != 'open') {
+            
+                $rules['companies'] = 'required_without:vertical';
+                $rules['vertical'] = 'required_without:companies';
+            
+        }
+        return $rules;
+        
+    }
+    public function messages()
+    {
+        return [
+            'companies.required_without' => 'You must specify either companies or vertical for restricted campaigns',
+            'vertical.required_without'  => 'You must specify either companies or vertical for restricted campaigns',
         ];
     }
+
 }

@@ -13,105 +13,107 @@ class BranchActivityController extends Controller
      */
     public function index()
     {
-        if (! $myBranches = $this->person->myBranches()) {
+       
+        
+        if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
-
+       
         $branch = array_keys($myBranches);
 
         $data = $this->_getBranchActivities([reset($branch)]);
-
-        $title = $data['branches']->first()->branchname.' activities';
-
-        return response()->view('activities.index', compact('activities', 'data'));
+        
+        $title= $data['branches']->first()->branchname . " activities";
+         return response()->view('activities.index', compact('activities', 'data')); 
         // how to get the distance for each branch
         // get my branches
         // get addresses that are leads that are assigned to a branch
         //
     }
-
     /**
-     * [branchActivities description].
-     *
+     * [branchActivities description]
+     * 
      * @param Request $request [description]
      * @param Branch  $branch  [description]
-     *
+     * 
      * @return [type]           [description]
      */
     public function branchActivities(Request $request, Branch $branch)
     {
+       
         if (request()->has('branch')) {
             $branch = request('branch');
         } else {
             $branch = $branch->id;
         }
         $myBranches = $this->person->myBranches();
-
-        if (! ($myBranches) or ! in_array($branch, array_keys($myBranches))) {
+       
+        if (! ( $myBranches)  or ! in_array($branch, array_keys($myBranches))) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
-
+       
+         
         $data = $this->_getBranchActivities([$branch]);
-
-        $title = $data['branches']->first()->branchname.' activities';
+       
+        $title= $data['branches']->first()->branchname . " activities";
 
         return response()->view('activities.index', compact('data', 'myBranches', 'title'));
     }
-
     /**
-     * [_getBranchActivities description].
-     *
-     * @param array  $branch [description]
-     *
+     * [_getBranchActivities description]
+     * 
+     * @param Array  $branch [description]
+     * 
      * @return [type]         [description]
      */
-    private function _getBranchActivities(array $branch)
+    private function _getBranchActivities(Array $branch) 
     {
-        $data['activities'] = $this->getUpcomingActivities($branch);
+        $data['activities'] = $this->_getUpcomingActivities($branch);
         $data['calendar'] = $this->getUpcomingCalendar($data['activities']);
 
         $data['branches'] = $this->_getBranches($branch);
-
         return $data;
     }
-
     /**
-     * [_getBranches description].
-     *
-     * @param array $branches [description]
-     *
+     * [_getBranches description]
+     * 
+     * @param Array $branches [description]
+     * 
      * @return [type]           [description]
      */
-    private function _getBranches(array $branches)
+    private function _getBranches(Array $branches)
     {
         return  $this->branch->with('manager')
             ->whereIn('id', $branches)
             ->get();
     }
-
     /**
-     * [getUpcomingCalendar description].
+     * [getUpcomingCalendar description]
      * @param  [type] $activities [description]
      * @return [type]             [description]
      */
     private function getUpcomingCalendar($activities)
     {
+        
         return \Calendar::addEvents($activities);
     }
 
     /**
-     * [Return open activities for branch].
-     * @param  array  $myBranches [description]
+     * [Return open activities for branch]
+     * @param  Array  $myBranches [description]
      * @return [Collection]     [description]
      */
-    private function getUpcomingActivities(array $myBranches)
+    private function _getUpcomingActivities(Array $myBranches)
     {
-        // should rename to open activities
-        $users = $this->person->myBranchTeam($myBranches);
+            // should rename to open activities
+        $users =  $this->person->myBranchTeam($myBranches);
 
-        return $this->activity->whereIn('user_id', $users)
-           ->where('completed', '<>', 1)->get();
+        return $this->activity
+            ->whereIn('user_id', $users)
+            ->where('completed', '<>', 1)->get();
+
     }
+
 
     /**
      * Show the form for creating a new resource.

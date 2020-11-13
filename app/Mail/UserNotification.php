@@ -2,11 +2,11 @@
 
 namespace App\Mail;
 
-use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\User;
 
 class UserNotification extends Mailable
 {
@@ -15,6 +15,8 @@ class UserNotification extends Mailable
     public $action;
     public $changes;
 
+
+
     /**
      * Create a new message instance.
      *
@@ -22,10 +24,10 @@ class UserNotification extends Mailable
      */
     public function __construct(User $user)
     {
-        $this->user = $user->with('person')->first();
-        //$this->person = Person::where('id','=',$this->user->person_id)->first();
+        $this->user = $user->load('person');
 
-        dd($this->user);
+    
+        
     }
 
     /**
@@ -35,10 +37,11 @@ class UserNotification extends Mailable
      */
     public function build()
     {
-        if ($this->user->status == 'active') {
-            return $this->markdown('emails.usernotification')
-                ->to($this->user->email);
-        }
-        //return $this->markdown('emails.usernotification');
+        return $this->from(config('mail.from'))
+            ->markdown('emails.usernotification')
+            ->to($this->user->email, $this->user->person->fullname())
+            ->subject("Welcome to Mapminer");
+        
+        
     }
 }

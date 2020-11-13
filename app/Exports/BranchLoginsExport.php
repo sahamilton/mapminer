@@ -1,54 +1,122 @@
 <?php
-
 namespace App\Exports;
 
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use App\Branch;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Carbon\Carbon;
+use App\Person;
 
-class BranchLoginsExport implements FromView
+class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMapping, ShouldAutoSize
 {
-    public $period;
-    public $branches;
+    use Exportable;
 
+    
+    public $period;
+    public $diff;
+    public $branches;
+    public $fields = [
+        'branchname'=>'Branch',
+        'manager'=>'Manager',
+        'reportsto'=>'Reports To',
+        'logins'=>'Logins',
+        'avg'=>'Avg Daily Logins'
+        ]; 
+ 
     /**
-     * [__construct description].
-     *
-     * @param array $period [description]
+     * [__construct description]
+     * 
+     * @param Array      $period   [description]
+     * @param Array|null $branches [description]
      */
-    public function __construct(array $period, array $branches = null)
+    public function __construct(Array $period, Array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
-    }
+        $this->diff = $this->period['from']->diff($this->period['to'])->days +1;
 
+    }
     /**
-     * [view description].
-     *
+     * [headings description]
+     * 
      * @return [type] [description]
      */
-    public function view(): View
+    public function headings(): array
     {
-        $query = "select branches.id as branchid, branchname, count(track.id) as logins,
-            count(track.id)/datediff( '".$this->period['to']."','".$this->period['from']."') as avgdaily
-            from track, persons,branch_person, branches
-            where track.created_at between '".$this->period['from']."' and '".$this->period['to']."'
-            and track.user_id = persons.user_id
-            and persons.id = branch_person.person_id
-            and branch_person.branch_id = branches.id ";
-        if ($this->branches) {
-            $query .= " and branches.id in ('".implode("','", array_keys($this->branches))."')";
+        return [
+           [' '],
+           ['Branch Logins'],
+           ['for the period from '. $this->period['from']->format('M jS, Y'). ' to ' . $this->period['to']->format('M jS, Y')],
+           [' '],
+           $this->fields,
+        ];
+  
+    }
+    /**
+     * [map description]
+     * 
+     * @param [type] $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function map($branch): array
+    { 
+        foreach ($this->fields as $key=>$field) {
+                
+            switch($key) {
+            case 'branchname':
+                $detail[] = $branch->branchname;
+                break;
+            case 'manager':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                break;
+            
+            case 'reportsto':
+                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                    $detail[] =   $branch->manager->first()->reportsTo->fullName();
+                } else {
+                    $detail[] = 'No direct reporting manager';
+                }
+
+            case 'logins':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->usage_count : '';
+                break;
+            case 'avg':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->usage_count / $this->diff: '';
+                break;
+            default:
+                $detail[] = $branch->$key;
+                break;
+            }
+                
+            
         }
-        $query .= ' group by branches.id, branchname ';
+        return $detail;
 
-        $results = \DB::select($query);
-
-        if ($this->branches) {
-            $branches = array_keys($this->branches);
-        } else {
-            $branches = $this->branches;
-        }
-        $period = $this->period;
-
-        return view('reports.branchlogins', compact('results', 'period', 'branches'));
+       
+    }
+    /**
+     * [query description]
+     * 
+     * @return [type] [description]
+     */
+    public function query()
+    {
+        return Branch::with(
+            [
+                'manager.userdetails'=>function ($q) {
+                    $q->totalLogins($this->period);
+                }
+            ]
+        )
+        ->when(
+            isset($this->branches), function ($q) {
+                $q->whereIn('branches.id', $this->branches);
+            }
+        );
     }
 }

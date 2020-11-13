@@ -30,6 +30,9 @@
     @endif
 </p>
 <p><a href="{{route('reports.index')}}">Back to all reports</a></p>
+@if($report->filename)
+<p><a href="{{route('reports.review', $report->filename)}}">See stored {{$report->report}} files.</a></p>
+@endif
 <p>{{$report->description}}</p>
 @if($report->object)
 <p><label><strong>Model:</strong></label>{{ucwords($report->object)}}</p>
@@ -66,7 +69,8 @@
     @endif
     </div>
     @include('reports.partials._removerecipient')
+    @endif
     @include('reports.partials._variableselector')
-@endif
+
 @include('partials._scripts')
 @endsection

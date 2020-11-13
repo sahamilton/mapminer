@@ -5,7 +5,8 @@
         type="button" 
         class="btn btn-campaign btn-block col-sm4" 
         data-toggle="collapse" 
-        data-target="#{{$view['title']}}">
+        data-target="#{{$view['title']}}"
+        title="{{$view['detail']}}">
             {{$view['title']}}
         </button>
     </div>

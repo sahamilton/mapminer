@@ -23,3 +23,13 @@
     <span class="help-block">
         <strong>{{$errors->has('color') ? $errors->first('color')  : ''}}</strong>
     </span>
+</div>
+<div class= "form-group">
+    <label class="col-md-4 control-label" for="defintion">Defintion</label>
+    <textarea class="form-control" 
+        name="definition"
+        id="defintion">{{old('definition' , isset($activitytype) ? $activitytype->definition : '')}}</textarea>
+    <span class="help-block">
+        <strong>{{$errors->has('color') ? $errors->first('color')  : ''}}</strong>
+    </span>
+</div>

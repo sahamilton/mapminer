@@ -1,46 +1,104 @@
 <?php
-
 namespace App\Exports;
 
 use App\Branch;
-use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class BranchStatsExport implements FromView
+
+class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting,ShouldAutoSize
 {
+    use Exportable;
+
     public $period;
     public $branches;
 
-    /**
-     * [__construct description].
-     *
-     * @param array $period [description]
-     */
+    public $fields = [
+        'branchname'=>'Branch',
+        'id'=>'ID',
+        'manager'=>'Manager',
+        'opened'=>'# Opportunities Opened in Period',
+        'Top25'=>'# Open Top 25 Opportunities',
+        'open'=>'# All Open Opportunities Count',
+        'openvalue'=>'Sum All Open Opportunities Value',
+        'lost'=>'# Opportunities Lost',
+        'won'=>'# Opportunities Won',
+        'wonvalue'=>'Sum of Won Value',
+        'leads_count'=>'# Open Leads',
+        'activities_count'=>'# Completed Activities',
+        'salesappts'=>'# Completed Sales Appts',
+        'sitevisits'=>'# Completed Site Visits'
+    ];
+
+    
     public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
     }
 
-    /**
-     * [view description].
-     *
-     * @return [type] [description]
-     */
-    public function view(): View
+    public function headings(): array
     {
-        if ($this->branches) {
-            $branch = Branch::whereIn('id', array_keys($this->branches));
-        } else {
-            $branch = new Branch;
+        return [
+            [' '],
+            ['Branch Stats'],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [' ' ],
+            $this->fields
+        ];
+    }
+    
+    
+    public function map($branch): array
+    {
+        foreach ($this->fields as $key=>$field) {
+            switch($key) {
+            case 'manager':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                break;
+
+            case 'reportsto':
+                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                        $detail[] =  $branch->manager->first()->reportsTo->fullName();
+                } else {
+                        $detail[] = 'No direct reporting manager';
+                }
+            default:
+                $detail[]=$branch->$key;
+                break;
+
+            }
+            
         }
+        return $detail;
+       
+    }
 
-        $branches = $branch->summaryStats($this->period)
-            ->with('manager')->get();
+    public function columnFormats(): array
+    {
+        return [
+            'B'=>NumberFormat::FORMAT_TEXT,
+            'G' => NumberFormat::FORMAT_CURRENCY_USD,
+            'J' => NumberFormat::FORMAT_CURRENCY_USD,
+        ];
+    }
 
-        $period = $this->period;
 
-        return view('reports.branchstats', compact('branches', 'period'));
+
+    public function query()
+    {
+        return Branch::summaryStats($this->period)
+            ->with('manager:id,firstname,lastname')
+            ->when(
+                $this->branches, function ($q) {
+                    $q->whereIn('id', $this->branches);
+                }
+            );
     }
 }

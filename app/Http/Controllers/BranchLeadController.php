@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Branch;
-use App\BranchLead;
 use App\Lead;
+use App\Address;
 use App\Person;
+use App\Branch;
+use App\Note;
+use App\BranchLead;
 use Illuminate\Http\Request;
 
 class BranchLeadController extends Controller
@@ -15,11 +16,12 @@ class BranchLeadController extends Controller
     public $branch;
     public $address;
     public $person;
+    public $note;
     public $branchlead;
 
     /**
-     * [__construct description].
-     *
+     * [__construct description]
+     * 
      * @param Lead       $lead       [description]
      * @param Person     $person     [description]
      * @param BranchLead $branchlead [description]
@@ -27,19 +29,20 @@ class BranchLeadController extends Controller
      * @param Address    $address    [description]
      */
     public function __construct(
-        Lead $lead,
-        Person $person,
-        BranchLead $branchlead,
-        Branch $branch,
-        Address $address
+        Lead $lead, 
+        Person $person, 
+        BranchLead $branchlead, 
+        Branch $branch, 
+        Address $address,
+        Note $note
     ) {
         $this->lead = $lead;
         $this->address = $address;
         $this->branch = $branch;
         $this->branchlead = $branchlead;
         $this->person = $person;
+        $this->note = $note;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -47,8 +50,8 @@ class BranchLeadController extends Controller
      */
     public function index()
     {
-        dd('hi');
-        if (count($this->person->myBranches()) > 0) {
+        
+        if (count($this->person->myBranches())>0) {
             $branches = $this->branch->whereIn(
                 'id', array_keys($this->person->myBranches())
             )
@@ -56,7 +59,7 @@ class BranchLeadController extends Controller
         } else {
             $branches = $this->branch->withCount('leads')->with('manager')->get();
         }
-
+    
         return response()->view('branchleads.index', compact('branches'));
     }
 
@@ -67,104 +70,139 @@ class BranchLeadController extends Controller
      */
     public function create()
     {
+        
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request [description]
-     *
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        
+        $exists = $this->branchlead
+            ->where('branch_id', '=', request('branch_id'))
+            ->where('address_id', '=', request('address_id'))
+            ->get();
+        
+        if ($exists->count() > 0) {
+                return redirect()->back()->withError('Branch ' . request('branch_id') . ' already owns this lead');
+        }
         $this->branchlead->create(
             [
                 'address_id'=>request('address_id'),
                 'branch_id'=>request('branch_id'),
-                'status_id'=>'2',
+                'status_id'=>'2'
             ]
         );
-
+  
         return redirect()->route('address.show', request('address_id'));
     }
 
     /**
-     * [show description].
-     *
+     * [show description]
+     * 
      * @param Branch $branch [description]
-     *
+     * 
      * @return [type]         [description]
      */
-    public function show(Branch $branch)
+    public function show(BranchLead $branch)
     {
-        $branch = $branch->load(
-            'leads', 'manager', 'leads.industryVertical', 'leads.leadsource'
-        );
-
+        
         return response()->view('branchleads.show', compact('branch'));
     }
 
+    
     /**
-     * [edit description].
-     *
-     * @param BranchLead $branchLead [description]
-     *
-     * @return [type]                 [description]
-     */
-    public function edit(BranchLead $branchLead)
-    {
-        //
-    }
-
-    /**
-     * [update description].
-     *
+     * [update description]
+     * 
      * @param Request    $request    [description]
      * @param BranchLead $branchLead [description]
-     *
+     * 
      * @return [type]                 [description]
      */
     public function update(Request $request, BranchLead $branchLead)
     {
+        
         $branchLead->update(['status_id'=>2]);
-
+       
         return redirect()->route('address.show', $branchLead->address_id);
     }
 
     /**
-     * [destroy description].
-     *
+     * [destroy description]
+     * 
      * @param BranchLead $branchLead [description]
-     *
+     * 
      * @return [type]                 [description]
      */
     public function destroy(Request $request, BranchLead $branchLead)
     {
-        $branch = $this->branch->findOrFail($branchLead->branch_id);
-        $branchLead->update(['status_id'=>4, 'comments'=>request('comment')]);
-
-        return redirect()->route('branchdashboard.show', $branch->id);
+        $data['note'] = auth()->user()->person->fullName() . " removed this lead from branch " . $branchLead->branch_id ." on " .now()->format('Y-m-d');
+        $data['user_id'] = auth()->user()->id;
+        $data['address_id'] = $branchLead->address_id;
+        $this->note->create($data);
+        $branchLead->delete();
+        return redirect()->back()->withMessage('Lead removed from branch '. $branchLead->branch_id);
     }
-
     /**
-     * [assign description].
-     *
+     * [assign description]
+     * 
      * @return [type] [description]
      */
     public function assign()
     {
-        $leads = $this->address
+        $leads = $this->address       
             ->where('addressable_type', '=', 'lead')
             ->get();
-        $a = $leads->count();
+        $a=$leads->count();
         foreach ($leads as $lead) {
             $branch = $this->branch->nearby($lead, '25', 1)->get();
-            if ($branch->count() > 0) {
+            if ($branch->count()>0) {
                 $data = ['branch_id'=>$branch->first()->id, 'address_id'=>$lead->id];
                 $a--;
                 BranchLead::create($data);
             }
         }
+       
+    }
+    /**
+     * [branchStaleLeads description]
+     * 
+     * @param Branch $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function branchStaleLeads(Branch $branch)
+    {
+        $branch->load('staleLeads');
+        return response()->view('branchleads.staledetail', compact('branch'));
+    }
+    /**
+     * [staleLeads description]
+     * 
+     * @return [type] [description]
+     */
+    public function staleLeads()
+    {
+        if (count($this->person->myBranches()) >0 ) {
+            $branches = $this->branch->select('id', 'branchname')->whereIn(
+                'id', array_keys($this->person->myBranches())
+            )->withCount('staleLeads')->get();
+        
+       
+            return response()->view('branchleads.staleleads', compact('branches'));
+        } else {
+            return redirect()->back()->withError("You have no branches");
+        }
+    }
+    public function showDuplicates()
+    {
+
+        
+        return response()->view('branchleads.duplicates', compact('leads'));
     }
 }

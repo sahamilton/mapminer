@@ -2,23 +2,23 @@
 
 namespace App\Jobs;
 
-use App\Branch;
-use App\Campaign;
-use App\Company;
-use App\Jobs\SendCampaignLaunched;
-use App\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use App\Campaign;
+use App\Company;
+use App\Branch;
+use App\User;
+use App\Jobs\SendCampaignLaunched;
 
 class AssignCampaignLeadsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $campaign;
     public $company;
-
+  
     /**
      * Create a new job instance.
      *
@@ -28,6 +28,8 @@ class AssignCampaignLeadsJob implements ShouldQueue
     {
         $this->campaign = $campaign;
         $this->company = $company;
+        
+        
     }
 
     /**
@@ -37,21 +39,34 @@ class AssignCampaignLeadsJob implements ShouldQueue
      */
     public function handle()
     {
-        $branch_ids = $this->campaign->branches->pluck('id')->toArray();
+        $addresses = $this->company->unassigned;
+        $addresses = $addresses->flatten()->pluck('id')->toArray();
 
-        $this->company->unassigned->each(
-            function ($location, $key) use ($branch_ids) {
-                $branches = Branch::whereIn('id', $branch_ids)
-                    ->nearby($location, 25, 1)
-                    ->get();
-                if ($branches->count() > 0) {
-                    $branches->each(
-                        function ($branch, $key) use ($location) {
-                            $branch->leads()->attach($location->id, ['status_id'=>1]);
-                        }
-                    );
-                }
-            }
-        );
+        $assignable = $this->campaign->getAssignableLocationsofCampaign($addresses, $count = false);
+        
+        // loop through assignable and id branch and address
+        // return array branch[id]=>[address]
+        // [branch_id][$address->id => ['status_id' => 1 ],$address->id => ['status' => 1 ] ]
+        // select each branch
+        // sync 
+
+        foreach ($this->_getBranchAddresses($assignable) as $branch_id=>$addresses) {
+            $branch = Branch::findOrFail($branch_id);
+            $branch_ids[] = $branch_id;
+           
+            $branch->leads()->attach($addresses);
+        }
+        
+    }
+
+    private function _getBranchAddresses($assignable)
+    {
+        $data = [];
+        foreach ($assignable as $item) {
+            $data[$item->branch][$item->id] = ['status_id' => 1 ];
+        }
+
+
+        return $data;
     }
 }

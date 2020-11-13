@@ -32,7 +32,7 @@ class WeeklyActivityOpportunityReport extends Mailable
      */
     public function build()
     {
-        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
+        return $this->from(config('mail.from'))
             ->markdown('emails.activityopportunityreport')
             ->subject('Activities and Opportunities Weekly Report')
             ->attach(

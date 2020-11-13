@@ -1,64 +1,70 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
+use App\User;
+use App\Role;
 use App\Http\Requests\PermissionFormRequest;
 use App\Permission;
-use App\Role;
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request;
 
 class AdminPermissionsController extends BaseController
 {
+
     /**
-     * User Model.
+     * User Model
      * @var User
      */
     public $user;
 
     /**
-     * Role Model.
+     * Role Model
      * @var Role
      */
     protected $role;
 
+    
     /**
-     * Permission Model.
+     * Permission Model
      * @var Permission
      */
     protected $permission;
+
+    
 
     /**
      * Inject the models.
      * @param User $user
      * @param Role $role
      * @param Permission $permission
+     *
+     *
      */
     public function __construct(User $user, Role $role, Permission $permission)
     {
+       
         $this->user = $user;
         $this->role = $role;
         $this->permission = $permission;
     }
 
+
+    
     /**
      * Display a listing of the resource.
-     * GET /adminpermissions--resource.
+     * GET /adminpermissions--resource
      *
      * @return Response
      */
     public function index()
     {
         $permissions = $this->permission->with('roles')->get();
-
         return response()->view('admin.permissions.index', compact('permissions'));
     }
 
     /**
      * Show the form for creating a new resource.
-     * GET /adminpermissions--resource/create.
+     * GET /adminpermissions--resource/create
      *
      * @return Response
      */
@@ -67,7 +73,7 @@ class AdminPermissionsController extends BaseController
         $roles = $this->role->all();
 
         // Selected permissions
-        $currentRoles = \Request::old('roles', []);
+        $currentRoles = request()->old('roles', []);
 
         $permission = $this->permission;
         $title = 'Create New Permission';
@@ -78,20 +84,20 @@ class AdminPermissionsController extends BaseController
 
     /**
      * Store a newly created resource in storage.
-     * POST /adminpermissions--resource.
+     * POST /adminpermissions--resource
      *
      * @return Response
      */
     public function store(PermissionFormRequest $request)
     {
-
+        
         // Get the inputs, with some exceptions
 
-        $inputs = request()->except('_token');
-        $inputs['display_name'] = ucwords($inputs['name']);
-        $inputs['name'] = strtolower(str_replace(' ', '_', $inputs['name']));
-
-        $permission = $this->permission->create($inputs);
+            $inputs = request()->except('_token');
+            $inputs['display_name'] = ucwords($inputs['name']);
+            $inputs['name'] = strtolower(str_replace(' ', '_', $inputs['name']));
+            
+            $permission = $this->permission->create($inputs);
 
         if ($permission->id) {
             $permission->roles()->sync($inputs['roles']);
@@ -99,54 +105,55 @@ class AdminPermissionsController extends BaseController
             return redirect()->to(route('permissions.index'))->with('success', 'Permission created succesfully');
         }
 
-        // Redirect to the new role page
-        return redirect()->to(route('permissions.index'))->with('error', 'Unable to create permission');
-
-        // Redirect to the role create page
-        return redirect()->to(route('permissions.create'))->withInput()->with('error', 'Unable to create permission');
+            // Redirect to the new role page
+            return redirect()->to(route('permissions.index'))->with('error', 'Unable to create permission');
+        
+            // Redirect to the role create page
+            return redirect()->to(route('permissions.create'))->withInput()->with('error', 'Unable to create permission');
     }
 
     /**
      * Display the specified resource.
-     * GET /adminpermissions--resource/{id}.
+     * GET /adminpermissions--resource/{id}
      *
      * @param  int  $id
      * @return Response
      */
     public function show($permission)
     {
+        
         return response()->view('permissions.show', compact('permission'));
     }
 
     /**
      * Show the form for editing the specified resource.
-     * GET /adminpermissions--resource/{id}/edit.
+     * GET /adminpermissions--resource/{id}/edit
      *
      * @param  int  $id
      * @return Response
      */
     public function edit(Permission $permission)
     {
+        
         $roles = $this->role->all();
         $permission = $this->permission->with('roles')->find($permission->id);
         if ($permission) {
             // Selected permissions
 
             $currentRoles = $permission->roles()->pluck('roles.id')->toArray();
-
+            
             // Title
             $title = 'Edit Permission';
 
             // Show the page
             return response()->view('admin.permissions.edit', compact('roles', 'currentRoles', 'permission', 'title'));
         }
-
         return redirect()->to(route('permissions.index'))->with('error', 'Unable to locate that permission');
     }
 
     /**
      * Update the specified resource in storage.
-     * PUT /adminpermissions--resource/{id}.
+     * PUT /adminpermissions--resource/{id}
      *
      * @param  int  $id
      * @return Response
@@ -154,11 +161,12 @@ class AdminPermissionsController extends BaseController
     public function update(Permission $permission, PermissionFormRequest $request)
     {
 
+                
         // Get the inputs, with some exceptions
-        $inputs = request()->except('csrf_token');
+            $inputs = request()->except('csrf_token');
 
-        $inputs['display_name'] = ucwords($inputs['name']);
-        $inputs['name'] = strtolower(str_replace(' ', '_', $inputs['name']));
+            $inputs['display_name'] = ucwords($inputs['name']);
+            $inputs['name'] = strtolower(str_replace(' ', '_', $inputs['name']));
         if ($permission->update($inputs)) {
             if (request()->filled('roles')) {
                 $permission->roles()->sync($inputs['roles']);
@@ -169,25 +177,28 @@ class AdminPermissionsController extends BaseController
             return redirect()->to(route('permissions.index'))->with('success', 'Permission updated succesfully');
         }
 
-        // Redirect to the new role page
-        return redirect()->to(route('permissions.index'))->withInput()->with('error', 'Unable to update permission');
+            // Redirect to the new role page
+            return redirect()->to(route('permissions.index'))->withInput()->with('error', 'Unable to update permission');
     }
+        
 
     /**
      * Remove the specified resource from storage.
-     * DELETE /adminpermissions--resource/{id}.
+     * DELETE /adminpermissions--resource/{id}
      *
      * @param  int  $id
      * @return Response
      */
     public function destroy($permission)
     {
+
         if ($permission && $permission->delete()) {
-            // Redirect to the role management page
-            return redirect()->to(route('permissions.index'))->with('success', 'Permission succesfully deleted');
+              // Redirect to the role management page
+              return redirect()->to(route('permissions.index'))->with('success', 'Permission succesfully deleted');
         }
 
         // There was a problem deleting the permission
+           
 
         return redirect()->to(route('permissions.index'))->with('error', 'Unable to delete that permission');
     }

@@ -249,7 +249,7 @@ class Geolocation
      */
     public static function getGeocodeFromGoogle($location)
     {
-        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($location).'&sensor=false&key=AIzaSyBtoJDOdhDa2HyIwlEihEIJUhfzd-6SNBE';
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($location).'&sensor=false&key='. config('maps.api_key');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

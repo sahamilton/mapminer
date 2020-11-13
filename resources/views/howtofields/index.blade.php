@@ -19,7 +19,7 @@ class="btn btn-small btn-info iframe">
         
         <li class="dd-item" data-id="{{$field->id}}">
                 <ol class="dd-list">
-                    @foreach ($field->immediateDescendants()->get() as $subField)
+                    @foreach ($field->descendants()->limitDepth(1)->get() as $subField)
                     
                     <li class="dd-item" data-id="{{$subField->id}}">
                         <div class="dd-handle">
@@ -28,7 +28,7 @@ class="btn btn-small btn-info iframe">
                                 <del class="text-danger">{{$subField->fieldname}} </del>
                             @else
                                <span class="text-success" >
-                                {{$subField->fieldname}} {{$subField->id}}
+                                {{$subField->parent()->first()->fieldname}} - {{$subField->fieldname}} ({{$subField->id}}) 
                                 </span>
                              @endif
                             

@@ -34,6 +34,36 @@ and opportunities.user_id = b.user_id
 and opportunities.address_id = addresses.id
 order by branches.id
 
+/*********************************************************************
+/**************** Stale Opportunities ********************************
+/*********************************************************************
+select branchname, count(opportunities.id) 
+from branches, opportunities 
+where branches.id = opportunities.branch_id 
+and opportunities.closed = 0 and 
+opportunities.created_at <= DATE_FORMAT( CURRENT_DATE - INTERVAL 3 MONTH, '%Y/%m/%d' ) 
+group by branchname
+
+/************ expected close - 3 months ago
+select branchname, count(opportunities.id) 
+from branches, opportunities 
+where branches.id = opportunities.branch_id 
+and opportunities.closed = 0 and 
+opportunities.expected_close <= DATE_FORMAT( CURRENT_DATE - INTERVAL 3 MONTH, '%Y/%m/%d' ) 
+group by branchname
+
+/************* with no activities
+SELECT branchname, count(opportunities.id)
+from branches, opportunities
+LEFT JOIN activities 
+ON activities.address_id = opportunities.address_id
+AND activities.activity_date <= DATE_FORMAT( CURRENT_DATE - INTERVAL 1 MONTH, '%Y/%m/%d' )
+where branches.id = opportunities.branch_id
+and opportunities.created_at <= DATE_FORMAT( CURRENT_DATE - INTERVAL 2 MONTH, '%Y/%m/%d' )
+and opportunities.closed = 0
+and activities.activity_date is null
+group by branchname
+
 /**************************************************************************************/
 /****************** Get count of Branch opportunities by month                 ********/
 /**************************************************************************************/
@@ -45,6 +75,7 @@ COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 4 month), 1, null)) AS 4month,
 COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 5 month), 1, null)) AS 5month,
 COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 6 month), 1, null)) AS 6month
 from opportunities
+where opportunities.closed = 0
 group by branch_id
 
 
@@ -664,6 +695,50 @@ where a.company_id in (388)
 and address_branch.address_id is null
 
 // Duplicates
+    select a1.id, businessname, street, city, state, zip
+    from 
+    addresses a1, address_branch 
+    where position in 
+      (
+        select * from 
+        (
+          select  a.position, count(a.id) as duplicate
+          from addresses a, 
+          addresses b, address_branch
+          where a.position = b.position
+          and a.id = address_branch.address_id
+          and b.id = address_branch.address_id
+          and address_branch.branch_id = 2255
+          group by a.position
+          having duplicate  > 1
+        )  z 
+      )
+    and a1.id = address_branch.address_id
+    and address_branch.branch_id = 2255
+    order by position
+
+
+select * from addresses, address_branch where addresses.id = address_branch.address_id and address_branch.branch_id = 2255 and position = (select position from addresses where id = 679227)
+
+public function duplicate(Address $address) {
+  return $this->whereHas(
+    'assignedToBranch', function ($q) {
+      $q->where('branches.id', 2255);
+    }
+  )->where('position', function ($q) use($address){
+        $q->from('addresses')->select('position')->where('addresses.id', '=', $address);
+    }
+  )->get();
+}
+
+  $address = Address::whereHas('assignedToBranch', function ($q) { $q->where('branches.id', 2255);})->where('position','=', function ($q) { $q->from('addresses')->select('position')->where('addresses.id', 6679227);})->count();
+
+$data= User::from('User as u')
+         ->select('distinct u.name')
+         ->join('Member as m','u.id','m.userId')
+         ->whereRaw('u.name is not null')
+         ->get();
+
 
 select addresses.*
 FROM addresses
@@ -830,9 +905,9 @@ and branch_person.role_id = 9
 and branch_person.person_id = b.id
 and b.reports_to = m.id
 
-/******************************************************************************************/
-/***************************** Select duplicates from branch ******************************/
-/******************************************************************************************/
+/**************************************************************************/
+/************************** Select duplicates from branch *****************/
+/**************************************************************************/
 select * from addresses, address_branch 
 where address_branch.branch_id = 2255 
 and addresses.id = address_branch.address_id 
@@ -856,7 +931,7 @@ and branch_person.role_id = roles.id
 and branch_person.branch_id = branches.id
 
 /****************************************************************
-/********** delete selection above *******************************
+/********** delet selection above *******************************
 /****************************************************************
 delete from branch_person where person_id in (select * from (SELECT persons.id as PID
 FROM users, persons, branch_person b
@@ -896,38 +971,8 @@ and activities.branch_id = address_branch.branch_id
 where activities.branch_id is not null
 and address_branch.id is null group by activities.address_id, activities.branch_id
 /******************************************************************
-SELECT branchname, addresses.id, addresses.businessname, addresses.street, addresses.city, addresses.state, addresses.zip, addresses.lat, addresses.lng,concat_ws(' ', firstname, lastname) as created_by, ST_Distance_Sphere(addresses.position, branches.position) / 1604 AS distance, leadsources.source, leadsources.created_at
-from addresses, address_branch, branches, leadsources, persons
-where addresses.id = address_branch.address_id
-and address_branch.branch_id = branches.id
-and addresses.lead_source_id = leadsources.id
-and ST_Distance_Sphere(addresses.position, branches.position) / 1604 > 100
-and addresses.user_id = persons.user_id
-order by branchname, distance desc
-
-
-////////////////////
-SELECT ASWKT(position) AS `aswkt`, X(position) AS `lat`, Y(position) AS `lng` from branches limit 10
-/******************************************************/
-/*********** Move leads based on geo from one branch **/
-/*********** to another (closing?)   ******************/
-/******************************************************/
-
-select 
-    a.id,
-    b.id 
-from address_branch, addresses a
-left join address_branch on a.id = address_branch.address_id
-inner join branches b
-    on b.id = (
-        select b1.id
-        from branches b1,  branch_serviceline s
-        where st_distance_sphere(a.position, b1.position, 40233) * 0.00062137119 < b1.radius
-        and b1.id = s.branch_id
-        and s.serviceline_id in (5)
-        and b1.id != 9001
-        order by st_distance_sphere(a.position, b1.position) 
-        limit 1
-    )
-where a.id = address_branch.address_id
-and address_branch.branch_id = 9001
+/*********************************************/
+/************ Purge daily terminations *******/
+/*********************************************/
+update users set users.confirmed = 0 where users.id in (select * from (SELECT users.id FROM `purge_employee`, users
+WHERE purge_employee.employee_id = users.employee_id) a)

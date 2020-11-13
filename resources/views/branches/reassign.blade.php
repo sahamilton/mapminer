@@ -38,13 +38,24 @@
 <div class="col-sm-5">
     <div class="form-group">
         <label for='branch'><h4> All Branches:</h4></label>
-            <select name="newbranch" class="form-control">
-                <option value=""></option>
-                @foreach ($branches as $br)
-                    <option value="{{$br->id}}">{{$br->branchname}}</option>
-                @endforeach
-            </select>
-
+        <select name="newbranch" class="form-control">
+            <option value=""></option>
+            @foreach ($branches as $br)
+                <option value="{{$br->id}}">{{$br->branchname}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+<div class="col-sm-5">
+    <div class="form-group">
+        <div class="form-group">
+            <label>Delete Branch after reassigning:</label>
+            <input type="checkbox"  name="delete" value="delete" />
+        </div>
+    </div>
+</div>
+<div class="col-sm-5">
+    <div class="form-group">
         <div class="form-group">
             <input type="submit" class="btn btn-warning " name="Submit" value="Reassign" />
         </div>

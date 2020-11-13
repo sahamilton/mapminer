@@ -31,6 +31,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+        // we should be able to delete all these as Laravel now 
+        // does implicit route model binding.
         Route::model('activity', \App\Activity::class);
         Route::model('activitytype', \App\ActivityType::class);
         Route::model('accounttype', \App\AccountType::class);
@@ -46,11 +48,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('feedback_comment', \App\FeedbackComments::class);
         Route::model('branchsummary', \App\Branch::class);
         Route::model('lead', \App\Lead::class);
-        Route::model('leadsource', \App\Leadsource::class);
+        Route::model('leadsource', \App\LeadSource::class);
         Route::model('location', \App\Location::class);
         Route::model('mobile', \App\Address::class);
-        Route::model('mylead', \App\Mylead::class);
+        Route::model('mylead', \App\MyLead::class);
         Route::model('myleadsactivity', \App\MyLeadActivity::class);
+        Route::model('news', \App\News::class);
         Route::model('note', \App\Note::class);
         Route::model('opportunity', \App\Opportunity::class);
         Route::model('permission', \App\Permission::class);

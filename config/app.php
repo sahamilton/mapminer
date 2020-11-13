@@ -168,6 +168,8 @@ return [
          * Package Service Providers...
          */
 
+
+
        // Collective\Html\HtmlServiceProvider::class,
       //  MaddHatter\LaravelFullcalendar\ServiceProvider::class,
        // Maatwebsite\Excel\ExcelServiceProvider::class,
@@ -175,15 +177,17 @@ return [
          * Application Service Providers...
          */
         Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
-
+        
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
        // Geocoder\Laravel\Providers\GeocoderService::class,
-
-        App\Providers\DropboxServiceProvider::class,
+        
+        App\Providers\DropboxServiceProvider::class
+       
+       
 
 
     ],
@@ -202,7 +206,6 @@ return [
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
-        'Arr' => Illuminate\Support\Arr::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
@@ -232,24 +235,25 @@ return [
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
-        'Str' => Illuminate\Support\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'Input' => Illuminate\Support\Facades\Input::class,
         'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
-        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
+        
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
 
     ],
     // should move these to the mapminer config
     'available_language' => ['en'],
-    'search_radius'=>['2'=>'2', '5'=>'5', '10'=>'10', '25'=>'25', '50'=>'50', '75'=>'75', '100'=>'100', '250'=>'250'],
-    'zoom_levels'=>['2'=>'13', '5'=>'12', '10'=>'11', '25'=>'10', '50'=>'9', '75'=>'8', '100'=>'8', '250'=>'6'],
+    'search_radius'=>['2'=>'2','5'=>'5','10'=>'10','25'=>'25','50'=>'50','75'=>'75','100'=>'100','250'=>'250'],
+    'zoom_levels'=>['2'=>'13','5'=>'12','10'=>'11','25'=>'10','50'=>'9','75'=>'8','100'=>'8','250'=>'6'],
     'default_radius'=>['10'=>'10'],
-    'mysql_data_loc'=>app_path().'/storage/uploads/',
+    'mysql_data_loc'=>app_path() .'/storage/uploads/',
     'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyBNKL8bKVML2LlKbhDWxYY_Xk_tmzzk5fM'),
     'location_limit'=>env('LOCATION_LIMIT', 2000),
 ];

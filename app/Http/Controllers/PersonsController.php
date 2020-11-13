@@ -1,38 +1,39 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Person;
 use App\Branch;
 use App\Company;
-use App\Exports\PeopleExport;
-use App\Person;
 use App\SearchFilter;
-use App\User;
 use Excel;
+use App\Exports\PeopleExport;
 use Illuminate\Http\Request;
 
 class PersonsController extends BaseController
 {
+
     public $branch;
     public $persons;
     public $company;
     public $managerID;
-    public $validroles = [3, 4, 5];
+    public $validroles = [3,4,5];
 
     /**
-     * [__construct description].
-     *
+     * [__construct description]
+     * 
      * @param User    $user    [description]
      * @param Person  $person  [description]
      * @param Branch  $branch  [description]
      * @param Company $company [description]
      */
     public function __construct(
-        User $user,
-        Person $person,
-        Branch $branch,
+        User $user, 
+        Person $person, 
+        Branch $branch, 
         Company $company
     ) {
+
         $this->persons = $person;
         $this->company = $company;
         $this->user = $user;
@@ -40,118 +41,119 @@ class PersonsController extends BaseController
         //$this->persons->rebuild();
     }
 
+
     /**
-     * Display a listing of People.
+     * Display a listing of People
      *
      * @return Response
      */
     public function index()
     {
+
         $filtered = $this->persons->isFiltered(['companies'], ['vertical']);
+
 
         $persons = $this->getAllPeople($filtered);
 
+
+
+
         return response()->view('persons.index', compact('persons', 'filtered'));
     }
-
     /**
-     * [vertical description].
-     *
+     * [vertical description]
+     * 
      * @param [type] $vertical [description]
-     *
+     * 
      * @return [type]           [description]
      */
     public function vertical($vertical = null)
     {
+
         if (! $vertical) {
             return redirect()->route('person.index');
         }
         $persons = $this->persons
             ->whereHas(
                 'industryfocus', function ($q) use ($vertical) {
-                    $q->whereIn('search_filter_id', [$vertical])
+                        $q->whereIn('search_filter_id', [$vertical])
                             ->orWhereNull('search_filter_id');
                 }
             )
             ->with('userdetails', 'reportsTo', 'industryfocus', 'userdetails.roles')
             ->get();
-        $filtered = null;
+        $filtered=null;
         $industry = SearchFilter::findOrFail($vertical);
-
         return response()->view(
-            'persons.index',
+            'persons.index', 
             compact('persons', 'industry', 'filtered')
         );
     }
-
     /**
-     * [map description].
-     *
+     * [map description]
+     * 
      * @return [type] [description]
      */
     public function map()
     {
+
         $filtered = $this->persons->isFiltered(['companies'], ['vertical']);
 
         $mylocation = $this->persons->getMyPosition();
 
         $colors = $this->_getColors($filtered);
-
+    
         return response()->view(
-            'persons.map',
+            'persons.map', 
             compact('filtered', 'keys', 'mylocation', 'colors')
         );
     }
-
     /**
-     * [_getColors description].
-     *
+     * [_getColors description]
+     * 
      * @param [type] $filtered [description]
-     *
+     * 
      * @return [type]           [description]
      */
     private function _getColors($filtered)
     {
-        $this->validroles = ['5'];
+        $this->validroles=['5'];
         $colors = [];
         $persons = $this->getAllPeople($filtered);
         foreach ($persons as $person) {
-            if (isset($person->industryfocus[0])
+            if (isset($person->industryfocus[0]) 
                 && ! in_array($person->industryfocus[0]->color, $colors)
             ) {
                 $colors[$person->industryfocus[0]->filter] = $person->industryfocus[0]->color;
             }
         }
-
         return $colors;
     }
-
     /**
-     * [getMapLocations description].
-     *
+     * [getMapLocations description]
+     * 
      * @return [type] [description]
      */
     public function getMapLocations()
     {
+
         $filtered = $this->persons->isFiltered(['companies'], ['vertical']);
-        $this->validroles = ['5'];
+        $this->validroles=['5'];
         $persons = $this->getAllPeople($filtered);
         $content = view('persons.xml', compact('persons'));
-
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
     }
-
     /**
-     * [getAllPeople description].
-     *
+     * [getAllPeople description]
+     * 
      * @param [type] $filtered [description]
-     *
+     * 
      * @return [type]          [description]
      */
     public function getAllPeople($filtered = null)
     {
-        $keys = [];
+        $keys=[];
         if ($filtered) {
             $keys = $this->persons->getSearchKeys(['companies'], ['vertical']);
 
@@ -187,26 +189,27 @@ class PersonsController extends BaseController
         }
 
         return $persons->with(
-            'userdetails',
-            'reportsTo',
-            'userdetails.serviceline',
-            'industryfocus',
+            'userdetails', 
+            'reportsTo', 
+            'userdetails.serviceline', 
+            'industryfocus', 
             'userdetails.roles'
         )->get();
     }
 
+
     /**
-     * [show description].
-     *
+     * [show description]
+     * 
      * @param [type] $person [description]
-     *
+     * 
      * @return [type]        [description]
      */
-    public function show($person)
+    public function show(Person $person)
     {
+        
         $roles = $this->persons->findPersonsRole($person);
 
-        //note remove manages & manages.servicedby
         $people = $person->load(
             'directReports',
             'directReports.userdetails.roles',
@@ -222,82 +225,97 @@ class PersonsController extends BaseController
             'branchesServiced.servicedBy'
         );
 
+
+    
         if (in_array('national_account_manager', $roles)) {
             $accounts = $people->managesAccount;
 
+
+
             return response()->view(
-                'persons.showaccount',
+                'persons.showaccount', 
                 compact('people', 'accounts')
             );
+
         } elseif (in_array('market_manager', $roles)) {
+           
             return response()->view('persons.showlist', compact('people'));
+
         } else {
             if ($people->isLeaf()) {
-                // Show branches serviced by sales rep
-
+               
+               
                 return response()->view('persons.salesteam', compact('people'));
             } else {
+               
                 return response()->view('persons.salesmanager', compact('people'));
             }
         }
     }
 
+
+
+
     /**
-     * Shows a map of managers branches.
-     *
+     * Shows a map of managers branches
+     * 
      * @param [type] $id [description]
-     *
+     * 
      * @return [type]     [description]
      */
-    public function showmap($id)
+    public function showmap(Person $person)
     {
-        $data['people'] = $this->persons->with('manages')->findorFail($id);
 
-        /// We need to calculate the persons 'center point' based on their branches.
-        // This should be moved to the model and maybe to a Maps model and made more generic.
-        // or we could have a 'home' location as a field on every persons i.e. their lat / lng.
+        $person->load('manages');
 
-        if ($data['people']->lat) {
-            $data['lat'] = $data['people']->lat;
-            $data['lng'] = $data['people']->lng;
-        } else {
+        // We need to calculate the persons 'center point' 
+        // if they do not have a lat / lng
+        // based on their branches.
+        // This should be moved to the model and 
+        // maybe to a Maps model and made more generic.
+        // or we could have a 'home' location as 
+        // a field on every persons i.e. their lat / lng.
+
+        if (! $person->lat) {
+            
             $latSum = $lngSum = $n = '';
-            foreach ($data['people']->manages as $branch) {
+            foreach ($person->manages as $branch) {
                 $n++;
                 $latSum = $latSum + $branch->lat;
                 $lngSum = $lngSum + $branch->lng;
             }
             $avgLat = $latSum / $n;
             $avgLng = $lngSum / $n;
-            $data['lat'] = $avgLat;
-            $data['lng'] = $avgLng;
+            $person->lat = $avgLat;
+            $person->lng = $avgLng;
         }
 
-        return response()->view('persons.showmap', compact('data'));
+        return response()->view('persons.showmap', compact('person'));
     }
 
+
     /**
-     * [import description].
-     *
+     * [import description]
+     * 
      * @return [type] [description]
      */
     public function import()
     {
         return response()->view('persons.import');
     }
-
     /**
-     * [processimport description].
-     *
+     * [processimport description]
+     * 
      * @param PersonUploadFormRequest $request [description]
-     *
+     * 
      * @return [type]                           [description]
      */
     public function processimport(PersonUploadFormRequest $request)
     {
+
         $file = request()->file('upload')->store('public/uploads');
         $data['people'] = asset(Storage::url($file));
-        $data['basepath'] = base_path().'/public'.Storage::url($file);
+        $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
         $people = Excel::import(
             $data['basepath'], function () {
@@ -312,29 +330,28 @@ class PersonsController extends BaseController
                 );
         }
 
-        $fields = implode(',', array_keys($people->toArray()));
+        $fields = implode(",", array_keys($people->toArray()));
         $data = $this->persons->_import_csv($data['basepath'], 'persons', $fields);
-
         return redirect()->route('persons.index');
     }
 
     /**
-     * [export description].
-     *
+     * [export description]
+     * 
      * @return [type] [description]
      */
     public function export()
     {
+
         $data = $this->persons
             ->with('userdetails', 'userdetails.roles', 'userdetails.serviceline', 'reportsTo', 'reportsTo.userdetails', 'industryfocus')
             ->get();
 
         return Excel::download(new PeopleExport($data), 'AllPeople.csv');
     }
-
     /**
-     * [geoCodePersons description].
-     *
+     * [geoCodePersons description]
+     * 
      * @return [type] [description]
      */
     public function geoCodePersons()

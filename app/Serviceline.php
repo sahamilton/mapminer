@@ -30,10 +30,16 @@ class Serviceline extends Model
     public function companyCount()
     {
         return $this->belongsToMany(Company::class)
-        ->selectRaw('serviceline_id, count(*) as aggregate')
-        ->groupBy('serviceline_id');
+            ->selectRaw('serviceline_id, count(*) as aggregate')
+            ->groupBy('serviceline_id');
     }
 
+    public function leadsources()
+    {
+      
+      return $this->belongsToMany(LeadSource::class);
+
+    }
     public function branchCount()
     {
         return $this->belongsToMany(Branch::class)

@@ -3,7 +3,7 @@
 
 <h1>{{$title}}</h1>
 
-<p><a href="{{route('dashboard.show', $data['branches']->first()->id)}}">
+<p><a href="{{route('branchdashboard.show', $data['branches']->first()->id)}}">
 <i class="fas fa-tachometer-alt"></i>
  Return To Branch Dashboard</a></p>
 @if(count($myBranches)>1)
@@ -48,7 +48,7 @@
 	      role="tab" 
 	      aria-controls="details" 
 	      aria-selected="false">
-	    <strong> Completed ({{$data['activities']->where('completed', '=' ,1)->count()}})</strong>
+	    <strong> Completed in the past 3 Months ({{$data['activities']->where('completed', '=' ,1)->count()}})</strong>
 	  </a>
 
 	</div>
@@ -56,9 +56,12 @@
 <div class="tab-content" id="nav-tabContent">
     <div id="summary" class="tab-pane show active">
     	<h2>Recent Completed Activities by Activity Type</h2>
+        @if(count($data['activitychart']) >0)
     	<canvas id="ctb" width="500" height="300" ></canvas>
 			@include('charts._branchactivitiestype')
-		
+		@else
+        <p class="text-warning">No Activities in this period</p>
+        @endif
 	</div>
 
 	<div id="upcoming" class="tab-pane fade">

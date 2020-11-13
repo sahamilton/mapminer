@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
 use App\Dashboard;
 use App\Person;
+use App\Branch;
+use App\Role;
+use App\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -12,21 +14,27 @@ class DashboardController extends Controller
     public $dashboard;
     public $person;
     public $branch;
+    public $user;
 
     /**
-     * [__construct description].
-     *
+     * [__construct description]
+     * 
      * @param Dashboard $dashboard [description]
      * @param Person    $person    [description]
      * @param Branch    $branch    [description]
      */
-    public function __construct(Dashboard $dashboard, Person $person, Branch $branch)
+    public function __construct(
+        Dashboard $dashboard,
+        Person $person,
+        Branch $branch,
+        User $user
+        )
     {
         $this->dashboard = $dashboard;
         $this->person = $person;
         $this->branch = $branch;
+        $this->user = $user;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -34,69 +42,226 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('national_account_manager')) {
+        $myTeam = auth()->user()->person->myTeam()->get()->pluck('user_id')->toArray();
+       
+        if(! session('manager') or ! in_array(session('manager'), $myTeam)) {
+            session(['manager'=>auth()->user()->id]);
+        }
+        
+        $myRoles = $this->user->findOrFail(session('manager'))->roles->pluck('name')->toArray();
+        
+        switch ($myRoles[0]) {
+
+        case 'national_account_manager':
             return redirect()->route('namdashboard.index');
-        }
-        $branchCount = $this->dashboard->checkBranchCount();
-
-        if ($branchCount > 1 or auth()->user()->hasRole('admin')) {
-            return redirect()->route('mgrdashboard.index');
-        } else {
+            break;
+        
+        case 'branch_manager';
             return redirect()->route('branchdashboard.index');
-        }
-    }
+            break;
 
+        case 'admin':
+            $managers = $this->_selectDashboard();
+            return response()->view('dashboards.select', compact('managers'));
+            break;
+
+        default:
+            
+            return redirect()->route('mgrdashboard.index');
+            break;
+
+        }       
+
+
+    }
     /**
-     * [show description].
-     *
+     * [show description]
+     * 
      * @param [type] $branch [description]
-     *
+     * 
      * @return [type]         [description]
-     */
-    public function show(Branch $branch)
-    {
-        $branch->load('manager');
-
-        return redirect()->route('branchdashboard.show', $branch->id);
-    }
-
-    /**
-     * [select description].
-     *
-     * @param Request $request [description]
-     *
-     * @return [type]           [description]
      */
     public function select(Request $request)
     {
+        $manager = $this->person->with('userdetails.roles')->findOrFail(request('manager'));
+        session(['manager'=>$manager->user_id]);
+        $role =  $manager->userdetails->roles->pluck('name')->toArray();
+        
+        switch ($role[0]) {
+
+        case 'national_account_manager':
+            return redirect()->route('namdashboard.index');
+            break;
+        
+        case 'branch_manager';
+        
+            return redirect()->route('branchdashboard.index');
+            break;
+
+        case 'admin':
+            $managers = $this->_selectDashboard();
+            return response()->view('dashboards.select', compact('managers'));
+            break;
+
+        default:
+
+            return redirect()->route('mgrdashboard.index');
+            break;
+
+        }
+        
+    }
+
+    public function reset()
+    {
+        
+        session()->forget(['manager','branch', 'period']);
+        return redirect()->route('dashboard.index');
+    }
+    /**
+     * [select description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function show(Branch $branch)
+    {
+        
         $this->manager = $this->person->with('manages')
-            ->findOrFail(request('manager'));
-
+            ->findOrFail(auth()->user()->person->id);
+       
         $branchCount = $this->dashboard->checkBranchCount($this->manager);
-
+        
         if ($branchCount > 1) {
+            
             return redirect()->route('manager.dashboard', $this->manager->id);
-        } elseif ($branchCount == 1 && count($this->manager->manages) > 0) {
+        } elseif ($branchCount==1 && count($this->manager->manages) >0) {
+        
             return redirect()
                 ->route('branchdashboard.show', $this->manager->manages->first()->id);
         } else {
             return redirect()->back()
-                ->withWarning($this->manager->fullName().'is not associated with any branches');
+                ->withWarning($this->manager->fullName() . 'is not associated with any branches');
         }
+    
     }
 
     /**
-     * [_getSummaryBranchData description].
+     * [setPeriod description]
+     * 
+     * @param Request $request [description]
      *
+     * @return redirect [<description>]
+     */
+    public function setPeriod(Request $request)
+    {
+      
+        $this->period = $this->person->setPeriod(request('period'));
+
+        return redirect()->route('dashboard.index');
+    }
+
+    /**
+     * [setManager description]
+     * 
+     * @param Request $request [description]
+     *
+     * @return redirect [<description>]
+     */
+    public function setManager(Request $request)
+    {
+        $manager = $this->person->findOrFail(request('manager'));
+
+        session(['manager'=>$manager->user_id]);
+       
+        return redirect()->route('dashboard.index');
+    }
+
+    /**
+     * [_getSummaryBranchData description]
+     * 
      * @return [type]           [description]
      */
-    protected function getSummaryBranchData()
+    protected function getSummaryBranchData($fields = null) 
+    {
+       
+        if(! $fields) {
+            $fields['leadFields'] = [
+                'leads',
+                'new_leads',
+                'stale_leads',
+                'active_leads',
+            ];
+            $fields['opportunityFields'] =[
+                "lost_opportunities",
+                "open_opportunities",
+                "top25_opportunities",
+                "won_opportunities",
+                "active_value",
+                "lost_value",
+                "won_value",
+            ];
+            $fields['activityFields'] = [
+                '4'=>'Sales Appointment',
+                '5'=>'Stop By',
+                '7'=>'Proposal',
+                '10'=>'Site Visit',
+                '13'=>'Log a call',
+                '14'=>'In Person'
+
+            ];
+        }
+        
+        // get lead stats
+        // get opportunity stats
+        // get activity stats
+        // merge collections
+        $stats =[];
+        if (isset($fields['leadFields'])) {
+            $stats['leads'] = $this->_getLeadStats($fields['leadFields']);
+        }
+        if (isset($fields['activityFields'])) {
+            $stats['activities'] = $this->_getActivityStats($fields['activityFields']);
+        }
+        if (isset($fields['opportunityFields'])) {
+            $stats['opportunities'] = $this->_getOpportunityStats($fields['opportunityFields']);
+        }
+        return $stats;
+         
+
+    }
+
+    private function _selectDashboard()
+    {
+        return $this->person->managers([3,4,6,7,9]);
+    }
+
+    private function _getLeadStats($fields)
     {
         return $this->branch
-            ->SummaryStats($this->period)
-            ->with('manager', 'manager.reportsTo')
-            ->getActivitiesByType($this->period)
-            ->whereIn('id', $this->myBranches)
+            ->select('branches.id', 'branches.branchname')
+            ->summaryLeads($this->period, $fields)
+            ->whereIn('branches.id', $this->myBranches)
+            ->groupBy('branches.id')
             ->get();
     }
+    private function _getActivityStats($fields)
+    {
+        return $this->branch
+            ->summaryActivities($this->period, $fields)
+            ->whereIn('branches.id', $this->myBranches)
+            ->groupBy('branches.id')
+            ->get();
+    }
+
+    private function _getOpportunityStats($fields)
+    {
+        return $this->branch
+            ->summaryOpportunities($this->period, $fields)
+            ->whereIn('branches.id', $this->myBranches)
+            ->groupBy('branches.id')
+            ->get();
+    }
+
 }

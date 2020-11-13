@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -14,13 +14,14 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'Illuminate\Auth\Events\Login' => [
-        \App\Listeners\Users\UpdateLastLoggedInAt::class, ],
-         SocialiteProviders\Manager\SocialiteWasCalled::class => [
-                'SocialiteProviders\\Okta\\OktaExtendSocialite@handle',
-            ],
-        \App\Events\FeedbackEvent::class => [
-        \App\Listeners\FeedbackListener::class,
+            'App\Listeners\Users\UpdateLastLoggedInAt',
         ],
+                
+        'App\Events\FeedbackEvent' => [
+            'App\Listeners\FeedbackListener',
+        ],
+        
+        
     ];
 
     /**
@@ -31,5 +32,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+
+        //
     }
 }

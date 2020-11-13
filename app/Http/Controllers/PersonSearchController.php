@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Person;
+use App\User;
 use App\Track;
 use Illuminate\Http\Request;
 
 class PersonSearchController extends Controller
 {
+
     protected $person;
     protected $track;
-
     public function __construct(Person $person, Track $track)
     {
         $this->person = $person;
         $this->track = $track;
     }
+
 
     /**
      * Display the specified resource.
@@ -25,35 +27,27 @@ class PersonSearchController extends Controller
      */
     public function find(Person $person)
     {
-        $branches = $person->branchesManaged();
+        
+        $user = User::withLastLoginId()->withCount('usage')->with('lastLogin', 'roles', 'serviceline')->find($person->user_id);
 
-        $track = $this->track
-            ->where('user_id', $person->user_id)
-            ->whereNotNull('lastactivity')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $branches = $person->branchesManaged();
 
         //note remove manages & manages.servicedby
         $person
             ->load(
-
                 'directReports.userdetails.roles',
-                'reportsTo',
-                'userdetails.serviceline',
-                'userdetails.roles',
                 'managesAccount.countlocations',
                 'managesAccount.industryVertical',
-                'userdetails',
                 'industryfocus'
             );
-
+        
         if ($branches) {
             $branchmarkers = $branches->toJson();
         }
-        if (count($person->directReports) > 0) {
+        if (count($person->directReports)>0) {
             $salesrepmarkers = $this->person->jsonify($person->directReports);
         }
 
-        return response()->view('persons.details', compact('person', 'track', 'branches', 'branchmarkers', 'salesrepmarkers'));
+        return response()->view('persons.details', compact('person','branches', 'branchmarkers',  'user'));
     }
 }

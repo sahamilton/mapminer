@@ -32,7 +32,7 @@ class DeadLeadsBySourceExport implements FromView
     public function view(): View
     {
         $branches = Branch::deadLeadsBySource(
-            array_keys($this->branches), $this->period
+            $this->branches, $this->period
         );
 
         $period = $this->period;

@@ -2,29 +2,32 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use App\Branches;
 use App\Exports\DeadLeadsExport;
 use App\Mail\DeadLeadsReport;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class DeadLeads implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+  
     public $branches;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(array $branches = null)
+    public function __construct(Array $branches = null)
     {
+     
+        
         $this->branches = $branches;
+
     }
 
     /**
@@ -35,17 +38,19 @@ class DeadLeads implements ShouldQueue
     public function handle()
     {
         // create the file
-
-        $file = '/public/reports/deadleadsrpt'.Carbon::now()->timestamp.'.xlsx';
-        Excel::store(new DeadLeadsExport($this->period, $this->branches), $file);
-        $class = str_replace("App\Jobs\\", '', get_class($this));
-        $report = Report::with('distribution', 'distribution.person', 'distribution.person.userdetails')
-            ->where('job', $class)
+        
+        $report = Report::with('distribution')
+            ->where('job', 'DeadLeads')
             ->firstOrFail();
+        
+        // create the file
+        $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
+       
+        (new DeadLeadsExport($this->period, $this->branches))->store($this->file)->chain(
+            [
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 
-        $distribution = $report->getDistribution();
-
-        Mail::to($distribution)
-            ->send(new DeadLeadsReport($file));
+            ]
+        );
     }
 }

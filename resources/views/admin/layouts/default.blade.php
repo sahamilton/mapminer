@@ -48,7 +48,7 @@
         <script src="//twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
 <!--- Charts --->
         <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" ></script>   
-
+@livewireStyles
         <style>
         body {
             padding: 0  0;
@@ -60,7 +60,7 @@
         @section('styles')
         @show
         </style>
-
+@livewireStyles
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
         <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -104,7 +104,7 @@
 
 </div>
     
-
+@livewireScripts
 @include('partials.besnappy')
         @yield('scripts')
     </body>

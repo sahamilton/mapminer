@@ -24,7 +24,8 @@ class ActivityFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'activity_date'=>'date:required',
+      
+            'activity_date'=>'date:required|exclude_unless:completed,1|before_or_equal:today',
             'activitytype_id'=>'required',
             'note'=>'required',
             'followup_date'=>'date|nullable|after:activity_date',
@@ -33,5 +34,14 @@ class ActivityFormRequest extends FormRequest
             'address_id' => 'required_without:location_id',
             'branch_id'=>'required',
         ];
+    }
+    /**
+     * [messages description]
+     * 
+     * @return [type] [description]
+     */
+    public function messages()
+    {
+        return ['activity_date.before_or_equal:today'=>'The activity date for a completed activity must be a date before or equal to today.'];
     }
 }

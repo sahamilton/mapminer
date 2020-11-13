@@ -2,7 +2,7 @@
 
 .activity_date, .followup_date{z-index:1151 !important;}
 </style>
-
+@php $activityTypes = \App\ActivityType::all(); @endphp
 <!-- Modal -->
 <div class="modal fade" 
       id="add-activity" 
@@ -31,7 +31,7 @@
            <input type="submit" value="Record Activity" class="btn btn-danger" />
             </div>
             <input type="hidden" name= "address_id" id = "address_id" value="" />
-            <input type="hidden" name= "branch_id" id = "branch_id" value="{{$data['branches']->first()->id}}" />
+            <input type="hidden" name= "branch_id" id = "branch_id" value="{{$branch->id}}" />
         </form>
 
         <div class="modal-footer">

@@ -24,6 +24,7 @@
 <p><strong>Details:</strong>
     {{$activity->note}}</p>
 
-</div>
 
+<p><strong>Status:</strong>{{$activity->completed == 1 ? 'Completed' : 'Open'}}</p>
+</div>
 @endsection

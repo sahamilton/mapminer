@@ -21,16 +21,19 @@
 
             @foreach ($fields->where('depth', 1) as $tab)
                 <div id="{{$tab->fieldname}}" class="tab-pane show @if($loop->first) active @endif" >
+                  
                     @foreach ($tab->getDescendants() as $field)
                  
                     
                         <p>
                           <strong>{{$field->fieldname}}</strong>
                         </p>
-                          @if($salesnote->where('howtofield_id', $field->id)->count() > 0)
-                            <p>{!! $salesnote->where('howtofield_id', $field->id)->first()->fieldvalue!!} </p>
-                          @endif
-                    
+                        @php $notelets = $salesnote->where('howtofield_id', $field->id); @endphp
+                         
+                             @foreach($notelets as $notelet)
+                                <p>{!! $notelet->fieldvalue !!}</p>
+                              @endforeach
+                        
                     @endforeach
                 </div>
             @endforeach

@@ -10,15 +10,15 @@
     </thead>
     <tbody>
         
-        @foreach ($branch->workedleads as $lead)
+        @foreach ($branch->workedLeads as $lead)
         <tr>
             <td>
                 <a href="{{route('address.show', $lead->id)}}">
                     {{$lead->businessname}}
                 </a>
             </td>
-            <td>{{$lead->address}}</td>
             <td>{{$lead->street}}</td>
+            <td>{{$lead->city}}</td>
             <td>{{$lead->state}}</td>
             <td>{{$lead->zip}}</td>
         </tr>

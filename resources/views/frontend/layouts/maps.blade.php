@@ -9,7 +9,7 @@
         
         <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap-theme.min.css')}}">
-        <link rel="stylesheet" href="{{asset('assets/css/mapminer.css')}}">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 
     <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>

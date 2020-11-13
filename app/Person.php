@@ -1,14 +1,15 @@
 <?php
-
 namespace App;
 
 use App\Presenters\LocationPresenter;
+use App\Http\Requests\UserFormRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use McCool\LaravelAutoPresenter\HasPresenter;
-use Kalnoy\Nestedset\NodeTrait;
-class Person extends Model implements HasPresenter
+//use McCool\LaravelAutoPresenter\HasPresenter;
+
+
+class Person extends NodeModel
 {
-    use Geocode, Filters, SoftDeletes, FullTextSearch, NodeTrait;
+    use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch;
     public $salesroles = ['5','9'];
     public $branchroles = ['9'];
     // Add your validation rules here
@@ -16,35 +17,16 @@ class Person extends Model implements HasPresenter
         'email'=>'required',
         'mgrtype' => 'required',
     ];
-    public function getLftName()
-    {
-        return 'lft';
-    }
-
-    public function getRgtName()
-    {
-        return 'rgt';
-    }
-
+    
+    protected $table ='persons';
+    protected $hidden = ['created_at','updated_at','deleted_at','position'];
     public function getParentIdName()
     {
         return 'reports_to';
     }
+    
 
-    // Specify parent id attribute mutator
-    public function setParentAttribute($value)
-    {
-        $this->setParentIdAttribute($value);
-    }
-    protected $table ='persons';
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'position'
-    ];
-    protected $parentColumn = 'reports_to';
-
+    
     // Don't forget to fill this array
     public $fillable = ['firstname',
                         'lastname',
@@ -59,154 +41,165 @@ class Person extends Model implements HasPresenter
                         'geostatus',
                         'business_title',
                         'user_id',
-                        'position', ];
+                        'position'];
     protected $searchable = [
         'firstname',
-        'lastname',
+        'lastname'
     ];
-
     /**
-     * [reportsTo description].
-     *
+     * [reportsTo description]
+     * 
      * @return [type] [description]
      */
     public function reportsTo()
     {
-        return $this->belongsTo(self::class, 'reports_to', 'id');
+        return $this->belongsTo(Person::class, 'reports_to', 'id')
+            ->withDefault();
     }
-
     /**
-     * [reportChain description].
-     *
+     * [reportChain description]
+     * 
      * @return [type] [description]
      */
     public function reportChain()
     {
         return $this->getAncestorsWithoutRoot();
     }
-
     /**
-     * [directReports description].
-     *
+     * [directReports description]
+     * 
      * @return [type] [description]
      */
     public function directReports()
     {
-        return $this->hasMany(self::class, 'reports_to');
+        return $this->hasMany(Person::class, 'reports_to');
     }
-
+   
     /**
      * [salesRole description]
      * not sure this works!
-     *
+     * 
      * @return [type] [description]
      */
     public function salesRole()
     {
         return $this->belongsTo(SalesOrg::class, 'id', 'position');
     }
-
     /**
-     * [branchesServiced description].
-     *
+     * [branchesServiced description]
+     * 
      * @return [type] [description]
      */
     public function branchesServiced()
     {
+
         return $this->belongsToMany(Branch::class)
             ->withTimestamps()
             ->withPivot('role_id')
             ->orderBy('branchname');
     }
-
     /**
-     * [scopeManagers description].
-     *
+     * [scopeManagers description]
+     * 
      * @param [type] $query [description]
      * @param [type] $roles [description]
-     *
+     * 
      * @return [type]        [description]
      */
-    public function scopeManagers($query, $roles = null)
+    public function scopeManagers($query, $roles=null)
     {
         if (! $roles) {
-            $roles = [14, 6, 7, 3];
+            $roles = [14,6,7,3];
         }
-
+        
         return $this->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
-                $q->whereIn('role_id', $roles);
+
+                    $q->whereIn('role_id', $roles);
             }
         );
     }
-
     /**
-     * [managers description].
-     *
+     * [managers description]
+     * 
      * @param [type] $roles [description]
-     *
+     * 
      * @return [type]        [description]
      */
-    public function managers($roles = null)
+    public function managers(Array $roles=null)
     {
         if (! $roles) {
-            $roles = [14, 6, 7, 3];
+            $roles = [14,6,7,3];
         }
-
+        
         return $this->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
-                $q->whereIn('role_id', $roles);
+
+                    $q->whereIn('role_id', $roles);
             }
         )->orderBy('lastname')
          ->orderBy('firstname')->get();
     }
-
     /**
      * [getMyBranches finds branch managers in reporting
-     * strucuture and returns their branches as array].
-     *
+     * strucuture and returns their branches as array]
+     * 
      * @return array list of branches serviced by reports
      */
-    public function getMyBranches(array $servicelines = null)
+    public function getMyBranches(Array $servicelines=null)
     {
-        if ($this->userdetails->hasRole('sales_operations') && $this->has('reportsTo')) {
-            $person = $this->reportsTo()->first();
-            $branches = $person->descendantsAndSelf();
-        } else {
-            $branches = $this->descendantsAndSelf();
-        }
-        $branches = $branches
-            ->withRoles([9])
-            ->with('branchesServiced');
-        if ($servicelines) {
-            $branches = $branches->whereHas(
-                'serviceline', function ($q) use ($serviceline) {
-                    $q->whereIn('id', $serviceline);
+        
+        if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
+
+            return Branch::when(
+                $servicelines, function ($q1) use ($servicelines) {
+                    $q1->whereIn('servicelines.id', $servicelines);
                 }
-            );
+            )->pluck('id')->toArray();
+        } else {
+            $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
         }
-        $branches = $branches->get()
+        
+        $branches = $branchMgrs->with('branchesServiced')
+            ->when(
+                $servicelines, function ($q) use ($servicelines) {
+                    $q->whereHas(
+                        'servicelines', function ($q1) use ($servicelines) {
+                            $q1->whereIn('servicelines.id', $servicelines);
+                        }
+                    );
+                }
+            )
+            ->get()
             ->map(
-                function ($branch) {
+                function ($branch) { 
                     return $branch->branchesServiced->pluck('id')->toArray();
                 }
             );
-
         return array_unique($branches->flatten()->toArray());
     }
+    public function getMyAccounts()
+    {
+        if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
+            return Company::all()->pluck('id')->toArray();
+        }
+        return $this->managesAccount->pluck('id')->toArray();
+        
 
+
+    }
     /**
-     * [branchesManaged description].
-     *
+     * [branchesManaged description]
+     * 
      * @return sorted array of all branches servicedS
      */
     public function branchesManaged()
     {
         $team = $this->descendantsAndSelf()
             ->withRoles([9])
-
+                
             ->with('branchesServiced.manager')->get();
-
+       // dd(1968, $this, $this->descendants()->get());
         return $team->map(
             function ($people) {
                 return $people->branchesServiced;
@@ -214,124 +207,178 @@ class Person extends Model implements HasPresenter
         )->flatten()->unique()->sortBy('id');
     }
 
+
     /**
-     * [myBranches description].
-     *
+     * [myBranches description]
+     * 
      * @param Person|null $person       [description]
-     * @param array|null  $servicelines [description]
-     *
+     * @param Array|null  $servicelines [description]
+     * 
      * @return [type]                    [description]
      */
-    public function myBranches(self $person = null, array $servicelines = null)
+    public function myBranches(Person $person=null, Array $servicelines=null)
     {
-        if (auth()->user()->hasRole('admin')) {
-            return Branch::all()->pluck('branchname', 'id')->toArray();
-        } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
-            $person = $this->findOrFail(auth()->user()->person->reports_to);
-        }
-
-        $myteam = $this->myTeam($person)->has('branchesServiced')->get();
-
-        $data = [];
-        if ($servicelines) {
-            // not used!!
-        } else {
-            $teammembers = $myteam->map(
-                function ($team) {
-                    return $team->branchesServiced;
-                }
-            );
-        }
-
-        foreach ($teammembers as $member) {
-            foreach ($member->pluck('branchname', 'id') as $id => $branchname) {
-                if (! array_key_exists($id, $data)) {
-                    $data[$id] = $branchname;
-                }
+           
+        if (! $person ) {
+            $user = $this->_getPersonFromAuth();
+           
+            $person = $user->person;
+            if ($user->hasRole(['admin', 'sales_operations'])) {
+                return $this->_getBranchesInServicelines($user->serviceline);
+            } else {
+                return $this->_getBranchesFromTeam($person); 
             }
+        } else {
+            $person->load('userdetails');
+            if($person->userdetails->hasRole(['admin', 'sales_operations'])) {
+                return $this->_getBranchesInServicelines($person->userdetails->serviceline);
+            }
+            return $this->_getBranchesFromTeam($person);
         }
-        ksort($data);
-
-        return $data;
-    }
-
+    }  
     /**
-     * [myBranchTeam description].
-     *
+     * [_getBranchesFromTeam description]
+     * 
+     * @param Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
+    private function _getBranchesFromTeam(Person $person)
+    {
+        $mybranchteam = $this->myTeam($person)
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                    $q->whereIn('role_id', $this->branchroles);
+                }
+            )
+            ->with('branchesServiced')->get();
+
+        $branches =  $mybranchteam->map(
+            function ($team) {
+                return $team->branchesServiced;
+            }
+        );
+        return $branches->flatten()->unique()->sort()->pluck('branchname', 'id')->toArray();
+    }
+    /**
+     * [myBranchTeam description]
+     * 
      * @param array $myBranches [description]
-     *
+     * 
      * @return [type]             [description]
      */
     public function myBranchTeam(array $myBranches)
     {
+        
         $branches = Branch::whereIn('id', $myBranches)->with('manager')->get();
-
+        
         $team = $branches->map(
             function ($branch) {
                 return $branch->manager->pluck('user_id');
             }
         );
-
         return $team->flatten();
     }
 
+    private function _getPersonFromAuth()
+    {
+        
+        return User::with('roles', 'person', 'serviceline')->findOrFail(auth()->user()->id);
+    }
+    private function _getBranchesInServicelines($servicelines)
+    {
+        return Branch::whereHas(
+            'servicelines', function ($q) use ($servicelines) {
+                $q->whereIn('id', $servicelines->pluck('id')->toArray());
+            }
+        )->orderBy('id')
+        ->pluck('branchname', 'id')->toArray();
+    }
     /**
-     * [scopeMyReports description].
-     *
+     * [scopeMyReports description]
+     * 
      * @param [type] $query [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function scopeMyReports($query)
     {
         return $query->descendantsAndSelf();
     }
-
-    public function team()
+    public function ownBranches()
     {
-        return $this->descendantsAndSelf()->with('branchesServiced');
-    }
+        return $this->descendantsAndSelf()
+            ->whereHas(
+                'userdetails.roles', function ($q)  {
+                    $q->whereIn('role_id', [9]);
+                }
 
+            )->with('branchesServiced');
+    }
+    public function team(array $roles=null)
+    {
+        return $this->descendantsAndSelf()
+            ->when(
+                $roles, function ($q) use ($roles) {
+                    $q->whereHas(
+                        'userdetails.roles', function ($q) use ($roles) {
+
+                            $q->whereIn('role_id', $roles);
+                        }
+                    );
+                }
+            )
+            ->with('branchesServiced');
+    }
     /**
-     * [myTeam description].
-     *
+     * [scopeMyImmediateReports description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeMyImmediateReports($query)
+    {
+        return $query->descendantsAndSelf($this->id)->limitDepth(1);
+    }
+    /**
+     * [myTeam description]
+     * 
      * @param Person|null $person [description]
-     *
+     * 
      * @return [type]              [description]
      */
-    public function myTeam(self $person = null)
+    public function myTeam(Person $person=null)
     {
+        
         if ($person) {
             return $person->descendantsAndSelf()->with('branchesServiced');
         }
-
+       
         return $this->where('user_id', '=', auth()->user()->id)->firstOrFail()
             ->descendantsAndSelf()->with('branchesServiced');
     }
-
     /**
-     * [lastUpdatedBranches description].
-     *
+     * [lastUpdatedBranches description]
+     * 
      * @return [type] [description]
      */
     public function lastUpdatedBranches()
     {
         return $this->belongsToMany(Branch::class)
             ->withTimestamps()
-            ->addSelect('branch_person.updated_at', \DB::raw('MAX(branch_person.updated_at) AS lastdate'))->get();
+            ->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
     }
-
     public function mapminerUsage()
     {
         return $this->hasManyThrough(Track::class, User::class);
     }
-
     /**
-     * [scopeStaleBranchAssignments description].
-     *
+     * [scopeStaleBranchAssignments description]
+     * 
      * @param [type] $query [description]
      * @param [type] $roles [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function scopeStaleBranchAssignments($query, $roles)
@@ -341,108 +388,136 @@ class Person extends Model implements HasPresenter
                 $q->whereIn('roles.id', $roles);
             }
         );
+        
     }
 
     /**
-     * [manages description].
-     *
+     * [manages description]
+     * 
      * @return [type] [description]
      */
     public function manages()
     {
+        
         return $this->belongsToMany(Branch::class)
             ->withTimestamps()->withPivot('role_id');
     }
-
     /**
-     * [comments description].
-     *
+     * [comments description]
+     * 
      * @return [type] [description]
      */
     public function comments()
     {
+        
         return $this->hasMany(Comment::class);
     }
-
     /**
-     * [managesAccount description].
-     *
+     * [managesAccount description]
+     * 
      * @return [type] [description]
      */
     public function managesAccount()
     {
+        
         return $this->hasMany(Company::class)
             ->orderBy('companyname');
     }
-
     /**
-     * [emailcampaigns description].
-     *
+     * [emailcampaigns description]
+     * 
      * @return [type] [description]
      */
     public function emailcampaigns()
     {
         return $this->belongsToMany(Campaign::class)->withPivot('activity');
     }
-
     /**
-     * [projects description].
-     *
+     * [projects description]
+     * 
      * @return [type] [description]
      */
     public function projects()
     {
         return $this->belongsToMany(Project::class)->withPivot('status');
     }
-
     /**
-     * Return user details of person.
-     *
+     * Return user details of person
+     * 
      * @return relation [description]
      */
     public function userdetails()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+          return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
     /**
-     * Author of news.
-     *
+     * Author of news
+     * 
      * @return relation [description]
      */
     public function authored()
     {
+        
         return $this->hasMany(News::class);
     }
-
     /**
-     * [scopeManages description].
-     *
+     * [scopeManages description]
+     * 
      * @param [type] $query [description]
      * @param [type] $roles [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function scopeManages($query, $roles)
     {
         return $query->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
-                $q->whereIn('role_id', $roles);
+
+                    $q->whereIn('role_id', $roles);
             }
         );
     }
 
+    public function scopeSummaryActivitiesByManager($query, $period)
+    {
+        $this->period = $period;
+        
+        $query->leftJoin('actvities',function ($join) {
+            $join->on('activities.user',function ($q) {
+                $q->whereIn('activities.user_id', function ($q) {
+                    $q->select('user_id')
+                    ->from('persons');
+                }, 'reports')
+
+                ->where('reports.lft','>=','persons.lft')->where('reports.rgt', '<=', 'persons.rgt');
+                }
+            );
+
+            }
+        )
+        ->selectRaw('COUNT(CASE when activitytype_id = 4  then 1 end) as sales_appointment')
+        ->selectRaw('COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by')
+        ->selectRaw('COUNT(CASE when activitytype_id = 7  then 1 end) as proposal')
+        ->selectRaw('COUNT(CASE when activitytype_id = 10  then 1 end) as site_visit')
+        ->selectRaw('COUNT(CASE when activitytype_id = 11  then 1 end) as log_a_call')
+        ->selectRaw('COUNT(CASE when activitytype_id = 131  then 1 end) as site_visit')
+        ->selectRaw('COUNT(CASE when activitytype_id = 14  then 1 end) as in_person')
+        ->selectRaw('COUNT(*) as all_activities')
+        ->whereBetween('activities.activity_date', [$period['from'], $period['to']])
+        ->whereCompleted(1);
+    }
     /**
-     * [scopeLeadsByType description].
-     *
+     * [scopeLeadsByType description]
+     * 
      * @param [type] $query  [description]
      * @param [type] $id     [description]
      * @param [type] $status [description]
-     *
+     * 
      * @return [type]         [description]
      */
     public function scopeLeadsByType($query, $id, $status)
     {
+     
         return $query->belongsToMany(
             Lead::class, 'lead_person_status', 'person_id', 'related_id'
         )
@@ -450,10 +525,9 @@ class Person extends Model implements HasPresenter
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating')
             ->wherePivot('status_id', 2);
     }
-
     /**
-     * Create concatenated full name.
-     *
+     * Create concatenated full name
+     * 
      * @return [type] [description]
      */
     public function fullName()
@@ -461,39 +535,38 @@ class Person extends Model implements HasPresenter
         if (! isset($this->attributes['firstname'])) {
             return 'No longer a Mapminer User';
         }
-
-        return addslashes($this->attributes['firstname']).' '.addslashes($this->attributes['lastname']);
+        return addslashes($this->attributes['firstname']) . ' ' . addslashes($this->attributes['lastname']);
     }
-
     /**
-     * Return concatenated name,.
-     *
+     * Return concatenated name,
+     *  
      * @return [type] [description]
      */
     public function postName()
     {
-        return addslashes($this->attributes['lastname']).', '.addslashes($this->attributes['firstname']);
+        if (! isset($this->attributes['firstname'])) {
+            return 'No longer a Mapminer User';
+        }
+        return addslashes($this->attributes['lastname']) . ', ' . addslashes($this->attributes['firstname']);
     }
-
     /**
-     * [distribution description].
-     *
+     * [distribution description]
+     * 
      * @return [type] [description]
      */
     public function distribution()
     {
         return ['name'=>$this->fullName(), 'email'=>$this->userdetails->email];
     }
-
     /**
-     * [currentleads description].
-     *
+     * [currentleads description]
+     * 
      * @return [type] [description]
      */
     public function currentleads()
     {
         return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
-
+            
             ->whereHas(
                 'leadsource', function ($q) {
                     $q->where('datefrom', '<=', date('Y-m-d'))
@@ -501,10 +574,9 @@ class Person extends Model implements HasPresenter
                 }
             )->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
-
     /**
-     * [leads description].
-     *
+     * [leads description]
+     * 
      * @return [type] [description]
      */
     public function leads()
@@ -512,10 +584,9 @@ class Person extends Model implements HasPresenter
         return $this->belongsToMany(Address::class, 'address_person', 'person_id', 'address_id')
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
-
     /**
-     * [offeredleads description].
-     *
+     * [offeredleads description]
+     * 
      * @return [type] [description]
      */
     public function offeredleads()
@@ -524,10 +595,10 @@ class Person extends Model implements HasPresenter
             ->wherePivot('status_id', 1)
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
-
+    
     /**
-     * [openleads description].
-     *
+     * [openleads description]
+     * 
      * @return [type] [description]
      */
     public function openleads()
@@ -536,10 +607,9 @@ class Person extends Model implements HasPresenter
             ->wherePivot('status_id', 2)
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
-
     /**
-     * [closedleads description].
-     *
+     * [closedleads description]
+     * 
      * @return [type] [description]
      */
     public function closedleads()
@@ -548,85 +618,83 @@ class Person extends Model implements HasPresenter
             ->wherePivot('status_id', 3)
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
-
     /**
-     * [scopeLeadsWithStatus description].
-     *
+     * [scopeLeadsWithStatus description]
+     * 
      * @param [type] $query  [description]
      * @param [type] $status [description]
-     *
+     * 
      * @return [type]         [description]
      */
     public function scopeLeadsWithStatus($query, $status)
     {
+        
         return $query->whereHas(
             'leads', function ($q) use ($status) {
                 $q->where('lead_person_status.status_id', $status);
             }
         );
     }
-
     /**
-     * [industryfocus description].
-     *
+     * [industryfocus description]
+     * 
      * @return [type] [description]
      */
     public function industryfocus()
     {
         return $this->belongsToMany(SearchFilter::class)->withTimestamps();
     }
-
     /**
-     * [getPresenterClass description].
-     *
+     * [getPresenterClass description]
+     * 
      * @return [type] [description]
      */
     public function getPresenterClass()
     {
         return LocationPresenter::class;
     }
-
     /**
-     * [personroles description].
-     *
+     * [personroles description]
+     * 
      * @param [type] $roles [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function personroles($roles)
     {
+
+
         return $this->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
-                $q->whereIn('role_id', $roles);
+                    $q->whereIn('role_id', $roles);
             }
         )
         ->with('userdetails', 'userdetails.roles')
         ->orderBy('lastname')
         ->get();
     }
-
     /**
-     * [scopeWithRoles description].
-     *
+     * [scopeWithRoles description]
+     * 
      * @param [type] $query [description]
      * @param [type] $roles [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function scopeWithRoles($query, $roles)
     {
+
         return $query->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
-                $q->whereIn('role_id', $roles);
+                    $q->whereIn('role_id', $roles);
             }
         );
     }
-
     /**
-     * [getPersonsWithRole description].
-     *
+     * [getPersonsWithRole description]
+     * 
      * @param [type] $roles [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function getPersonsWithRole($roles)
@@ -642,10 +710,9 @@ class Person extends Model implements HasPresenter
             )
         ->orderBy('lastname')->get();
     }
-
     /**
-     * [salesleads description].
-     *
+     * [salesleads description]
+     * 
      * @return [type] [description]
      */
     public function salesleads()
@@ -654,10 +721,9 @@ class Person extends Model implements HasPresenter
             ->withTimestamps()
             ->withPivot('status_id', 'rating');
     }
-
     /**
-     * [webleads description].
-     *
+     * [webleads description]
+     * 
      * @return [type] [description]
      */
     public function webleads()
@@ -667,10 +733,9 @@ class Person extends Model implements HasPresenter
             ->wherePivot('type', '=', 'web')
             ->withPivot('status_id', 'rating', 'type');
     }
-
     /**
-     * [leadratings description].
-     *
+     * [leadratings description]
+     * 
      * @return [type] [description]
      */
     public function leadratings()
@@ -680,62 +745,63 @@ class Person extends Model implements HasPresenter
             ->withPivot('status_id', 'rating')
             ->whereNotNull('rating');
     }
-
     /**
-     * [fullAddress description].
-     *
+     * [fullAddress description]
+     * 
      * @return [type] [description]
      */
     public function fullAddress()
     {
-        return $this->address.' '.$this->city.' '.$this->state.' '.$this->zip;
+        return $this->address . ' '. $this->city . ' ' . $this->state . ' ' . $this->zip;
     }
-
     /**
-     * [findPersonsRole description].
-     *
+     * [findPersonsRole description]
+     * 
      * @param [type] $people [description]
-     *
+     * 
      * @return [type]         [description]
      */
     public function findPersonsRole($people)
     {
-        foreach ($people->userdetails->roles as $role) {
+
+        foreach ($people->userdetails->roles as $role) {             
             $result[] = $role->name;
         }
 
         return $result;
-    }
 
+    }
     /**
-     * [findRole description].
-     *
+     * [findRole description]
+     * 
      * @return [type] [description]
      */
     public function findRole()
     {
+
         foreach ($this->userdetails->roles as $role) {
             $result[] = $role->id;
         }
 
         return $result;
+
     }
 
     /**
-     * [activities description].
-     *
+     * [activities description]
+     * 
      * @return [type] [description]
      */
     public function activities()
     {
         return $this->hasMany(Activity::class, 'user_id', 'user_id');
     }
-
+    
     /**
-     * [salesLeadsByStatus description].
-     *
+     * [salesLeadsByStatus description]
+     * 
      * @param [type] $id [description]
-     *
+     * 
      * @return [type]     [description]
      */
     public function salesLeadsByStatus($id)
@@ -751,35 +817,34 @@ class Person extends Model implements HasPresenter
 
         foreach ($leads->salesleads as $lead) {
             if (! isset($statuses[$lead->pivot->status_id])) {
-                $statuses[$lead->pivot->status_id]['status'] = $lead->pivot->status_id;
-                $statuses[$lead->pivot->status_id]['count'] = 0;
+                $statuses[$lead->pivot->status_id]['status']=$lead->pivot->status_id;
+                $statuses[$lead->pivot->status_id]['count']=0;
             }
-            $statuses[$lead->pivot->status_id]['count'] += 1;
+            $statuses[$lead->pivot->status_id]['count']+=1;
         }
-
         return $statuses;
     }
-
+    
     /**
-     * [scopeInServiceLine description].
-     *
+     * [scopeInServiceLine description]
+     * 
      * @param [type] $query        [description]
      * @param [type] $servicelines [description]
-     *
+     * 
      * @return [type]               [description]
      */
     public function scopeInServiceLine($query, $servicelines)
     {
+        
         return $query->whereHas(
             'userdetails.serviceline', function ($q) use ($servicelines) {
                 $q->whereIn('servicelines.id', $servicelines);
             }
         );
     }
-
     /**
-     * [ownedLeads description].
-     *
+     * [ownedLeads description]
+     * 
      * @return [type] [description]
      */
     public function ownedLeads()
@@ -787,12 +852,12 @@ class Person extends Model implements HasPresenter
         return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
             ->withTimestamps()
             ->withPivot('status_id', 'rating')
-            ->whereIn('status_id', [2, 3]);
+            ->whereIn('status_id', [2,3]);
     }
 
     /**
-     * [myOwnedLeads description].
-     *
+     * [myOwnedLeads description]
+     * 
      * @return [type] [description]
      */
     public function myOwnedLeads()
@@ -804,28 +869,28 @@ class Person extends Model implements HasPresenter
             ->where('person_id', '=', auth()->user()->person->id);
     }
 
+    
     /**
-     * [campaigns description].
-     *
+     * [campaigns description]
+     * 
      * @return [type] [description]
      */
     public function campaigns()
     {
         return $this->belongsToMany(Salesactivity::class);
     }
-
     /**
-     * [campaignparticipants description].
-     *
+     * [campaignparticipants description]
+     * 
      * @param [type] $vertical [description]
-     *
+     * 
      * @return [type]           [description]
      */
     public function campaignparticipants($vertical)
     {
         return $this->whereHas(
             'industryfocus', function ($q) use ($vertical) {
-                $q->whereIn('search_filter_id', $vertical);
+                    $q->whereIn('search_filter_id', $vertical);
             }
         )
         ->whereHas(
@@ -840,56 +905,52 @@ class Person extends Model implements HasPresenter
             }
         );
     }
-
     /**
-     * [jsonify description].
-     *
+     * [jsonify description]
+     * 
      * @param [type] $people [description]
-     *
+     * 
      * @return [type]         [description]
      */
     public function jsonify($people)
     {
-        $key = 0;
-        $salesrepmarkers = [];
+        $key=0;
+        $salesrepmarkers= [];
         foreach ($people as $person) {
-            $salesrepmarkers[$key]['id'] = $person->id;
-            $salesrepmarkers[$key]['lat'] = $person->lat;
-            $salesrepmarkers[$key]['lng'] = $person->lng;
-            $salesrepmarkers[$key]['name'] = $person->fullName();
+            $salesrepmarkers[$key]['id']=$person->id;
+            $salesrepmarkers[$key]['lat']=$person->lat;
+            $salesrepmarkers[$key]['lng']=$person->lng;
+            $salesrepmarkers[$key]['name']=$person->fullName();
             $key++;
         }
-
+      
         return collect($salesrepmarkers)->toJson();
     }
-
     /**
-     * [updatePersonsAddress description].
-     *
+     * [updatePersonsAddress description]
+     * 
      * @param [type] $data [description]
-     *
+     * 
      * @return [type]       [description]
      */
-    public function updatePersonsAddress($data)
+    public function updatePersonsAddress(UserFormRequest $request)
     {
-        if (! empty($data['address'])) {
-            $data = $this->getGeoCode(app('geocoder')->geocode($data['address'])->get());
-            unset($data['fulladdress']);
+        if (request()->filled('address')) {
+            $data = $this->getGeoCode(app('geocoder')->geocode(request('address'))->get());
+            
         } else {
-            $data['address'] = null;
-            $data['city'] = null;
-            $data['state'] = null;
-            $dta['zip'] = null;
-            $data['lat'] = null;
-            $data['lng'] = null;
+            $data['address']=null;
+            $data['city']=null;
+            $data['state']=null;
+            $dta['zip']=null;
+            $data['lat']=null;
+            $data['lng']=null;
         }
-
         return $data;
     }
-
     /**
-     * [myAddress description].
-     *
+     * [myAddress description]
+     * 
      * @return [type] [description]
      */
     public function myAddress()
@@ -900,43 +961,41 @@ class Person extends Model implements HasPresenter
             return $this->address;
         }
     }
-
     public function primaryRole()
     {
         return $this->userdetails()->roles()->first();
     }
-
     /**
-     * [scopePrimaryRole description].
-     *
+     * [scopePrimaryRole description]
+     * 
      * @param [type] $query [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function scopePrimaryRole($query)
     {
-        return $query->with('userdetails.roles');
-        //->userdetails;
-    }
 
+        return $query->with('userdetails.roles');
+                    //->userdetails;
+    }
     /**
-     * [getPrimaryRole description].
-     *
+     * [getPrimaryRole description]
+     * 
      * @param [type] $person [description]
-     *
+     * 
      * @return [type]         [description]
      */
     public function getPrimaryRole($person)
     {
-        return $person->userdetails->roles()->first()->id;
-        //->userdetails;
-    }
 
+        return $person->userdetails->roles()->first()->id;
+                    //->userdetails;
+    }
     /**
-     * [scopeSalesReps description].
-     *
+     * [scopeSalesReps description]
+     * 
      * @param [type] $query [description]
-     *
+     * 
      * @return [type]        [description]
      */
     public function scopeSalesReps($query)
@@ -948,9 +1007,14 @@ class Person extends Model implements HasPresenter
         );
     }
 
+    public function scopeSearch($query, $search)
+    {
+        return  $query->where('firstname', 'like', "%{$search}%")
+                    ->Orwhere('lastname', 'like', "%{$search}%");
+    }
     /**
-     * [rankings description].
-     *
+     * [rankings description]
+     * 
      * @return [type] [description]
      */
     public function rankings()
@@ -960,8 +1024,88 @@ class Person extends Model implements HasPresenter
             ->withTimeStamps();
     }
 
-    public function scopeWithPrimaryRole()
+    public function scopeWithPrimaryRole($query)
     {
-        return $this->userdetails->roles->first();
+        return $query->userdetails->roles->first();
+    }
+    /**
+     * [getCapoDiCapo id the top of the sales org
+     * refactor to programmatically get topdog.
+     * 
+     * @return Person topDog
+     */
+    public function getCapoDiCapo()
+    {
+
+        return $this->findOrFail(config('mapminer.topdog'));
+    }
+
+    public function inMyTeam(Person $person)
+    {
+        if (auth()->user()->hasRole('admin')) {
+            return true;
+        }
+        return $person->isDescendantOf(auth()->user()->person);
+    }
+
+    public function inMyAccounts(Company $company)
+    {
+        if (auth()->user()->hasRole('admin')) {
+            return true;
+        }
+        return auth()->user()->person->managesAccount->contains('id', $company->id);
+
+    }
+
+    public function scopeSummaryActivities($query, $period)
+    {
+        $this->period = $period;
+
+        $query
+            ->join(
+                'persons as reports', function ($join) {
+                    $join->on('reports.lft', '>=', 'persons.lft')
+                        ->on('reports.rgt', '<=', 'persons.rgt');
+                }
+            )
+            ->join('activities', 'reports.user_id', '=', 'activities.user_id')
+            ->where('completed', 1)
+            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+            ->selectRaw('concat_ws(" ", persons.firstname, persons.lastname) as manager')
+            ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
+            ->selectRaw('COUNT(*) AS all_activities')
+            ->groupBy('manager');
+
+    }
+    
+    public function scopeSummaryOpportunities($query, $period)
+    {
+        
+        $this->period = $period;
+
+        $query->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+        ->join('persons as reports',function ($join) {
+            $join->on('reports.lft', '>=', 'persons.lft')
+            ->on('reports.rgt', '<=', 'persons.rgt')
+            ->join('activities','reports.user_id', '=', 'activities.user_id');
+        })
+        
+        ->where('completed',1)
+        ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+        ->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+        ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
+        ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
+        ->selectRaw('COUNT(*) AS all_activities')
+        ->groupBy('manager');
+        
     }
 }

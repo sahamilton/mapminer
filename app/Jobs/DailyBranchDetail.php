@@ -2,39 +2,55 @@
 
 namespace App\Jobs;
 
-use App\Branch;
-use App\Exports\DailyBranchExport;
-use App\Mail\DailyBranchReport;
+use \Carbon\Carbon;
 use App\Person;
-use App\Report;
 use App\User;
-use Carbon\Carbon;
+use App\Branch;
+use App\Report;
+use Mail;
+use App\Mail\SendReport;
 use Excel;
+use App\Mail\DailyBranchReport;
+use App\Exports\DailyBranch;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Mail;
 
 class DailyBranchDetail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+    public $branches;
     public $user;
     public $person;
+    public $file;
+    public $report;
+    
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(User $recipient)
+    public function __construct(User $user, Report $report,$branches, $file, array $period = null)
     {
-        $this->period['from'] = Carbon::yesterday()->startOfDay();
-        $this->period['to'] = Carbon::yesterday()->endOfDay();
-        $this->user = $recipient;
-        $this->person = $recipient->person;
+        
+        if (! $period) {
+
+            $this->period['from'] = Carbon::yesterday()->startOfDay();
+            $this->period['to'] = Carbon::yesterday()->endOfDay();
+        } else {
+            $this->period = $period;
+        }
+        $this->user = $user;
+        $this->person = $user->person;
+        $this->report = $report;
+        $this->branches = $branches;
+        $this->file = $file;
+        
+
     }
 
     /**
@@ -45,16 +61,11 @@ class DailyBranchDetail implements ShouldQueue
     public function handle()
     {
 
-            // send this to a queued job
-
-        $file = '/public/reports/'.$this->person->firstname.'_'.$this->person->lastname.'_dailyreport_'.$this->period['from']->format('Y-m-d').'.xlsx';
-
-        Excel::store(
-                new DailyBranchExport($this->period, [$this->person->id]), $file
-            );
-        $distribution = [$this->person->distribution()];
-        Mail::to($distribution)
-                ->queue(new DailyBranchReport($file, $this->period, $this->person));
+        
+        (new DailyBranch($this->period, $this->branches))
+            ->store($this->file);
+        Mail::to([$this->user->getFormattedEmail()])
+                        ->send(new SendReport($this->file, $this->period, $this->report, $this->user));
     }
 
     /**
@@ -63,7 +74,8 @@ class DailyBranchDetail implements ShouldQueue
      * @param  Exception  $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed($exception)
     {
+       
     }
 }

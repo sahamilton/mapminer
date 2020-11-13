@@ -32,7 +32,7 @@ class DeadLeadsExport implements FromView
     public function view(): View
     {
         if ($this->branches) {
-            $branch = Branch::whereIn('id', array_keys($this->branches));
+            $branch = Branch::whereIn('id', $this->branches);
         } else {
             $branch = new Branch;
         }

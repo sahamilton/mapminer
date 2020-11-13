@@ -15,7 +15,8 @@
 	
 	@include('campaigns.partials._summary')
 	@include('campaigns.partials._documents')
-	@include('campaigns.partials._details')
-
+	@if($campaign->type != 'open')
+		@include('campaigns.partials._details')
+	@endif
 @include ('partials._scripts')
 @endsection()

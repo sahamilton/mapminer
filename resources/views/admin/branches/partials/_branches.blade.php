@@ -31,16 +31,29 @@
 			<td>{{$branch->street}} {{$branch->address2}}</td>
 			<td>{{$branch->city}}</td>
 			<td>{{$branch->state}}</td>
-			<td>@if($branch->manager->count()>0)
-				{{$branch->manager->first()->postName()}}
+			<td>
+				@if(isset($branch->branchmanager))
+					@foreach ($branch->branchmanager as $manager)
+						@if(! $loop->first),@endif
+						{{$manager->fullName()}}
+				@endforeach
+				@endif
+			
+			</td>
+			<td>
+				@if(isset($branch->businessmanager))
+					@foreach ($branch->businessmanager as $manager)
+						@if(! $loop->first),@endif
+						{{$manager->fullName()}}
+					@endforeach
 				@endif
 			</td>
-			<td>@if($branch->businessmanager->count()>0) 
-				{{$branch->businessmanager->first()->postName()}}
-				@endif
-			</td>
-			<td>@if($branch->marketmanager->count()>0)
-				{{$branch->marketmanager->first()->postName()}}
+			<td>
+				@if(isset($branch->marketmanager))
+					@foreach ($branch->marketmanager as $manager)
+					@if(! $loop->first),@endif
+						{{$manager->fullName()}}
+					@endforeach
 				@endif
 			</td>
 

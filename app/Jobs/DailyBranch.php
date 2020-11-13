@@ -2,27 +2,39 @@
 
 namespace App\Jobs;
 
+use Mail;
+use App\Mail\SendReport;
 use App\Report;
+use \ErrorException;
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
-class DailyBranch implements ShouldQueue
+class DailyBranch
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
     public $user;
     public $person;
+    public $report;
+    public $file;
+    
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $period = null)
     {
+        if (! $period) {
+            $period = ['from'=>now()->subDay()->startOfDay(), 'to'=>now()->subDay()->endOfDay()];
+        }
+        $this->period = $period;    
+
     }
 
     /**
@@ -32,10 +44,16 @@ class DailyBranch implements ShouldQueue
      */
     public function handle()
     {
-        $class = str_replace("App\Jobs\\", '', get_class($this));
-        $job = Report::where('job', $class)->with('distribution.person')->firstOrFail();
-        foreach ($job->distribution as $recipient) {
-            DailyBranchDetail::dispatch($recipient);
+        
+        $this->report = Report::where('job', 'DailyBranch')->with('distribution')->firstOrFail();
+        
+        foreach ($this->report->distribution as $recipient) {
+            $this->file = "/public/reports/". strtolower(Str::slug($recipient->person->fullName()." ".$this->report->filename ." ". $this->period['from']->format('Y-m-d'), '_')). ".xlsx";
+            
+            $branches = $recipient->person->getMyBranches();
+            
+            DailyBranchDetail::dispatch($recipient, $this->report, $branches, $this->file, $this->period);
+            
         }
     }
 
@@ -45,7 +63,8 @@ class DailyBranch implements ShouldQueue
      * @param  Exception  $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed($exception)
     {
+       dd($exception);
     }
 }

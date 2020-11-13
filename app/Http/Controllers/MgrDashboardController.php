@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Activity;
@@ -9,16 +8,16 @@ use App\AddressBranch;
 use App\Branch;
 use App\Chart;
 use App\Company;
+use App\Track;
 use App\Contact;
-use App\Http\Requests\OpportunityFormRequest;
 use App\Note;
+use App\Http\Requests\OpportunityFormRequest;
 use App\Opportunity;
 use App\Person;
 use App\SalesOrg;
-use App\Track;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
+use \Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 
 class MgrDashboardController extends DashboardController
 {
@@ -35,12 +34,13 @@ class MgrDashboardController extends DashboardController
     public $person;
     public $salesorg;
     public $track;
+    public $branchManagerRole = [9];
 
     public $keys = [];
 
     /**
-     * [__construct description].
-     *
+     * [__construct description]
+     * 
      * @param Activity      $activity      [description]
      * @param Address       $address       [description]
      * @param AddressBranch $addressbranch [description]
@@ -64,16 +64,17 @@ class MgrDashboardController extends DashboardController
         SalesOrg $salesorg,
         Track $track
     ) {
-        $this->activity = $activity;
-        $this->address = $address;
-        $this->addressbranch = $addressbranch;
-        $this->branch = $branch;
-        $this->chart = $chart;
-        $this->contact = $contact;
-        $this->opportunity = $opportunity;
-        $this->person = $person;
-        $this->salesorg = $salesorg;
-        $this->track = $track;
+            $this->activity = $activity;
+            $this->address = $address;
+            $this->addressbranch = $addressbranch;
+            $this->branch = $branch;
+            $this->chart = $chart;
+            $this->contact = $contact;
+            $this->opportunity = $opportunity;
+            $this->person = $person;
+            $this->salesorg = $salesorg;
+            $this->track = $track;    
+       
     }
 
     /**
@@ -83,321 +84,361 @@ class MgrDashboardController extends DashboardController
      */
     public function index()
     {
+        
         request()->session()->forget('branch');
+        // set the period
+        $this->_setPeriod();
 
-        if (! $this->period) {
-            $this->period = $this->activity->getPeriod();
+        // set the manager
+        $this->_getManager();
+
+        // if no direct reports this is the incorrect controller.
+        if (! $this->manager->directReports->count()) {
+            return redirect()->route('dashboard');
         }
-        if (auth()->user()->hasRole(['admin'])) {
-            $this->manager = $this->salesorg->getCapoDiCapo();
-        } else {
-            $this->manager = $this->person->where('user_id', '=', auth()->user()->id)->firstOrFail();
-        }
-
-        // get associated branches
-
-        $this->myBranches = array_keys($this->_getBranches());
-
+        $this->_getBranches();
+        
         if (count($this->myBranches) < 2) {
-            return $this->_checkBranches();
-        } else {
-            $data = $this->_getDashBoardData();
-            $reports = \App\Report::publicReports()->get();
-            $managers = $this->manager->load('directReports')->directReports;
+                    return $this->_checkBranches();
 
-            return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
+        } else {  
+
+            return $this->_displayDashboard();
         }
     }
-
     /**
-     * [_checkBranches description].
+     * [_setPeriod description]
      *
+     * @return $this->period [<description>]
+     */
+    private function _setPeriod()
+    {
+        if (! $this->period && ! session('period')) {
+            $this->period = $this->activity->getPeriod();
+        } else {
+
+            $this->period = session('period');
+        }
+    }
+    /**
+     * [_getManager description]
      * @return [type] [description]
+     */
+    private function _getManager()
+    {
+        if (! session('manager')) {
+            session(['manager'=>auth()->user()->id]);
+        }
+
+        $this->manager = $this->person
+            ->with('directReports')
+            ->where('user_id', '=', session('manager'))
+            ->firstOrFail();
+    }
+    /**
+     * [_getBranches description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getBranches()
+    {
+        $this->myBranches = $this->manager->getMyBranches();
+    }
+    /**
+     * [_checkBranches If count of branches is less than 2 redirect]
+     * 
+     * @return [redirect route] [description]
      */
     private function _checkBranches()
     {
-        if (count($this->myBranches) == 1) {
-            return redirect()->route('branchdashboard.show', $this->myBranches[0]);
-        } elseif (count($this->myBranches) == 0) {
-            return redirect()->route('user.show', auth()->user()->id)
-                    ->withWarning('You are not assigned to any branches. You can assign yourself here or contact Sales Ops');
+        if (count($this->myBranches)==0) {
+            //return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
+            return redirect()->route('user.show', $this->manager->user_id)
+                ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
+        if (count($this->myBranches)==1) {
+          
+            return redirect()->route('dashboard.show', $this->myBranches[0]);
+        }
+        
     }
-
+    
     /**
-     * [setPeriod description].
-     *
+     * [selectBranch entry point for drill down to branch]
+     * 
      * @param Request $request [description]
-     *
-     * @return redirect [<description>]
-     */
-    public function setPeriod(Request $request)
-    {
-        $this->period = $this->activity->setPeriod(request('period'));
-
-        return redirect()->route('newdashboard.index');
-    }
-
-    /**
-     * [selectBranch description].
-     *
-     * @param Request $request [description]
-     *
+     * 
      * @return [type]           [description]
      */
     public function selectBranch(Request $request)
     {
+       
         if (! $this->period) {
-            $this->period = $this->activity->getPeriod();
-        }
+            $this->period= $this->activity->getPeriod();
+        } 
         $data = $this->_getDashBoardData([request('branch')]);
-
         return $this->_displayDashboard($data);
+
     }
 
     /**
-     * [manager description].
-     *
+     * [manager description]
+     * 
      * @param Request     $request [description]
      * @param Person|null $manager [description]
-     *
+     * 
      * @return [type]               [description]
      */
-    public function manager(Request $request, Person $manager = null)
+    public function manager(Request $request, Person $manager=null)
     {
+        
         request()->session()->forget('branch');
-        if (! $this->period) {
-            $this->period = $this->activity->getPeriod();
-        }
-
+        $this->_setPeriod();
         if ($manager) {
             $this->manager = $manager;
         } else {
+          
             $this->manager = $this->person->findOrFail(request('manager'));
         }
+        
+        $this->_getBranches();
+    
+        if (count($this->myBranches) < 2) {
+            return $this->_checkBranches();
 
-        $team = $this->manager->descendantsAndSelf()
-            ->with('branchesServiced')->get();
+        } else {  
 
-        $branches = $team->map(
-            function ($mgr) {
-                return $mgr->branchesServiced->pluck('id')->toArray();
-            }
-        );
-
-        $this->myBranches = array_unique($branches->flatten()->toArray());
-
-        if (count($this->myBranches) == 0) {
-            return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
+            return $this->_displayDashboard();
         }
-        if (count($this->myBranches) == 1) {
-            return redirect()->route('dashboard.show', $this->myBranches[0]);
-        }
-        $data = $this->_getDashBoardData();
-
-        return $this->_displayDashboard($data);
+        
     }
 
+    
+    
     /**
-     * [_getDashBoardData description].
-     *
+     * [_getDashBoardData description]
+     * 
      * @return array $data     [description]
      */
     private function _getDashBoardData()
     {
-        $myBranches = $this->myBranches;
-
+        
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
-        $data['team'] = $this->_myTeamsOpportunities($data['branches']);
+    
+        if (! $data['team'] = $this->_myTeamsData($data['branches'])) {
+            
+            return false;
 
-        // this should go away and incorparte in charts
+        }
+     
+        // this should go away and incorporate in charts
         $data['chart'] = $this->_getChartData($data['branches']);
-
+     
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
-
+        
         return $data;
     }
-
     /**
-     * [_displayDashboard description].
-     *
-     * @param [type] $data [description]
-     *
+     * [_displayDashboard description]
+     * 
      * @return [type]       [description]
      */
-    private function _displayDashboard($data)
+    private function _displayDashboard()
     {
-        if ($data['branches']->count() > 1) {
+        $data = $this->_getDashBoardData();
+        if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team']['me']->directReports()->get();
-
-            return response()->view('opportunities.mgrindex', compact('data', 'myBranches', 'reports', 'managers'));
+            
+            return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
+          
         } else {
+
             $branch = $data['branches']->first();
 
             return response()->view('branches.dashboard', compact('data', 'branch'));
         }
     }
-
+    
+    
+    
     /**
-     * [_getBranches description].
-     *
-     * @return [type] [description]
-     */
-    private function _getBranches()
-    {
-        if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')) {
-            return $this->branch->all()->pluck('branchname', 'id')->toArray();
-        } else {
-            return  $this->person->myBranches();
-        }
-    }
-
-    /**
-     * [_myTeamsOpportunities description].
-     *
+     * [_myTeamsData description]
+     * 
      * @param Collection $branchdata [description]
-     *
+     * 
      * @return [type]                 [description]
      */
-    private function _myTeamsOpportunities(Collection $branchdata)
+    private function _myTeamsData($branchdata)
     {
-        $stats = ['leads',
-                'opportunities',
-                'Top25',
-                'booked',
-                'won',
-                'lost',
-                'pipeline',
-                'activities', ];
-        $teamroles = [14, 6, 7, 3, 9];
+
+        $teamroles = [14,6,7,3,9];
         $data['me'] = $this->person->findOrFail($this->manager->id);
         // this might return branch managers with no branches!
-        $data['team'] = $this->person
-            ->where('reports_to', '=', $this->manager->id)
+        $data['team'] =  $this->person
+            ->where(
+                function ($q) {
+                    $q->where('reports_to', $this->manager->id);
+                }
+            )
             ->with('branchesServiced')
-            ->withRoles($teamroles)
+            ->withRoles($teamroles) 
             ->get();
 
-        // get all branch managers
-        $branchManagerRole = 9;
-
-        foreach ($data['team'] as $team) {
-            $data['branchteam'] = $team->descendantsAndSelf()
-                ->withRoles([$branchManagerRole])
-                ->has('branchesServiced')
-                ->with('branchesServiced')
-                ->get();
-
-            $branches = $data['branchteam']->map(
-                function ($person) {
-                    return $person->branchesServiced->pluck('id');
-                }
-            );
-
-            $branches = $branches->flatten();
-
-            if ($data['branchteam']->count() > 0) {
-                $data['data'][$team->id]['leads'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('leads_count');
-
-                $data['data'][$team->id]['activities'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->where('completed', 1)
-                      ->sum('activities_count');
-
-                $data['data'][$team->id]['activitiestype'] = $branchdata
-                    ->whereIn('id', $branches)
-                    ->map(
-                        function ($branch) {
-                            return $branch->activities->groupBy('activitytype_id')->toArray();
-                        }
-                    );
-
-                $data['data'][$team->id]['won'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('won');
-
-                $data['data'][$team->id]['lost'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('lost');
-
-                $data['data'][$team->id]['Top25'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('Top25');
-
-                $data['data'][$team->id]['open'] = $branchdata
-                      ->whereIn('id', $branches)
-                      ->sum('open');
-            }
+        if (! $data['team']->count()) {
+            return false;
         }
+        // get all branch managers
+        
+        foreach ($data['team'] as $team) {
 
+            $data = $this->_getBranchManagerData($team, $branchdata, $data);
+
+        }
+        
         $data = $this->_getCharts($data);
 
         return $data;
     }
-
     /**
-     * [_getCharts description].
-     *
-     * @param array $data [description]
-     *
+     * [_getBranchManagerData description]
+     * 
+     * @param  [type] $team [description]
+     * 
      * @return [type]       [description]
      */
-    private function _getCharts(array $data)
+    private function _getBranchManagerData(Person $team, Collection $branchdata, array $data)
     {
+        $data['branchteam'] = $team->descendantsAndSelf()
+            ->withRoles([$this->branchManagerRole])
+            ->has('branchesServiced')
+            ->with('branchesServiced')
+            ->get();
+
+        
+        $branches = $data['branchteam']->map(
+            function ($person) {
+                return $person->branchesServiced->pluck('id');
+            }
+        )->flatten();
+        
+        //$branches = $branches;
+
+        $mybranchdata = $branchdata->filter(
+            function ($branch) use ($branches) {
+                return in_array($branch->id, $branches->toArray());
+            }
+        );
+
+        if ($data['branchteam']->count() > 0 ) {
+            $data['data'][$team->id]['leads'] = $mybranchdata->sum('leads_count');
+            $data['data'][$team->id]['activities'] = $mybranchdata->sum('activities_count');
+            $data['data'][$team->id]['activitiestype'] = $this->_getSummaryBranchActivitiesByType($mybranchdata);       
+            $data['data'][$team->id]['won'] = $mybranchdata->sum('won_opportunities');
+            $data['data'][$team->id]['lost'] = $mybranchdata->sum('lost_opportunities');
+            $data['data'][$team->id]['Top25'] = $mybranchdata->sum('top25_opportunities');
+            $data['data'][$team->id]['open'] = $mybranchdata->sum('open_opportunities');
+            
+        }
+        return $data;
+    }
+    /**
+     * [_getSummaryBranchActivitiesByType description]
+     * 
+     * @param Collection $mybranchdata [description]
+     * 
+     * @return [type]                   [description]
+     */
+    private function _getSummaryBranchActivitiesByType(Collection $mybranchdata)
+    {
+        dd($mybranchdata);
+        $types =$mybranchdata->first()->activityFields;
+        foreach ($types as $type) {
+            $type=str_replace(" ", "_", strtolower($type));
+            $data[$type] = $mybranchdata->sum($type);
+
+
+        }
+        return $data;
+    }
+    /**
+     * [_getCharts description]
+     * 
+     * @param array $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getCharts(array $data) 
+    {
+        
         $data['activities'] = $this->chart->getTeamActivityChart($data);
         $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
         $data['Top25chart'] = $this->chart->getTeamTop25Chart($data);
         $data['winratiochart'] = $this->chart->getWinRatioChart($data);
         $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
         $data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
-
+        
         return $data;
     }
+    
 
-    /**
-     * [_getChartData description].
-     *
-     * @param [type] $results [description]
-     *
-     * @return [type]          [description]
-     */
-    private function _getChartData($results)
+    
+    
+     /**
+      * [_getChartData description]
+      * 
+      * @param [type] $results [description]
+      * 
+      * @return [type]          [description]
+      */
+    private function _getChartData($results) 
     {
+
+
         $string = '';
 
         foreach ($results as $branch) {
-            $string = $string.'["'.$branch->branchname.'",  '.$branch->salesappts.',  '.$branch->won.', '.($branch->wonvalue ? $branch->wonvalue : 0).'],';
+           
+            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
+         
         }
-
+     
         return $string;
+
     }
 
-    /**
-     * [_getTeamLogins description].
-     *
-     * @param array $team [description]
-     *
-     * @return [type]       [description]
-     */
+      
+      /**
+       * [_getTeamLogins description]
+       * 
+       * @param array $team [description]
+       * 
+       * @return [type]       [description]
+       */
     private function _getTeamLogins(array $team)
     {
+      
         $track = $this->person->whereIn('id', $team)
-            ->with('userdetails', 'userdetails.usage')
+            ->with(
+                ['userdetails'=>function ($q) {
+                    $q->withCount('usage');
+                }
+                ]
+            )
             ->get();
-
+        
         return $track->map(
             function ($person) {
+         
                 return [$person->fullName() => [
                       'first'=>$person->userdetails->usage->min('lastactivity'),
                       'last'=>$person->userdetails->usage->max('lastactivity'),
-                      'count'=>$person->userdetails->usage->count(), ]];
+                      'count'=>$person->userdetails->usage->count()]];
             }
         );
     }
+      
 }

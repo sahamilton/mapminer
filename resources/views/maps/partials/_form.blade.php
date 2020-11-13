@@ -106,8 +106,8 @@ class= "btn btn-success ">
 <input type="hidden" name="lat" id ="lat" value="{{isset($data['lat']) ? $data['lat'] : '39.8282'}}" />
 </form>
 
-<?php $action = '/findme';?>
-@include('partials._noaddressmodal')
+
+
 <script>
 
 $("#search").change(function() {

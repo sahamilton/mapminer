@@ -24,6 +24,7 @@ class ReportFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'title'=>'required,unique:reports,title',
             'job'=>'unique:reports,job',
             'export'=>'unique:reports,export',
         ];

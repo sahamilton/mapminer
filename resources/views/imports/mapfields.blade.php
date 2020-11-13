@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 @if(! isset($data['route']))
-<?php $data['route'] = 'imports.mapfields';?>
+@php  $data['route'] = 'imports.mapfields';@endphp
 @endif
 <div class="container" style="margin-bottom:80px">
 <h2>@if(isset($title)) {{$title}} @endif</h2>
@@ -30,9 +30,7 @@
             <select name="fields[{{$field}}]">
                 <option value="@ignore">ignore</option>
                 <option value="@add">include (new)</option>
-               @foreach ($columns as $column) 
-        
-                  
+               @foreach ($columns as $column)   
 
                     <option @if(in_array($column->Field,$requiredFields)) style="color:red" @endif value = '{{$column->Field}}'
                                         
@@ -63,6 +61,7 @@
 
 </tbody>
 </table>
+
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Map Fields" />
 
@@ -71,8 +70,7 @@
     <input type="hidden" name="additionaldata[{{$key}}]" value="{{$value}}" />
     @endforeach
 @endif
-@php $hidden = ['lead_source_id', 'serviceline', 'step', 'contacts', 'branch_ids', 'file', 'type', 'table']; @endphp
-
+@php $hidden = ['lead_source_id', 'step', 'contacts', 'branch_ids', 'file', 'type', 'table']; @endphp
 @foreach ($hidden as $hide)
     @if(isset($data[$hide]))
         <input type="hidden" name="{{$hide}}" value="{{$data[$hide]}}" />

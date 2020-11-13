@@ -46,8 +46,8 @@ class DocumentFormRequest extends FormRequest
             'dateto'=>'required',
             'file'=>'required_without_all:location|file|mimetypes:'.implode(',', $this->mimetypes),
             'location'=>'required_without_all:file',
-            'vertical'=>'required',
-            'salesprocess'=>'required',
+            'vertical'=>'required_without:campaigns',
+            'campaigns'=>'required_without:vertical',
         ];
     }
 

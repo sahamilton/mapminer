@@ -79,4 +79,23 @@
       
               </div>
           </div>
+
+          <div class="form-group {{ $errors->has('primary') ? ' has-error' : '' }}">
+              <label class="col-md-4 control-label">Primary</label>
+              <div class="input-group input-group-lg">
+                  <input type="checkbox"
+                    class="form-control" 
+                    name='primary' 
+                    title="primary"
+                    @if(isset($contact) && $contact->primary ==1)
+                    checked 
+                    @endif 
+                    value="1">
+                
+                      <span class="help-block">
+                      <strong>{{$errors->has('primary') ? $errors->first('primary')  : ''}}</strong>
+                      </span>
+      
+              </div>
+          </div>
          

@@ -4,17 +4,21 @@
 @php $statuses = [1=>'Offered to',2=>'Owned by','4'=>'Owned by*']; @endphp
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
+
 <p>
     @if($location->company)
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
      
     @endif
 </p>
-
+@if($owned)
 @include('addresses.partials._ranking')
-
-<p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
+@endif
+<p><strong>Location Source:</strong> {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
+<p><strong>Type:</strong> {{ucwords($location->addressable_type)}}</p>
+<p><strong>Date Added:</strong> {{$location->created_at->format('Y-m-d')}}</p>
+
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
 
@@ -33,7 +37,7 @@
       role="tab" 
       aria-controls="details" 
       aria-selected="true">
-    <strong> Details</strong>
+    <strong>  Details</strong>
   </a>
 @if(isset($owned))
 <a class="nav-item nav-link"  
@@ -62,7 +66,7 @@
 
     <strong>Contacts</strong>
   </a>
-  @if($owned && $owned ==2)
+ 
     <a class="nav-item nav-link" 
         data-toggle="tab" 
         href="#activities"
@@ -72,7 +76,7 @@
         aria-selected="false">
           <strong>Activities</strong>
     </a>
-  @endif
+  
   <a class="nav-item nav-link" 
       data-toggle="tab" 
       href="#team"
@@ -158,7 +162,7 @@
 
     </div>
     @endif
-        @if($location->addressable_type == 'weblead')
+    @if($location->addressable_type == 'weblead')
     <div id="weblead" class="tab-pane fade">
       
        @include('addresses.partials._tabwebleads') 
@@ -172,7 +176,7 @@
 
     </div>
 
-    <div id="contacts" class="tab-pane fade">
+    <div id="company" class="tab-pane fade">
       @include('projects.partials._companylist')
       
       
@@ -213,14 +217,21 @@
     </div>
 
   </div>
-
-
 @include('partials._modal')
+@if($owned)
+  @include('addresses.partials._deleteleadmodal')
+  @include('addresses.partials._removecampaignmodal')
+@endif
+@include('addresses.partials._addresscampaignmodal')
+@if($campaigns->count())
+  @include('addresses.partials._removecampaignmodal')
+@endif
 @include('opportunities.partials._closemodal')
 @include('addresses.partials._reassignlead')
 @include('addresses.partials._rateaddressform')
 @include('partials._scripts')
 @include('addresses.partials.map')
+
 
 
 @endsection

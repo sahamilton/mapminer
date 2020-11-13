@@ -52,14 +52,7 @@ $cumulative = array();
         aria-controls="home" aria-selected="true">Usage
     </a>
     </li>
-     <li class="nav-item">
-      <a class="nav-link" 
-          data-toggle="tab" 
-          href="#menu1" 
-          aria-controls="menu1" 
-          aria-selected="true">Activity
-      </a>
-    </li>
+     
     <li class="nav-item">
       <a class="nav-link" 
           data-toggle="tab" 
@@ -100,14 +93,7 @@ $cumulative = array();
         @include('admin.partials.firsttimers')
         <div style="clear:both"></div>
     </div>
-    <div id="menu1" class="tab-pane fade">
-      <h3>Account Activity</h3>
-
-      
-        @include('admin.partials.newNotes')
-        @include('admin.partials.newLeadNotes')  
-        @include('admin.partials.newProjectNotes') 
-    </div>
+    
     <div id="menu2" class="tab-pane fade">
       <h3>Account Health</h3>
         @include ('admin.partials.nosalesnotes')

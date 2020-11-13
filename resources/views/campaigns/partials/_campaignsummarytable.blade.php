@@ -3,6 +3,7 @@
     class="table table-striped"
     >
     <thead>
+
         <th>Branch</th>
         <th>Branch Name</th>
         @foreach ($fields as $field)

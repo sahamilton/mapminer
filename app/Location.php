@@ -1,12 +1,13 @@
 <?php
-
 namespace App;
 
 use App\Presenters\LocationPresenter;
-use McCool\LaravelAutoPresenter\HasPresenter;
+//use McCool\LaravelAutoPresenter\HasPresenter;
 
-class Location extends Model implements HasPresenter
+
+class Location extends Model 
 {
+
     use Geocode,Addressable;
 
     // Add your validation rules here
@@ -18,86 +19,91 @@ class Location extends Model implements HasPresenter
         'zip' => 'required',
         'company_id' => 'required',
         'segment' => 'required',
-        'businesstype' => 'required',
+        'businesstype' => 'required'
 
     ];
+
 
     public $table = 'locations';
     public $branch;
 
-    public $fillable = ['businessname', 'street', 'address2', 'city', 'state', 'zip', 'company_id', 'phone', 'contact', 'lat', 'lng', 'segment', 'businesstype', 'position'];
 
-    protected $hidden = ['created_at', 'updated_at', 'id'];
+    public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype','position'];
 
-    /**
-     * [relatedNotes description].
-     * @return [type] [description]
-     */
+    protected $hidden =  ['created_at','updated_at','id'];
+/**
+ * [relatedNotes description]
+ * @return [type] [description]
+ */
     public function relatedNotes()
     {
+
         return $this->hasMany(Note::class, 'related_id')->where('type', '=', 'location')->with('writtenBy');
     }
-
-    /**
-     * [company description].
-     * @return [type] [description]
-     */
+/**
+ * [company description]
+ * @return [type] [description]
+ */
     public function company()
     {
+
         return $this->belongsTo(Company::class)->with('managedBy');
     }
-
-    /**
-     * [branch description].
-     * @return [type] [description]
-     */
+/**
+ * [branch description]
+ * @return [type] [description]
+ */
     public function branch()
     {
+
         return $this->belongsTo(Branch::class);
     }
+    
 
-    /**
-     * [contacts description].
-     * @return [type] [description]
-     */
+/**
+ * [contacts description]
+ * @return [type] [description]
+ */
     public function contacts()
     {
         return $this->hasMany(Contact::class);
     }
 
-    /**
-     * [instate description].
-     * @return [type] [description]
-     */
+/**
+ * [instate description]
+ * @return [type] [description]
+ */
     public function instate()
     {
+
         return $this->belongsTo(State::class, 'state', 'statecode');
     }
-
-    /**
-     * [verticalsegment description].
-     * @return [type] [description]
-     */
+/**
+ * [verticalsegment description]
+ * @return [type] [description]
+ */
     public function verticalsegment()
     {
         return $this->hasOne(SearchFilter::class, 'id', 'segment');
     }
-
-    /**
-     * [clienttype description].
-     * @return [type] [description]
-     */
+/**
+ * [clienttype description]
+ * @return [type] [description]
+ */
     public function clienttype()
     {
+
         return $this->hasOne(SearchFilter::class, 'id', 'businesstype');
     }
 
-    /**
-     * [watchedBy description].
-     * @return [type] [description]
-     */
+/**
+ * [watchedBy description]
+ * @return [type] [description]
+ */
+
     public function watchedBy()
     {
+
         return $this->belongsToMany(User::class, 'location_user', 'location_id', 'user_id')->withPivot('created_at', 'updated_at');
     }
 
@@ -106,12 +112,13 @@ class Location extends Model implements HasPresenter
         return LocationPresenter::class;
     }
 
-    /**
-     * [nearbyBranches description].
-     * @return [type] [description]
-     */
+/**
+ * [nearbyBranches description]
+ * @return [type] [description]
+ */
     public function nearbyBranches($servicelines, $limit = 5)
     {
+
         return Branch::whereHas(
             'servicelines', function ($q) use ($servicelines) {
                 $q->whereIn('servicelines.id', $servicelines);
@@ -120,15 +127,16 @@ class Location extends Model implements HasPresenter
     }
 
     /**
-     * [nearbySalesRep description].
-     *
+     * [nearbySalesRep description]
+     * 
      * @param [type]  $serviceline [description]
-     * @param int $limit       [description]
-     *
+     * @param integer $limit       [description]
+     * 
      * @return [type]               [description]
      */
     public function nearbySalesRep($serviceline = null, $limit = 5)
     {
+
         return Person::with('userdetails.roles')
             ->whereHas(
                 'userdetails.serviceline', function ($q) use ($serviceline) {
@@ -146,21 +154,22 @@ class Location extends Model implements HasPresenter
         //return Branch::nearby($this,'100')->limit(5);
     }
 
+
     /**
-     * [locationAddress description].
-     *
+     * [locationAddress description]
+     * 
      * @return [type] [description]
      */
     public function locationAddress()
     {
-        return $this->street.' '.$this->address2.' '.$this->city.' '.$this->state;
+        return ($this->street . " " . $this->address2 . " " .$this->city . " " . $this->state);
     }
-
+    
     /**
-     * [makeNearbyLocationsXML description].
-     *
+     * [makeNearbyLocationsXML description]
+     * 
      * @param [type] $result [description]
-     *
+     * 
      * @return [type]         [description]
      */
     public function makeNearbyLocationsXML($result)
@@ -170,12 +179,11 @@ class Location extends Model implements HasPresenter
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
     }
-
     /**
-     * Function getStateSummary.
-     *
+     * Function getStateSummary
+     * 
      * @param int $id Company ID
-     *
+     * 
      * @return Collections     location count by state for company
      */
     public function getStateSummary($id)

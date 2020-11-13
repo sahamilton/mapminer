@@ -1,8 +1,6 @@
 <?php
-
-use Illuminate\Http\Request;
-
-/*
+use Illuminate\Http\Request;       
+   /**
      *  Admin Routes
      *  ------------------------------------------
      */
@@ -11,10 +9,12 @@ use Illuminate\Http\Request;
         Route::post('branchassignments/email', ['as'=>'branchteam.email', 'uses'=>'Admin\BranchManagementController@confirm']);
         Route::post('branchassignments/send', ['as'=>'branchassignments.send', 'uses'=>'Admin\BranchManagementController@emailAssignments']);
         Route::get('branch/manage', ['as'=>'branch.management', 'uses'=>'Admin\BranchManagementController@index']);
-        Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
+        Route::get('branch/manage/export/{type?}', ['as'=>'branches.manage.export', 'uses'=>'Admin\BranchManagementController@export']);
+        Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'BranchAssignmentController@checkBranchReporting']);
+        
 
         // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
-
+        
         //   Campaigns (email)
         Route::get('campaigns/{campaign}/track', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@show']);
         Route::get('campaigns/{campaign}/launch', ['as'=>'campaigns.launch', 'uses'=>'CampaignController@launch']);
@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
         Route::get('campaigns/reports/{campaign?}', ['as'=>'campaigns.select', 'uses'=>'CampaignController@selectReport']);
         Route::get('campaigns/{campaign}/export', ['as'=>'campaigns.export', 'uses'=>'CampaignTrackingController@export']);
         Route::get('campaigns/{campaign}/companyexport', ['as'=>'campaigns.company.export', 'uses'=>'CampaignTrackingController@exportCompany']);
+        Route::get('campaigns/{campaign}/manager/{person}', ['as'=>'campaigns.manager', 'uses'=>'CampaignController@select']);
         Route::post('campaigns/{campaign}/report', ['as'=>'campaigns.report', 'uses'=>'CampaignController@export']);
         Route::post('campaigns/{campaign}/company', ['as'=>'campaigns.companyreport', 'uses'=>'CampaignTrackingController@company']);
         Route::get('campaigns/{campaign}/company', ['as'=>'campaigns.company', 'uses'=>'CampaignTrackingController@summaryByCompany']);
@@ -44,6 +45,8 @@ use Illuminate\Http\Request;
 
         //   Database Backups
         Route::resource('database', 'DatabaseBackupManagerController');
+
+        
 
         //   User Management
 
@@ -69,6 +72,8 @@ use Illuminate\Http\Request;
         Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
         Route::resource('user/importcleanse', 'UsersImportController');
 
+
+
         Route::get('users/newusers', ['as'=>'import.newusers', 'uses'=>'UsersImportController@newUsers']);
         Route::post('users/createnewusers', ['as'=>'import.createnewusers', 'uses'=>'UsersImportController@createNewUsers']);
 
@@ -83,11 +88,14 @@ use Illuminate\Http\Request;
         //Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
 
         Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
-        Route::get('reports/review', ['as'=>'reports.review', 'uses'=>'ReportsController@review']);
+        Route::get('reports/review/{filename?}', ['as'=>'reports.review', 'uses'=>'ReportsController@review']);
         Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
         Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
 
-        Route::resource('reports', 'ReportsController', ['except'=>['index', 'show']]);
+
+        Route::resource('reports', 'ReportsController', ['except'=>['index','show']]);
+        
+        
         //   User Role Management
 
         Route::resource('roles', 'Admin\AdminRolesController');
@@ -98,6 +106,8 @@ use Illuminate\Http\Request;
         //     Howtofields
         Route::resource('howtofields', 'HowtofieldsController');
 
+
+
         //     People
         Route::get('person/import', ['as'=>'person.bulkimport', 'uses'=>'PersonsController@import']);
         Route::post('person/import', ['as'=>'person.import', 'uses'=>'PersonsController@processimport']);
@@ -106,12 +116,14 @@ use Illuminate\Http\Request;
         //     ServiceLines
         Route::resource('serviceline', 'ServicelinesController');
 
+
         //   Lead Status
 
         Route::resource('leadstatus', 'LeadStatusController');
 
          //     Regions
         Route::resource('region', 'RegionsController');
+
 
         //   Sales Process
 
@@ -120,12 +132,15 @@ use Illuminate\Http\Request;
         //   Training
 
         Route::resource('training', 'TrainingController')->except(['index', 'show']);
+        ;
 
         //   Admin Dashboard
         Route::get('watching/{user}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
         Route::get('userlogin/{view?}', ['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
         Route::get('userlogin/download/{view?}', ['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
         Route::get('/', ['as'=>'dashboard', 'uses'=>'Admin\AdminDashboardController@dashboard']);
+
+        Route::post('dashboard/show', ['as'=>'dashboard.show', 'uses'=>'NewDashboardController@show']);
 
         //     Comments
         Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
@@ -134,12 +149,13 @@ use Illuminate\Http\Request;
         Route::get('news/{id}/audience', ['as'=>'news.audience', 'uses'=>'NewsController@audience']);
         Route::resource('news', 'NewsController', ['except' => ['index', 'show']]);
 
+
         //     Notes
         Route::get('notes/{companyid}/co', ['as'=>'notes.company', 'uses'=>'NotesController@companynotes']);
         Route::get('locationnotes', ['as'=>'locations.notes', 'uses'=>'NotesController@index']);
 
         //     Search Filters
-
+        Route::get('htfimport', ['as'=>'htfimport', 'uses'=>'HowtofieldsController@import']);
         Route::get('searchfilters/analysis/{id?}', ['as'=>'vertical.analysis', 'uses'=>'SearchFiltersController@filterAnalysis']);
         Route::get('searchfilters/export/{id?}', ['as'=>'vertical.export', 'uses'=>'SearchFiltersController@export']);
         Route::get('searchfilters/promote/{filterid}', ['as'=>'admin.searchfilter.promote', 'uses'=>'SearchFiltersController@promote']);
@@ -153,21 +169,27 @@ use Illuminate\Http\Request;
         Route::resource('jobs', 'FailedJobsController');
         Route::get(
             'testjob', function () {
+                $opportunity = App\Opportunity::whereHas('branch')->with('branch.branch.manager.userdetails')->first();
+                
+                App\Jobs\WonOpportunity::dispatch($opportunity);
                 //$companies = App\Company::whereIn('id', [532])->get();
-                $period['from'] = \Carbon\Carbon::now()->subDay()->startOfDay();
-                $period['to'] = \Carbon\Carbon::now()->subDay()->endOfDay();
+                $opportunity = App\Opportunity::whereHas('branch')->whereHas('location')->latest()->first();
 
+                $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek(), 
+                    'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()];
+                //App\Jobs\BranchActivitiesDetail::dispatch($period);
+                //App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
-                //App\Jobs\BranchLogins::dispatch($period);
+                //App\Jobs\BranchLogins::dispatch();
                 App\Jobs\DailyBranch::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);
-                 //App\Jobs\RebuildPeople::dispatch();
+                //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
                  foreach ($filesInFolder as $file){
@@ -176,25 +198,26 @@ use Illuminate\Http\Request;
                  App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
                         ->dispatch($filename)->onQueue('mapminer');
                  }*/
-
+                 
                  /*}
-
+                 
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
                  App\Jobs\WeeklyActivityReminder::dispatch($period);*/
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
-                 /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now();/
-                App\Jobs\BranchStats::dispatch($period);*
+                 //$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                // $period['to'] = \Carbon\Carbon::now();
+                //App\Jobs\BranchStats::dispatch($period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //App\Jobs\ActivityOpportunityReport::dispatch();
-
+                
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
                 //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-                */
+                
             }
         );
+
 
         //   Tracking
         Route::resource('track', 'TrackController');
@@ -203,3 +226,4 @@ use Illuminate\Http\Request;
         Route::resource('versions', 'GitController');
 
         Route::get('authtest', ['as'=>'test', 'uses'=>'TestController@test']);
+

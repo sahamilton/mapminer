@@ -7,78 +7,147 @@ use Illuminate\Database\Eloquent\Model;
 
 class LeadSource extends Model
 {
-    public $table = 'leadsources';
-    public $dates = ['created_at', 'updated_at', 'datefrom', 'dateto'];
-    public $fillable = ['source', 'description', 'reference', 'datefrom', 'dateto', 'user_id', 'filename', 'type'];
+   
+    public $table='leadsources';
+    public $dates = ['created_at','updated_at','datefrom','dateto'];
+    public $fillable = ['source','description','reference','datefrom','dateto','user_id','filename','type'];
 
+    /**
+     * [verticals description]
+     * 
+     * @return [type] [description]
+     */
     public function verticals()
     {
         return $this->belongsToMany(SearchFilter::class, 'leadsource_searchfilter', 'leadsource_id', 'searchfilter_id');
     }
-
+    /**
+     * [leads description]
+     * 
+     * @return [type] [description]
+     */
     public function leads()
     {
         return $this->hasMany(Address::class, 'lead_source_id');
     }
+    /**
+     * [scopeSummary description]
+     * 
+     * @param Builder $query [description]
+     * 
+     * @return Builder        [description]
+     */
+    public function scopeSummary($query)
+    {
 
+        $query->withCount(
+            [
+              'leads', 
+              'leads as unassigned'=>function ($q) {
+                  $q->doesntHave('assignedToBranch');
+              },
+              'leads as assigned'=>function ($q) {
+                  $q->has('assignedToBranch');
+              },
+
+            ]
+        );
+
+
+    }
+    /**
+     * [assigned description]
+     * 
+     * @return [type] [description]
+     */
     public function assigned()
     {
+
         return $this->whereHas(
-            'addresses', function ($q) {
+            'leads', function ($q) {
                 $q->has('assignedToBranch');
             }
-        )
-        ->with('addresses');
+        );
 
-        /* return $this->selectRaw('`leadsources`.*, count(`address`.`id`) as assigned')
-             ->join('leads','leadsources.id','=','leads.lead_source_id')
-             ->join('lead_person_status','leads.id','=','lead_person_status.related_id')
-             ->groupBy('leadsources.id');
-*/
+     
     }
-
+    /**
+     * [branchleads description]
+     * 
+     * @return [type] [description]
+     */
     public function branchleads()
     {
-        return $this->hasManyThrough(AddressBranch::class, Address::class, 'lead_source_id', 'address_id');
-    }
 
+      return $this->hasManyThrough(AddressBranch::class, Address::class, 'lead_source_id', 'address_id');
+    }
+    /**
+     * [unassigned description]
+     * @return [type] [description]
+     */
     public function unassigned()
     {
-        return $this->whereHas('addresses', function ($q) {
-            $q->doesntHave('assignedToBranch');
-        });
-    }
 
+        return $this->whereHas(
+            'leads', function ($q) {
+                $q->doesntHave('assignedToBranch');
+            }
+        );
+    }
+    /**
+     * [addresses description]
+     * 
+     * @return [type] [description]
+     */
     public function addresses()
     {
         return $this->hasMany(Address::class, 'lead_source_id', 'id');
     }
+    /**
+     * [serviceline description]
+     * 
+     * @return [type] [description]
+     */
+    public function servicelines()
+    {
+      
+      return $this->belongsToMany(Serviceline::class);
 
+    }
+    /**
+     * [author description]
+     * 
+     * @return [type] [description]
+     */
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->with('person');
     }
-
+    /**
+     * [salesteam description] obsolete
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function salesteam($id)
     {
-        $query = "SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`address_person`.`status_id`, count(*) as count
+        $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`address_person`.`status_id`, count(*) as count
               FROM `address_person` ,addresses,persons
               where address_id = addresses.id 
               and person_id = persons.id
-              and addresses.lead_source_id = ".$id.'
+              and addresses.lead_source_id = ". $id . "
               group by name,id,address_person.status_id
-              order by persons.id,address_person.status_id';
+              order by persons.id,address_person.status_id";
 
         return \DB::select($query);
     }
-
     /**
-     * [branches description].
+     * [branches description]
      * @param  [type] $id [description]
      * @return [type]     [description]
      */
     public function branches($id)
     {
+
         return \App\AddressBranch::whereHas(
             'address', function ($q) use ($id) {
                 $q->where('lead_source_id', '=', $id);
@@ -86,18 +155,13 @@ class LeadSource extends Model
         )
         ->select('branch_id', DB::raw('count(*) as leads'))
              ->groupBy('branch_id')->with('branch')->get();
-
-        /* $query ="SELECT branches.id as id,branchname,`address_branch`.`status_id`, count(*) as count
-                 FROM `address_branch` ,addresses,branches
-                 where address_id = addresses.id
-                 and branch_id = branches.id
-                 and addresses.lead_source_id = ". $id . "
-                 group by branchname,id,address_branch.status_id
-                 order by branches.id,address_branch.status_id";
-
-            return \DB::select($query); */
+   
     }
-
+    /**
+     * [assignedTo description] obsolete
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function assignedTo($id = null)
     {
         $leads = $this->with('leads')->findOrFail($id);
@@ -107,53 +171,61 @@ class LeadSource extends Model
             $reps = $lead->salesteam->pluck('id')->toArray();
             $salesreps = array_unique(array_merge($reps, $salesreps));
         }
-
         return $salesreps;
     }
-
+    /**
+     * [unassignedLeads description]
+     * @return [type] [description]
+     */
     public function unassignedLeads()
     {
         return $this->hasMany(Lead::class, 'lead_source_id')->doesntHave('salesteam');
     }
-
+    /**
+     * [closedLeads description]
+     * 
+     * @return [type] [description]
+     */
     public function closedLeads()
     {
         return $this->hasMany(Lead::class, 'lead_source_id')->has('closedLead');
     }
-
+    /**
+     * [assignedLeads description]
+     * 
+     * @return [type] [description]
+     */
     public function assignedLeads()
     {
-        return $this->hasMany(Lead::class, 'lead_source_id')->has('salesteam');
+            return $this->hasMany(Lead::class, 'lead_source_id')->has('salesteam');
     }
-
+    /**
+     * [leadStatusSummary description]
+     * 
+     * @return [type] [description]
+     */
     public function leadStatusSummary()
     {
+
         return $this->withCount('addresses');
 
-        /*return $this->select(array('leadsources.*',
-                   \DB::raw('COUNT(leads.id) as allleads,
-                     COUNT(b.related_id) as ownedleads,
-                     COUNT(a.related_id) as closedleads,
-                     avg(a.rating) as ranking')))
-                 ->leftjoin('leads', 'leads.lead_source_id', '=', 'leadsources.id')
-                 ->leftjoin('lead_person_status as a', function($join){
-                     $join->on('leads.id', '=', 'a.related_id')->where('a.status_id','=',3);
-                 })
-                 ->leftjoin('lead_person_status as b','leads.id', '=', 'b.related_id')
-                 ->groupBy('leadsources.id');
-                 */
+    
     }
-
+    public function scopeActive()
+    {
+        return $this->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
+    }
     /**
-     * [leadRepStatusSummary description].
-     *
+     * [leadRepStatusSummary description]
+     * 
      * @param [type] $id [description]
-     *
+     * 
      * @return [type]     [description]
      */
     public function leadRepStatusSummary($id)
     {
-        $query = 'select persons.id, 
+        $query ="select persons.id, 
               persons.firstname,
               persons.lastname, 
               count(leads.id) as leadcount, 
@@ -164,8 +236,8 @@ class LeadSource extends Model
               lead_person_status 
               where persons.id = lead_person_status.person_id 
               and lead_person_status.related_id = leads.id 
-              and leads.lead_source_id = '.$id.' 
-              group by persons.id,status';
+              and leads.lead_source_id = ".$id." 
+              group by persons.id,status";
 
         return \DB::select($query);
     }

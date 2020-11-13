@@ -1,39 +1,43 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Requests\NewsFormRequest;
 use App\News;
+use Carbon\Carbon;
+use App\User;
+use App\Serviceline;
 use App\Person;
 use App\Role;
 use App\SearchFilter;
-use App\Serviceline;
-use App\User;
-use Carbon\Carbon;
+use App\Http\Requests\NewsFormRequest;
+use Illuminate\Support\Str;
 
 class NewsController extends BaseController
 {
+
+    
     public $news;
 
     /**
-     * [__construct description].
-     *
+     * [__construct description]
+     * 
      * @param News $news [description]
      */
     public function __construct(News $news)
     {
         $this->news = $news;
-
+        
         parent::__construct($news);
     }
-
+    
     /**
-     * Display a listing of news.
+     * Display a listing of news
      *
      * @return Response
      */
     public function index()
     {
+        
+        
         $news = $this->news
             ->whereHas(
                 'serviceline', function ($q) {
@@ -45,14 +49,14 @@ class NewsController extends BaseController
 
         return response()->view('news.index', compact('news'));
     }
-
     /**
-     * [admin description].
-     *
+     * [admin description]
+     * 
      * @return [type] [description]
      */
     public function admin()
     {
+    
         $news = $this->news
             ->whereHas(
                 'serviceline', function ($q) {
@@ -61,41 +65,44 @@ class NewsController extends BaseController
             )
         ->with('comments')
         ->orderBy('datefrom', 'desc')->get();
-
+       
         return response()->view('news.index', compact('news'));
     }
-
     /**
-     * Show the form for creating a new news.
+     * Show the form for creating a new news
      *
      * @return Response
      */
     public function create()
     {
+        
         $filters = new SearchFilter;
         $verticals = $filters->industrysegments();
         $servicelines = Serviceline::whereIn('id', $this->news->getUserServiceLines())
         ->pluck('serviceline', 'id')
         ->toArray();
-        $roles = Role::all();
-        $mode = 'create';
+        $roles=Role::all();
+        $mode='create';
 
         return response()->view(
-            'news.create',
+            'news.create', 
             compact('servicelines', 'verticals', 'roles', 'mode')
         );
     }
 
     /**
-     * [store description].
-     *
+     * [store description]
+     * 
      * @param NewsFormRequest $request [description]
-     *
+     * 
      * @return [type]                   [description]
      */
     public function store(NewsFormRequest $request)
     {
+        
+
         $data = request()->all();
+        $data['slug'] = Str::slug($data['title']);
         $data = $this->setDates($data);
         if ($news = $this->news->create($data)) {
             $news->serviceline()->attach(request('serviceline'));
@@ -106,93 +113,90 @@ class NewsController extends BaseController
                 $news->relatedRoles()->attach(request('roles'));
             }
         }
-
+        
         return redirect()->route('news.index');
     }
-
     /**
-     * [currentNews description].
-     *
+     * [currentNews description]
+     * 
      * @return [type] [description]
      */
     public function currentNews()
     {
         $news = $this->news->currentNews();
-
         return response()->view('news.index', compact('news'));
     }
-
     /**
-     * [show description].
-     *
+     * [show description]
+     * 
      * @param [type] $slug [description]
-     *
+     * 
      * @return [type]       [description]
      */
     public function show($slug)
     {
+
         $news = $this->news->with('relatedRoles')
             ->where('slug', '=', $slug)->first();
-
+        
         if (! $news) {
             return redirect()->route('currentnews')
-                ->with('message', 'No news found');
+                ->with('message', "No news found");
         }
-
         return response()->view('news.show', compact('news'));
     }
 
     /**
      * Show the form for editing the specified news.
      *
-     * @param int $id
-     *
+     * @param int $id 
+     * 
      * @return Response
      */
-    public function edit($id)
+    public function edit(News $news)
     {
         $filters = new SearchFilter;
         $verticals = $filters->industrysegments();
 
-        $news = $this->news
-            ->with('author', 'author.person', 'serviceline', 'relatedRoles', 'relatedIndustries')
-            ->findOrFail($id);
-        $mode = 'edit';
+        $news->load('author', 'author.person', 'serviceline', 'relatedRoles', 'relatedIndustries');
+        $mode='edit';
 
-        $roles = Role::all();
+
+        $roles=Role::all();
         $servicelines = Serviceline::whereIn('id', $this->userServiceLines)
             ->pluck('serviceline', 'id')
             ->toArray();
-
         return response()->view(
-            'news.edit',
+            'news.edit', 
             compact('news', 'servicelines', 'verticals', 'roles', 'mode')
         );
     }
 
     /**
-     * [update description].
-     *
+     * [update description]
+     * 
      * @param NewsFormRequest $request [description]
      * @param [type]          $id      [description]
-     *
+     * 
      * @return [type]                   [description]
      */
-    public function update(NewsFormRequest $request, $id)
+    public function update(NewsFormRequest $request, News $news)
     {
-        $news = $this->news->findOrFail($id);
-        $data = request()->all();
+        
 
+        $data = request()->all();
+        $data['slug'] = Str::slug($data['title']);
         $data = $this->setDates($data);
 
         if ($news->update($data)) {
             $news->serviceline()->sync(request('serviceline'));
 
+            
             $news->relatedIndustries()->sync(request('vertical'));
+
 
             $news->relatedRoles()->sync(request('roles'));
         }
-
         return redirect()->route('news.index');
     }
 
@@ -200,37 +204,35 @@ class NewsController extends BaseController
      * Remove the specified news from storage.
      *
      * @param int $id [desctiption]
-     *
+     * 
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(News $news)
     {
-        $this->news->destroy($id);
+        $title = $news->title;
+        $news->delete();
 
-        return redirect()->route('news.index');
+        return redirect()->route('news.index')->withMessage("News Item '".$title."' deleted.");
     }
-
     /**
-     * [audience description].
-     *
+     * [audience description]
+     * 
      * @param [type] $id [description]
-     *
+     * 
      * @return [type]     [description]
      */
-    public function audience($id)
+    public function audience(News $news)
     {
-        $news = $this->news->findOrFail($id);
-        $people = $news->audience($id);
+        
+        $people = $news->load('audience')->audience;
         $audience = User::whereIn('id', $people)
             ->with('person', 'person.industryfocus', 'roles')
             ->get();
-
         return response()->view('news.audience', compact('news', 'audience'));
     }
-
     /**
-     * [noNews description].
-     *
+     * [noNews description]
+     * 
      * @return [type] [description]
      */
     public function noNews()
@@ -238,21 +240,21 @@ class NewsController extends BaseController
         $noNewsDate = now();
         $this->_updateNewsDate($noNewsDate);
     }
-
     /**
-     * [setNews description].
+     * [setNews description]
+     * 
      */
     public function setNews()
     {
+
         $noNewsDate = null;
         $this->_updateNewsDate($noNewsDate);
     }
-
     /**
-     * [updateNewsDate description].
-     *
+     * [updateNewsDate description]
+     * 
      * @param [type] $noNewsDate [description]
-     *
+     * 
      * @return [type]             [description]
      */
     private function _updateNewsDate($noNewsDate)
@@ -264,4 +266,5 @@ class NewsController extends BaseController
         $user->save();
         $user->timestamps = true;
     }
+   
 }

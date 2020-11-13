@@ -28,10 +28,22 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
+    $(document).on('show.bs.modal','#confirm-remove-campaign', function(e) {
+        $(this).find('#campaigndeletetitle').html($(e.relatedTarget).data('title'));
+        $(this).find('#campaign_id').val($(e.relatedTarget).data('id'));
+    }); 
+    $(document).on('show.bs.modal','#addtocampaign', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#address_id').val($(e.relatedTarget).data('id'));
+    });
     $(document).on('show.bs.modal','#run-report', function(e) {
         $(this).find('#title').html($(e.relatedTarget).data('title'));
         $(this).find('#period-form').attr('action',$(e.relatedTarget).data('href'));
     }); 
+     $(document).on('show.bs.modal','#delete-lead', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+    });
     $(document).on('show.bs.modal','#run-report-wop', function(e) {
         $(this).find('#title').html($(e.relatedTarget).data('title'));
         $(this).find('#period-form').attr('action',$(e.relatedTarget).data('href'));
@@ -104,6 +116,9 @@ $(document).ready(function()
 	    var checkboxes = $(this).closest('form').find(':checkbox');
 	    checkboxes.prop('checked', $(this).is(':checked'));
 	});
+
+  
+
 
 	$( "#activitydate" ).datepicker( {altField : "#activitydate",
     altFormat: "yy-mm-dd"});
@@ -265,7 +280,47 @@ $(document).ready(function() {
     copyToClipboard(text, el);
   });
 });
+
+$(document).ready(function() {
+            var bloodhound = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/myleads/find?q=%QUERY%',
+                    wildcard: '%QUERY%'
+                },
+            });
+            
+            $('#leadsearch').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            }, {
+                name: 'leads',
+                source: bloodhound,
+                display: function(data) {
+
+                    return data.businessname +" "+ data.city //Input value to be set when you select a suggestion. 
+                },
+                templates: {
+                    empty: [
+                        '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                    ],
+                    header: [
+                        '<div class="list-group search-results-dropdown">'
+                    ],
+                    suggestion: function(data) {
+                        var url = '{{ route("address.show", ":slug") }}';
+                        var color = 'orange';
+                        url = url.replace(':slug', data.id,color);
+                    return '<div font-weight:bold; margin-top:-10px ! important;" class="list-group-item"><a style="color:' + color +'" href="'+ url +'">'
+                         + data.businessname + ', ' + data.city +   '</a></div></div>'
+                    }
+                }
+            });
+        });
 </script>
+
 
 
 

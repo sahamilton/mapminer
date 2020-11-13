@@ -9,7 +9,8 @@
                 <h3>Add Note</h3>
                 <form id ='addNoteForm' >
                 <div class="form-group @if ($errors->has('news')) has-error @endif">
-                {{Form::textarea('note')}}
+                    <textarea class="form-group" name="note"></textarea>
+                
                 </div>
                 <input type="hidden" id="location_id" name="location_id" value="" />
                 

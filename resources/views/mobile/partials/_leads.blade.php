@@ -28,9 +28,9 @@
             <td>{{$result->fullAddress()}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>
-                @if($result->lastActivity->count() > 0)
+                @if($result->lastActivity)
 
-                    {{$result->lastActivity->first()->activity_date->format('Y-m-d')}} 
+                    {{$result->lastActivity->activity_date->format('Y-m-d')}} 
                 @endif
                <br />
                @if(isset($result->address_id))<a 

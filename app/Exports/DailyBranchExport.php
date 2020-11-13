@@ -1,46 +1,126 @@
 <?php
-
 namespace App\Exports;
 
 use App\Branch;
 use App\Person;
-use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class DailyBranchExport implements FromView
+
+class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
+    use Exportable;
+    
     public $period;
     public $branches;
     public $person;
+    public $fields = [
+        'branchname'=>'Branch',
+        'manager'=>'Manager',
+        'reportsto'=>'Reports To',
+        
+    ];
+    public $allFields;
+    public $leadFields = [
+
+        'newbranchleads'=>'# New Leads Created',
+
+    ];
+
+    public $activityFields  =  [
+        'proposal'=>'# Completed Proposals',
+        'sales_appointment'=>'# Completed Sales Appts',
+        'site_visit'=>'# Completed Site Visits'
+
+    ];
 
     /**
-     * [__construct description].
-     *
-     * @param array $period [description]
+     * [__construct description]
+     * 
+     * @param Array $period   [description]
+     * @param array $branches [description]
      */
-    public function __construct(array $period, array $person)
+    public function __construct(Array $period, array $branches)
     {
+       
         $this->period = $period;
-        $this->person = $person;
+        $this->branches = $branches;
+        $this->allFields = array_merge($this->fields, $this->leadFields,$this->activityFields);
+
+
+       
+    }
+        
+    public function headings(): array
+    {
+        
+
+        return [
+            [' '],
+            ['Branch Stats'],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [' ' ],
+            $this->allFields
+        ];
+    }
+    
+    
+    public function map($branch): array
+    {
+        
+        foreach ($this->allFields as $key=>$field) {
+            switch ($key) {
+            
+            case 'branchname':
+                $detail[] = $branch->branchname;
+                break;
+            
+            case 'manager':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->postName() :'';
+                break;
+
+            case 'reportsto':
+                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                        $detail[] =  $branch->manager->first()->reportsTo->fullName();
+                } else {
+                        $detail[] = 'No direct reporting manager';
+                }
+            default:
+                $detail[]=$branch->$key;
+                break;
+            }
+        }
+        return $detail;
     }
 
+    public function columnFormats(): array
+    {
+        return [
+        ];
+    }
+
+
     /**
-     * [view description].
-     *
+     * [query description]
+     * 
      * @return [type] [description]
      */
-    public function view(): View
+    public function query()
     {
-        $person = Person::whereIn('id', $this->person)->firstOrFail();
-        $myBranches = $person->getMyBranches();
-
-        $branches = Branch::summaryStats($this->period)
-            ->with('manager', 'manager.reportsTo')
-            ->whereIn('id', $myBranches)->get();
-
-        $period = $this->period;
-
-        return view('reports.dailybranchstats', compact('branches', 'period', 'person'));
+      
+        return Branch::query()->summaryStats($this->period, array_keys($this->leadFields))
+            ->summaryActivities($this->period, array_keys($this->activityFields))
+            ->with('manager.reportsTo')
+            ->when(
+                $this->branches, function ($q) {
+                    $q->whereIn('id', $this->branches);
+                }
+            );
     }
 }

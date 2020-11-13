@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\MyLead;
-use App\MyLeadActivity;
+use App\AddressBranch;
 use Carbon\Carbon;
+use App\MyLeadActivity;
 use Illuminate\Http\Request;
 
 class MyLeadsActivityController extends Controller
 {
     public $mylead;
     public $activity;
-
-    public function __construct(MyLead $mylead, MyLeadActivity $activity)
+    public function __construct(AddressBranch $mylead, MyLeadActivity $activity)
     {
         $this->activity = $activity;
         $this->mylead = $mylead;
@@ -35,7 +34,11 @@ class MyLeadsActivityController extends Controller
      */
     public function create()
     {
-        //
+        $branches = auth()->user()->person->myBranches();
+        $leads = $this->mylead
+            ->whereIn('branch_id', array_keys($branches))
+            ->get();
+        dd($leads, $branches);
     }
 
     /**
@@ -46,10 +49,10 @@ class MyLeadsActivityController extends Controller
      */
     public function store(Request $request)
     {
+        
         $data = $this->cleanseData($request);
-
+       
         $this->activity->create($data);
-
         return redirect()->route('myleads.show', request('lead_id'))->withMessage('Activity recorded');
     }
 
@@ -105,15 +108,15 @@ class MyLeadsActivityController extends Controller
 
     private function cleanseData(Request $request)
     {
-        $data = ['user_id' => auth()->user()->id,
+        $data =['user_id' => auth()->user()->id,
         'related_id'=> request('lead_id'),
         'type'=>'mylead',
         'activity'=>request('activity'),
-        'activity_date'=>Carbon::parse(request('activitydate')), ];
+        'activity_date'=>Carbon::parse(request('activitydate'))];
         if (request()->has('followupdate')) {
             $data['followup_date'] = Carbon::parse(request('followupdate'));
         }
-
+       
         return array_merge(request()->all(), $data);
     }
 }

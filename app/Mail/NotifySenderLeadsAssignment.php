@@ -34,6 +34,6 @@ class NotifySenderLeadsAssignment extends Mailable
     {
         return $this->markdown('emails.sendersleads')
             ->subject('Branches Notified')
-            ->from('salesoperations@tbmapminer.com', 'Sales Operations');
+            ->from(config('mail.from'));
     }
 }

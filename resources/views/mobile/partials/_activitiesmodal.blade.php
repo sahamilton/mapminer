@@ -24,7 +24,7 @@ body {
     <div class="modal-content">
       <div class="modal-header">
         
-        <h4 class="modal-title">Record Activity </h4>
+        <h4 class="modal-title">Record Activity</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
@@ -32,6 +32,10 @@ body {
         <form method="post" action="{{route('activity.store')}}">
         @csrf
          @include('mobile.partials._activitynewform')
+         <input type="hidden" 
+            name = "address_id" 
+            id="address_id"
+            value = "" />
          <input 
               type="hidden" 
               name="branch_id" 
@@ -40,10 +44,7 @@ body {
               type="hidden" 
               name="mobile" 
               value="1" /> 
-            <input type="hidden" 
-            name = "address_id" 
-            id = "address_id" 
-            value = "" />
+            
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Record Activity" class="btn btn-danger" />
             </div>

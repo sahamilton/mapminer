@@ -59,9 +59,11 @@
             @endif
             
           </td>
-          <td>{{$opportunity->requirements}}</td>
-          <td>{{$opportunity->duration}}</td>
-          <td>{{$opportunity->value}}</td>
+          <td style="text-align:center">{{$opportunity->requirements}}</td>
+          <td style="text-align:center">{{$opportunity->duration}}</td>
+          <td style="text-align:right">
+            ${{number_format($opportunity->value,0)}}
+          </td>
           <td>
             @if($opportunity->actual_close )
             {{$opportunity->actual_close->format('Y-m-d')}}
@@ -74,8 +76,23 @@
 
       </tbody>
     <tfoot>
+    <tr>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th style="text-align:right">${{number_format($data['opportunities']->where('closed', 1)->sum('value'),0)}}
+      </th>
+      <th></th>
       
-    </tfoot>
+    </tr>
+
+  </tfoot>
 
 </table>
 

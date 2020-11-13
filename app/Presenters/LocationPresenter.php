@@ -31,7 +31,7 @@ class LocationPresenter extends BasePresenter
             }
         }
     }
-
+/*
     public function fullAddress()
     {
         if ($this->wrappedObject->street) {
@@ -45,4 +45,5 @@ class LocationPresenter extends BasePresenter
     {
         return $this->wrappedObject->firstname.' '.$this->wrappedObject->lastname;
     }
+    */
 }

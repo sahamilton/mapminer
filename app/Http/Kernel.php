@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -20,6 +19,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         //custom middleware for https redirect
         \App\Http\Middleware\HttpsMiddleware::class,
+        \App\Http\Middleware\RestrictIpMiddleware::class,
     ];
     /**
      * The application's route middleware groups.

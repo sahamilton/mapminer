@@ -2,34 +2,36 @@
 
 namespace App\Jobs;
 
-use App\Exports\ActivityOpportunityExport;
-use App\Mail\WeeklyActivityOpportunityReport;
+use Mail;
+use Excel;
 use App\Report;
 use Carbon\Carbon;
-use Excel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Mail;
+use App\Mail\WeeklyActivityOpportunityReport;
+use App\Exports\ActivityOpportunityExport;
+
 
 class ActivityOpportunity implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
     public $branches;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(array $period, array $branches = null)
+    public function __construct(Array $period, Array $branches = null)
     {
+     
         $this->period = $period;
-
+        
         $this->branches = $branches;
+
     }
 
     /**
@@ -37,20 +39,45 @@ class ActivityOpportunity implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    /*public function handle()
     {
         // create the file
 
-        $file = '/public/reports/actopptywkrpt'.Carbon::now()->timestamp.'.xlsx';
+        $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
+        $distribution = $report->getDistribution();
         Excel::store(new ActivityOpportunityExport($this->period, $this->branches), $file);
-        $class = str_replace("App\Jobs\\", '', get_class($this));
+        $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution', 'distribution.person', 'distribution.person.userdetails')
             ->where('job', $class)
             ->firstOrFail();
-
-        $distribution = $report->getDistribution();
-
+     
+        
+       
         Mail::to($distribution)
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
+    }*/
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        
+        $report = Report::with('distribution')
+            ->where('job', 'ActivityOpportunity')
+            ->firstOrFail();
+        
+        // create the file
+        $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
+       
+        (new ActivityOpportunityExport($this->period, $this->branches))->store($this->file)->chain(
+            [
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
+
+            ]
+        );
+        
     }
+        
 }

@@ -7,7 +7,7 @@
           <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('dashboard')}}">
+                    <a class="nav-link" href="">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 </li>

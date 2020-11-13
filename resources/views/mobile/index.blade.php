@@ -67,14 +67,14 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
        <div id="pac-container" class="input-group mx-sm-3 mb-2">
           
           <input 
-          id="pac-input"
-          type="text" 
-          class="form-control  {{ $errors->has('search') ? ' has-error' : ''}}" 
-          placeholder="Enter address or check Help Support for auto geocoding" 
-          aria-label="Search term" 
-          value="{{$searchaddress}}"
-          name="search"
-          aria-describedby="basic-addon">
+              id="pac-input"
+              type="text" 
+              class="form-control  {{ $errors->has('search') ? ' has-error' : ''}}" 
+              placeholder="Enter address or check Help Support for auto geocoding" 
+              aria-label="Search term" 
+              value="{{$searchaddress}}"
+              name="search"
+              aria-describedby="basic-addon">
           <div class="input-group-append">
             <button class="btn btn-success" type="submit">Search!</button>
           </div>

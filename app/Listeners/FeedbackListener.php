@@ -3,17 +3,17 @@
 namespace App\Listeners;
 
 use App\Events\FeedbackEvent;
-use App\Feedback;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Mail\FeedbackClosed;
 use App\Mail\FeedbackComment;
 use App\Mail\FeedbackOpened;
 use App\Mail\FeedbackResponse;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Feedback;
 use Mail;
-
 class FeedbackListener
 {
+   
     /**
      * Handle the event.
      *
@@ -22,14 +22,19 @@ class FeedbackListener
      */
     public function handle(FeedbackEvent $event)
     {
-        if ($event->feedback->status == 'closed') {
+       
+      
+        if($event->feedback->status == 'closed'){
+          
             Mail::to($event->feedback->providedBy->email)
-                ->cc(config('mapminer.system_contact'), config('mapminer.developer_email'))
+                ->cc(config('mapminer.system_contact'),config('mapminer.developer_email'))
                 ->queue(new FeedbackClosed($event->feedback));
         } else {
+
             Mail::to($event->feedback->providedBy->email)
                 ->cc(config('mapminer.system_contact'), config('mapminer.developer_email'))
                 ->queue(new FeedbackComment($event->feedback));
+
         }
     }
 }

@@ -1,48 +1,114 @@
 <?php
-
 namespace App\Exports;
 
+use App\Branch;
 use App\Person;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class TeamLoginsExport implements FromView
+
+class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, ShouldAutoSize
 {
+    use Exportable;
     public $manager;
     public $period;
-
+    public $fields =
+        [
+            'manager'=>'Team Member',
+            'branches'=>'Branches',
+            'role'=>'Role',
+            'logins'=>'Logins',
+            'lastlogin'=>'Last Login'
+        ];
     /**
-     * [__construct description].
-     *
-     * @param array $period [description]
+     * [__construct description]
+     * 
+     * @param Array $period [description]
      * @param array $person [description]
      */
-    public function __construct(array $period, array $manager)
+    public function __construct(Array $period, Array $manager)
     {
         $this->period = $period;
         $this->manager = $manager;
+      
     }
 
+    public function headings(): array
+    {
+        return [
+            [' '],
+            ['Team Member Logins'],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [' ' ],
+            $this->fields
+        ];
+    }
+
+    public function map($person): array
+    {
+       
+        foreach ($this->fields as $key=>$field) {
+            switch ($key) {
+            case 'manager':
+                $detail[] = $person->fullName();
+                break;
+            case 'branches':
+                $detail[] = $person->branchesServiced->count() ? implode(
+                    ";", $person->branchesServiced
+                        ->pluck("branchname")
+                        ->toArray()
+                ) : '';
+
+                break;
+            case 'role':
+                $detail[] = $person->userdetails->roles->count() ? implode(
+                    ";", $person->userdetails
+                        ->roles->pluck('display_name')
+                        ->toArray()
+                ) : '';
+                
+                break;
+
+            case 'logins':
+                $detail[] = $person->userdetails->usage_count;
+                break;
+
+            case 'lastlogin';
+                $detail[] = $person->userdetails->lastlogin ?
+                        $person->userdetails->lastlogin : '';
+                break;
+            default:
+                $detail[]=$person->$key;
+                break;
+            }
+        }
+        return $detail;
+    }
     /**
-     * [view description].
-     *
+     * [view description]
+     * 
      * @return [type] [description]
      */
-    public function view(): View
+    public function query()
     {
+        
         $manager = Person::findOrFail($this->manager[0]);
-
-        $people = $manager->descendantsAndSelf()
-            ->with('branchesServiced', 'userdetails', 'userdetails.roles')
+        return $manager->descendantsAndSelf()
+            ->with('branchesServiced')
             ->with(
-                ['userdetails.usage' => function ($query) {
-                    $query->whereBetween('track.created_at', [$this->period['from'], $this->period['to']]);
-                },
+                ['userdetails'=>function ($q) {
+                    $q->withLastLoginId()
+                        ->with('lastlogin', 'roles')
+                        ->totalLogins($this->period);
+                }
                 ]
-            )->get();
-
-        $period = $this->period;
-
-        return view('reports.dailybranch', compact('period', 'people'));
+            );
+                     
     }
 }
