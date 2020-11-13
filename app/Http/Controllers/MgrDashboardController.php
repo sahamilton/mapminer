@@ -354,7 +354,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _getSummaryBranchActivitiesByType(Collection $mybranchdata)
     {
-        dd($mybranchdata);
+        
         $types =$mybranchdata->first()->activityFields;
         foreach ($types as $type) {
             $type=str_replace(" ", "_", strtolower($type));

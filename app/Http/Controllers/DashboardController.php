@@ -27,8 +27,7 @@ class DashboardController extends Controller
         Dashboard $dashboard,
         Person $person,
         Branch $branch,
-        User $user
-        )
+        User $user)
     {
         $this->dashboard = $dashboard;
         $this->person = $person;
@@ -183,52 +182,39 @@ class DashboardController extends Controller
      * 
      * @return [type]           [description]
      */
-    protected function getSummaryBranchData($fields = null) 
+    protected function getSummaryBranchData() 
     {
        
-        if(! $fields) {
-            $fields['leadFields'] = [
-                'leads',
-                'new_leads',
-                'stale_leads',
-                'active_leads',
-            ];
-            $fields['opportunityFields'] =[
-                "lost_opportunities",
-                "open_opportunities",
-                "top25_opportunities",
-                "won_opportunities",
-                "active_value",
-                "lost_value",
-                "won_value",
-            ];
-            $fields['activityFields'] = [
-                '4'=>'Sales Appointment',
-                '5'=>'Stop By',
-                '7'=>'Proposal',
-                '10'=>'Site Visit',
-                '13'=>'Log a call',
-                '14'=>'In Person'
-
-            ];
-        }
         
-        // get lead stats
-        // get opportunity stats
-        // get activity stats
-        // merge collections
-        $stats =[];
-        if (isset($fields['leadFields'])) {
-            $stats['leads'] = $this->_getLeadStats($fields['leadFields']);
-        }
-        if (isset($fields['activityFields'])) {
-            $stats['activities'] = $this->_getActivityStats($fields['activityFields']);
-        }
-        if (isset($fields['opportunityFields'])) {
-            $stats['opportunities'] = $this->_getOpportunityStats($fields['opportunityFields']);
-        }
-        return $stats;
-         
+        $leadFields = [
+            'leads',
+        ];
+        $opportunityFields =[
+            "lost_opportunities",
+            "open_opportunities",
+            "top25_opportunities",
+            "won_opportunities",
+            "active_value",
+            "lost_value",
+            "won_value",
+        ];
+        $activityFields = [
+            'sales_appointment',
+            'stop_by',
+            'proposal',
+            'site_visit',
+            'log_a_call',
+            'in_person',
+
+        ];
+
+        return $this->branch->select('id', 'branchname')
+            ->SummaryLeadStats($this->period, $leadFields)
+            ->SummaryOpportunities($this->period, $opportunityFields)
+            ->SummaryActivities($this->period, $activityFields)
+            ->with('manager', 'manager.reportsTo')
+            ->whereIn('id', $this->myBranches)
+            ->get(); 
 
     }
 
@@ -236,32 +222,5 @@ class DashboardController extends Controller
     {
         return $this->person->managers([3,4,6,7,9]);
     }
-
-    private function _getLeadStats($fields)
-    {
-        return $this->branch
-            ->select('branches.id', 'branches.branchname')
-            ->summaryLeads($this->period, $fields)
-            ->whereIn('branches.id', $this->myBranches)
-            ->groupBy('branches.id')
-            ->get();
-    }
-    private function _getActivityStats($fields)
-    {
-        return $this->branch
-            ->summaryActivities($this->period, $fields)
-            ->whereIn('branches.id', $this->myBranches)
-            ->groupBy('branches.id')
-            ->get();
-    }
-
-    private function _getOpportunityStats($fields)
-    {
-        return $this->branch
-            ->summaryOpportunities($this->period, $fields)
-            ->whereIn('branches.id', $this->myBranches)
-            ->groupBy('branches.id')
-            ->get();
-    }
-
+   
 }
