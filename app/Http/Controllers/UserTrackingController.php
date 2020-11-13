@@ -28,7 +28,7 @@ class UserTrackingController extends Controller
         $persons = $this->_getBranchManagers();
         $models = ['Activity', 'Address', 'Opportunity', 'Track'];
         return view(
-            'admin.users.usertracking.index', 
+            'usertracking.index', 
             [
                 'models'=>$this->models, 
                 'persons'=>$persons
@@ -45,18 +45,17 @@ class UserTrackingController extends Controller
     public function show(Request $request)
     {
         
-        $selectModels = request('model');
         $setPeriod = request('setPeriod');
         
         $address = new Address;
         $this->period = $address->getPeriod($setPeriod);
         
         $this->user = User::findOrFail(request('person'));
-        foreach ($selectModels as $model) {
+        foreach ($this->models as $model) {
             $data[$model] = $this->_getModelData($model);
         }
         $persons = $this->_getBranchManagers();
-        $models = ['Activity', 'Address', 'Opportunity'];
+        
         session()->put('trackuser', $this->user->id);
         
         return view(

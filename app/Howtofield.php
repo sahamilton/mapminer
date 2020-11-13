@@ -1,8 +1,10 @@
 <?php
 
 namespace App;
-{
-    use NodeTrait;
+
+class Howtofield extends NodeModel {
+
+
     // Add your validation rules here
 
     // Don't forget to fill this array

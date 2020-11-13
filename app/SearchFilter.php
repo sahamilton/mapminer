@@ -1,13 +1,13 @@
 <?php
 
 namespace App;
-use Kalnoy\Nestedset\NodeTrait;
+
 /**
 * SearchFilter
 */
-class SearchFilter extends Model
+class SearchFilter extends NodeModel
 {
-    use NodeTrait;
+
   /**
    * Table name.
    *
