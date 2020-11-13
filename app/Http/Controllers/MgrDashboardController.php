@@ -310,7 +310,7 @@ class MgrDashboardController extends DashboardController
      * 
      * @return [type]       [description]
      */
-    private function _getBranchManagerData(Person $team, Array $branchdata, array $data)
+    private function _getBranchManagerData(Person $team, Collection $branchdata, array $data)
     {
         $data['branchteam'] = $team->descendantsAndSelf()
             ->withRoles([$this->branchManagerRole])
@@ -324,7 +324,7 @@ class MgrDashboardController extends DashboardController
                 return $person->branchesServiced->pluck('id');
             }
         )->flatten();
-        dd($branchdata);
+       
         //$branches = $branches;
 
         $mybranchdata = $branchdata->filter(
