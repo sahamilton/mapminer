@@ -3,9 +3,13 @@
 <h2>All Branches</h2>
 
 
-<p><a href='{{route("branches.index")}}'><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
+<p>
+    <a href='{{route("branches.index")}}'>
+        <i class="fas fa-th-list" aria-hidden="true"></i> List view
+    </a>
+</p>
 
-<?php $route ='branches.statemap';?>
+@php $route ='branches.statemap';@endphp
   @include('branches/partials/_state')
   @include('maps.partials._form')  
   @include('partials._branchesmap')
