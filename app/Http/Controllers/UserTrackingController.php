@@ -59,7 +59,7 @@ class UserTrackingController extends Controller
         session()->put('trackuser', $this->user->id);
         
         return view(
-            'admin.users.usertracking.show', [
+            'usertracking.show', [
                 'data'=>$data, 
                 'user'=>$this->user, 
                 'period'=>$this->period, 
@@ -83,7 +83,7 @@ class UserTrackingController extends Controller
         $persons = $this->_getBranchManagers();
         $data[$model] = $this->_getModelData($model);
         return view(
-            'admin.users.usertracking.detail', 
+            'usertracking.detail', 
             [
                 'data'=>$data, 
                 'user'=>$this->user, 
@@ -110,13 +110,14 @@ class UserTrackingController extends Controller
                 ->toArray();
 
         }
+
         return Person::whereHas(
             'branchesServiced', function ($q) {
                 $q->where('role_id', 9);
             }
         )
         ->when(
-            $reports, function ($q) {
+            $reports, function ($q) use ($reports)  {
                 $q->whereIn('id', $reports);
             }
         )

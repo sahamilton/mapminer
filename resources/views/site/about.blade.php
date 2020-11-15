@@ -12,6 +12,7 @@
 <p><strong>Mapminer Version:</strong> {{ucwords(exec('git describe --tags'))}} </p>
 <p><strong>Mapminer Branch:</strong> {{ ucwords(exec('git rev-parse --abbrev-ref HEAD'))}} </p>
 <p><a href ="https://pingping.io/PuUkRgfn" target="_blank"><strong>Status</strong></a></p>
+<p><strong>Version tag</strong>{{config('version.tag')}}</p>
 @if(auth()->user()->hasRole('admin'))
 <p><strong>Environment: </strong>
 {{App::environment()}} </p>
