@@ -5,12 +5,12 @@ $tag  = exec('git describe --tags --abbrev=0');
 if (empty($tag)) {
     $tag = '-.-.-';
 }
-
+$branch = ucwords(exec('git rev-parse --abbrev-ref HEAD'));
 $hash = trim(exec('git log --pretty="%h" -n1 HEAD'));
 $date = Carbon\Carbon::parse(trim(exec('git log -n1 --pretty=%ci HEAD')));
 
 return [
-
+    'branch'=>$branch,
     'tag' => $tag,
     'date' => $date,
     'hash' => $hash,
