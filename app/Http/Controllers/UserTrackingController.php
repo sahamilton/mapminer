@@ -24,16 +24,18 @@ class UserTrackingController extends Controller
      */
     public function index()
     {
+
+            $persons = $this->_getBranchManagers();
+            $models = ['Activity', 'Address', 'Opportunity', 'Track'];
+            return view(
+                'usertracking.index', 
+                [
+                    'models'=>$this->models, 
+                    'persons'=>$persons
+                ]
+            );
         
-        $persons = $this->_getBranchManagers();
-        $models = ['Activity', 'Address', 'Opportunity', 'Track'];
-        return view(
-            'admin.users.usertracking.index', 
-            [
-                'models'=>$this->models, 
-                'persons'=>$persons
-            ]
-        );
+
     }
     /**
      * [show description]
@@ -45,13 +47,14 @@ class UserTrackingController extends Controller
     public function show(Request $request)
     {
         
-        $selectModels = request('model');
+        $selectModels = $this->models;
         $setPeriod = request('setPeriod');
         
         $address = new Address;
         $this->period = $address->getPeriod($setPeriod);
         
         $this->user = User::findOrFail(request('person'));
+
         foreach ($selectModels as $model) {
             $data[$model] = $this->_getModelData($model);
         }
@@ -60,7 +63,7 @@ class UserTrackingController extends Controller
         session()->put('trackuser', $this->user->id);
         
         return view(
-            'admin.users.usertracking.show', [
+            'usertracking.show', [
                 'data'=>$data, 
                 'user'=>$this->user, 
                 'period'=>$this->period, 
@@ -84,7 +87,7 @@ class UserTrackingController extends Controller
         $persons = $this->_getBranchManagers();
         $data[$model] = $this->_getModelData($model);
         return view(
-            'admin.users.usertracking.detail', 
+            'usertracking.detail', 
             [
                 'data'=>$data, 
                 'user'=>$this->user, 
@@ -106,18 +109,19 @@ class UserTrackingController extends Controller
         if (! auth()->user()->hasRole(['admin'])) {
             $reports =  Person::where('user_id', auth()->user()->id)
                 ->first()
-                ->descendants()
+                ->descendantsAndSelf()
                 ->pluck('id')
                 ->toArray();
 
         }
+   
         return Person::whereHas(
             'branchesServiced', function ($q) {
                 $q->where('role_id', 9);
             }
         )
         ->when(
-            $reports, function ($q) {
+            $reports, function ($q) use ($reports) {
                 $q->whereIn('id', $reports);
             }
         )
