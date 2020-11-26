@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
         
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon" style="color:white"></span>
+    <span class="navbar-toggler-icon" style="color:green"></span>
     </button>
         <a href="{{ route('findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' class="navbar-brand"></a>
           <div class="collapse navbar-collapse" id="collapsibleNavbar">

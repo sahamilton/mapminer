@@ -189,7 +189,7 @@ class BranchDashboardController extends DashboardController
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-        dd(192, $data);
+     
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns'));
 
     }

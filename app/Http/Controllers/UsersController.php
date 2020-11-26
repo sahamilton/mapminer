@@ -26,7 +26,7 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
-        
+       
         $user->load(
             'person',
             'serviceline',
@@ -34,9 +34,10 @@ class UsersController extends Controller
             'person.directReports',
             'manager',
             'person.industryfocus',
-            'roles',
-            'usage'
-        );
+            'roles'
+            
+        )->loadCount('usage');
+     
         if ($user->person->has('branchesServiced')) {
             $branchmarkers = $user->person->branchesServiced->toJson();
         }
