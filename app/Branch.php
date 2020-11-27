@@ -969,7 +969,10 @@ class Branch extends Model implements HasPresenter
         }
         return $data;
     }
-
+    public function scopesearch($query, $search)
+    {
+        return $query->where('branchname', 'like', "%{$search}%");
+    }
     public function scopeSummaryOpportunities($query, array $period, array $fields=null)
     {
         $this->period = $period;

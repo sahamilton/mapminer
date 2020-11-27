@@ -85,7 +85,14 @@ class UserTrackingController extends Controller
         $this->user = User::with('person')->findOrFail(session('trackuser'));
         $this->period= session('period');
         $persons = $this->_getBranchManagers();
-        $data[$model] = $this->_getModelData($model);
+        return view(
+            'usertracking.detail', [
+                'user'=>$this->user, 
+                'period'=>$this->period,
+                'model'=>$model
+            ]
+        );
+        /*$data[$model] = $this->_getModelData($model);
         return view(
             'usertracking.detail', 
             [
@@ -96,7 +103,7 @@ class UserTrackingController extends Controller
                 'models'=>$this->models, 
                 'persons'=>$persons
             ]
-        );
+        );*/
     }
     /**
      * [_getBranchManagers description]

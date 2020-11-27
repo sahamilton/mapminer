@@ -9,4 +9,8 @@
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
+  'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',
+  'usertrack-leads' => 'App\\Http\\Livewire\\UsertrackLeads',
+  'usertrack-logins' => 'App\\Http\\Livewire\\UsertrackLogins',
+  'usertrack-opportunities' => 'App\\Http\\Livewire\\UsertrackOpportunities',
 );
