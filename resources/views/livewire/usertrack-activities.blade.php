@@ -1,4 +1,5 @@
-<div>
+<div>   
+    <p>for the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
     <div class="row mb4" style="padding-bottom: 10px">
             
             <div class="col mb8">
@@ -8,7 +9,7 @@
                 <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
             </div></div>
         </div>
-
+        <p>Period: {{$period['period']}}
     <div class="row mb-4 ">
         @include('livewire.partials._perpage')
         <div class="col form-inline">
@@ -26,7 +27,7 @@
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 
             class="form-control">
-                <option value="All">All</option>
+                
                 @foreach ($activitytypes as $type)
                     <option {{$activitytype== $type->id ? 'selected' :''}} value="{{$type->id}}">{{$type->activity}}</option>
                 @endforeach
@@ -55,8 +56,18 @@
             <th>Activity</th>
             <th>Status</th>
             <th>Type</th>
-            <th>Branch</th>
-            <th>Created At</th>
+            <th>
+                <a wire:click.prevent="sortBy('branch_id')" role="button" href="#">
+                Branch
+                @include('includes._sort-icon', ['field' => 'branch_id'])
+                </a>
+            </th>
+            <th>
+            <a wire:click.prevent="sortBy('created_at')" role="button" href="#">
+                Created or Updated At
+                @include('includes._sort-icon', ['field' => 'created_at'])
+                </a>
+            </th>
         </thead>
         <tbody>
         @foreach ($activities as $activity)
@@ -73,7 +84,7 @@
                </td> 
                <td>{{$activity->type->activity}}</td>
                <td>{{$activity->branch_id}}</td>
-               <td>{{$activity->created_at->format('Y-m-d')}}</td>
+               <td>{{max($activity->created_at, $activity->updated_at)->format('Y-m-d')}}</td>
             </tr>
         @endforeach
         </tbody>

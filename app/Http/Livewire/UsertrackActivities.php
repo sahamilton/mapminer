@@ -19,7 +19,7 @@ class UsertrackActivities extends Component
     public $search ='';
     public $branch;
     public $period;
-    public $setPeriod='All';
+    public $setPeriod='this week';
     public $status='All';
     public $user;
 
@@ -47,14 +47,28 @@ class UsertrackActivities extends Component
     }
     public function render()
     {
-        
+        $this->_setPeriod();
         return view(
             'livewire.usertrack-activities',
             [
                 'activities'=>Activity::userActions($this->user)
                 ->periodActions($this->period)
                 ->with('relatesToAddress', 'type')
-                
+                ->search($this->search)
+                ->when(
+                        $this->status != 'All', function ($q) {
+                            if ($this->status ==='') {
+                                $this->status = null;
+                            } 
+                            $q->where('completed', $this->status);
+                        }
+                    )
+                ->when(
+                        $this->activitytype != 'All', function ($q) {
+
+                            $q->where('activitytype_id', $this->activitytype);
+                        }
+                    )
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
                 'activitytypes' => ActivityType::select('id', 'activity')->orderBy('activity')->get(),
@@ -66,13 +80,11 @@ class UsertrackActivities extends Component
 
     private function _setPeriod()
     {
-        if ($this->setPeriod != 'All') {
-
-            $this->period = $this->activity->getPeriod($this->setPeriod);
         
-        } else {
-            $this->period = null;
-        }
+        $branch = Branch::first();
+        $this->period = $branch->getPeriod($this->setPeriod);
+        
+       
 
 
     }
