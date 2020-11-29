@@ -18,8 +18,9 @@ class ActivitiesTable extends Component
     public $sortAsc = false;
     public $search ='';
     public $branch;
+    public $branch_id;
     public $period;
-    public $setPeriod='All';
+    public $setPeriod='lastWeek';
     public $status='All';
     public $filter = 0;
     public $myBranches;
@@ -38,22 +39,24 @@ class ActivitiesTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch)
+    public function mount(Int $branch, Array $myBranches)
     {
-        $this->branch = Branch::findOrFail($branch->id);
-        //$this->period = session('period');
+        
+        $this->branch = Branch::findOrFail($branch);
+        $this->branch_id = $this->branch->id;
+        $this->myBranches = $myBranches;
     }
     public function render()
     {
         
 
         $this->_setPeriod(); 
-        
+        $this->_setBranch();
         
         return view(
             'livewire.activities-table', [
                 'activities'=>Activity::query()
-                    ->where('branch_id', $this->branch->id)
+                    ->where('branch_id', $this->branch_id)
                     ->select('activities.*', 'addresses.id', 'addresses.businessname')
                     ->join('addresses', 'addresses.id', '=', 'address_id')
                     ->with('type')
@@ -87,7 +90,12 @@ class ActivitiesTable extends Component
             ]
         );
     }
-
+    private function _setBranch()
+    {
+        if ($this->branch_id != $this->branch->id) {
+            $this->branch = Branch::findOrFail($this->branch_id);
+        }
+    }
     private function _setPeriod()
     {
         if ($this->setPeriod != 'All') {

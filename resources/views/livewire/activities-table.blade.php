@@ -1,13 +1,38 @@
 <div>
+    <h2>{{$branch->branchname}}</h2>
+    <h4>Activities</h4>
     <div class="row mb4" style="padding-bottom: 10px">
+        @if(count($myBranches) >1)
+
+
+        <div class="col mb8">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-leaf"></i>
+                </span>
+                <select wire:model="branch_id" 
+                class="form-control">
+                @foreach ($myBranches as $key=>$mybranch)
+                    <option {{$branch_id === $key ? 'selected' : ''}} 
+                        value="{{$key}}">
+                            {{$mybranch}}
+                    </option>
+                @endforeach 
+                </select>
+            </div>
+        </div>
+
+        @endif
+    
             
-            <div class="col mb8">
-                <div class="input-group-prepend">
+        <div class="col mb8">
+            <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-search"></i></span>
         
                 <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
-            </div></div>
+            </div>
         </div>
+    </div>
 
     <div class="row mb-4 ">
         @include('livewire.partials._perpage')
