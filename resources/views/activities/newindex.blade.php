@@ -14,8 +14,9 @@
 @csrf
 
  <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
-  @foreach ($myBranches as $key=>$branch)
-    <option {{$branch->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branch}}</option>
+
+  @foreach ($myBranches as $key=>$mybranch)
+    <option {{$branch->id == $key ? 'selected' : ''}} value="{{$key}}">{{$mybranch}}</option>
   @endforeach 
 </select>
 
