@@ -32,11 +32,15 @@ class LocationContactController extends Controller
      */
     public function index()
     {
+ 
         $myBranches = $this->person->myBranches();
-        $data = $this->_getBranchContacts(array_keys($myBranches));
+
+        $branch = $this->branch->findOrFail(array_key_first($myBranches));
+       
+        /*$data = $this->_getBranchContacts(array_keys($myBranches));
         $title = "Branch " . reset($myBranches) . " Contacts";
-        $campaigns = Campaign::currentOpen([array_keys($myBranches)[0]])->get();
-         return response()->view('contacts.index', compact('data', 'title', 'myBranches', 'campaigns'));
+        $campaigns = Campaign::currentOpen([array_keys($myBranches)[0]])->get();*/
+         return response()->view('contacts.index', compact('branch', 'myBranches'));
     }
     /**
      * [branchContacts description]

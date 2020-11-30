@@ -976,3 +976,33 @@ and address_branch.id is null group by activities.address_id, activities.branch_
 /*********************************************/
 update users set users.confirmed = 0 where users.id in (select * from (SELECT users.id FROM `purge_employee`, users
 WHERE purge_employee.employee_id = users.employee_id) a)
+
+/******************************************* /
+List all BM's who have more than one branch
+/*****************************************
+SELECT
+    CONCAT_WS(' ', firstname, lastname) AS manager,
+    branchname
+FROM
+    persons,
+    branch_person,
+    branches
+WHERE
+    persons.id = branch_person.person_id AND branch_person.branch_id = branches.id AND persons.id IN
+    (SELECT
+     person
+        FROM
+            (
+            SELECT
+                person_id AS person,
+                COUNT(branch_id) AS branches
+            FROM
+                branch_person,
+                persons
+            WHERE
+                role_id = 9 AND persons.id = branch_person.person_id AND persons.deleted_at IS NULL
+            GROUP BY
+                person_id
+            HAVING
+                branches > 1
+        ) AS a )

@@ -41,7 +41,7 @@
 			<td class="text-center">{{$data['summary']->first()->won_opportunities}}</td>
 			<td class="text-center">{{ $data['summary']->first()->lost_opportunities}}</td>
 			<td class="text-center">
-				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->active_leads}}</a></td>
+				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
 			<td class="text-center">
 				<a href="{{route('activity.index')}}">{{$data['summary']->first()->activities_count}}</a></td>	
 		</tbody>

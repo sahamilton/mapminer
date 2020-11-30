@@ -7,6 +7,7 @@
   'company-table' => 'App\\Http\\Livewire\\CompanyTable',
   'dashboard-table' => 'App\\Http\\Livewire\\DashboardTable',
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
+  'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',
