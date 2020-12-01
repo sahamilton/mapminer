@@ -35,13 +35,14 @@ class OpportunityTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch)
+    public function mount()
     {
         
-        $this->branch_id = $branch->id;
-        $this->period = session('period');
+        
+        //$this->period = session('period');
         $person = new Person();
         $this->myBranches = $person->myBranches();
+        $this->branch_id = array_key_first($this->myBranches);
     }
     public function render()
     {
@@ -49,7 +50,7 @@ class OpportunityTable extends Component
         return view('livewire.opportunity-table', 
             [
                 'opportunities' => Opportunity::query()
-                    ->select('opportunities.*','businessname')
+                    ->select('opportunities.*', 'businessname')
                     ->where('branch_id', $this->branch_id)
                     ->where('closed', $this->filter)
                     ->join('addresses', 'addresses.id', '=', 'opportunities.address_id')

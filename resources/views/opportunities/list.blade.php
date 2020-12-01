@@ -5,7 +5,7 @@
 
     <div class="row">
 
-        @livewire('opportunity-table', ['branch'=>$branch])
+        @livewire('opportunity-table')
 
     </div>
 </div>
