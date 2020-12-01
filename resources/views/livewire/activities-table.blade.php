@@ -13,9 +13,7 @@
                 <select wire:model="branch_id" 
                 class="form-control">
                 @foreach ($myBranches as $key=>$mybranch)
-                    <option {{$branch_id === $key ? 'selected' : ''}} 
-                        value="{{$key}}">
-                            {{$mybranch}}
+                    <option value="{{$key}}"> {{$mybranch}}
                     </option>
                 @endforeach 
                 </select>

@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-
+use App\Person;
 use App\ActivityType;
 use App\Branch;
 use App\Activity;
@@ -17,7 +17,6 @@ class ActivitiesTable extends Component
     public $activitytype='All';
     public $sortAsc = false;
     public $search ='';
-    public $branch;
     public $branch_id;
     public $period;
     public $setPeriod='lastWeek';
@@ -39,19 +38,20 @@ class ActivitiesTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount(Int $branch, Array $myBranches)
+    public function mount()
     {
         
-        $this->branch = Branch::findOrFail($branch);
-        $this->branch_id = $this->branch->id;
-        $this->myBranches = $myBranches;
+        $person = new Person();
+        $this->myBranches = $person->myBranches();
+        $this->branch_id = array_key_first($this->myBranches);
+
     }
     public function render()
     {
         
 
         $this->_setPeriod(); 
-        $this->_setBranch();
+
         
         return view(
             'livewire.activities-table', [
@@ -84,23 +84,18 @@ class ActivitiesTable extends Component
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                 'activitytypes' => ActivityType::select('id', 'activity')->orderBy('activity')->get(),
-
+                'branch'=> Branch::findOrFail($this->branch_id),
 
 
             ]
         );
     }
-    private function _setBranch()
-    {
-        if ($this->branch_id != $this->branch->id) {
-            $this->branch = Branch::findOrFail($this->branch_id);
-        }
-    }
+    
     private function _setPeriod()
     {
         if ($this->setPeriod != 'All') {
-
-            $this->period = $this->branch->getPeriod($this->setPeriod);
+            $model = new Branch();
+            $this->period = $model->getPeriod($this->setPeriod);
         
         } else {
             $this->period = null;
