@@ -54,7 +54,7 @@ class LeadTable extends Component
                         $query->select('address_id')
                             ->from('address_branch')
                             ->where('branch_id', $this->branch_id)
-                            ->where('status_id',2);
+                            ->where('status_id', 2);
                     }
                 )
 

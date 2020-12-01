@@ -178,4 +178,18 @@ class AddressBranch extends Model
                 }
             )->doesntHave('opportunities');
     }
+    public function scopeOrderByColumn($query, $field, $dir) 
+    {
+        
+         return $query->orderBy($field, $dir);
+
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('businessname', 'like', "%{$search}%")
+            ->orWhere('fullname', 'like', "%{$search}%")
+            ->orWhere('firstname', 'like', "%{$search}%")
+            ->orWhere('lastname', 'like', "%{$search}%");
+    }
 }

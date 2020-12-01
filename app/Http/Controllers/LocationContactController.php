@@ -11,6 +11,7 @@ use App\Person;
 use App\Opportunity;
 use \App\Address;
 use JeroenDesloovere\VCard\VCard;
+use App\Exports\BranchContacts;
 
 class LocationContactController extends Controller
 {
@@ -33,14 +34,7 @@ class LocationContactController extends Controller
     public function index()
     {
  
-        $myBranches = $this->person->myBranches();
-
-        $branch = $this->branch->findOrFail(array_key_first($myBranches));
-       
-        /*$data = $this->_getBranchContacts(array_keys($myBranches));
-        $title = "Branch " . reset($myBranches) . " Contacts";
-        $campaigns = Campaign::currentOpen([array_keys($myBranches)[0]])->get();*/
-         return response()->view('contacts.index', compact('branch', 'myBranches'));
+         return response()->view('contacts.index');
     }
     /**
      * [branchContacts description]
@@ -206,6 +200,20 @@ class LocationContactController extends Controller
         return redirect()->route('address.show', $contact->address_id);
 
     }
+
+    public function export(Branch $branch, Request $request)
+    {
+        if ($this->_checkBranch($branch)) {
+            $file = $branch->branchname ." contacts as of ". now()->format('Y-m-d'). ".csv";
+            return (new BranchContacts)->forBranch($branch)
+                ->filtered(request('filter'))
+                ->download($file);
+
+        
+        } else {
+            return redirect()->back();
+        }
+    }
     /**
      * [_setRequestPrimaryContact Set primary to false if not included]
      * 
@@ -232,6 +240,12 @@ class LocationContactController extends Controller
             ->update(['primary'=> 0]);
     }
     
-
+    private function _checkBranch(Branch $branch)
+    {
+        if (array_key_exists($branch->id, auth()->user()->person->myBranches())) {
+            return true;
+        }
+        return false;
+    }
 
 }

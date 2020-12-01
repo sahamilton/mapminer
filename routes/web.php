@@ -150,6 +150,8 @@ Route::group(
         
         Route::post('contact/branch', ['as'=>'contact.branch', 'uses'=>'LocationContactController@branchcontacts']);
         Route::get('contacts/branch/{branch}', ['as'=>'contacts.branch', 'uses'=>'LocationContactController@branchcontacts']);
+        Route::get('contacts/{branch}/export', ['as'=>'contacts.export', 'uses'=>'LocationContactController@export']);
+
         Route::resource('mycontacts', 'MyContactsController');
         Route::post('dataquality/details', ['as'=>'dataquality.details', 'uses'=>"DataQualityController@details"]);
         Route::post('dataquality/branch', ['as'=>'dataquality.branch', 'uses'=>'DataQualityController@branch']); 
