@@ -38,17 +38,17 @@ class BranchOpportunityTable extends Component
         $this->sortField = $field;
     }
 
-    public function mount($person, array $period)
+    public function mount()
     {
-        $this->person = $person->id;
-        $this->myBranches = $person->getMyBranches();
-        $this->period = $period;
-        $this->setPeriod = $period['period'];
+        $person = new Person();
+        $this->myBranches = $person->myBranches();
+        $this->branch_id = array_key_first($this->myBranches);
+        
     }
     
     public function render()
     {
-        if ($this->setPeriod != $this->period['period']) {
+        if (! $this->setPeriod or $this->setPeriod != $this->period['period']) {
 
            $this->_setPeriod(); 
         
@@ -56,7 +56,7 @@ class BranchOpportunityTable extends Component
         
         return view('livewire.branch-opportunity-table',
             ['branches'=>Branch::summaryOpportunities($this->period)
-                ->whereIn('branches.id', $this->myBranches)
+                ->whereIn('branches.id', array_keys($this->myBranches))
                 ->search($this->search)
                 ->with('manager')
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
@@ -68,6 +68,6 @@ class BranchOpportunityTable extends Component
 
     private function _setPeriod()
     {
-        $this->period = Person::where('id', $this->person)->first()->getPeriod($this->setPeriod);
+        $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
     }
 }

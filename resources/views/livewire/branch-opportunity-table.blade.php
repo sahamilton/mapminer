@@ -43,6 +43,7 @@
             </tbody>
             
         </table>
+    </div>
         <div class="row">
             <div class="col">
                 {{ $branches->links() }}
@@ -52,6 +53,6 @@
                 Showing {{ $branches->firstItem() }} to {{ $branches->lastItem() }} out of {{ $branches->total() }} results
             </div>
         </div>
-    </div>
-    </div>
+
+
 </div>
