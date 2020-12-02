@@ -75,6 +75,7 @@
                     @include('includes._sort-icon', ['field' => 'activity_date'])
                 </a>
             </th>
+            <th>Created / Updated</th>
             <th>Activity</th>
             <th>Status</th>
             <th>Type</th>
@@ -83,8 +84,9 @@
         @foreach ($activities as $activity)
           
             <tr>
-               <td><a href="{{route('address.show', $activity->address_id)}}">{{$activity->businessname}}</a></td> 
+               <td><a href="{{route('address.show', $activity->address_id)}}">{{$activity->relatesToAddress->businessname}}</a></td> 
                <td>{{$activity->activity_date->format('Y-m-d')}}</td> 
+               <td>{{max($activity->created_at,$activity->updated_at)->format('Y-m-d')}}</td> 
                <td>{{$activity->note}}</td> 
                <td> 
                     {{$activity->completed ==1 ? 'Completed' : 'Planned'}}

@@ -19,6 +19,8 @@ class ActivitiesTable extends Component
     public $sortAsc = false;
     public $search ='';
 
+    public $branch_id;
+    public $myBranches;
     public $period;
     public $setPeriod='lastWeek';
     public $status='All';
@@ -42,21 +44,25 @@ class ActivitiesTable extends Component
     }
     public function mount()
     {
-        $this->user = User::findOrFail(3581);
+        
+        $this->myBranches = auth()->user()->person->myBranches();
+        $this->branch_id = array_key_first($this->myBranches);
 
 
     }
     public function render()
     {
         $this->_setPeriod();
+
         return view(
             'livewire.activities-table',
             [
-                'activities'=>Activity::userActions($this->user)
-                ->periodActions($this->period)
-                ->with('relatesToAddress', 'type')
-                ->search($this->search)
-                ->when(
+                'activities'=>Activity::query()
+                    ->where('branch_id', $this->branch_id)
+                    ->periodActions($this->period)
+                    ->with('relatesToAddress', 'type')
+                    ->search($this->search)
+                    ->when(
                         $this->status != 'All', function ($q) {
                             if ($this->status ==='') {
                                 $this->status = null;
@@ -64,18 +70,18 @@ class ActivitiesTable extends Component
                             $q->where('completed', $this->status);
                         }
                     )
-                ->when(
+                    ->when(
                         $this->activitytype != 'All', function ($q) {
 
                             $q->where('activitytype_id', $this->activitytype);
                         }
                     )
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                ->paginate($this->perPage),
+                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->paginate($this->perPage),
                 'activitytypes' => ActivityType::select('id', 'activity')->orderBy('activity')->get(),
+                'branch' => Branch::findOrFail($this->branch_id),
                 
-                'branch'=>Branch::findOrFail('2221'),
-                'myBranches'=>['2221'=>'Bellevue, ON'],            ]
+                           ]
         );
     }
 
@@ -83,10 +89,11 @@ class ActivitiesTable extends Component
     {
         
         $branch = Branch::first();
-        $this->period = $branch->getPeriod($this->setPeriod);
         
-       
+        $this->period = $branch->getPeriod($this->setPeriod);
 
 
     }
+
+
 }
