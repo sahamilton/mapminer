@@ -20,12 +20,17 @@ class Person extends NodeModel
     
     protected $table ='persons';
     protected $hidden = ['created_at','updated_at','deleted_at','position'];
+
     public function getParentIdName()
     {
         return 'reports_to';
     }
     
+    protected $parentColumnName = 'reports_to';
 
+    protected $leftColumnName = 'lft';
+   
+    protected $rightColumnName = 'rgt';
     
     // Don't forget to fill this array
     public $fillable = ['firstname',
