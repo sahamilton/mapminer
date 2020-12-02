@@ -44,13 +44,13 @@ class ActivitiesTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
-        $this->period = ['period'=>'lastWeek', 'from'=>now()->subWeek()->startOfWeek(), 'to'=>now()->subWeek()->endOfWeek()];
+        $this->_setPeriod();
 
     }
     public function render()
     {
+        $this->_setPeriod(); 
         
- 
         return view(
             'livewire.activities-table', [
                 'activities'=>Activity::query()
@@ -58,7 +58,26 @@ class ActivitiesTable extends Component
                     ->select('activities.*', 'addresses.id', 'addresses.businessname')
                     ->join('addresses', 'addresses.id', '=', 'address_id')
                     ->with('type')
-                    
+                    ->when(
+                        $this->status != 'All', function ($q) {
+                            if ($this->status ==='') {
+                                $this->status = null;
+                            } 
+                            $q->where('completed', $this->status);
+                        }
+                    )
+                    ->when(
+                        $this->period, function ($q) {
+                            
+                            $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                        }
+                    )
+                    ->when(
+                        $this->activitytype != 'All', function ($q) {
+
+                            $q->where('activitytype_id', $this->activitytype);
+                        }
+                    )
                     ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
@@ -70,5 +89,16 @@ class ActivitiesTable extends Component
         );
     }
     
-    
+    private function _setPeriod()
+    {
+        if ($this->setPeriod != 'All') {
+            $model = new Branch();
+            $this->period = $model->getPeriod($this->setPeriod);
+        
+        } else {
+            $this->period = null;
+        }
+
+
+    }
 }
