@@ -4,7 +4,7 @@ namespace App;
 trait GeoCode
 {
       /**
-       * GetGeoCode Geocoder Trait
+       * GetGeoCode Geocoder Trait renamed
        * 
        * @param [type] $geoCode [description]
        * 
