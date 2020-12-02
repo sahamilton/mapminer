@@ -44,12 +44,12 @@ class ActivitiesTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
-        $this->_setPeriod();
+        $this->_setPeriodArray();
 
     }
     public function render()
     {
-        $this->_setPeriod(); 
+        $this->_setPeriodArray(); 
  
         return view(
             'livewire.activities-table', [
@@ -70,7 +70,7 @@ class ActivitiesTable extends Component
         );
     }
     
-    private function _setPeriod()
+    private function _setPeriodArray()
     {
         if ($this->setPeriod != 'All') {
             $model = new Branch();
