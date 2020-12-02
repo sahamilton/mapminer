@@ -3,11 +3,12 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use Livewire\WithPagination;
-use App\Person;
 use App\ActivityType;
 use App\Branch;
 use App\Activity;
+use App\User;
+use Livewire\WithPagination;
+
 class ActivitiesTable extends Component
 {
     use WithPagination;
@@ -17,12 +18,13 @@ class ActivitiesTable extends Component
     public $activitytype='All';
     public $sortAsc = false;
     public $search ='';
-    public $branch_id;
+
     public $period;
     public $setPeriod='lastWeek';
     public $status='All';
-    public $filter = 0;
-    public $myBranches;
+    public $user;
+
+
 
     public function updatingSearch()
     {
@@ -40,25 +42,21 @@ class ActivitiesTable extends Component
     }
     public function mount()
     {
-        
-        $person = new Person();
-        $this->myBranches = $person->myBranches();
-        $this->branch_id = array_key_first($this->myBranches);
-        $this->_setPeriod();
+        $this->user = User::findOrFail(3581);
+
 
     }
     public function render()
     {
-        $this->_setPeriod(); 
-        
+        $this->_setPeriod();
         return view(
-            'livewire.activities-table', [
-                'activities'=>Activity::query()
-                    ->where('branch_id', $this->branch_id)
-                    ->select('activities.*', 'addresses.id', 'addresses.businessname')
-                    ->join('addresses', 'addresses.id', '=', 'address_id')
-                    ->with('type')
-                    ->when(
+            'livewire.activities-table',
+            [
+                'activities'=>Activity::userActions($this->user)
+                ->periodActions($this->period)
+                ->with('relatesToAddress', 'type')
+                ->search($this->search)
+                ->when(
                         $this->status != 'All', function ($q) {
                             if ($this->status ==='') {
                                 $this->status = null;
@@ -66,38 +64,28 @@ class ActivitiesTable extends Component
                             $q->where('completed', $this->status);
                         }
                     )
-                    ->when(
-                        $this->period, function ($q) {
-                            
-                            $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    )
-                    ->when(
+                ->when(
                         $this->activitytype != 'All', function ($q) {
 
                             $q->where('activitytype_id', $this->activitytype);
                         }
                     )
-                    ->search($this->search)
-                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                    ->paginate($this->perPage),
+                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                ->paginate($this->perPage),
                 'activitytypes' => ActivityType::select('id', 'activity')->orderBy('activity')->get(),
-                'branch'=> Branch::findOrFail($this->branch_id),
-
-
-            ]
+                
+                'branch'=>Branch::findOrFail('2221'),
+                'myBranches'=>['2221'=>'Bellevue, ON'],            ]
         );
     }
-    
+
     private function _setPeriod()
     {
-        if ($this->setPeriod != 'All') {
-            $model = new Branch();
-            $this->period = $model->getPeriod($this->setPeriod);
         
-        } else {
-            $this->period = null;
-        }
+        $branch = Branch::first();
+        $this->period = $branch->getPeriod($this->setPeriod);
+        
+       
 
 
     }
