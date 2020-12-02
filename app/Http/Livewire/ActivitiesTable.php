@@ -44,12 +44,12 @@ class ActivitiesTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
-        $this->_setPeriodArray();
+        $this->period = ['period'=>'lastWeek', 'from'=>now()->subWeek()->startOfWeek(), 'to'=>now()->subWeek()->endOfWeek()];
 
     }
     public function render()
     {
-        $this->_setPeriodArray(); 
+        
  
         return view(
             'livewire.activities-table', [
@@ -70,16 +70,5 @@ class ActivitiesTable extends Component
         );
     }
     
-    private function _setPeriodArray()
-    {
-        if ($this->setPeriod != 'All') {
-            $model = new Branch();
-            $this->period = $model->getPeriod($this->setPeriod);
-        
-        } else {
-            $this->period = null;
-        }
-
-
-    }
+    
 }
