@@ -11,7 +11,7 @@ class BranchTable extends Component
 {
     use WithPagination;
 
-    public $perPage = 10;
+    public $perPage = 2;
     public $sortField = 'id';
     public $state='All';
     public $region='All';
@@ -73,6 +73,7 @@ class BranchTable extends Component
             ->paginate($this->perPage),
             'allstates' => Branch::select('state')
                 ->distinct('state')
+                ->whereIn('serviceline_id', $this->userServiceLines)
                 ->when(
                     $this->region != 'All', function ($q) {
                             $q->where('region_id', $this->region);
