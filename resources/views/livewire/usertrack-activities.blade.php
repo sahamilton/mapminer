@@ -9,7 +9,7 @@
                 <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
             </div></div>
         </div>
-        <p>Period: {{$period['period']}}
+       
     <div class="row mb-4 ">
         @include('livewire.partials._perpage')
         <div class="col form-inline">
