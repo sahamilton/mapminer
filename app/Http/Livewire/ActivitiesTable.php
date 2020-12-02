@@ -44,7 +44,7 @@ class ActivitiesTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
-        $this->setPeriod();
+        $this->_setPeriod();
 
     }
     public function render()
