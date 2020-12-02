@@ -16,7 +16,7 @@ class UserTable extends Component
     public $search = '';
     public $serviceline =false;
     public $selectRole = false;
-    public $roles;
+
 
     public function sortBy($field)
     {
@@ -34,37 +34,41 @@ class UserTable extends Component
     }
     public function mount()
     {
-        $this->roles = Role::all();
+        
     }
 
     public function render()
     {
-        return view('livewire.user-table', 
+        return view(
+            'livewire.user-table', 
             [
                 'users' => User::query()
-                ->select('users.*', 'persons.firstname', 'persons.lastname')
-                ->join('persons', 'user_id', '=', 'users.id')
-                ->with('usage',  'serviceline', 'roles')
-                ->when($this->selectRole !='All', function ($q) {
-                        $q->whereHas(
-                            'roles',function($q) {
-                                $q->when($this->selectRole, function ($q) {
-                                    $q->where('roles.id', $this->selectRole);
+                    ->select('users.*', 'persons.firstname', 'persons.lastname')
+                    ->join('persons', 'user_id', '=', 'users.id')
+                    ->with('usage',  'serviceline', 'roles')
+                    ->when(
+                        $this->selectRole !='All', function ($q) {
+                            $q->whereHas(
+                                'roles', function ($q) {
+                                    $q->when(
+                                        $this->selectRole, function ($q) {
+                                            $q->where('roles.id', $this->selectRole);
+                                        }
+                                    );
                                 }
+
                             );
                         }
-
-                    );
-                })
-                
-                ->when(
-                    $this->search, function ($q) {
-                        $q->search($this->search);
-                    }
-                )
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                ->paginate($this->perPage),
-            ]
-       );
+                    )
+                    ->when(
+                        $this->search, function ($q) {
+                            $q->search($this->search);
+                        }
+                    )
+                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->paginate($this->perPage),
+                    'roles'=>Role::all(),
+                ]
+           );
     }
 }

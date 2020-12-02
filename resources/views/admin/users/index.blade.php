@@ -9,8 +9,8 @@
 	<div class="page-header">
 		<h3>{{ $title }}</h3>
 
-			
-			</div>
+		@livewire('user-table');	
+	</div>
     
 @include('partials/_scripts')
 @endsection

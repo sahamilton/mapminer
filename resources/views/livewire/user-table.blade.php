@@ -12,7 +12,7 @@
                 wire:model="selectRole" class="form-control">
                 <option vallue='All'>All</option>
                 @foreach ($roles as $role)
-                    <option value="{{$role->id}}" @if($selectRole==$role->id) selected @endif>
+                    <option value="{{$role->id}}">
                         {{$role->display_name}}
                     </option>
                 @endforeach
