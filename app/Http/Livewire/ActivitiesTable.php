@@ -50,7 +50,7 @@ class ActivitiesTable extends Component
     public function render()
     {
         $this->_setPeriod(); 
-
+        dd($this->period);
         return view(
             'livewire.activities-table', [
                 'activities'=>Activity::query()
