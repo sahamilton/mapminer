@@ -55,14 +55,7 @@ class ActivitiesTable extends Component
                     ->select('activities.*', 'addresses.id', 'addresses.businessname')
                     ->join('addresses', 'addresses.id', '=', 'address_id')
                     ->with('type')
-                    ->when(
-                        $this->status != 'All', function ($q) {
-                            if ($this->status ==='') {
-                                $this->status = null;
-                            } 
-                            $q->where('completed', $this->status);
-                        }
-                    )
+                    
                     ->when(
                         $this->period, function ($q) {
                             
@@ -77,7 +70,7 @@ class ActivitiesTable extends Component
                     )
                     ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                    ->count();
+                    ->count());
         return view(
             'livewire.activities-table', [
                 'activities'=>Activity::query()
