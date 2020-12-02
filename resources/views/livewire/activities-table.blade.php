@@ -44,7 +44,7 @@
                 
             </select>
         </div>
-        @include('livewire.partials._periodselector')
+        
          <div class="col form-inline">
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 
