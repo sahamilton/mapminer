@@ -110,7 +110,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-        
+       
         $myBranches = auth()->user()->person->getMyBranches();
 
         // we need to geocode this address
@@ -119,10 +119,10 @@ class MyLeadsController extends BaseController
         }
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
-
+      
         $address = $this->lead->create($data['lead']);
         
-        $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
+        $address->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
 
         if (request()->filled('campaign')) {
             $this->_assignToCampaign($address, request('campaign'));
