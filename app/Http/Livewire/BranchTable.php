@@ -11,7 +11,7 @@ class BranchTable extends Component
 {
     use WithPagination;
 
-    public $perPage = 2;
+    public $perPage = 10;
     public $sortField = 'id';
     public $state='All';
     public $region='All';
