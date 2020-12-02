@@ -50,7 +50,34 @@ class ActivitiesTable extends Component
     public function render()
     {
         $this->_setPeriod(); 
-        dd($this->branch_id);
+        dd(Activity::query()
+                    ->where('branch_id', $this->branch_id)
+                    ->select('activities.*', 'addresses.id', 'addresses.businessname')
+                    ->join('addresses', 'addresses.id', '=', 'address_id')
+                    ->with('type')
+                    ->when(
+                        $this->status != 'All', function ($q) {
+                            if ($this->status ==='') {
+                                $this->status = null;
+                            } 
+                            $q->where('completed', $this->status);
+                        }
+                    )
+                    ->when(
+                        $this->period, function ($q) {
+                            
+                            $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                        }
+                    )
+                    ->when(
+                        $this->activitytype != 'All', function ($q) {
+
+                            $q->where('activitytype_id', $this->activitytype);
+                        }
+                    )
+                    ->search($this->search)
+                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->count();
         return view(
             'livewire.activities-table', [
                 'activities'=>Activity::query()
