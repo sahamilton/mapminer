@@ -94,8 +94,8 @@ class MyLeadsController extends BaseController
         if (! in_array($branch_id, array_keys($myBranches))) {
             return redirect()->back()->withError('You are not assigned to this branch');
         }
-        session(['branch'=>$branch_id]);
-        $branch = $this->_getBranchLeadData($branch_id);
+        session(['branch'=>$branch->id]);
+        $branch = $this->_getBranchLeadData($branch->id);
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
         
         return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns'));
