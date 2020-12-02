@@ -19,7 +19,7 @@ class UsertrackActivities extends Component
     public $search ='';
     public $branch;
     public $period;
-    public $setPeriod='this week';
+    public $setPeriod='lastWeek';
     public $status='All';
     public $user;
 

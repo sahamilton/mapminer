@@ -27,9 +27,9 @@
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 
             class="form-control">
-                
+                <option value="All">All</option>
                 @foreach ($activitytypes as $type)
-                    <option {{$activitytype== $type->id ? 'selected' :''}} value="{{$type->id}}">{{$type->activity}}</option>
+                    <option value="{{$type->id}}">{{$type->activity}}</option>
                 @endforeach
             </select>
         </div>
