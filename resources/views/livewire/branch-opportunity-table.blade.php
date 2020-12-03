@@ -7,9 +7,7 @@
             <input wire:model="search" class="form-control" type="text" placeholder="Search branches...">
         </div>
     </div>
-    
-    </div>
-    <p>Period: {{$period['period']}} | {{$setPeriod}}</p>
+
     <div class="row">
        <table class='table table-striped table-bordered table-condensed table-hover'>    
             <thead>
