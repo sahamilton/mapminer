@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-       
+        'App\Console\Commands\BackUpDatabase'
     ];
 
     /**
