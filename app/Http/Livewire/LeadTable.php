@@ -41,7 +41,7 @@ class LeadTable extends Component
      * 
      * @return [type]             [description]
      */
-    public function mount($myBranches, $search=null)
+    public function mount(Array $myBranches, $search=null)
     {
         $this->myBranches = $myBranches;
         $this->branch_id = array_key_first($this->myBranches);
@@ -71,12 +71,10 @@ class LeadTable extends Component
                 ->search($this->search)
                 ->with('assignedToBranch')
                 ->whereDoesntHave('opportunities')
-
                 ->withLastActivityId()
                 ->with('lastActivity')
                 ->dateAdded()
                 ->withCount('openOpportunities')
-                
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
                 'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),
