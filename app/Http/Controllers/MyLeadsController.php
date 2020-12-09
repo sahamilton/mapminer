@@ -94,8 +94,8 @@ class MyLeadsController extends BaseController
         if (! in_array($branch_id, array_keys($myBranches))) {
             return redirect()->back()->withError('You are not assigned to this branch');
         }
-        session(['branch'=>$branch_id]);
-        $branch = $this->_getBranchLeadData($branch_id);
+        session(['branch'=>$branch->id]);
+        $branch = $this->_getBranchLeadData($branch->id);
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
         
         return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns'));
@@ -110,7 +110,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-        
+       
         $myBranches = auth()->user()->person->getMyBranches();
 
         // we need to geocode this address
@@ -119,10 +119,10 @@ class MyLeadsController extends BaseController
         }
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
-
+      
         $address = $this->lead->create($data['lead']);
         
-        $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
+        $address->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
 
         if (request()->filled('campaign')) {
             $this->_assignToCampaign($address, request('campaign'));

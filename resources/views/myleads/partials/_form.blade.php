@@ -140,7 +140,8 @@
     </div>
 </div>
 @php
-$branches = auth()->user()->person->getMyBranches()
+$branches = auth()->user()->person->getMyBranches();
+
 @endphp
 @if (count($branches) > 1)
 <div class="form-group row">
@@ -149,17 +150,17 @@ $branches = auth()->user()->person->getMyBranches()
      <div class="col-sm-8">
         <select
             class="form-control"
-            name="branch_id"
+            name="branch"
             required
             >
-            @foreach ($branches as $id=>$title)
-                <option value={{$id}}>{{$title}}</option>
+            @foreach ($branches as $title)
+                <option value={{$title}}>{{$title}}</option>
             @endforeach
         </select>
     </div>
 </div>
 @else
-<input type="hidden" name="branch_id" value="{{reset($branches)}}" />
+<input type="hidden" name="branch" value="{{reset($branches)}}" />
 @endif
 
 @if(isset($campaigns))
