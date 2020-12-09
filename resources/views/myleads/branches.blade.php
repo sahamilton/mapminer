@@ -17,7 +17,7 @@
     @include('branchleads.partials._mylead') 
 
 
-    @livewire('lead-table', ['branch_id'=>$branch->id])
+    @livewire('lead-table', ['myBranches'=>auth()->user()->person->myBranches()])
 @include('addresses.partials._deleteleadmodal') 
 @include('branchleads.partials._branchleadmodal')
 @include('branchleads.partials._branchcampaignmodal')

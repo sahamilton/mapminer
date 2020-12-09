@@ -34,19 +34,29 @@ class LeadTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch_id)
+    /**
+     * [mount description]
+     * 
+     * @param [type] $myBranches [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function mount($myBranches, $search=null)
     {
-        
-        $this->branch_id = $branch_id;
-        $person = new Person();
-        $this->myBranches = $person->myBranches();
-        
+        $this->myBranches = $myBranches;
+        $this->branch_id = array_key_first($this->myBranches);
+        $this->search = $search;
      
     }
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         //$branches = auth()->user()->person->myBranches();
-     
+
         return view(
             'livewire.lead-table', [
             'leads' => Address::query()
@@ -58,7 +68,7 @@ class LeadTable extends Component
                             ->where('status_id', 2);
                     }
                 )
-
+                ->search($this->search)
                 ->with('assignedToBranch')
                 ->whereDoesntHave('opportunities')
 
@@ -66,11 +76,7 @@ class LeadTable extends Component
                 ->with('lastActivity')
                 ->dateAdded()
                 ->withCount('openOpportunities')
-                ->when(
-                    $this->search, function ($q) {
-                        $q->search($this->search);
-                    }
-                )
+                
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
                 'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),

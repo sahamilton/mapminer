@@ -2,7 +2,7 @@
     <div class="col-sm-6 col-sm-offset-3">
         <div id="imaginary_container"> 
             <div class="input-group stylish-input-group">
-                <form method="post"
+                <form method="get"
                 action="{{route('searchleads')}}"
                 >
                 @csrf

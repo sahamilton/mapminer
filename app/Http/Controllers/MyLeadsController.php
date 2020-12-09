@@ -205,16 +205,10 @@ class MyLeadsController extends BaseController
 
     public function searchleads(Request $request)
     {
+        
         $search = request('companyname');
-        $myBranches = auth()->user()->person->getMyBranches();
-        $leads = $this->lead->search($search)
-            ->whereHas(
-                'assignedToBranch', function ($q) use ($myBranches) {
-                    $q->whereIn('branches.id', $myBranches);
-                }
-            )
-        ->get();
-        return response()->view('myleads.search', compact('leads', 'search'));
+        $myBranches = auth()->user()->person->myBranches();
+        return response()->view('myleads.search', compact('search', 'myBranches'));
     }
     /**
      * [_assignToCampaign Remove null campaign and assign address]
