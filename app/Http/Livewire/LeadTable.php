@@ -47,7 +47,8 @@ class LeadTable extends Component
     {
         //$branches = auth()->user()->person->myBranches();
      
-        return view('livewire.lead-table', [
+        return view(
+            'livewire.lead-table', [
             'leads' => Address::query()
                 ->whereIn(
                     'addresses.id', function ($query) {
