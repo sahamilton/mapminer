@@ -34,10 +34,10 @@ class LeadTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch_id)
+    public function mount($branch)
     {
-        
-        $this->branch_id = $branch_id;
+        ;
+        $this->branch_id = $branch;
         $person = new Person();
         $this->myBranches = $person->myBranches();
         
