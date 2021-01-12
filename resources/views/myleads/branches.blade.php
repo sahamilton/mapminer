@@ -8,7 +8,7 @@
             class="btn btn-info float-right" 
             data-toggle="modal" 
             data-target="#add_lead">
-              Add Lead!
+              Add Lead
         </button>
     </div>
 

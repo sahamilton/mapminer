@@ -83,7 +83,7 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
                     $line[$n][] = $branch->branchname;
                     break;
                 case 'manager':
-                    if (! is_null($branch->manager){
+                    if (! is_null($branch->manager)) {
                         $line[$n][] = $branch->manager->first()->fullName(); 
                     } else {
                         $line[$n][] = 'No manager'; 
