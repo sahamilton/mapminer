@@ -19,10 +19,7 @@
         @foreach($teamStats as $person=>$stats)
           
            <tr>  @php $total = 0;@endphp
-                <td>
-                    <a href="">
-                        {{$stats['name']}}</a>
-                </td>
+                <td>{{$stats['name']}}</td>
 
             @foreach($statuses as $key=>$status)
             

@@ -20,7 +20,7 @@
     <tr>
         <td>
             @if($lead->companyname != '')
-            <a href="{{route('myleads.show',$lead->id)}}">
+            <a href="{{route('address.show',$lead->id)}}">
                 {{ $lead->companyname }} 
             </a>
             @endif

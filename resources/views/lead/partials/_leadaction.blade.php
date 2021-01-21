@@ -19,7 +19,7 @@
 			<strong>Lead Closed: Rated {{$location->lead->salesteam->first()->pivot->rating}}</strong>
 		</p>
 		<p>
-			<a href="{{route('myclosedleads')}}">See all closed leads</a>
+			<a href="">See all closed leads</a>
 		</p>
 	@endif
 @else
