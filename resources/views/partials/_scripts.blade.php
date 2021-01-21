@@ -92,6 +92,7 @@ $(document).ready(function()
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('input#address_id').val($(e.relatedTarget).data('id'));
+        $(this).find('input#branch_id').val($(e.relatedTarget).data('branch_id'));
 	});	
 	$(document).on('show.bs.modal','#add-contact', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
