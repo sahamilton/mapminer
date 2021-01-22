@@ -186,6 +186,13 @@
       'Fractal' => 'Spatie\\Fractal\\FractalFacade',
     ),
   ),
+  'spatie/laravel-ray' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\LaravelRay\\RayServiceProvider',
+    ),
+  ),
   'spatie/laravel-uptime-monitor' => 
   array (
     'providers' => 
