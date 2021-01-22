@@ -92,7 +92,7 @@ class ServicelinesController extends BaseController
             $filtered=null;
             $title = 'All ' .$serviceline->ServiceLine .' Accounts';
         
-            return response()->view('companies.index', compact('companies', 'fields', 'title', 'filtered', 'locationFilter'));
+            return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
         }
     }
 
