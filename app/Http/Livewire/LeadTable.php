@@ -34,18 +34,13 @@ class LeadTable extends Component
 
         $this->sortField = $field;
     }
-    /**
-     * [mount description]
-     * 
-     * @param [type] $myBranches [description]
-     * 
-     * @return [type]             [description]
-     */
-    public function mount(Array $myBranches, $search=null)
+    public function mount($branch)
     {
-        $this->myBranches = $myBranches;
-        $this->branch_id = array_key_first($this->myBranches);
-        $this->search = $search;
+        ;
+        $this->branch_id = $branch;
+        $person = new Person();
+        $this->myBranches = $person->myBranches();
+        
      
     }
     /**

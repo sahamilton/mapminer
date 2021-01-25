@@ -18,9 +18,7 @@
 		<p>
 			<strong>Lead Closed: Rated {{$location->salesteam->first()->pivot->rating}}</strong>
 		</p>
-		<p>
-			<a href="{{route('myclosedleads')}}">See all closed leads</a>
-		</p>
+		
 	@endif
 @else
 	<button type="button" class="btn btn-info " data-toggle="modal" data-target="#claimlead">Claim Lead</button>

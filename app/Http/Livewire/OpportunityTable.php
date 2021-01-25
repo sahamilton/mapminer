@@ -25,6 +25,13 @@ class OpportunityTable extends Component
     {
         $this->resetPage();
     }
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -35,19 +42,35 @@ class OpportunityTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount()
+    /**
+     * [mount description]
+     * 
+     * @return [type] [description]
+     */
+    public function mount($branch_id=null)
     {
         
         
         //$this->period = session('period');
         $person = new Person();
         $this->myBranches = $person->myBranches();
-        $this->branch_id = array_key_first($this->myBranches);
+        if (! $branch_id) {
+            $this->branch_id = array_key_first($this->myBranches);
+        } else {
+            $this->branch_id =$branch_id;
+        }
+        
     }
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
     
-        return view('livewire.opportunity-table', 
+        return view(
+            'livewire.opportunity-table', 
             [
                 'opportunities' => Opportunity::query()
                     ->select('opportunities.*', 'businessname')

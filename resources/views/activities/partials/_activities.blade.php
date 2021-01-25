@@ -32,13 +32,14 @@
            class="btn btn-default" 
            data-dismiss="modal">Cancel</button> 
            <input type="submit" 
-           value="Record Activity" c
+           value="Record Activity" 
            lass="btn btn-danger" />
             </div>
             <input 
             type="hidden" 
             name = "address_id" 
             value="{{$opportunity->address->id}}" />
+            
         </form>
 
         <div class="modal-footer">

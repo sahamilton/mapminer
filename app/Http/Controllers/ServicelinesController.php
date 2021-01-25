@@ -74,25 +74,29 @@ class ServicelinesController extends BaseController
         $serviceline = $this->serviceline->findOrFail($id);
         if (! $type) {
             $branches = Branch::with('region', 'manager')
-                ->whereHas('servicelines', function ($q) use ($id) {
-                    $q->where('serviceline_id', '=', $id);
-                })
+                ->whereHas(
+                    'servicelines', function ($q) use ($id) {
+                        $q->where('serviceline_id', '=', $id);
+                    }
+                )
                 ->get();
             
             return response()->view('servicelines.show', compact('serviceline', 'branches'));
         } else {
             $companies = Company::with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'countlocations')
-                    ->whereHas('serviceline', function ($q) use ($id) {
+                ->whereHas(
+                    'serviceline', function ($q) use ($id) {
                         $q->where('serviceline_id', '=', $id)
-                        ->whereIn('serviceline_id', $this->userServiceLines);
-                    })
+                            ->whereIn('serviceline_id', $this->userServiceLines);
+                    }
+                )
             ->get();
             $locationFilter = 'both';
             
             $filtered=null;
             $title = 'All ' .$serviceline->ServiceLine .' Accounts';
         
-            return response()->view('companies.index', compact('companies', 'fields', 'title', 'filtered', 'locationFilter'));
+            return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
         }
     }
 

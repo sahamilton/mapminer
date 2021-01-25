@@ -8,7 +8,7 @@
             class="btn btn-info float-right" 
             data-toggle="modal" 
             data-target="#add_lead">
-              Add Lead!
+              Add Lead
         </button>
     </div>
 
@@ -17,7 +17,7 @@
     @include('branchleads.partials._mylead') 
 
 
-    @livewire('lead-table', ['myBranches'=>auth()->user()->person->myBranches()])
+    @livewire('lead-table', ['branch'=>$branch->id])
 @include('addresses.partials._deleteleadmodal') 
 @include('branchleads.partials._branchleadmodal')
 @include('branchleads.partials._branchcampaignmodal')

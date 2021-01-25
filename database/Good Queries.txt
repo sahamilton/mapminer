@@ -1006,3 +1006,13 @@ WHERE
             HAVING
                 branches > 1
         ) AS a )
+
+/**************************************
+SELECT persons.id, CONCAT_WS(' ', firstname, lastname), businessname, activity_date, activities.branch_id AS activity_branch, address_branch.branch_id AS lead_branch 
+FROM persons, activities, address_branch, addresses 
+WHERE persons.user_id = activities.user_id 
+AND activities.address_id = address_branch.address_id 
+AND activities.branch_id != address_branch.branch_id 
+AND address_branch.updated_at < activities.activity_date 
+AND activities.activity_date > '2020-10-01' 
+AND address_branch.address_id = addresses.id

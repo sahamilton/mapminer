@@ -21,11 +21,7 @@
         @foreach($branches as $branch)
      
            <tr> 
-                <td>
-                    <a href="">
-                        {{$branch->branchname}}
-                    </a>
-                </td>
+                <td>{{$branch->branchname}}</td>
                 <td>{{$branch->assigned}}</td>
                 <td>{{$branch->claimed}}</td>
                 <td>{{$branch->closed}}</td>

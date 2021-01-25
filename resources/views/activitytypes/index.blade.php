@@ -18,7 +18,11 @@
 				@foreach ($activitytypes as $activitytype)
 				
 				<tr>
-					<td><a href="">{{$activitytype->activity}}</a></td>
+					<td>
+						<a href="{{route('activitytype.show',$activitytype->id">
+							{{$activitytype->activity}}
+						</a>
+					</td>
 					
 					<td>{{$activitytype->activities_count}}</td>
 					<td bgcolor='#{{$activitytype->color}}'>#{{$activitytype->color}}
