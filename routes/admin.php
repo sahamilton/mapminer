@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
      *  Admin Routes
      *  ------------------------------------------
      */
+    
+        Route::get('accounttype/locations', ['as'=>'accounttype.locations', 'uses'=>'AccounttypesController@locations']);
 
         Route::get('branchassignments/select', ['as'=>'branchassignment.check', 'uses'=>'Admin\BranchManagementController@select']);
         Route::post('branchassignments/email', ['as'=>'branchteam.email', 'uses'=>'Admin\BranchManagementController@confirm']);

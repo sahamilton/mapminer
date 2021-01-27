@@ -810,7 +810,24 @@ class Company extends NodeModel
         );
        
     }
+    public function lastUpdated()
+    {
+        return $this->belongsTo(Address::class);
+    }
+    /**
+     * [scopeWithLastUpdatedId description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeWithLastUpdatedId($query)
+    {
+         return $query
+             ->select('companies.*')
+             ->selectSub('select id as last_updated_id from addresses where company_id = companies.id order by addresses.created_at desc limit 1', 'last_updated_id');
        
+    }   
 
     public function scopePipeline($query, $period=null)
     {

@@ -113,6 +113,25 @@ trait GeoCode
       
         return $query;
     }
+
+    public function scopeCountNearby($query, array $latlng, $radius = 100, $limit = null)
+    {
+        $location = new Address;
+        $location->lat = $latlng['lat'];
+        $location->lng= $latlng['lng'];
+
+        ray($location);
+        $query = $query
+            ->selectRaw("count('id')")//pick the columns you want here.
+            
+            ->whereRaw("{$this->_haversine($location)} < $radius ")
+            ->orderBy('distance', 'ASC');
+        if ($limit) {
+            $query = $query->limit($limit);
+        }
+      
+        return $query;
+    }
     /*
      * ScopeNewNearby [description]
      * 
