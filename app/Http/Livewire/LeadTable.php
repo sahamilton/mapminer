@@ -36,7 +36,7 @@ class LeadTable extends Component
     }
     public function mount($branch)
     {
-        ;
+        ray($branch);
         $this->branch_id = $branch;
         $person = new Person();
         $this->myBranches = $person->myBranches();

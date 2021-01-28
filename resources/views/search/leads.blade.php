@@ -4,7 +4,7 @@
 <div class="container">
 <h2>Search My Leads</h2>
 
-    @livewire('lead-table', ['myBranches'=> auth()->user()->person->myBranches()]);
+    @livewire('lead-table', ['branch'=>$branch->id]);
 
 </h2>
 
