@@ -86,4 +86,15 @@ class FeedbackTable extends Component
     {
          $feedback->update(['status'=>'closed']);
     }
+    /**
+     * [open description]
+     * 
+     * @return [type] [description]
+     */
+    public function openFeedback(Feedback $feedback)
+    {
+         $feedback->update(['status'=>'open']);
+    }
+
+
 }

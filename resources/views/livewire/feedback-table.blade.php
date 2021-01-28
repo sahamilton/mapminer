@@ -82,6 +82,12 @@
                             <a title="close feedback" class="far fa-window-close text-danger" wire:click="closeFeedback({{ $item->id }})">
                                 
                             </a>
+                        @else
+                            <a title="Reopen feedback" 
+                            class="fas fa-door-open text-success" 
+                            wire:click="openFeedback({{ $item->id }})">
+                                
+                            </a>
                         @endif
                     </td>
                     <td>{{$item->biz_rating}}</td>
