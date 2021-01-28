@@ -14,7 +14,7 @@ class LeadTable extends Component
     public $perPage = 10;
     public $sortField = 'businessname';
     public $sortAsc = true;
-    public $search = '';
+    public $search = null;
     public $branch_id;
 
     public $myBranches;
@@ -24,6 +24,13 @@ class LeadTable extends Component
     {
         $this->resetPage();
     }
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -34,14 +41,14 @@ class LeadTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch)
+    public function mount($branch, $search = null)
     {
-        ray($branch);
+     
         $this->branch_id = $branch;
         $person = new Person();
         $this->myBranches = $person->myBranches();
+        $this->search = $search;
         
-     
     }
     /**
      * [render description]
@@ -51,7 +58,7 @@ class LeadTable extends Component
     public function render()
     {
         //$branches = auth()->user()->person->myBranches();
-
+       
         return view(
             'livewire.lead-table', [
             'leads' => Address::query()

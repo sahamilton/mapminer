@@ -2,7 +2,7 @@
     <div class="col-sm-6 col-sm-offset-3">
         <div id="imaginary_container"> 
             <div class="input-group stylish-input-group">
-                <form method="get"
+                <form method="post"
                 action="{{route('searchleads')}}"
                 >
                 @csrf
@@ -16,6 +16,7 @@
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-search"></i>
                     </button>
+                    <input type="hidden" name="branch_id" value = "{{session('branch')}}" />
                 </form>
             </div>
         </div>

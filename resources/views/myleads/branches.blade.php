@@ -15,9 +15,8 @@
 
 
     @include('branchleads.partials._mylead') 
-
-
-    @livewire('lead-table', ['branch'=>$branch->id])
+ 
+    @livewire('lead-table', ['branch'=>$branch->id, 'search'=>$search])
 @include('addresses.partials._deleteleadmodal') 
 @include('branchleads.partials._branchleadmodal')
 @include('branchleads.partials._branchcampaignmodal')

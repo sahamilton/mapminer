@@ -46,7 +46,7 @@
 
 
 	<!-- Charts -->
-	<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" ></script>layo
+	<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" ></script>
 	
 	</script>
 

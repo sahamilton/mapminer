@@ -9,10 +9,10 @@
                 wire:model="branch_id" 
                 class="form-control input-sm" 
                 id="branchselect" 
-                name="branch" 
+                name="branch_id" 
                 onchange="this.form.submit()">
                 @foreach ($myBranches as $key=>$branchname)
-                    <option {{$branch->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branchname}}</option>
+                    <option value="{{$key}}">{{$branchname}}</option>
                 @endforeach 
             </select>
 
@@ -24,9 +24,7 @@
     <div class="row mb-4">
         @include('livewire.partials._perpage')
 
-        <div class="col">
-            <input wire:model="search" class="form-control" type="text" placeholder="Search leads...">
-        </div>
+        @include('livewire.partials._search', ['placeholder'=>'Search leads'])
     </div>
 
     <div class="row">
