@@ -62,6 +62,12 @@
                 </a>
             </th>
             <th>  
+                <a title="Number of locations assigned to any branch" wire:click.prevent="sortBy('assigned')" role="button" href="#">
+                    Assigned Locations
+                    @include('includes._sort-icon', ['field' => 'assigned'])
+                </a>
+            </th>
+            <th>  
                
                     Manager
                    
@@ -76,9 +82,10 @@
             @foreach ($companies as $company)
            @ray($company)
             <tr>
-                <td>{{$company->companyname}}</td>
-                <td>{{$company->locations_count}}</td>
-                <td>{{$company->managedBy ? $company->managedBy->fullName() : ''}}</td>
+                <td><a href="{{route('company.show', $company->id)}}" title="Explore {{$company->companyname}}">{{$company->companyname}}</a></td>
+                <td class='text-center'>{{$company->locations_count}}</td>
+                <td class='text-center'>{{$company->assigned}}</td>
+                <td class='text-right'>{{$company->managedBy ? $company->managedBy->fullName() : ''}}</td>
                  <td>{{$company->lastUpdated ? $company->lastUpdated->created_at->format('Y-m-d'): ''}}</td>
             </tr>
             @endforeach

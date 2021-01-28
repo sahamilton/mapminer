@@ -43,6 +43,7 @@
                         @include('includes._sort-icon', ['field' => 'state'])
                     </a>
                 </th>
+                <th>Assigned to Branch</th>
                
             </thead>
             <tbody>

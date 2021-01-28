@@ -83,12 +83,26 @@ class AccountLocation extends Component
                                         $q->countNearby($this->latlng, $this->distance);
                                     }
                                 ]
+                            )->withCount(
+                                [
+                                    'locations as assigned'=>function ($q) { 
+                                        $q->countNearby($this->latlng, $this->distance)
+                                            ->has('assignedToBranch');
+                                    }
+                                ]
                             );
                         }, function ($q) {
-                            return $q->withCount('locations');
+                            return $q->withCount('locations')
+                                ->withCount(
+                                    [
+                                        'locations as assigned'=>function ($q) { 
+                                            $q->has('assignedToBranch');
+                                        }
+                                    ]
+                                );
                         }
                     )
-                    
+                   
                     
                     ->with('managedBy', 'lastUpdated')
                     ->when(
