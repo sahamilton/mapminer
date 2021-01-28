@@ -27,7 +27,9 @@ class ExportCompanyLocationCount implements FromQuery, ShouldQueue, WithHeadings
         'companyname'=>'Company',
         'manager'=>'Manager',
         'locations'=>'# Locations',
+        'assigned'=>"Assigned to Branch",
         'lastupdated'=>'Last Created',
+
         
         
     ];
@@ -36,9 +38,10 @@ class ExportCompanyLocationCount implements FromQuery, ShouldQueue, WithHeadings
     /**
      * [__construct description]
      * 
-     * @param array      $period   [description]
-     * @param array|null $branches [description]
-     * 
+     * @param [type] $accounttype [description]
+     * @param [type] $latlng      [description]
+     * @param string $distance    [description]
+     * @param [type] $address     [description]
      */
     public function __construct($accounttype, $latlng=null, $distance = '50', $address=null)
     {
@@ -53,7 +56,11 @@ class ExportCompanyLocationCount implements FromQuery, ShouldQueue, WithHeadings
         }
         
     }
-
+    /**
+     * [headings description]
+     * 
+     * @return [type] [description]
+     */
     public function headings(): array
     {
         if ($this->latlng) {
@@ -78,7 +85,13 @@ class ExportCompanyLocationCount implements FromQuery, ShouldQueue, WithHeadings
             ];
     }
     
-    
+    /**
+     * [map description]
+     * 
+     * @param [type] $company [description]
+     * 
+     * @return [type]          [description]
+     */
     public function map($company): array
     {
         
@@ -107,14 +120,22 @@ class ExportCompanyLocationCount implements FromQuery, ShouldQueue, WithHeadings
         return $detail;
        
     }
-
+    /**
+     * [columnFormats description]
+     * 
+     * @return [type] [description]
+     */
     public function columnFormats(): array
     {
-       return [];
+        return [];
     }
 
 
-
+    /**
+     * [query description]
+     * 
+     * @return [type] [description]
+     */
     public function query()
     {
        
@@ -129,9 +150,23 @@ class ExportCompanyLocationCount implements FromQuery, ShouldQueue, WithHeadings
                                 $q->countNearby($this->latlng, $this->distance);
                             }
                         ]
+                    )->withCount(
+                        [
+                            'locations as assigned'=>function ($q) { 
+                                $q->countNearby($this->latlng, $this->distance)
+                                    ->has('assignedToBranch');
+                            }
+                        ]
                     );
                 }, function ($q) {
-                    return $q->withCount('locations');
+                    return $q->withCount('locations')
+                        ->withCount(
+                            [
+                                'locations as assigned'=>function ($q) { 
+                                    $q->has('assignedToBranch');
+                                }
+                            ]
+                        );
                 }
             )
             ->when(
