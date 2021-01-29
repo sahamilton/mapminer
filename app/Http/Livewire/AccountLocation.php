@@ -23,7 +23,7 @@ class AccountLocation extends Component
     public $distance = '25';
     public $address;
     public $latlng;
-    
+    public $type;
     public $location;
 
 
@@ -106,18 +106,26 @@ class AccountLocation extends Component
                     
                     ->with('managedBy', 'lastUpdated')
                     ->when(
-                        $this->accounttype != 'All', function ($q) {
+                        $this->accounttype != '0', function ($q) {
 
                             $q->where('accounttypes_id', $this->accounttype);
                         }
                     )
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'accounttypes' => AccountType::orderBy('type')->pluck('type', 'id')->toArray(),
+                'accounttypes' => $this->_getaccountTypes(),
                 'distances'=>['10','20','50','100'],
                 
             ]
         );
+    }
+    private function _getaccountTypes()
+    {
+        $types = AccountType::orderBy('type')->pluck('type', 'id')->toArray();
+        $types['all']='All';
+        sort($types);
+  
+        return $types;
     }
     public function export()
     {

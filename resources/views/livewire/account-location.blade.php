@@ -1,6 +1,6 @@
 <div>
-  
-    <h4>{{$accounttype !='All' ? $companies->first()->type->type : 'All'}} Companies</h4>
+    @ray($accounttypes)
+    <h4>{{$accounttypes[$accounttype]}} Companies</h4>
     <div class="row mb-4 ">
         @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
     </div>
@@ -37,7 +37,7 @@
             <select wire:model="accounttype" 
 
             class="form-control">
-                <option value="All">All</option>
+                
                 @foreach ($accounttypes as $key=>$value)
                     <option value="{{$key}}">{{$value}}</option>
                 @endforeach
@@ -80,7 +80,7 @@
         </thead>
         <tbody>
             @foreach ($companies as $company)
-           @ray($company)
+        
             <tr>
                 <td><a href="{{route('company.show', $company->id)}}" title="Explore {{$company->companyname}}">{{$company->companyname}}</a></td>
                 <td class='text-center'>{{$company->locations_count}}</td>
