@@ -44,23 +44,31 @@ class MyLeadsController extends BaseController
      * @param  [type] $branch [description]
      * @return [type]         [description]
      */
-    public function index()
+    public function index(Branch $branch=null)
     {
-  
+        ray($branch);
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
 
-        $branch_ids = array_keys($myBranches);
-        // get first branch
-        $branch_id = reset($branch_ids);
+        if (! $branch) {
+            $branch_ids = array_keys($myBranches);
+            $branch_id = reset($branch_ids);
+            $branch = $this->branch->findOrFail($branch_id);
+        } else {
+            if (! in_array($branch->id, array_keys($myBranches))) {
+                return redirect()->back()->withError(' That is not one of your branches');
+            }
+            $branch_id = $branch->id;
+        }
+        
         session(['branch'=>$branch_id]);
         // necessary if using impersonate
         session()->forget('manager');
-        $branch = $this->branch->findOrFail($branch_id);
+        
         $search = null;
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
-       
+      
         return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
         
     }

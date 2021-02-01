@@ -39,12 +39,14 @@ class BranchPipelineExport implements FromView
      */
     public function view(): View
     {
-        
-        $branches = Branch::with('manager')
+        $this->period['from']->startOfWeek();
+        $this->period['to']->endOfWeek();
+       
+        $branches =Branch::with('manager')
             ->whereIn('id', $this->branches)
             ->with(
-                ['opportunities' => function ($q)  {
-                    $q->whereBetween('expected_close', [$this->period['from'], $this->period['to']])
+                ['opportunities' => function ($q) {
+                    $q->whereBetween('expected_close', [$this->period['from'],$this->period['to']])
                         ->where('closed', 0)
                         ->selectRaw('FROM_DAYS(TO_DAYS(expected_close) -MOD(TO_DAYS(expected_close) -2, 7)) as yearweek, sum(value) as funnel')
                         ->groupBy('expected_close');

@@ -20,11 +20,7 @@ class Person extends NodeModel
     
     protected $table ='persons';
     protected $hidden = ['created_at','updated_at','deleted_at','position'];
-
-    public function getParentIdName()
-    {
-        return 'reports_to';
-    }
+    
     
     protected $parentColumnName = 'reports_to';
 
@@ -51,6 +47,16 @@ class Person extends NodeModel
         'firstname',
         'lastname'
     ];
+
+    /**
+     * [getParentIdName description]
+     * 
+     * @return [type] [description]
+     */
+    public function getParentIdName()
+    {
+        return 'reports_to';
+    }
     /**
      * [reportsTo description]
      * 
@@ -146,10 +152,12 @@ class Person extends NodeModel
          ->orderBy('firstname')->get();
     }
     /**
-     * [getMyBranches finds branch managers in reporting
+     * GetMyBranches finds branch managers in reporting
      * strucuture and returns their branches as array]
      * 
-     * @return array list of branches serviced by reports
+     * @param Array|null $servicelines [description]
+     * 
+     * @return [type]                   [description]
      */
     public function getMyBranches(Array $servicelines=null)
     {
@@ -183,6 +191,11 @@ class Person extends NodeModel
             );
         return array_unique($branches->flatten()->toArray());
     }
+    /**
+     * [getMyAccounts description]
+     * 
+     * @return [type] [description]
+     */
     public function getMyAccounts()
     {
         if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
@@ -235,7 +248,7 @@ class Person extends NodeModel
             }
         } else {
             $person->load('userdetails');
-            if($person->userdetails->hasRole(['admin', 'sales_operations'])) {
+            if ($person->userdetails->hasRole(['admin', 'sales_operations'])) {
                 return $this->_getBranchesInServicelines($person->userdetails->serviceline);
             }
             return $this->_getBranchesFromTeam($person);
@@ -256,14 +269,15 @@ class Person extends NodeModel
                     $q->whereIn('role_id', $this->branchroles);
                 }
             )
-            ->with('branchesServiced')->get();
+            ->with('branchesServiced')
+            ->get();
 
         $branches =  $mybranchteam->map(
             function ($team) {
                 return $team->branchesServiced;
             }
         );
-        return $branches->flatten()->unique()->sort()->pluck('branchname', 'id')->toArray();
+        return $branches->flatten()->unique()->sortBy('branchname')->pluck('branchname', 'id')->toArray();
     }
     /**
      * [myBranchTeam description]
@@ -284,20 +298,33 @@ class Person extends NodeModel
         );
         return $team->flatten();
     }
-
+    /**
+     * [_getPersonFromAuth description]
+     * 
+     * @return [type] [description]
+     */
     private function _getPersonFromAuth()
     {
         
         return User::with('roles', 'person', 'serviceline')->findOrFail(auth()->user()->id);
     }
+    /**
+     * [_getBranchesInServicelines description]
+     * 
+     * @param [type] $servicelines [description]
+     * 
+     * @return [type]               [description]
+     */
     private function _getBranchesInServicelines($servicelines)
     {
         return Branch::whereHas(
             'servicelines', function ($q) use ($servicelines) {
                 $q->whereIn('id', $servicelines->pluck('id')->toArray());
             }
-        )->orderBy('id')
-        ->pluck('branchname', 'id')->toArray();
+        )
+        ->orderBy('branches.id')
+        ->pluck('branchname', 'id')
+        ->toArray();
     }
     /**
      * [scopeMyReports description]
@@ -310,16 +337,27 @@ class Person extends NodeModel
     {
         return $query->descendantsAndSelf();
     }
+    /**
+     * [ownBranches description]
+     * 
+     * @return [type] [description]
+     */
     public function ownBranches()
     {
         return $this->descendantsAndSelf()
             ->whereHas(
-                'userdetails.roles', function ($q)  {
+                'userdetails.roles', function ($q) {
                     $q->whereIn('role_id', [9]);
                 }
-
             )->with('branchesServiced');
     }
+    /**
+     * [team description]
+     * 
+     * @param array|null $roles [description]
+     * 
+     * @return [type]            [description]
+     */
     public function team(array $roles=null)
     {
         return $this->descendantsAndSelf()
@@ -374,6 +412,11 @@ class Person extends NodeModel
             ->withTimestamps()
             ->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
     }
+    /**
+     * [mapminerUsage description]
+     * 
+     * @return [type] [description]
+     */
     public function mapminerUsage()
     {
         return $this->hasManyThrough(Track::class, User::class);
@@ -482,21 +525,36 @@ class Person extends NodeModel
             }
         );
     }
-
+    /**
+     * [scopeSummaryActivitiesByManager description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
     public function scopeSummaryActivitiesByManager($query, $period)
     {
         $this->period = $period;
         
-        $query->leftJoin('actvities',function ($join) {
-            $join->on('activities.user',function ($q) {
-                $q->whereIn('activities.user_id', function ($q) {
-                    $q->select('user_id')
-                    ->from('persons');
-                }, 'reports')
+        $query->leftJoin(
+            'actvities',
+            function ($join) {
+                $join->on(
+                    'activities.user',
+                    function ($q) {
+                        $q->whereIn(
+                            'activities.user_id', function ($q) {
+                                $q->select('user_id')
+                                    ->from('persons');
+                            }, 
+                            'reports'
+                        )
 
-                ->where('reports.lft','>=','persons.lft')->where('reports.rgt', '<=', 'persons.rgt');
-                }
-            );
+                        ->where('reports.lft', '>=', 'persons.lft')
+                        ->where('reports.rgt', '<=', 'persons.rgt');
+                    }
+                );
 
             }
         )
@@ -934,9 +992,9 @@ class Person extends NodeModel
     /**
      * [updatePersonsAddress description]
      * 
-     * @param [type] $data [description]
+     * @param UserFormRequest $request [description]
      * 
-     * @return [type]       [description]
+     * @return [type]                   [description]
      */
     public function updatePersonsAddress(UserFormRequest $request)
     {
@@ -966,6 +1024,11 @@ class Person extends NodeModel
             return $this->address;
         }
     }
+    /**
+     * [primaryRole description]
+     * 
+     * @return [type] [description]
+     */
     public function primaryRole()
     {
         return $this->userdetails()->roles()->first();
@@ -1011,11 +1074,18 @@ class Person extends NodeModel
             }
         );
     }
-
+    /**
+     * [scopeSearch description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $search [description]
+     * 
+     * @return [type]         [description]
+     */
     public function scopeSearch($query, $search)
     {
         return  $query->where('firstname', 'like', "%{$search}%")
-                    ->Orwhere('lastname', 'like', "%{$search}%");
+            ->Orwhere('lastname', 'like', "%{$search}%");
     }
     /**
      * [rankings description]
@@ -1028,7 +1098,13 @@ class Person extends NodeModel
             ->withPivot('ranking', 'comments')
             ->withTimeStamps();
     }
-
+    /**
+     * [scopeWithPrimaryRole description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeWithPrimaryRole($query)
     {
         return $query->userdetails->roles->first();
@@ -1044,7 +1120,13 @@ class Person extends NodeModel
 
         return $this->findOrFail(config('mapminer.topdog'));
     }
-
+    /**
+     * [inMyTeam description]
+     * 
+     * @param Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
     public function inMyTeam(Person $person)
     {
         if (auth()->user()->hasRole('admin')) {
@@ -1052,7 +1134,13 @@ class Person extends NodeModel
         }
         return $person->isDescendantOf(auth()->user()->person);
     }
-
+    /**
+     * [inMyAccounts description]
+     * 
+     * @param Company $company [description]
+     * 
+     * @return [type]           [description]
+     */
     public function inMyAccounts(Company $company)
     {
         if (auth()->user()->hasRole('admin')) {
@@ -1061,7 +1149,14 @@ class Person extends NodeModel
         return auth()->user()->person->managesAccount->contains('id', $company->id);
 
     }
-
+    /**
+     * [scopeSummaryActivities description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
     public function scopeSummaryActivities($query, $period)
     {
         $this->period = $period;
@@ -1087,20 +1182,29 @@ class Person extends NodeModel
             ->groupBy('manager');
 
     }
-    
+    /**
+     * [scopeSummaryOpportunities description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
     public function scopeSummaryOpportunities($query, $period)
     {
         
         $this->period = $period;
 
         $query->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
-        ->join('persons as reports',function ($join) {
-            $join->on('reports.lft', '>=', 'persons.lft')
-            ->on('reports.rgt', '<=', 'persons.rgt')
-            ->join('activities','reports.user_id', '=', 'activities.user_id');
-        })
+            ->join(
+                'persons as reports', function ($join) {
+                    $join->on('reports.lft', '>=', 'persons.lft')
+                        ->on('reports.rgt', '<=', 'persons.rgt')
+                        ->join('activities', 'reports.user_id', '=', 'activities.user_id');
+                }
+            )
         
-        ->where('completed',1)
+        ->where('completed', 1)
         ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
         ->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
         ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
