@@ -81,7 +81,7 @@ class MyLeadsController extends BaseController
      */
     public function branchLeads(Request $request, Branch $branch)
     {
-       
+        
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
@@ -95,11 +95,12 @@ class MyLeadsController extends BaseController
             return redirect()->back()->withError('You are not assigned to this branch');
         }
         session(['branch'=>$branch->id]);
-        $branch = $branch->id;
+        //$branch = $branch->id;
         //$branch = $this->_getBranchLeadData($branch->id);
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
         
-        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns'));
+        $search =null;
+        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
     }
     
     /**
