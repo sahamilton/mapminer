@@ -1,16 +1,15 @@
 <div>
 <h1>{{$branch->branchname . " leads"}}</h1>
 <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
-
+Source = {{$this->lead_source_id}}
 @if(count($myBranches) > 1)
     <div class="col-sm-4">
        
             <select
                 wire:model="branch_id" 
                 class="form-control input-sm" 
-                id="branchselect" 
                 name="branch_id" 
-                onchange="this.form.submit()">
+                >
                 @foreach ($myBranches as $key=>$branchname)
                     <option value="{{$key}}">{{$branchname}}</option>
                 @endforeach 
@@ -25,6 +24,9 @@
         @include('livewire.partials._perpage')
 
         @include('livewire.partials._search', ['placeholder'=>'Search leads'])
+        
+        
+    </div>
     </div>
 
     <div class="row">

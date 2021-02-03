@@ -8,10 +8,11 @@ use App\Branch;
 use App\Activity;
 use App\User;
 use Livewire\WithPagination;
+use App\PeriodSelector;
 
 class ActivitiesTable extends Component
 {
-    use WithPagination;
+    use WithPagination, PeriodSelector;
 
     public $perPage = 10;
     public $sortField = 'activity_date';
@@ -19,10 +20,11 @@ class ActivitiesTable extends Component
     public $sortAsc = false;
     public $search ='';
 
+    public $setPeriod = 'thisWeek';
+
     public $branch_id;
     public $myBranches;
-    public $period;
-    public $setPeriod='lastWeek';
+ 
     public $status='All';
     public $user;
 
@@ -78,7 +80,7 @@ class ActivitiesTable extends Component
                     )
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'activitytypes' => ActivityType::select('id', 'activity')->orderBy('activity')->get(),
+                'activitytypes' => ActivityType::orderBy('activity')->pluck('activity', 'id')->toArray(),
                 'branch' => Branch::findOrFail($this->branch_id),
                 
                            ]
@@ -87,12 +89,10 @@ class ActivitiesTable extends Component
 
     private function _setPeriod()
     {
-        
-        $branch = Branch::first();
-        
-        $this->period = $branch->getPeriod($this->setPeriod);
-
-
+        if ($this->setPeriod != session('period')) {
+            $this->livewirePeriod($this->setPeriod);
+            
+        }
     }
 
 

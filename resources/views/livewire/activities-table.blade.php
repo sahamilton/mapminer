@@ -1,6 +1,7 @@
 <div>
     <h2>{{$branch->branchname}}</h2>
     <h4>Activities</h4>
+    <p>for the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
     <div class="row mb4" style="padding-bottom: 10px">
         @if(count($myBranches) >1)
 
@@ -50,15 +51,17 @@
             <select wire:model="activitytype" 
             class="form-control">
                 <option value="All">All</option>
-                @foreach ($activitytypes as $type)
-                    <option {{$activitytype== $type->id ? 'selected' :''}} value="{{$type->id}}">{{$type->activity}}</option>
+                @foreach ($activitytypes as $key=>$type)
+                    <option value="{{$key}}">{{$type}}</option>
                 @endforeach
             </select>
         </div>
         <div class="row mb-4 ">
 
         </div>
-
+        <div wire:loading>
+            Processing Payment...
+        </div>
     
     </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
@@ -69,7 +72,9 @@
                    
             </th>
             <th>
-                <a wire:click.prevent="sortBy('activity_date')" role="button" href="#">
+                <a wire:click.prevent="sortBy('activity_date')" 
+                role="button" href="#" 
+                wire:loading.class="bg-danger">
                     Activity Date
                     @include('includes._sort-icon', ['field' => 'activity_date'])
                 </a>

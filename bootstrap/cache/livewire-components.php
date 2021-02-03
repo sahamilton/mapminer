@@ -10,6 +10,7 @@
   'feedback-table' => 'App\\Http\\Livewire\\FeedbackTable',
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
+  'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',

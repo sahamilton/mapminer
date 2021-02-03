@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Address;
+use App\AddressBranch;
 use App\Branch;
 use App\Person;
 use Livewire\Component;
@@ -16,11 +16,16 @@ class LeadTable extends Component
     public $sortAsc = true;
     public $search = null;
     public $branch_id;
+    public $lead_source_id = 'All';
 
     public $myBranches;
 
  
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingLeadSourceId()
     {
         $this->resetPage();
     }
@@ -57,11 +62,13 @@ class LeadTable extends Component
      */
     public function render()
     {
-        //$branches = auth()->user()->person->myBranches();
-       
+        
+        $this->_getLeadSources();
         return view(
             'livewire.lead-table', [
-            'leads' => Address::query()
+            'leads' => AddressBranch::query()
+                ->search($this->search)
+                
                 ->whereIn(
                     'addresses.id', function ($query) {
                         $query->select('address_id')
@@ -70,17 +77,37 @@ class LeadTable extends Component
                             ->where('status_id', 2);
                     }
                 )
-                ->search($this->search)
-                ->with('assignedToBranch')
                 ->whereDoesntHave('opportunities')
                 ->withLastActivityId()
                 ->with('lastActivity')
                 ->dateAdded()
-                ->withCount('openOpportunities')
+                
+
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-                'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),
+
+                'branch' => Branch::findOrFail($this->branch_id),
+                
             ]
         );
+    }
+
+    private function _getLeadSources()
+    {
+        $branch = Branch::query()
+            
+            ->with('locations.leadsource')
+            ->find($this->branch_id);
+        $sources = [];
+        
+        foreach ($branch->locations as $location) {
+            
+            if (! array_key_exists($location->lead_source_id, $sources)) {
+                
+                $sources[$location->lead_source_id] = $location->leadsource->source;
+            }
+        }
+        
+        return $sources;
     }
 }
