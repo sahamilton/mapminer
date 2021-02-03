@@ -5,7 +5,7 @@ current:
   major: 3
   minor: 11
   patch: 61
-  prerelease: ''
+  prerelease: 4-gfa3cd86c
   buildmetadata: ''
   commit: '100002'
   timestamp:
