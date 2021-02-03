@@ -4,8 +4,9 @@
 </style>
 
 <!-- Modal -->
-<div class="modal fade" 
-      id="add-activity" 
+<div  wire:ignore.self  
+      class="modal fade" 
+      id="add-lwactivity" 
       tabindex="-1" 
       role="dialog" 
       aria-labelledby="myModalLabel" 
@@ -23,24 +24,18 @@
       </div>
       <div class="modal-body">
                 
-        <form method="post" action="{{route('activity.store')}}">
-        @csrf
-        @include('activities.partials._activitynewform')
+       
+        @include('livewire.activities._activityform')
           <div class="float-right">
            <button 
            type="button" 
-           class="btn btn-default" 
+           class="btn btn-default close-modal" 
            data-dismiss="modal">Cancel</button> 
-           <input type="submit" 
-           value="Record Activity" 
-           lass="btn btn-danger" />
+           <button  wire:click.prevent="store()"
+           
+           class="btn btn-danger" />Record Activity</div>
             </div>
-            <input 
-            type="hidden" 
-            name = "address_id" 
-            value="{{$opportunity->address->id}}" />
-            
-        </form>
+
 
         <div class="modal-footer">
         

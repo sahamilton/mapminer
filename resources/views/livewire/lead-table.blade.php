@@ -1,15 +1,31 @@
 <div>
 <h1>{{$branch->branchname . " leads"}}</h1>
+<h4>
+    @switch($withOps)
+    @case('All')
+    With or Without Any Opportunities
+    @break
+    @case('Without')
+    {{$withOps}} Any Opportunities
+    @break
+    @case('Only Open')
+    With {{$withOps}} Opportunities
+    @break
+    @case('Any')
+    With {{$withOps}} Opportunities
+    @break
+    @endswitch
+</h4>
+
 <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
-Source = {{$this->lead_source_id}}
+@ray($leads->first())
 @if(count($myBranches) > 1)
     <div class="col-sm-4">
        
             <select
                 wire:model="branch_id" 
                 class="form-control input-sm" 
-                name="branch_id" 
-                >
+                id="branchselect" >               >
                 @foreach ($myBranches as $key=>$branchname)
                     <option value="{{$key}}">{{$branchname}}</option>
                 @endforeach 
@@ -19,16 +35,23 @@ Source = {{$this->lead_source_id}}
     </div>
 @endif
 
-
-    <div class="row mb-4">
+    
+    <div class="row">
         @include('livewire.partials._perpage')
-
+        <div class="col form-inline">
+            <label>With / W/O Opportunities</label>
+             <select wire:model="withOps" class="form-control">
+                @foreach ($opstatus as $key)
+                    <option value="{{$key}}">{{$key}}</option>
+                @endforeach
+            </select>
+        </div>
         @include('livewire.partials._search', ['placeholder'=>'Search leads'])
         
         
     </div>
     </div>
-
+   
     <div class="row">
         <table class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
@@ -65,6 +88,7 @@ Source = {{$this->lead_source_id}}
                         </a>
                        
                     </th>
+                    
                     @if($branch->currentcampaigns->count())
                         <th>Campaign</th>
                     @endif
@@ -95,6 +119,13 @@ Source = {{$this->lead_source_id}}
             <a href="{{route('address.show',$lead->id)}}">
                 {{$lead->businessname}}
             </a>
+            <a data-toggle="modal" 
+            data-target="#add-lwactivity" 
+            data-title="{{$lead->businessname}}"
+            data-address_id = "{{$lead->id}}"
+            data-branch_id = "{{$branch->id}}"
+            title="Add activity at {{$lead->businessname}}" >
+            <i class="fas fa-plus-circle text text-success"></i> </a>
         </td>
 
         <td>{{$lead->street}}</td>
@@ -105,6 +136,7 @@ Source = {{$this->lead_source_id}}
              {{$lead->leadsource->source}}
             @endif
         </td>
+        
         @if ($branch->currentcampaigns->count())
         <td>
             @foreach ($lead->currentcampaigns as $campaign)
@@ -165,3 +197,4 @@ Source = {{$this->lead_source_id}}
         </div>
     </div>
 </div>
+@include('livewire.activities._modal')

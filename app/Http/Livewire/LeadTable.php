@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\AddressBranch;
+use App\Address;
+use App\Activity;
 use App\Branch;
 use App\Person;
+use App\ActivityType;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,6 +17,17 @@ class LeadTable extends Component
     public $sortField = 'businessname';
     public $sortAsc = true;
     public $search = null;
+   
+    public $withOps = 'All';
+    //public $updateMode = false;
+
+    public $activitytype_id;
+    public $note;
+    public $activity_date='2021-02-03';
+    public $completed =1;
+    public $followup_date;
+    public $followup_activity;
+    public $address_id;
     public $branch_id;
     public $lead_source_id = 'All';
 
@@ -46,6 +59,14 @@ class LeadTable extends Component
 
         $this->sortField = $field;
     }
+    /**
+     * [mount description]
+     * 
+     * @param [type] $branch [description]
+     * @param [type] $search [description]
+     * 
+     * @return [type]         [description]
+     */
     public function mount($branch, $search = null)
     {
      
@@ -77,7 +98,33 @@ class LeadTable extends Component
                             ->where('status_id', 2);
                     }
                 )
-                ->whereDoesntHave('opportunities')
+                ->search($this->search)
+                ->with('assignedToBranch')
+                ->when(
+                    $this->withOps != 'All', function ($q) {
+                        $q->when(
+                            $this->withOps == 'Without', function ($q) {
+                                $q->whereDoesntHave('opportunities');
+                            }
+                        )
+                        ->when(
+                            $this->withOps == 'Only Open', function ($q) {
+                                $q->whereHas(
+                                    'opportunities', function ($q) {
+                                        $q->where('closed', 0);
+                                    }
+                                );
+                            }
+                        )
+                        ->when(
+                            $this->withOps == 'Any', function ($q) {
+                                $q->has('opportunities');
+                            }
+                        );
+                        
+                    }
+                )
+                
                 ->withLastActivityId()
                 ->with('lastActivity')
                 ->dateAdded()
@@ -85,29 +132,87 @@ class LeadTable extends Component
 
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-
-                'branch' => Branch::findOrFail($this->branch_id),
-                
+                'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),
+                'opstatus'=>['All', 'Without', 'Only Open', 'Any'],
+                'activities'=>ActivityType::pluck('activity', 'id')->toArray(),
             ]
         );
     }
 
-    private function _getLeadSources()
+     
+    
+    /**
+     * [_resetInputFields description]
+     *
+     * @return [type] [description]
+     */
+    private function _resetInputFields()
     {
-        $branch = Branch::query()
-            
-            ->with('locations.leadsource')
-            ->find($this->branch_id);
-        $sources = [];
-        
-        foreach ($branch->locations as $location) {
-            
-            if (! array_key_exists($location->lead_source_id, $sources)) {
-                
-                $sources[$location->lead_source_id] = $location->leadsource->source;
-            }
-        }
-        
-        return $sources;
+        $this->activitytype_id='';
+        $this->note='';
+        $this->activity_date=now()->format('Y-m-d');
+        $this->completed=1;
+        $this->followup_date='';
+        $this->followup_activity='';
+        $this->address_id='';
+    
+
+
     }
+    /**
+     * [openModal description]
+     *
+     * @return [type] [description]
+     */
+    public function openModal()
+    {
+
+        $this->isOpen = true;
+
+    }
+    /**
+     * [closeModal description]
+     *
+     * @return [type] [description]
+     */
+    public function closeModal()
+    {
+
+        $this->isOpen = false;
+
+    }
+
+    public function store()
+    {
+        dd('hree we are');
+        $this->validate(
+            [
+             
+            ]
+        );
+
+        $activity = Activity::updateOrCreate(
+            ['id' => $this->account_id],
+            [
+                'activitytype_id' => $this->activitytype_id,
+                'note' => $this->note,
+                'activity_date' => $this->activity_date,
+                'completed'=>$this->completed,
+                'followup_date'=>$this->followup_date,
+                'followup_activity'=>$this->followup_activity,
+                'address_id'=>$this->address_id,
+                'branch_id'=>$this->branch_id,
+                'user_id' => auth()->user()->id
+
+            ]
+        );
+        ray($activity);
+    }
+    public function cancel()
+    {
+        $this->updateMode = false;
+        $this->_resetInputFields();
+    }
+
+
 }

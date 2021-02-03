@@ -85,8 +85,12 @@ $(document).ready(function()
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 		
 	});
-	
-
+	$(document).on('show.bs.modal','#add-lwactivity', function(e) {
+        $(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('input#address_id').val($(e.relatedTarget).data('address_id'));
+        $(this).find('input#branch_id').val($(e.relatedTarget).data('branch_id'));
+    }); 
 
 	$(document).on('show.bs.modal','#add-activity', function(e) {
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
