@@ -9,7 +9,7 @@
     <tbody>
         @foreach ($people as $person)
         <tr>
-            <td><a href="{{route('team.show',$person->id)}}">{{$person->fullName}}</a></td>
+            <td><a href="{{route('team.show',$person->id)}}">{{$person->fullName()}}</a></td>
             <td>
                 @if(isset($person->userdetails))
                     @foreach ($person->userdetails->roles as $role)

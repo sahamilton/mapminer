@@ -44,23 +44,31 @@ class MyLeadsController extends BaseController
      * @param  [type] $branch [description]
      * @return [type]         [description]
      */
-    public function index()
+    public function index(Branch $branch=null)
     {
-  
+        ray($branch);
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
 
-        $branch_ids = array_keys($myBranches);
-        // get first branch
-        $branch_id = reset($branch_ids);
+        if (! $branch) {
+            $branch_ids = array_keys($myBranches);
+            $branch_id = reset($branch_ids);
+            $branch = $this->branch->findOrFail($branch_id);
+        } else {
+            if (! in_array($branch->id, array_keys($myBranches))) {
+                return redirect()->back()->withError(' That is not one of your branches');
+            }
+            $branch_id = $branch->id;
+        }
+        
         session(['branch'=>$branch_id]);
         // necessary if using impersonate
         session()->forget('manager');
-        $branch = $this->branch->findOrFail($branch_id);
+        
         $search = null;
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
-       
+      
         return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
         
     }
@@ -81,7 +89,7 @@ class MyLeadsController extends BaseController
      */
     public function branchLeads(Request $request, Branch $branch)
     {
-       
+        
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
@@ -95,11 +103,12 @@ class MyLeadsController extends BaseController
             return redirect()->back()->withError('You are not assigned to this branch');
         }
         session(['branch'=>$branch->id]);
-        $branch = $branch->id;
+        //$branch = $branch->id;
         //$branch = $this->_getBranchLeadData($branch->id);
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
         
-        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns'));
+        $search =null;
+        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
     }
     
     /**
