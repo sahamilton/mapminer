@@ -10,6 +10,12 @@
         </li>
         <li>
             <a class="dropdown-item" 
+            href="{{ route('accounttype.locations') }}">
+                <i class="far fa-compass"></i> Accounts & Nearby Locations
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" 
             href="{{ route('company.index') }}">
                 <i class="fas fa-wrench"></i> Manage Accounts
             </a>

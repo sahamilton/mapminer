@@ -88,7 +88,7 @@ class BranchDashboardController extends DashboardController
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
-        if(! session('manager')) {
+        if (! session('manager')) {
             session(['manager'=>auth()->user()->id]);
         }
         $this->manager = $this->person
@@ -189,7 +189,7 @@ class BranchDashboardController extends DashboardController
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-        
+     
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns'));
 
     }

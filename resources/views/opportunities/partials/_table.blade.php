@@ -85,11 +85,12 @@
             data-toggle="modal" 
             data-pk = "{{$opportunity->address->address->id}}"
             data-id="{{$opportunity->address->address->id}}"
+            data-branch_id="{{$branch->id}}"
             data-target="#add-activity" 
             data-title = "location" 
             href="#">
           <i class="fa fa-plus-circle text-success" aria-hidden="true"></i> Add Activity</a>
-         
+        
 
       </td>
       @endif

@@ -51,6 +51,7 @@ class CompanyLocationTable extends Component
                         }
                     )
                 ->search($this->search)
+                ->with('assignedToBranch')
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
             'allstates' => Address::select('state')

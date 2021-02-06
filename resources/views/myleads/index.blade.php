@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>My Leads</h1>
-<p><a href="{{route('myclosedleads')}}">See my closed leads</a></p>
+<p><a href="">See my closed leads</a></p>
 <div class="row float-right" style="padding-bottom:10px">
 
 	<!-- <a href="{{route('myleads.create')}}" class="btn btn-info">

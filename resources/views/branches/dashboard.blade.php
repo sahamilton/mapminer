@@ -1,4 +1,4 @@
-@extends('site.layouts.calendar')
+@extends('site.layouts.cal')
 @section('content')
 @include('partials._newsflash')
 
@@ -36,14 +36,14 @@
 		<tbody>
 			<td class="text-center">
 				<a href="{{route('opportunity.index')}}">
-					{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->open_opportunities : 0 }}</a></td>
-			<td class="text-center">{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->top25_opportunities : 0}}</td>
-			<td class="text-center">{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->won_opportunities :0}}</td>
-			<td class="text-center">{{$data['summary']['opportunities']->count() ? $data['summary']['opportunities']->first()->lost_opportunities : 0}}</td>
+					{{$data['summary']->first()->open_opportunities }}</a></td>
+			<td class="text-center">{{$data['summary']->first()->top25_opportunities}}</td>
+			<td class="text-center">{{$data['summary']->first()->won_opportunities}}</td>
+			<td class="text-center">{{ $data['summary']->first()->lost_opportunities}}</td>
 			<td class="text-center">
-				<a href="{{route('branch.leads')}}">{{$data['summary']['leads']->count() ? $data['summary']['leads']->first()->active_leads : 0}}</a></td>
+				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
 			<td class="text-center">
-				<a href="{{route('activity.index')}}">{{$data['summary']['activities']->count() ? $data['summary']['activities']->first()->activities_count : 0}}</a></td>	
+				<a href="{{route('activity.index')}}">{{$data['summary']->first()->activities_count}}</a></td>	
 		</tbody>
 	</table>
 </div>

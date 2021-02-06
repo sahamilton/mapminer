@@ -3,26 +3,32 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use Livewire\WithPagination;
-
 use App\ActivityType;
 use App\Branch;
 use App\Activity;
+use App\User;
+use Livewire\WithPagination;
+use App\PeriodSelector;
+
 class ActivitiesTable extends Component
 {
-    use WithPagination;
+    use WithPagination, PeriodSelector;
 
     public $perPage = 10;
     public $sortField = 'activity_date';
     public $activitytype='All';
     public $sortAsc = false;
     public $search ='';
-    public $branch;
-    public $period;
-    public $setPeriod='All';
-    public $status='All';
-    public $filter = 0;
+
+    public $setPeriod = 'thisWeek';
+
+    public $branch_id;
     public $myBranches;
+ 
+    public $status='All';
+    public $user;
+
+
 
     public function updatingSearch()
     {
@@ -38,25 +44,26 @@ class ActivitiesTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch)
+    public function mount()
     {
-        $this->branch = Branch::findOrFail($branch->id);
-        //$this->period = session('period');
+        
+        $this->myBranches = auth()->user()->person->myBranches();
+        $this->branch_id = array_key_first($this->myBranches);
+
+
     }
     public function render()
     {
-        
+        $this->_setPeriod();
 
-        $this->_setPeriod(); 
-        
-        
         return view(
-            'livewire.activities-table', [
+            'livewire.activities-table',
+            [
                 'activities'=>Activity::query()
-                    ->where('branch_id', $this->branch->id)
-                    ->select('activities.*', 'addresses.id', 'addresses.businessname')
-                    ->join('addresses', 'addresses.id', '=', 'address_id')
-                    ->with('type')
+                    ->where('branch_id', $this->branch_id)
+                    ->periodActions($this->period)
+                    ->with('relatesToAddress', 'type')
+                    ->search($this->search)
                     ->when(
                         $this->status != 'All', function ($q) {
                             if ($this->status ==='') {
@@ -66,38 +73,27 @@ class ActivitiesTable extends Component
                         }
                     )
                     ->when(
-                        $this->period, function ($q) {
-                            
-                            $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    )
-                    ->when(
                         $this->activitytype != 'All', function ($q) {
 
                             $q->where('activitytype_id', $this->activitytype);
                         }
                     )
-                    ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'activitytypes' => ActivityType::select('id', 'activity')->orderBy('activity')->get(),
-
-
-
-            ]
+                'activitytypes' => ActivityType::orderBy('activity')->pluck('activity', 'id')->toArray(),
+                'branch' => Branch::findOrFail($this->branch_id),
+                
+                           ]
         );
     }
 
     private function _setPeriod()
     {
-        if ($this->setPeriod != 'All') {
-
-            $this->period = $this->branch->getPeriod($this->setPeriod);
-        
-        } else {
-            $this->period = null;
+        if ($this->setPeriod != session('period')) {
+            $this->livewirePeriod($this->setPeriod);
+            
         }
-
-
     }
+
+
 }

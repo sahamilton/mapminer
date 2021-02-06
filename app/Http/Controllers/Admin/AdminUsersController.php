@@ -316,7 +316,7 @@ class AdminUsersController extends BaseController
 
     private function _createPersonData(Request $request, User $user)
     {
-        $personName = request(['firstname','lastname','phone','business_title']);
+        $personName = request(['firstname','lastname','phone','business_title', 'reports_to']);
         $personGeo = $this->person->updatePersonsAddress($request);
         return array_merge($personGeo, $personName, ['user_id'=>$user->id]);
         
@@ -388,7 +388,8 @@ class AdminUsersController extends BaseController
      */
     private function _associateBranchesWithPerson(Request $request, Person $person)
     {
-        
+        $data = request()->all();
+
         $syncData=[];
 
         if (request()->filled('branchstring')) {
@@ -396,6 +397,7 @@ class AdminUsersController extends BaseController
         }
         
         if (isset($data['branches']) && count($data['branches']) > 0 && $data['branches'][0] != 0) {
+
             $data['roles'] = $person->userdetails->roles->pluck('id')->toArray();
             foreach ($data['branches'] as $branch) {
                 if ($data['roles']) {

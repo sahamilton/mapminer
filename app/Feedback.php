@@ -32,4 +32,17 @@ class Feedback extends Model
     {
         return $this->hasMany(FeedbackComments::class);
     }
+
+    public function scopeSearch($query, $search)
+    {
+        $query->where('feedback', 'like', "%{$search}%")
+            ->orWhereIn(
+                'user_id', function ($q) use ($search) {
+                    $q->select('user_id')
+                        ->from('persons')
+                        ->where('firstname', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%");
+                }
+            );
+    }
 }

@@ -44,24 +44,32 @@ class MyLeadsController extends BaseController
      * @param  [type] $branch [description]
      * @return [type]         [description]
      */
-    public function index()
+    public function index(Branch $branch=null)
     {
-  
+        ray($branch);
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
 
-        $branch_ids = array_keys($myBranches);
-        // get first branch
-        $branch_id = reset($branch_ids);
+        if (! $branch) {
+            $branch_ids = array_keys($myBranches);
+            $branch_id = reset($branch_ids);
+            $branch = $this->branch->findOrFail($branch_id);
+        } else {
+            if (! in_array($branch->id, array_keys($myBranches))) {
+                return redirect()->back()->withError(' That is not one of your branches');
+            }
+            $branch_id = $branch->id;
+        }
+        
         session(['branch'=>$branch_id]);
         // necessary if using impersonate
         session()->forget('manager');
-        $branch = $this->branch->findOrFail($branch_id);
-
+        
+        $search = null;
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
-     
-        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns'));
+      
+        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
         
     }
 
@@ -81,6 +89,7 @@ class MyLeadsController extends BaseController
      */
     public function branchLeads(Request $request, Branch $branch)
     {
+        
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
@@ -93,11 +102,13 @@ class MyLeadsController extends BaseController
         if (! in_array($branch_id, array_keys($myBranches))) {
             return redirect()->back()->withError('You are not assigned to this branch');
         }
-        session(['branch'=>$branch_id]);
-        $branch = $this->_getBranchLeadData($branch_id);
+        session(['branch'=>$branch->id]);
+        //$branch = $branch->id;
+        //$branch = $this->_getBranchLeadData($branch->id);
         $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
         
-        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaigns'));
+        $search =null;
+        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
     }
     
     /**
@@ -109,7 +120,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-        
+       
         $myBranches = auth()->user()->person->getMyBranches();
 
         // we need to geocode this address
@@ -118,10 +129,10 @@ class MyLeadsController extends BaseController
         }
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
-
+      
         $address = $this->lead->create($data['lead']);
         
-        $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
+        $address->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
 
         if (request()->filled('campaign')) {
             $this->_assignToCampaign($address, request('campaign'));
@@ -204,16 +215,22 @@ class MyLeadsController extends BaseController
 
     public function searchleads(Request $request)
     {
+        
         $search = request('companyname');
-        $myBranches = auth()->user()->person->getMyBranches();
-        $leads = $this->lead->search($search)
-            ->whereHas(
-                'assignedToBranch', function ($q) use ($myBranches) {
-                    $q->whereIn('branches.id', $myBranches);
-                }
-            )
-        ->get();
-        return response()->view('myleads.search', compact('leads', 'search'));
+        if (request()->has('branch_id')) {
+                $branch = request('branch_id');
+        } else {
+            $branch = session('branch');
+        }
+        //check if in your branches
+        $myBranches = auth()->user()->person->myBranches();
+        if (! array_key_exists($branch, $myBranches)) {
+            return redirect()->back()->withError('That is not one of your branches ' . $branch);
+        }
+        $branch = $this->branch->findOrFail($branch);
+        $campaigns = $this->_getCurrentOpenCampaigns($branch->id);
+        
+        return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
     }
     /**
      * [_assignToCampaign Remove null campaign and assign address]

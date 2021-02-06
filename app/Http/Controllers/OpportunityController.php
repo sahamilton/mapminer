@@ -70,7 +70,7 @@ class OpportunityController extends BaseController
      */
     public function index()
     {
-      
+        
         $person = auth()->user()->person;
      
         if (! $this->period) {
@@ -89,14 +89,9 @@ class OpportunityController extends BaseController
         $period = $this->period;
 
         if (count($myBranches) == 1 ) {
-            
-            //$data = $this->_getBranchData([session('branch')]);
-            $branch = $this->branch->findOrFail(session('branch'));
-            $campaigns = Campaign::currentOpen([$branch->id])->get();
-            return response()->view(
-                'opportunities.index', 
-                compact('activityTypes', 'myBranches','period', 'branch', 'campaigns')
-            );
+       
+            $branch_id = reset($myBranches);
+            return redirect()->route('opportunities.branch', $branch_id);
 
         } else {
            
@@ -163,12 +158,7 @@ class OpportunityController extends BaseController
              return redirect()->back()
                  ->withWarning("You are not assigned to " .$branch->branchname);
         }
-        
-       
 
-        //$activityTypes = $activityTypes = ActivityType::all();
-       
-       // $data['period'] = $this->period;
        
         return response()->view(
             'opportunities.list', 

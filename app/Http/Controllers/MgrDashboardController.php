@@ -263,7 +263,10 @@ class MgrDashboardController extends DashboardController
         }
     }
     
-    
+    public function mgrSummary()
+    {
+        return response()->view('managers.summary');
+    }
     
     /**
      * [_myTeamsData description]

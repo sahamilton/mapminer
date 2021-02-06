@@ -11,6 +11,12 @@ class AccounttypesController extends BaseController
     public $accounttype;
     public $company;
 
+    /**
+     * [__construct description]
+     * 
+     * @param Accounttype $accounttype [description]
+     * @param Company     $company     [description]
+     */
     public function __construct(Accounttype $accounttype, Company $company)
     {
         $this->accounttype = $accounttype;
@@ -52,10 +58,11 @@ class AccounttypesController extends BaseController
     }
 
     /**
-     * Display the specified accounttype.
-     *
-     * @param  int  $id
-     * @return Response
+     * [show description]
+     * 
+     * @param AccountType $type [description]
+     * 
+     * @return [type]            [description]
      */
     public function show(AccountType $type)
     {
@@ -65,10 +72,11 @@ class AccounttypesController extends BaseController
     }
 
     /**
-     * Show the form for editing the specified accounttype.
-     *
-     * @param  int  $id
-     * @return Response
+     * [edit description]
+     * 
+     * @param Accounttype $accounttype [description]
+     * 
+     * @return [type]                   [description]
      */
     public function edit(Accounttype $accounttype)
     {
@@ -76,10 +84,12 @@ class AccounttypesController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
+     * [update description]
+     * 
+     * @param Accounttype        $accounttype [description]
+     * @param AccountTypeRequest $request     [description]
+     * 
+     * @return [type]                          [description]
      */
     public function update(Accounttype $accounttype, AccountTypeRequest $request)
     {
@@ -89,15 +99,26 @@ class AccounttypesController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
+     * [destroy description]
+     * 
+     * @param Accounttype $accounttype [description]
+     * 
+     * @return [type]                   [description]
+     */ 
     public function destroy(Accounttype $accounttype)
     {
         $accounttype->delete();
 
         return redirect()->route('accounttype.index');
+    }
+    /**
+     * [locationsByAccountType description]
+     * 
+     * @return [type] [description]
+     */
+    public function locations()
+    {
+
+        return response()->view('accounttypes.locations');
     }
 }

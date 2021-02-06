@@ -1,8 +1,7 @@
           <ul class="navbar-nav" style="margin-right:60px">
-         
                  <li class="nav-item">
                 <a  class="nav-link" href="{{route('feedback.index')}}" >
-                    <i class="fas fa-bullhorn"> </i> Feedback</a>
+                    <i class="fas fa-bullhorn">!! </i> Feedback</a>
                 @php $news = new \App\News; @endphp
                 @if($news->currentNews()->count()>0)
 

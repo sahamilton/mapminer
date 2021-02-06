@@ -4,7 +4,7 @@ namespace App;
 trait GeoCode
 {
       /**
-       * GetGeoCode [description]
+       * GetGeoCode Geocoder Trait renamed
        * 
        * @param [type] $geoCode [description]
        * 
@@ -105,6 +105,25 @@ trait GeoCode
             ->select()//pick the columns you want here.
             ->selectRaw("{$this->_haversine($location)} AS distance")
             ->mergeBindings($sub->getQuery())
+            ->whereRaw("{$this->_haversine($location)} < $radius ")
+            ->orderBy('distance', 'ASC');
+        if ($limit) {
+            $query = $query->limit($limit);
+        }
+      
+        return $query;
+    }
+
+    public function scopeCountNearby($query, array $latlng, $radius = 100, $limit = null)
+    {
+        $location = new Address;
+        $location->lat = $latlng['lat'];
+        $location->lng= $latlng['lng'];
+
+        ray($location);
+        $query = $query
+            ->selectRaw("count('id')")//pick the columns you want here.
+            
             ->whereRaw("{$this->_haversine($location)} < $radius ")
             ->orderBy('distance', 'ASC');
         if ($limit) {

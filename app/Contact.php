@@ -47,4 +47,12 @@ class Contact extends Model
     {
         return $this->with('location')->where('user_id', '=', auth()->user()->id)->get();
     }
+
+    public function scopeSearch($query, $search)
+    {
+        return  $query->where('firstname', 'like', "%{$search}%")
+            ->Orwhere('lastname', 'like', "%{$search}%")
+            ->Orwhere('fullname', 'like', "%{$search}%");
+
+    }
 }

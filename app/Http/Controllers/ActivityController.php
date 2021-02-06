@@ -49,7 +49,7 @@ class ActivityController extends Controller
      */
     public function index()
     {
-       
+      
         if (! $myBranches = $this->person->myBranches()) {
             return redirect()->back()
                 ->withError('You are not assigned to any branches');
@@ -69,7 +69,7 @@ class ActivityController extends Controller
         //$data = $this->_getBranchActivities($branch);
         
         
-      
+        
         return response()->view(
             'activities.newindex', 
             compact('branch', 'myBranches')

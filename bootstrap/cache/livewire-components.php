@@ -1,4 +1,5 @@
 <?php return array (
+  'account-location' => 'App\\Http\\Livewire\\AccountLocation',
   'activities-table' => 'App\\Http\\Livewire\\ActivitiesTable',
   'branch-locations-table' => 'App\\Http\\Livewire\\BranchLocationsTable',
   'branch-opportunity-table' => 'App\\Http\\Livewire\\BranchOpportunityTable',
@@ -6,7 +7,15 @@
   'company-location-table' => 'App\\Http\\Livewire\\CompanyLocationTable',
   'company-table' => 'App\\Http\\Livewire\\CompanyTable',
   'dashboard-table' => 'App\\Http\\Livewire\\DashboardTable',
+  'feedback-table' => 'App\\Http\\Livewire\\FeedbackTable',
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
+  'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
+  'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
+  'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
+  'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',
+  'usertrack-leads' => 'App\\Http\\Livewire\\UsertrackLeads',
+  'usertrack-logins' => 'App\\Http\\Livewire\\UsertrackLogins',
+  'usertrack-opportunities' => 'App\\Http\\Livewire\\UsertrackOpportunities',
 );

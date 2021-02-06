@@ -369,12 +369,13 @@ class Opportunity extends Model
     public function scopeSearch($query, $search)
     { 
         
-        return  $query->whereIn('address_id', function ($q) use ($search) {
+        return  $query->whereIn(
+            'address_id', function ($q) use ($search) {
                     $q->select('id')
-                    ->from('addresses')
-                    ->where('businessname', 'like', "%{$search}%")
-                    ->orWhere('street', 'like', "%{$search}%")
-                    ->orWhere('city', 'like', "%{$search}%");
+                        ->from('addresses')
+                        ->where('businessname', 'like', "%{$search}%")
+                        ->orWhere('street', 'like', "%{$search}%")
+                        ->orWhere('city', 'like', "%{$search}%");
                 }
             );
      

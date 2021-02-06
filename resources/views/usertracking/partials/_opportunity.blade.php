@@ -8,9 +8,8 @@ $statuses = [0=>'Open', 1=>'Closed Won', 2=>'Closed Lost'];
         <th>City</th>
         <th>State</th>
         <th>Created / Updated</th>
-        <th>Expected / Actual Close</th>
         <th>Value</th>
-        <th>Current Status!!</th>
+        <th>Current Status</th>
 
     </thead>
     <tbody>
@@ -31,7 +30,6 @@ $statuses = [0=>'Open', 1=>'Closed Won', 2=>'Closed Lost'];
             <td>
                 {{max($opportunity->created_at, $opportunity->updated_at)->format('Y-m-d')}}
             </td>
-            <td>{{$opportunity->actual_close ? $opportunity->actual_close->format('Y-m-d') : $opportunity->expected_close->format('Y-m-d')}}</td>
             <td>${{number_format($opportunity->value,0)}}</td>
             <td>{{$statuses[$opportunity->closed]}}</td>
         </tr>

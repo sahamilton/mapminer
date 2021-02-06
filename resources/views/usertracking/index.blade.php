@@ -3,7 +3,12 @@
 {{-- Content --}}
 @section('content')
 <div class="container">
-<h2>Select User to Track</h2>
+@if($persons->count()==1)
+<h2>Select TimeFrame to Track</h2>
+@else
+<h2>Select User and TimeFrame to Track</h2>
+@endif
+
     <form action="{{route('usertracking.show')}}"
         method="post" >
         @csrf
@@ -21,6 +26,11 @@
             </select>
             
         </div>
+        @if($persons->count()==1)
+
+        <input type="hidden" name="person" 
+            value="{{$persons->first()->user_id}}" />
+        @else
         <div class="form-group{{ $errors->has('person)') ? ' has-error' : '' }}">
             <label class="col-md-3 control-label">User</label>
             <div class="col-md-6">
@@ -40,7 +50,10 @@
                     <strong>{{ $errors->has('person') ? $errors->first('person') : ''}}</strong>
                     </span>
             </div>
+        </div>
 
+        
+        @endif
         <input type="submit" class="btn btn-info" value = "Track Users Actions" />
 
     </form>

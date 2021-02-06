@@ -135,7 +135,7 @@
 			</div>
 			@endif
 				
-			@can('service_branches')
+			
 				<div class="list-group-item">
 					<div class="row">
 					<div class="list-group-item-text col-sm-4">
@@ -148,17 +148,14 @@
 
 					<ul style="list-style-type: none;">
 						@foreach ($user->person->branchesServiced as $branch)
-							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
+							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> </li>
 						@endforeach
 					</ul>
 
 					@endif
 					@if($user->id == auth()->user()->id)
 					<div class="alert alert-warning">
-					<p class="">If your branch associations are incorrect or incomplete you can change them here
-							<a class="btn btn-primary float-right" href="{{route('branchassignments.index')}}">
-						<i class="far fa-edit text-info"></i>
-						Change Assignments</a> or contact <a href="mailto: {{config('mapminer.system_contact')}}">
+					<p class="">If your branch associations are incorrect or incomplete you should contact <a href="mailto: {{config('mapminer.system_contact')}}">
 							<i class="far fa-envelope" aria-hidden="true"> </i>
 							 {{config('mapminer.system_contact')}}
 						</a>.</p> 
@@ -178,7 +175,7 @@
 				
 				</div>
 			</div>
-			@endcan
+		
 
 			@if($user->person->managesAccount()->exists())
 				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
@@ -217,11 +214,9 @@
 						<a href="{{route('team.show',$user->person->id)}}" class="btn btn-info">	See Teams Mapminer Usage</a>
 						</div>
 						@endif
-						<li>Total Logins: {{$user->usage()->count()}}</li>
-						@if($user->lastactivity && $user->usage()->oldest()->first()->lastactivity)
-						<li>First Login:{{$user->usage()->oldest()->first()->lastactivity->format('M d, Y')}}</li>
-						<li>Last Login:{{$user->usage()->latest()->first()->lastactivity->format('M d, Y')}}
-						@endif	
+						<li>Last Login: {{$user->lastlogin->format('M d, Y')}}</li>
+						<li>Total Logins: {{$user->usage_count}}</li>
+						
 
 						
 					</li>

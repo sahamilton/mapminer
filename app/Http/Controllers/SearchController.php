@@ -103,6 +103,7 @@ class SearchController extends Controller
     {
         $branches = array_keys(auth()->user()->person->myBranches());
         $branch = Branch::findOrFail($branches[0]);
+        
         return response()->view('search.leads', compact('branch'));
     }
 }

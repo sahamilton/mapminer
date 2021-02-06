@@ -9,10 +9,12 @@
             </div>
             @if(config('app.env')=='local' or config('app.env')=='staging')
                 <div class="float-right" style="color:grey">
-                    {{ucwords(App::environment())}} | 
+                    Env{{ucwords(App::environment())}} | 
                     {{ucwords(exec('git describe --tags'))}} |
-                    {{ ucwords(exec('git rev-parse --abbrev-ref HEAD'))}} |
-                    {{ phpversion() }}
+                    @version
+                    {{ucwords(exec('git rev-parse --abbrev-ref HEAD'))}} |
+                    Framework {{app()::VERSION}}|
+                    OS {{ phpversion() }}
                 </div>
             @endif
         </div>

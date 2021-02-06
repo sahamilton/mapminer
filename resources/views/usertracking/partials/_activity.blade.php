@@ -1,4 +1,3 @@
-
 <table class="datatable">
     <thead>
         <th>Business</th>

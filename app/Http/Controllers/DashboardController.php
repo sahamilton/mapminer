@@ -188,6 +188,7 @@ class DashboardController extends Controller
         
         $leadFields = [
             'leads',
+            'active_leads'
         ];
         $opportunityFields =[
             "lost_opportunities",

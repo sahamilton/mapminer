@@ -323,7 +323,8 @@ class Address extends Model
             Branch::class, 'address_branch', 'address_id', 'branch_id'
         )
             ->withPivot('rating', 'person_id', 'status_id', 'comments')
-            ->withTimeStamps()->whereIn('status_id', [2]);
+            ->withTimeStamps()
+            ->whereIn('status_id', [2]);
     }
     /**
      * [closed description]

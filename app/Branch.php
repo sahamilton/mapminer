@@ -969,28 +969,16 @@ class Branch extends Model implements HasPresenter
         }
         return $data;
     }
-
+    public function scopesearch($query, $search)
+    {
+        return $query->where('branchname', 'like', "%{$search}%");
+    }
     public function scopeSummaryOpportunities($query, array $period, array $fields=null)
     {
         $this->period = $period;
         if (! $fields) {
             $fields = $this->opportunityFields;
         }
-        /*
-                "active_opportunities",
-                "lost_opportunities",
-                "new_opportunities",
-                "open_opportunities",
-                "top25_opportunities",
-                "won_opportunities",
-                "active_value",
-                "lost_value",
-                "new_value",
-                "open_value",
-                "top25_value",
-                "won_value"
-
-         */
         $this->fields = $fields;
         return $query
             ->when(
@@ -1257,28 +1245,28 @@ class Branch extends Model implements HasPresenter
     public function scopeSummaryActivities($query, $period, $fields = null)
     {
         $this->period = $period;
-        if (! $fields) {
-            $fields = $this->activityFields;
-        }
-        $this->fields = $fields;
-        foreach ($this->activityFields as $key=>$field) {
-            if (in_array($field, $this->fields)) {
-                $label = str_replace(" ", "_", strtolower($field));
-                $query->withCount(
-                    [
-                        'activities as '.$label=>function ($query) use ($key) {
-                            $query->whereBetween(
-                                'activity_date', [$this->period['from'],$this->period['to']]
-                            )->where('completed', 1)
-                                ->where('activitytype_id', $key);
-                        }
-                    ]
-                ); 
+        if ($fields) {
+            $this->activityFields = $fields;
+        
+            foreach ($this->activityFields as $key=>$field) {
+                if (in_array($field, $this->fields)) {
+                    $label = str_replace(" ", "_", strtolower($field));
+                    $query->withCount(
+                        [
+                            'activities as '.$label=>function ($query) use ($key) {
+                                $query->whereBetween(
+                                    'activity_date', [$this->period['from'],$this->period['to']]
+                                )->where('completed', 1)
+                                    ->where('activitytype_id', $key);
+                            }
+                        ]
+                    ); 
+                }
             }
         }
         $query->withCount(
             [
-                'activities'=>function ($query) use ($key) {
+                'activities'=>function ($query) {
                     $query->whereBetween(
                         'activity_date', [$this->period['from'],$this->period['to']]
                     )->where('completed', 1);

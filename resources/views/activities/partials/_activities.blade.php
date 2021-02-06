@@ -18,7 +18,7 @@
     <div class="modal-content">
       <div class="modal-header">
         
-        <h4 class="modal-title">Record Activity</h4>
+        <h4 class="modal-title">Record Activity at <span id="title">Company</span></h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
@@ -32,13 +32,14 @@
            class="btn btn-default" 
            data-dismiss="modal">Cancel</button> 
            <input type="submit" 
-           value="Record Activity" c
+           value="Record Activity" 
            lass="btn btn-danger" />
             </div>
             <input 
             type="hidden" 
             name = "address_id" 
             value="{{$opportunity->address->id}}" />
+            
         </form>
 
         <div class="modal-footer">

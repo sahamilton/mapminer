@@ -12,23 +12,18 @@ class ServicelinesController extends BaseController
 {
     public $serviceline;
 
+    
     /**
-     * Display a listing of servicelines.
-     *
-     * @return Response
+     * [index description]
+     * @return [type] [description]
      */
-    public function __construct(Serviceline $serviceline)
-    {
-        $this->serviceline = $serviceline;
-        parent::__construct($serviceline);
-    }
-
     public function index()
     {
-        $servicelines = $this->serviceline
-        ->with('companyCount', 'userCount')
-        ->get();
-
+        $servicelines = Serviceline::
+            with('companyCount', 'userCount')
+            ->get();
+        
+        
         return response()->view('servicelines.index', compact('servicelines'));
     }
 
@@ -54,83 +49,4 @@ class ServicelinesController extends BaseController
         return \redirect()->route('serviceline.index');
     }
 
-    /**
-     * Display the specified serviceline.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id, $type = null)
-    {
-
-        // Can the user see this service line?
-
-        if (! in_array($id, $this->userServiceLines)) {
-            return redirect()->route('serviceline.index');
-        }
-        $serviceline = $this->serviceline->findOrFail($id);
-        if (! $type) {
-            $branches = Branch::with('region', 'manager')
-                ->whereHas('servicelines', function ($q) use ($id) {
-                    $q->where('serviceline_id', '=', $id);
-                })
-                ->get();
-
-            return response()->view('servicelines.show', compact('serviceline', 'branches'));
-        } else {
-            $companies = Company::with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'countlocations')
-                    ->whereHas('serviceline', function ($q) use ($id) {
-                        $q->where('serviceline_id', '=', $id)
-                        ->whereIn('serviceline_id', $this->userServiceLines);
-                    })
-            ->get();
-            $locationFilter = 'both';
-
-            $filtered = null;
-            $title = 'All '.$serviceline->ServiceLine.' Accounts';
-
-            return response()->view('companies.index', compact('companies', 'fields', 'title', 'filtered', 'locationFilter'));
-        }
-    }
-
-    /**
-     * Show the form for editing the specified serviceline.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $serviceline = $this->serviceline->find($id);
-
-        return response()->view('servicelines.edit', compact('serviceline'));
-    }
-
-    /**
-     * Update the specified serviceline in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function update(ServiceLineFormRequest $request, $id)
-    {
-        $serviceline = $this->serviceline->find($id);
-
-        $serviceline->update(request()->all());
-
-        return redirect()->route('serviceline.index');
-    }
-
-    /**
-     * Remove the specified serviceline from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        $this->serviceline->destroy($id);
-
-        return redirect()->route('serviceline.index');
-    }
 }
