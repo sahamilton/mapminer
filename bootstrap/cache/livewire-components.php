@@ -12,6 +12,7 @@
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
   'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
+  'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',
   'usertrack-leads' => 'App\\Http\\Livewire\\UsertrackLeads',
