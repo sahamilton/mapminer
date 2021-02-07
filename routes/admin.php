@@ -171,11 +171,11 @@ use Illuminate\Http\Request;
         Route::resource('jobs', 'FailedJobsController');
         Route::get(
             'testjob', function () {
-                $opportunity = App\Opportunity::whereHas('branch')->with('branch.branch.manager.userdetails')->first();
+                //$opportunity = App\Opportunity::whereHas('branch')->with('branch.branch.manager.userdetails')->first();
                 
-                App\Jobs\WonOpportunity::dispatch($opportunity);
+                //App\Jobs\WonOpportunity::dispatch($opportunity);
                 //$companies = App\Company::whereIn('id', [532])->get();
-                $opportunity = App\Opportunity::whereHas('branch')->whereHas('location')->latest()->first();
+                //$opportunity = App\Opportunity::whereHas('branch')->whereHas('location')->latest()->first();
 
                 $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek(), 
                     'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()];

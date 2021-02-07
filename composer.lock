@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e7974a18f0c9ec628c83bb2efef5b2e",
+    "content-hash": "d1d6c0726746de000941134ac4494870",
     "packages": [
         {
             "name": "askedio/laravel-soft-cascade",
@@ -4060,51 +4060,6 @@
             "time": "2020-12-14T13:15:25+00:00"
         },
         {
-            "name": "morrislaptop/laravel-queue-clear",
-            "version": "v1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/morrislaptop/laravel-queue-clear.git",
-                "reference": "58c8b64e0f6e9f190fa687b8e44b442a649cbc98"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/morrislaptop/laravel-queue-clear/zipball/58c8b64e0f6e9f190fa687b8e44b442a649cbc98",
-                "reference": "58c8b64e0f6e9f190fa687b8e44b442a649cbc98",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": ">=5.0.0",
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Morrislaptop\\LaravelQueueClear\\LaravelQueueClearServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Morrislaptop\\LaravelQueueClear\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Craig Morris",
-                    "email": "craig.michael.morris@gmail.com"
-                }
-            ],
-            "description": "Command for wiping your queues clear",
-            "support": {
-                "issues": "https://github.com/morrislaptop/laravel-queue-clear/issues",
-                "source": "https://github.com/morrislaptop/laravel-queue-clear/tree/v1.2.0"
-            },
-            "time": "2019-08-05T15:21:24+00:00"
-        },
-        {
             "name": "myclabs/php-enum",
             "version": "1.7.7",
             "source": {
@@ -6314,16 +6269,16 @@
         },
         {
             "name": "spatie/laravel-ray",
-            "version": "1.12.1",
+            "version": "1.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-ray.git",
-                "reference": "c0afa2e2b0748d0e8e7828939a651cf6cfc0e790"
+                "reference": "1d524800de40b82739163221f531d52c9a6f84f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-ray/zipball/c0afa2e2b0748d0e8e7828939a651cf6cfc0e790",
-                "reference": "c0afa2e2b0748d0e8e7828939a651cf6cfc0e790",
+                "url": "https://api.github.com/repos/spatie/laravel-ray/zipball/1d524800de40b82739163221f531d52c9a6f84f2",
+                "reference": "1d524800de40b82739163221f531d52c9a6f84f2",
                 "shasum": ""
             },
             "require": {
@@ -6378,7 +6333,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-ray/issues",
-                "source": "https://github.com/spatie/laravel-ray/tree/1.12.1"
+                "source": "https://github.com/spatie/laravel-ray/tree/1.12.2"
             },
             "funding": [
                 {
@@ -6390,7 +6345,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-02-05T07:37:03+00:00"
+            "time": "2021-02-07T13:22:56+00:00"
         },
         {
             "name": "spatie/laravel-uptime-monitor",
