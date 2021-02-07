@@ -39,10 +39,10 @@ class Chart extends Model
         $full = ActivityType::all()->pluck('activity', 'color')->toArray();
        
         $team = $data['team']->filter(
-                function ($person) use($data) { 
-                    return in_array($person->id, array_keys($data['data']));
-                }
-            );
+            function ($person) use ($data) { 
+                return in_array($person->id, array_keys($data['data']));
+            }
+        );
         
     
         // Initialize
@@ -51,7 +51,8 @@ class Chart extends Model
                 return ['pid'=>$person->id,'name'=>$person->postName()];
             }
         );
-        $activitydata = collect($data['data'])->pluck('activitiestype');      
+        $activitydata = collect($data['data'])->pluck('activitiestype'); 
+        
         $labels = implode("','", $labels->pluck('name')->toArray());
         $chart['labels'] = $labels;
         foreach ($full as $color=>$activity) {
