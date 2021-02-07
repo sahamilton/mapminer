@@ -234,7 +234,7 @@ class MgrDashboardController extends DashboardController
      
         // this should go away and incorporate in charts
         $data['chart'] = $this->_getChartData($data['branches']);
-     
+        ray($data['chart']);
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
@@ -252,7 +252,7 @@ class MgrDashboardController extends DashboardController
         if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team']['me']->directReports()->get();
-            
+            ray($data);
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
           
         } else {
@@ -401,7 +401,7 @@ class MgrDashboardController extends DashboardController
         $string = '';
 
         foreach ($results as $branch) {
-           
+            ddd(404, $branch);
             $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
          
         }
