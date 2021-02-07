@@ -27,8 +27,8 @@ class DashboardController extends Controller
         Dashboard $dashboard,
         Person $person,
         Branch $branch,
-        User $user)
-    {
+        User $user
+    ) {
         $this->dashboard = $dashboard;
         $this->person = $person;
         $this->branch = $branch;
