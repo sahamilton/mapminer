@@ -1246,7 +1246,7 @@ class Branch extends Model implements HasPresenter
     {
         $this->period = $period;
         if ($fields) {
-            $this->activityFields = $fields;
+            $this->fields = $fields;
         
             foreach ($this->activityFields as $key=>$field) {
                 if (in_array($field, $this->fields)) {
