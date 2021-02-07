@@ -239,6 +239,7 @@ class Chart extends Model
             $chart[$activity->activity]['data'] = implode(",", $res[$activity->activity]['data']);
             $chart[$activity->activity]['labels'] = $labelstring;
         }
+        ray($chart);
         return $chart;
 
     }
