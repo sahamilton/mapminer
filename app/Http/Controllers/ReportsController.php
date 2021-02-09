@@ -249,31 +249,31 @@ class ReportsController extends Controller {
             
             $export = "\App\Exports\\". $report->export;
             switch ($report->object) {
-                case 'Company':
+            case 'Company':
 
-                    $company = $this->company->findOrFail(request('company'));
-                    return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
-                    break;
+                $company = $this->company->findOrFail(request('company'));
+                return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+                break;
 
-                case 'Role':
-                   
-                    return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
-                    break;
+            case 'Role':
+               
+                return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
+                break;
 
-                case 'User':
-                    
-                    return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
-                    break;
+            case 'User':
+                
+                return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
+                break;
 
-                case 'Campaign':
+            case 'Campaign':
 
-                    return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
-                    break;
+                return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
+                break;
 
-                default:
-        
-                    return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
-                    break;
+            default:
+    
+                return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
+                break;
 
             } 
             
@@ -301,8 +301,8 @@ class ReportsController extends Controller {
 
             $myBranches = $data['branches'];
             $team = $data['team'];
-            $period['from']=Carbon::parse(request('fromdate'));
-            $period['to'] = Carbon::parse(request('todate'));
+            $period['from']=Carbon::parse(request('fromdate')->startOfDay());
+            $period['to'] = Carbon::parse(request('todate')->endOfDay());
             $job = "\App\Jobs\\". $report->job; 
             if (request()->has('company')) {
                 $company = $this->company->findOrFail(request('company'));
@@ -344,9 +344,9 @@ class ReportsController extends Controller {
     /**
      * [_getMyTeam description]
      * 
-     * @param Request $request [description]
+     * @param Person $person [description]
      * 
-     * @return [type]           [description]
+     * @return [type]         [description]
      */
     private function _getMyTeam(Person $person)
     {
