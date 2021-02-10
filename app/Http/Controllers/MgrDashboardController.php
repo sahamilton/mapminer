@@ -401,7 +401,7 @@ class MgrDashboardController extends DashboardController
         $string = '';
 
         foreach ($results as $branch) {
-            ddd(404, $branch);
+            
             $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
          
         }
