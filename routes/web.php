@@ -2,6 +2,7 @@
 use \Carbon\Carbon;
 use App\User;
 use App\Mail\SendWeeklyActivityReminder;
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,10 +43,14 @@ Route::group(
            //     Activities/
         Route::get('branch/{branch}/activity/{activitytype?}', ['as'=>'branch.activity', 'uses'=>'ActivityController@getBranchActivtiesByType']);
         Route::get('activity/{activity}/complete', ['as'=>'activity.complete', 'uses'=>'ActivityController@complete']);
+        
+
         Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityController@export']);
 
-        Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
-        Route::resource('activity', 'ActivityController');
+        //Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
+        //Route::resource('activity', 'ActivityController');
+        //Route::get('activity', [App\Http\Controllers\ActivityController::class, 'index'])->name('activity.index');
+        Route::get('activity', [App\Http\Livewire\ActivitiesTable::class])->name('activity.index');
         
         //     Address
         Route::post('address/merge', ['as'=>'addresses.merge', 'uses'=>'AddressController@mergeAddress']);

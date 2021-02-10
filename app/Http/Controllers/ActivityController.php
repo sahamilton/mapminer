@@ -388,7 +388,7 @@ class ActivityController extends Controller
      * 
      * @return [type] [description]
      */
-    public function future()
+    /*public function future()
     {
       
         $activities = $this->activity->myActivity()
@@ -397,7 +397,7 @@ class ActivityController extends Controller
             ->get();
        
         return response()->view('activities.index', compact('activities'));
-    }
+    }*/
     /**
      * [_getBranchActivititiesByType description]
      * 
@@ -409,8 +409,8 @@ class ActivityController extends Controller
     {
        
         if (! $this->period) {
-            $this->period['from'] = Carbon::now()->subWeeks(4)->startOfWeek();
-            $this->period['to'] = Carbon::now()->endOfWeek();
+            $this->period['from'] = Carbon::now()->subWeeks(4)->startOfWeek()->startOfDay();
+            $this->period['to'] = Carbon::now()->endOfWeek()->endOfDay();
         }
         return $this->activity->whereIn('branch_id', [$branch->id])
             ->periodActivities($this->period)

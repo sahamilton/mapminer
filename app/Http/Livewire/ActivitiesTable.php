@@ -52,6 +52,11 @@ class ActivitiesTable extends Component
 
 
     }
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         $this->_setPeriod();
@@ -86,7 +91,11 @@ class ActivitiesTable extends Component
                            ]
         );
     }
-
+    /**
+     * [_setPeriod description]
+     *
+     * @return setPeriod
+     */
     private function _setPeriod()
     {
         if ($this->setPeriod != session('period')) {

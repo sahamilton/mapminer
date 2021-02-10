@@ -9,6 +9,13 @@ use League\Fractal;
 class CompanyActivityTransformer extends  Fractal\TransformerAbstract
 {
     $fields = [];
+    /**
+     * [transform description]
+     * 
+     * @param Company $company [description]
+     * 
+     * @return [type]           [description]
+     */
     public function transform(Company $company)
     {
    
