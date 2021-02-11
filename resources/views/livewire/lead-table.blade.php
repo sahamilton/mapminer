@@ -18,7 +18,7 @@
 </h4>
 
 <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
-@ray($leads->first())
+
 @if(count($myBranches) > 1)
     <div class="col-sm-4">
        

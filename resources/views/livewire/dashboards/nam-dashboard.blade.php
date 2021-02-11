@@ -2,11 +2,39 @@
     <h2>{{$person->fullName()}}'s Dashboard</h2>
 
     @include('livewire.partials._perpage')
-    @include('livewire.partials._companyselector')
-    @include('livewire.partials._search', ['placeholder'=>'Search addresses'])
-    @include('livewire.partials._stateselector')
-    <h4>Locations of {{$company->companyname}} in {{$state_code == 'All' ? 'All States' : $state_code}} </h4>
-
+     <div class="col form-inline"> 
+        @include('livewire.partials._companyselector')
+        @include('livewire.partials._search', ['placeholder'=>'Search addresses'])
+    </div>
+    <div class="col form-inline"> 
+        @include('livewire.partials._stateselector')
+        @include('livewire.partials._assigned')
+        @if ($status != 'Unassigned')
+        <label>With / W/O Opportunities</label>
+         <select wire:model="withOps" class="form-control">
+            @foreach ($opstatus as $key)
+                <option value="{{$key}}">{{$key}}</option>
+            @endforeach
+        </select>
+        @endif
+    </div>
+    <h4>{{$status}} Locations of {{$company->companyname}} in {{$state_code == 'All' ? 'All States' : $state_code}} </h4>
+    @if ($status != 'Unassigned')
+        @switch($withOps)
+        @case('All')
+        With or Without Any Opportunities
+        @break
+        @case('Without')
+        {{$withOps}} Any Opportunities
+        @break
+        @case('Only Open')
+        With {{$withOps}} Opportunities
+        @break
+        @case('Any')
+        With {{$withOps}} Opportunities
+        @break
+        @endswitch
+    @endif
     <div class="row">
         <table class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
@@ -73,11 +101,7 @@
                     {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
                 @endif
             </td>
-            <td>
-            @if($lead->dateAdded)
-                {{$lead->dateAdded->format('Y-m-d')}}
-            @endif
-        </td>
+            
         
     </tr>
     @endforeach

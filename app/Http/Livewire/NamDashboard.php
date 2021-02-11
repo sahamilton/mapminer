@@ -20,6 +20,8 @@ class NamDashboard extends Component
     public $state_code = 'All';
     public $company_id;
     public $person;
+    public $status = 'Unassigned';
+    public $withOps = 'All';
 
 
     public function updatingSearch()
@@ -55,7 +57,8 @@ class NamDashboard extends Component
             'managedBy', function ($q) {
                 $q->where('id', $this->person->id);
             }
-        )->has('locations')->get();
+        )
+        ->has('locations')->get();
         $this->companies = $companies->pluck('companyname', 'id')->toArray();
         $this->company_id = array_keys($this->companies)[0];
         
@@ -73,12 +76,52 @@ class NamDashboard extends Component
             'livewire.dashboards.nam-dashboard',
             [
                 'locations' => Address::where('company_id', $this->company_id)
-                    ->with('assignedToBranch', 'currentcampaigns')
+                    
                     ->search($this->search)
                     ->withLastActivityId()
                     ->when(
                         $this->state_code != 'All', function ($q) {
                             $q->whereState($this->state_code);
+                        }
+                    )
+                    ->when(
+                        $this->status == 'All', function ($q) {
+                            $q->with('assignedToBranch');
+                        }
+                    )
+                    ->when(
+                        $this->status == 'Unassigned', function ($q) {
+                            $q->doesntHave('assignedToBranch');
+                        }
+                    )
+                    ->when(
+                        $this->status == 'Assigned', function ($q) {
+                            $q->has('assignedToBranch')
+                                ->with('assignedToBranch');
+                        }
+                    )
+                    ->when(
+                        $this->withOps != 'All', function ($q) {
+                            $q->when(
+                                $this->withOps == 'Without', function ($q) {
+                                    $q->whereDoesntHave('opportunities');
+                                }
+                            )
+                            ->when(
+                                $this->withOps == 'Only Open', function ($q) {
+                                    $q->whereHas(
+                                        'opportunities', function ($q) {
+                                            $q->where('closed', 0);
+                                        }
+                                    );
+                                }
+                            )
+                            ->when(
+                                $this->withOps == 'Any', function ($q) {
+                                    $q->has('opportunities');
+                                }
+                            );
+                            
                         }
                     )
                     ->with('lastActivity')
@@ -88,6 +131,7 @@ class NamDashboard extends Component
                 'states' => Address::where('company_id', $this->company_id)
                     ->distinct('state')->orderBy('state')->pluck('state'),
                 'company'=>Company::findOrFail($this->company_id),
+                'opstatus'=>['All', 'Without', 'Only Open', 'Any'],
 
                     ]
         );
