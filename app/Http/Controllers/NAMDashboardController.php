@@ -34,9 +34,9 @@ class NAMDashboardController extends Controller
      */
     public function index()
     {
-        $manager = $this->person->with('managesAccount')->findOrFail(auth()->user()->person->id);
-
-        return response()->view('managers.namdashboard', compact('manager'));
+        //$manager = $this->person->with('managesAccount')->findOrFail(auth()->user()->person->id);
+        // check if user is a NAM
+        return response()->view('managers.namdashboard');
     }
 
     /**

@@ -48,7 +48,7 @@ Route::group(
         Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityController@export']);
 
         //Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
-        //Route::resource('activity', 'ActivityController');
+        Route::resource('activity', 'ActivityController');
         //Route::get('activity', [App\Http\Controllers\ActivityController::class, 'index'])->name('activity.index');
         Route::get('activity', [App\Http\Livewire\ActivitiesTable::class])->name('activity.index');
         
@@ -265,8 +265,8 @@ Route::group(
         //     Branch Sales Campaigns
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
 
-       Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
-       Route::post('branchcampaigns/remove', ['as'=>'branchcampaign.delete', 'uses'=>'BranchCampaignController@delete']);
+        Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
+        Route::post('branchcampaigns/remove', ['as'=>'branchcampaign.delete', 'uses'=>'BranchCampaignController@delete']);
 
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 
