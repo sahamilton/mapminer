@@ -51,7 +51,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
        
         $this->period = $period;
         $this->branches = $branches;
-        $this->allFields = array_merge($this->fields, $this->leadFields,$this->activityFields);
+        $this->allFields = array_merge($this->fields, $this->leadFields, $this->activityFields);
 
 
        
@@ -78,24 +78,22 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
             switch ($key) {
             
             case 'branchname':
-                $detail[] = $branch->branchname;
+                $detail['branchname'] = $branch->branchname;
                 break;
             
             case 'manager':
-                $detail[] = $branch->manager->count() ? $branch->manager->first()->postName() :'';
+                $detail['manager'] = $branch->manager->count() ? $branch->manager->first()->postName() :'';
                 break;
 
             case 'reportsto':
-                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
-                        $detail[] =  $branch->manager->first()->reportsTo->fullName();
-                } else {
-                        $detail[] = 'No direct reporting manager';
-                }
+                $detail['reportsto'] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->postName() :'';
+                break;
             default:
-                $detail[]=$branch->$key;
+                $detail[$key]=$branch->$key;
                 break;
             }
         }
+        
         return $detail;
     }
 
