@@ -35,7 +35,9 @@ class NAMDashboardController extends Controller
     public function index()
     {
         //$manager = $this->person->with('managesAccount')->findOrFail(auth()->user()->person->id);
-        // check if user is a NAM
+        if (! auth()->user()->hasRole(['admin', 'national_account_manager'])) {
+            return redirect()->back()->withError('You do not have the correct role for this view');
+        }
         return response()->view('managers.namdashboard');
     }
 

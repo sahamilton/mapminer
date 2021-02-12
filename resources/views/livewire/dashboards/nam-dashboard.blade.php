@@ -1,6 +1,10 @@
 <div>
     <h2>{{$person->fullName()}}'s Dashboard</h2>
-
+    @if($managers)
+     <div class="col form-inline"> 
+        @include('livewire.partials._NAMselector')
+    </div>
+    @endif
     @include('livewire.partials._perpage')
      <div class="col form-inline"> 
         @include('livewire.partials._companyselector')

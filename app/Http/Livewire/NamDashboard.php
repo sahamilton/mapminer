@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Company;
 use App\Address;
 use App\Person;
+use App\User;
 
 class NamDashboard extends Component
 {
@@ -20,8 +21,10 @@ class NamDashboard extends Component
     public $state_code = 'All';
     public $company_id;
     public $person;
+    public $person_id;
     public $status = 'Unassigned';
     public $withOps = 'All';
+    public $managers;
 
 
     public function updatingSearch()
@@ -52,15 +55,17 @@ class NamDashboard extends Component
      */
     public function mount()
     {
-        $this->person = Person::findOrFail(auth()->user()->person->id);
-        $companies = Company::whereHas(
-            'managedBy', function ($q) {
-                $q->where('id', $this->person->id);
-            }
-        )
-        ->has('locations')->get();
-        $this->companies = $companies->pluck('companyname', 'id')->toArray();
-        $this->company_id = array_keys($this->companies)[0];
+        if (auth()->user()->hasRole(['admin'])) {
+            $this->managers = $this->_getNAMS();
+            $this->person = $this->managers->first();
+            $this->person_id = $this->person->id;
+        } else {
+            $this->person = Person::findOrFail(auth()->user()->person->id);
+            $this->person_id = $this->person->id;
+        }
+        
+        $this->_setCompany();
+       
         
     }
     
@@ -72,6 +77,10 @@ class NamDashboard extends Component
     public function render()
     {
         ray($this->company_id);
+        if ($this->person_id != $this->person->id) {
+            $this->_setPerson();
+            $this->_setCompany();
+        }
         return view(
             'livewire.dashboards.nam-dashboard',
             [
@@ -135,5 +144,35 @@ class NamDashboard extends Component
 
                     ]
         );
+    }
+
+    private function _getNAMS()
+    {
+       
+        return 
+            Person::
+                whereHas(
+                    'userdetails.roles', function ($q) {
+                        $q->whereIn('name', ['national_account_manager']);
+                    }
+                )
+                ->has('managesAccount')
+                ->get();
+            
+    }
+    private function _setPerson()
+    {
+        $this->person = Person::findOrFail($this->person_id);
+    }
+    private function _setCompany()
+    {
+        $companies = Company::whereHas(
+            'managedBy', function ($q) {
+                $q->where('id', $this->person->id);
+            }
+        )
+        ->has('locations')->get();
+        $this->companies = $companies->pluck('companyname', 'id')->toArray();
+        $this->company_id = array_keys($this->companies)[0];
     }
 }
