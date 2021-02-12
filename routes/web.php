@@ -109,6 +109,7 @@ Route::group(
         Route::get('dashboard/reset',['as'=>'dashboard.reset', 'uses'=> 'DashboardController@reset']);
         Route::post('dashboard/setmanager',['as'=>'dashboard.setManager', 'uses'=> 'DashboardController@setManager']);
         Route::get('mgrsummary', ['as'=>'newmgrsummary', 'uses'=>'MgrDashboardController@mgrSummary']);
+        Route::get('namsummary', ['as'=>'namsummary', 'uses'=>'NamDashboardController@show']);
         Route::resource('mgrdashboard', 'MgrDashboardController');
         Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
         Route::resource('namdashboard', 'NAMDashboardController');

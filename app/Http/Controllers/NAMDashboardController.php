@@ -49,7 +49,10 @@ class NAMDashboardController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        if (! auth()->user()->hasRole(['admin', 'national_account_manager'])) {
+            return redirect()->back()->withError('You do not have the correct role for this view');
+        }
+        return response()->view('managers.namsummary');
     }
 
     /**

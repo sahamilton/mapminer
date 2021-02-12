@@ -19,4 +19,5 @@
   'usertrack-leads' => 'App\\Http\\Livewire\\UsertrackLeads',
   'usertrack-logins' => 'App\\Http\\Livewire\\UsertrackLogins',
   'usertrack-opportunities' => 'App\\Http\\Livewire\\UsertrackOpportunities',
+  'nam-summary' => 'App\\Http\\Livewire\\namSummary',
 );
