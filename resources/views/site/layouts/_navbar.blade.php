@@ -127,6 +127,10 @@
                   </li>
 
               @include('branchleads.partials._mylead')
+              @endif
+
+              @if(auth()->user()->hasRole('market_manager'))
+                  @include('branchleads.partials._mgrsearchbar')
               @endif          
           </ul>
 
