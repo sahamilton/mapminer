@@ -154,6 +154,13 @@
       0 => 'McCool\\LaravelAutoPresenter\\AutoPresenterServiceProvider',
     ),
   ),
+  'morrislaptop/laravel-queue-clear' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Morrislaptop\\LaravelQueueClear\\LaravelQueueClearServiceProvider',
+    ),
+  ),
   'nesbot/carbon' => 
   array (
     'providers' => 
