@@ -92,6 +92,17 @@
       0 => 'Laracasts\\Generators\\GeneratorsServiceProvider',
     ),
   ),
+  'laravel/horizon' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Horizon\\HorizonServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Horizon' => 'Laravel\\Horizon\\Horizon',
+    ),
+  ),
   'laravel/slack-notification-channel' => 
   array (
     'providers' => 
@@ -152,13 +163,6 @@
     'providers' => 
     array (
       0 => 'McCool\\LaravelAutoPresenter\\AutoPresenterServiceProvider',
-    ),
-  ),
-  'morrislaptop/laravel-queue-clear' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Morrislaptop\\LaravelQueueClear\\LaravelQueueClearServiceProvider',
     ),
   ),
   'nesbot/carbon' => 
