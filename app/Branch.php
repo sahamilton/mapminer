@@ -1244,25 +1244,24 @@ class Branch extends Model implements HasPresenter
      */
     public function scopeSummaryActivities($query, $period, $fields = null)
     {
+        ray($fields);
         $this->period = $period;
-        if ($fields) {
+        if (isset($fields)) {
             $this->activityFields = $fields;
-        
             foreach ($this->activityFields as $key=>$field) {
-                if (in_array($field, $this->fields)) {
-                    $label = str_replace(" ", "_", strtolower($field));
-                    $query->withCount(
-                        [
-                            'activities as '.$label=>function ($query) use ($key) {
-                                $query->whereBetween(
-                                    'activity_date', [$this->period['from'],$this->period['to']]
-                                )->where('completed', 1)
-                                    ->where('activitytype_id', $key);
-                            }
-                        ]
-                    ); 
-                }
+                $label = str_replace(" ", "_", strtolower($field));
+                $query->withCount(
+                    [
+                        'activities as '.$label=>function ($query) use ($key) {
+                            $query->whereBetween(
+                                'activity_date', [$this->period['from'],$this->period['to']]
+                            )->where('completed', 1)
+                                ->where('activitytype_id', $key);
+                        }
+                    ]
+                ); 
             }
+        
         }
         $query->withCount(
             [
