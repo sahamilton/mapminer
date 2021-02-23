@@ -31,13 +31,6 @@
       0 => 'Baum\\BaumServiceProvider',
     ),
   ),
-  'dionera/laravel-beanstalkd-ui' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Dionera\\BeanstalkdUI\\BeanstalkdUIServiceProvider',
-    ),
-  ),
   'facade/ignition' => 
   array (
     'providers' => 
@@ -90,6 +83,17 @@
     'providers' => 
     array (
       0 => 'Laracasts\\Generators\\GeneratorsServiceProvider',
+    ),
+  ),
+  'laravel/horizon' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Horizon\\HorizonServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Horizon' => 'Laravel\\Horizon\\Horizon',
     ),
   ),
   'laravel/slack-notification-channel' => 
@@ -152,13 +156,6 @@
     'providers' => 
     array (
       0 => 'McCool\\LaravelAutoPresenter\\AutoPresenterServiceProvider',
-    ),
-  ),
-  'morrislaptop/laravel-queue-clear' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Morrislaptop\\LaravelQueueClear\\LaravelQueueClearServiceProvider',
     ),
   ),
   'nesbot/carbon' => 
