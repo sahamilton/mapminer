@@ -1016,3 +1016,52 @@ AND activities.branch_id != address_branch.branch_id
 AND address_branch.updated_at < activities.activity_date 
 AND activities.activity_date > '2020-10-01' 
 AND address_branch.address_id = addresses.id
+/**************************************************************
+/* Extract leads for person
+/**************************************************************
+SELECT
+    CONCAT_WS(
+        ' ',
+        persons.firstname,
+        persons.lastname
+    ) AS sr,
+    addresses.id,
+    addresses.businessname,
+    addresses.street,
+    addresses.address2,
+    addresses.city,
+    addresses.state,
+    addresses.zip,
+    addresses.phone,
+    addresses.contact,
+    addresses.description,
+    addresses.created_at,
+    addresses.updated_at,
+    opportunities.branch_id,
+    opportunities.closed,
+    opportunities.Top25,
+    opportunities.value,
+    opportunities.requirements,
+    opportunities.duration,
+    opportunities.description,
+    opportunities.comments,
+    opportunities.created_at,
+    opportunities.updated_at,
+    opportunities.title,
+    opportunities.expected_close,
+    opportunities.actual_close,
+    opportunities.csp,
+    contacts.fullname,
+    contacts.title,
+    contacts.email,
+    contactphone,
+    contacts.comments
+FROM
+    persons,
+    addresses
+LEFT JOIN opportunities ON addresses.id = opportunities.address_id
+LEFT JOIN contacts ON addresses.id = contacts.address_id
+WHERE
+    persons.id IN(3686, 4008) AND persons.user_id = addresses.user_id
+ORDER BY
+    sr

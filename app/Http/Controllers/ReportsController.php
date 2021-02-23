@@ -123,7 +123,7 @@ class ReportsController extends Controller {
         } else {
             $object=null;
         }
-        if(auth()->user()->hasRole(['admin', 'sales_ops'])){
+        if (auth()->user()->hasRole(['admin', 'sales_ops'])){
             
             $managers = $this->person->managers();
         } else {
@@ -180,6 +180,8 @@ class ReportsController extends Controller {
      * 
      * @param AddRecipientReportRequest $request [description]
      * @param Report                    $report  [description]
+     *
+     * @return redirect 
      */
     public function addRecipient(AddRecipientReportRequest $request, Report $report)
     {
@@ -194,8 +196,8 @@ class ReportsController extends Controller {
     /**
      * [removeRecipient description]
      * 
-     * @param  AddRecipientReportRequest $request [description]
-     * @param  Report                    $report  [description]
+     * @param AddRecipientReportRequest $request [description]
+     * @param Report                    $report  [description]
      * 
      * @return [type]                             [description]
      */
