@@ -36,7 +36,7 @@ class associateBranches implements ShouldQueue
         foreach ($branches as $branch) {
             $data[$branch]=['role_id' => $this->person->role_id];
         }
-                $person = Person::findOrFail($person->person_id);
-                $person->branchesServiced()->sync($data);
+        $person = Person::findOrFail($person->person_id);
+        $person->branchesServiced()->sync($data);
     }
 }

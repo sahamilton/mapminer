@@ -62,15 +62,10 @@ class LeadTable extends Component
     /**
      * [mount description]
      * 
-     * @param [type] $branch [description]
-     * @param [type] $search [description]
-     * 
      * @return [type]         [description]
      */
     public function mount($branch, $search = null)
     {
-     
-        $this->branch_id = $branch;
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->search = $search;
@@ -83,8 +78,8 @@ class LeadTable extends Component
      */
     public function render()
     {
-        
-        $this->_getLeadSources();
+        //$branches = auth()->user()->person->myBranches();
+        $this->_setBranchSession();
         return view(
             'livewire.lead-table', [
             'leads' => AddressBranch::query()
@@ -139,80 +134,8 @@ class LeadTable extends Component
         );
     }
 
-     
-    
-    /**
-     * [_resetInputFields description]
-     *
-     * @return [type] [description]
-     */
-    private function _resetInputFields()
+    private function _setBranchSession()
     {
-        $this->activitytype_id='';
-        $this->note='';
-        $this->activity_date=now()->format('Y-m-d');
-        $this->completed=1;
-        $this->followup_date='';
-        $this->followup_activity='';
-        $this->address_id='';
-    
-
-
+        session(['branch'=>$this->branch_id]);
     }
-    /**
-     * [openModal description]
-     *
-     * @return [type] [description]
-     */
-    public function openModal()
-    {
-
-        $this->isOpen = true;
-
-    }
-    /**
-     * [closeModal description]
-     *
-     * @return [type] [description]
-     */
-    public function closeModal()
-    {
-
-        $this->isOpen = false;
-
-    }
-
-    public function store()
-    {
-        dd('hree we are');
-        $this->validate(
-            [
-             
-            ]
-        );
-
-        $activity = Activity::updateOrCreate(
-            ['id' => $this->account_id],
-            [
-                'activitytype_id' => $this->activitytype_id,
-                'note' => $this->note,
-                'activity_date' => $this->activity_date,
-                'completed'=>$this->completed,
-                'followup_date'=>$this->followup_date,
-                'followup_activity'=>$this->followup_activity,
-                'address_id'=>$this->address_id,
-                'branch_id'=>$this->branch_id,
-                'user_id' => auth()->user()->id
-
-            ]
-        );
-        ray($activity);
-    }
-    public function cancel()
-    {
-        $this->updateMode = false;
-        $this->_resetInputFields();
-    }
-
-
 }

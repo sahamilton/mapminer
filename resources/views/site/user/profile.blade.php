@@ -214,7 +214,7 @@
 						<a href="{{route('team.show',$user->person->id)}}" class="btn btn-info">	See Teams Mapminer Usage</a>
 						</div>
 						@endif
-						<li>Last Login: {{$user->lastlogin->format('M d, Y')}}</li>
+						<li>Last Login: {{$user->lastlogin ? $user->lastlogin->format('M d, Y') : 'Never logged in'}}</li>
 						<li>Total Logins: {{$user->usage_count}}</li>
 						
 

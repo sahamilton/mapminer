@@ -10,7 +10,7 @@
    		</tr>
         @foreach ($people as $person)
         <tr>
-            <td>{{$person->fullName}}</td>
+            <td>{{$person->fullName()}}</td>
             <td>
                 @if(isset($person->userdetails))
                     @foreach ($person->userdetails->roles as $role)

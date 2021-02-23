@@ -133,7 +133,7 @@ class Branch extends Model implements HasPresenter
     {
         if ($role) {
             return $this->belongsToMany(Person::class)
-                ->wherePivot('role_id', '=', $role);
+                ->wherePivot('role_id', '=', $role)->withDefault(['firstname'=>'No Person in this role at this branch']);
         } else {
             return $this->belongsToMany(Person::class)
                 ->withTimestamps()
@@ -289,7 +289,7 @@ class Branch extends Model implements HasPresenter
      */
     public function manager()
     {
-        return $this->relatedPeople($this->branchManagerRole);
+        return $this->belongsToMany(Person::class)->wherePivot('role_id', $this->branchManagerRole);
     }
     /**
      * [businessmanager description]
@@ -298,7 +298,7 @@ class Branch extends Model implements HasPresenter
      */
     public function businessmanager()
     {
-        return $this->relatedPeople($this->businessManagerRole);
+        return $this->belongsToMany(Person::class)->wherePivot('role_id', $this->businessManagerRole);
     }
     /**
      * [marketmanager description]
@@ -308,7 +308,7 @@ class Branch extends Model implements HasPresenter
     public function marketmanager()
     {
        
-        return $this->relatedPeople($this->marketManagerRole);
+        return $this->belongsToMany(Person::class)->wherePivot('role_id', $this->marketManagerRole);
     }
     /**
      * [servicelines description]
@@ -1369,6 +1369,7 @@ class Branch extends Model implements HasPresenter
     public function scopeSummaryStats($query,$period, $fields = null)
     {
         $this->period = $period;
+        ray($period);
         return $query->withCount(       
             [
                 'leads'=>function ($query) {

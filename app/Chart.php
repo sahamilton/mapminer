@@ -39,12 +39,11 @@ class Chart extends Model
         $full = ActivityType::all()->pluck('activity', 'color')->toArray();
        
         $team = $data['team']->filter(
-                function ($person) use($data) { 
-                    return in_array($person->id, array_keys($data['data']));
-                }
-            );
-        
-    
+            function ($person) use ($data) { 
+                return in_array($person->id, array_keys($data['data']));
+            }
+        );
+           
         // Initialize
         $labels = $team->map(
             function ($person) {
@@ -60,7 +59,7 @@ class Chart extends Model
             $type = str_replace(" ", "_", strtolower($activity));
             $chart['data'][$activity]['data'] = implode(",", $activitydata->pluck($type)->toArray());
         }
-        
+        ray($data, $chart);
         return $chart;
         
     }
@@ -238,6 +237,7 @@ class Chart extends Model
             $chart[$activity->activity]['data'] = implode(",", $res[$activity->activity]['data']);
             $chart[$activity->activity]['labels'] = $labelstring;
         }
+        ray($chart);
         return $chart;
 
     }

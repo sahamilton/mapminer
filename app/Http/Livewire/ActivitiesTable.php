@@ -55,7 +55,7 @@ class ActivitiesTable extends Component
     public function render()
     {
         $this->_setPeriod();
-
+        $this->_setBranchSession();
         return view(
             'livewire.activities-table',
             [
@@ -93,6 +93,11 @@ class ActivitiesTable extends Component
             $this->livewirePeriod($this->setPeriod);
             
         }
+    }
+
+    private function _setBranchSession()
+    {
+        session(['branch'=>$this->branch_id]);
     }
 
 
