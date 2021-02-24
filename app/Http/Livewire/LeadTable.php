@@ -8,6 +8,7 @@ use App\Person;
 use App\ActivityType;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\AddressBranch;
 
 class LeadTable extends Component
 {
