@@ -175,7 +175,7 @@ trait PeriodSelector
     private function thisMonth()
     {
         $data['from'] = Carbon::now()->startOfMonth()->startOfDay();
-        $data['to'] = Carbon::now()->endOfMonth()->endtOfDay();
+        $data['to'] = Carbon::now()->endOfMonth()->endOfDay();
         $data['period'] = 'thisMonth';
         return $data;
 
