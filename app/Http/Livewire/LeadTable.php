@@ -70,6 +70,7 @@ class LeadTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->search = $search;
+        $this->branch_id = array_keys($this->myBranches)[0];
         
     }
     /**
@@ -83,7 +84,7 @@ class LeadTable extends Component
         $this->_setBranchSession();
         return view(
             'livewire.lead-table', [
-            'leads' => AddressBranch::query()
+            'leads' => Address::query()
                 ->search($this->search)
                 
                 ->whereIn(
