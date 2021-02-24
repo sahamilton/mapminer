@@ -1,39 +1,39 @@
 <div>
-<h1>{{$branch->branchname . " leads"}}</h1>
-<h4>
-    @switch($withOps)
-    @case('All')
-    With or Without Any Opportunities
-    @break
-    @case('Without')
-    {{$withOps}} Any Opportunities
-    @break
-    @case('Only Open')
-    With {{$withOps}} Opportunities
-    @break
-    @case('Any')
-    With {{$withOps}} Opportunities
-    @break
-    @endswitch
-</h4>
+    <h1>{{$branch->branchname . " leads"}}</h1>
+    <h4>
+        @switch($withOps)
+        @case('All')
+        With or Without Any Opportunities
+        @break
+        @case('Without')
+        {{$withOps}} Any Opportunities
+        @break
+        @case('Only Open')
+        With {{$withOps}} Opportunities
+        @break
+        @case('Any')
+        With {{$withOps}} Opportunities
+        @break
+        @endswitch
+    </h4>
 
-<p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
-@ray($leads->first())
-@if(count($myBranches) > 1)
-    <div class="col-sm-4">
-       
-            <select
-                wire:model="branch_id" 
-                class="form-control input-sm" 
-                id="branchselect" >               >
-                @foreach ($myBranches as $key=>$branchname)
-                    <option value="{{$key}}">{{$branchname}}</option>
-                @endforeach 
-            </select>
+    <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
-        
-    </div>
-@endif
+    @if(count($myBranches) > 1)
+        <div class="col-sm-4">
+           
+                <select
+                    wire:model="branch_id" 
+                    class="form-control input-sm" 
+                    id="branchselect" >               >
+                    @foreach ($myBranches as $key=>$branchname)
+                        <option value="{{$key}}">{{$branchname}}</option>
+                    @endforeach 
+                </select>
+
+            
+        </div>
+    @endif
 
     
     <div class="row">
@@ -50,7 +50,7 @@
         
         
     </div>
-    </div>
+
    
     <div class="row">
         <table class='table table-striped table-bordered table-condensed table-hover'>

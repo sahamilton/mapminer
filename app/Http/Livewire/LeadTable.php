@@ -80,23 +80,12 @@ class LeadTable extends Component
      */
     public function render()
     {
-        //$branches = auth()->user()->person->myBranches();
+        
         $this->_setBranchSession();
         return view(
             'livewire.lead-table', [
             'leads' => Address::query()
                 ->search($this->search)
-                
-                ->whereIn(
-                    'addresses.id', function ($query) {
-                        $query->select('address_id')
-                            ->from('address_branch')
-                            ->where('branch_id', $this->branch_id)
-                            ->where('status_id', 2);
-                    }
-                )
-                ->search($this->search)
-                ->with('assignedToBranch')
                 ->when(
                     $this->withOps != 'All', function ($q) {
                         $q->when(
@@ -111,6 +100,7 @@ class LeadTable extends Component
                                         $q->where('closed', 0);
                                     }
                                 );
+                                
                             }
                         )
                         ->when(
@@ -121,6 +111,17 @@ class LeadTable extends Component
                         
                     }
                 )
+                ->whereIn(
+                    'addresses.id', function ($query) {
+                        $query->select('address_id')
+                            ->from('address_branch')
+                            ->where('branch_id', $this->branch_id)
+                            ->where('status_id', 2);
+                    }
+                )
+            
+                ->with('assignedToBranch')
+
                 
                 ->withLastActivityId()
                 ->with('lastActivity')
