@@ -1244,7 +1244,7 @@ class Branch extends Model implements HasPresenter
      */
     public function scopeSummaryActivities($query, $period, $fields = null)
     {
-        ray($fields);
+       
         $this->period = $period;
         if (isset($fields)) {
             $this->activityFields = $fields;

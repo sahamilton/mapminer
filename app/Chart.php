@@ -59,7 +59,7 @@ class Chart extends Model
             $type = str_replace(" ", "_", strtolower($activity));
             $chart['data'][$activity]['data'] = implode(",", $activitydata->pluck($type)->toArray());
         }
-        ray($data, $chart);
+       
         return $chart;
         
     }

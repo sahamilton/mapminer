@@ -21,7 +21,8 @@ class LeadTable extends Component
    
     public $withOps = 'All';
     //public $updateMode = false;
-
+    public $setPeriod = 'All';
+    public $period;
     public $activitytype_id;
     public $note;
     public $activity_date='2021-02-03';
@@ -31,7 +32,7 @@ class LeadTable extends Component
     public $address_id;
     public $branch_id;
     public $lead_source_id = 'All';
-
+   
     public $myBranches;
 
  
@@ -80,7 +81,7 @@ class LeadTable extends Component
      */
     public function render()
     {
-        
+        $this->_setPeriod();
         $this->_setBranchSession();
         return view(
             'livewire.lead-table', [
@@ -111,12 +112,18 @@ class LeadTable extends Component
                         
                     }
                 )
+
                 ->whereIn(
                     'addresses.id', function ($query) {
                         $query->select('address_id')
                             ->from('address_branch')
                             ->where('branch_id', $this->branch_id)
-                            ->where('status_id', 2);
+                            ->where('status_id', 2)
+                            ->when(
+                                $this->setPeriod != 'All', function ($q) {
+                                    $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                                }
+                            );
                     }
                 )
             
@@ -140,5 +147,13 @@ class LeadTable extends Component
     private function _setBranchSession()
     {
         session(['branch'=>$this->branch_id]);
+    }
+
+    private function _setPeriod()
+    {
+        if ($this->setPeriod != 'All') {
+            $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
+        }
+        
     }
 }

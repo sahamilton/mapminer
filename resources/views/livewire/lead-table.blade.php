@@ -16,7 +16,11 @@
         @break
         @endswitch
     </h4>
-
+    @if ($this->setPeriod !="All")
+    <p>created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
+    @else
+    <p>created in all time periods</p>
+    @endif
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
     @if(count($myBranches) > 1)
@@ -38,6 +42,7 @@
     
     <div class="row">
         @include('livewire.partials._perpage')
+        @include('livewire.partials._periodselector', ['all'=>true])
         <div class="col form-inline">
             <label>With / W/O Opportunities</label>
              <select wire:model="withOps" class="form-control">

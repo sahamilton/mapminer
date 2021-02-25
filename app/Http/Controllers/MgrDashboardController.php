@@ -225,7 +225,7 @@ class MgrDashboardController extends DashboardController
         
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
-    
+
         if (! $data['team'] = $this->_myTeamsData($data['branches'])) {
             
             return false;
@@ -234,11 +234,11 @@ class MgrDashboardController extends DashboardController
      
         // this should go away and incorporate in charts
         $data['chart'] = $this->_getChartData($data['branches']);
-        ray($data['chart']);
+        //ray($data['chart']);
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
-        
+       
         return $data;
     }
     /**
@@ -252,7 +252,7 @@ class MgrDashboardController extends DashboardController
         if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team']['me']->directReports()->get();
-            ray($data);
+            
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
           
         } else {
