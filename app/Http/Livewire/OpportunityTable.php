@@ -15,8 +15,9 @@ class OpportunityTable extends Component
     public $sortField = 'opportunities.created_at';
     public $sortAsc = true;
     public $search = '';
-    public $branch_id;
+    public $setPeriod = 'All';
     public $period;
+    public $branch_id;
     public $filter = 0;
     public $myBranches;
 
@@ -68,14 +69,18 @@ class OpportunityTable extends Component
      */
     public function render()
     {
-    
+        $this->_setPeriod();
         return view(
             'livewire.opportunity-table', 
             [
                 'opportunities' => Opportunity::query()
                     ->select('opportunities.*', 'businessname')
-                    ->where('branch_id', $this->branch_id)
-                    ->where('closed', $this->filter)
+                    ->when(
+                        $this->filter != 'All', function ($q) {
+                            $q->where('closed', $this->filter);
+                        }
+                    )
+                    
                     ->join('addresses', 'addresses.id', '=', 'opportunities.address_id')
                     ->withLastactivity()
                     ->when(
@@ -83,12 +88,24 @@ class OpportunityTable extends Component
                             $q->search($this->search);
                         }
                     )
+                    
+                    ->where('branch_id', $this->branch_id)
                     ->distinct()
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                 'branch'=>Branch::query()->findOrFail($this->branch_id),
+                'filters' => ['All'=>'All', 0=>'Open', '1'=>'Closed Won', '2'=>'Closed Lost'],
+
                 
             ]
         );
+    }
+
+    private function _setPeriod()
+    {
+        if ($this->setPeriod != 'All') {
+            $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
+        }
+        
     }
 }

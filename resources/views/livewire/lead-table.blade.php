@@ -23,25 +23,14 @@
     @endif
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
-    @if(count($myBranches) > 1)
-        <div class="col-sm-4">
-           
-                <select
-                    wire:model="branch_id" 
-                    class="form-control input-sm" 
-                    id="branchselect" >               >
-                    @foreach ($myBranches as $key=>$branchname)
-                        <option value="{{$key}}">{{$branchname}}</option>
-                    @endforeach 
-                </select>
-
-            
-        </div>
-    @endif
+    @include('livewire.partials._branchselector')
 
     
     <div class="row">
         @include('livewire.partials._perpage')
+        <div wire:loading>
+            <div class="spinner-border"></div>
+        </div>
         @include('livewire.partials._periodselector', ['all'=>true])
         <div class="col form-inline">
             <label>With / W/O Opportunities</label>

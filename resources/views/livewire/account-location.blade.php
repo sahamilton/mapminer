@@ -1,5 +1,5 @@
 <div>
-    @ray($accounttypes)
+   
     <h4>{{$accounttypes[$accounttype]}} Companies</h4>
     <div class="row mb-4 ">
         @include('livewire.partials._search', ['placeholder'=>'Search Companies'])

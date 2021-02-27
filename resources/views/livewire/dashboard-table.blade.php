@@ -1,14 +1,9 @@
 <div>
 
      <div class="row mb-4">
-        <div class="col form-inline">
-            Per Page: &nbsp;
-            <select wire:model="perPage" class="form-control">
-                <option>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-            </select>
+        @include('livewire.partials._perpage')
+        <div wire:loading>
+            <div class="spinner-border"></div>
         </div>
         <div class="col form-inline">
             Filter: &nbsp;
@@ -19,9 +14,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col">
-            <input wire:model="search" class="form-control" type="text" placeholder="Search managers...">
-        </div>
+        @include('livewire.partials._search', ['placeholder'=>'Search Managers'])
     </div>
 
     <div class="row">

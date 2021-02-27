@@ -2,10 +2,10 @@
     <div class="row" style="margin-top:5px">
         @include('livewire.partials._perpage')
         @include('livewire.partials._periodselector')
-
-        <div class="col">
-            <input wire:model="search" class="form-control" type="text" placeholder="Search branches...">
+        <div wire:loading>
+            <div class="spinner-border"></div>
         </div>
+        @include('livewire.partials._search', ['placeholder'=>'Search Branches'])
     </div>
 
     <div class="row">

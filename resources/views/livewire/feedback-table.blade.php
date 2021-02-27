@@ -3,7 +3,9 @@
     <div class="row mb-4 ">
         @include('livewire.partials._search', ['placeholder'=>'Search Feedback'])
     </div>
-    
+    <div wire:loading>
+        <div class="spinner-border"></div>
+    </div>
 
     <button class="btn btn-success" 
     title="Export to Excel"
