@@ -76,7 +76,7 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
                 break;
             
             case 'reportsto':
-                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                if ($branch->manager->count() && ! is_null($branch->manager->first()->reportsTo)) {
                     $detail[] =   $branch->manager->first()->reportsTo->fullName();
                 } else {
                     $detail[] = 'No direct reporting manager';

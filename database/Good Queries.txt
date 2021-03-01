@@ -1065,3 +1065,18 @@ WHERE
     persons.id IN(3686, 4008) AND persons.user_id = addresses.user_id
 ORDER BY
     sr
+
+//*************************** Get Market Managers email and full name
+$marketmanagers = App\Person::whereNull('deleted_at')
+->managers([3])
+->join('users', 'persons.user_id', '=', 'users.id')
+  ->selectRaw("persons.id, concat_ws(' ',firstname, lastname) as fullName, users.email")
+  ->get();
+  /********************************************************
+  relabel activities to branch
+
+  update activities, persons, branch_person set activities.bid = branch_person.branch_id where activities.bid is null and activities.user_id = persons.user_id and persons.id = branch_person.person_id and branch_person.role_id =9 and persons.deleted_at is null
+
+  update activities, branches 
+set activities.branch_id = branches.id
+where activities.bid = branches.branch_id

@@ -1277,8 +1277,14 @@ class Branch extends Model implements HasPresenter
         );
 
     }
-
-    public function scopeSummaryLeadStats($query,$period, $fields = null)
+    /**
+     * [scopeSummaryLeadStats description]
+     * @param  [type] $query  [description]
+     * @param  [type] $period [description]
+     * @param  [type] $fields [description]
+     * @return [type]         [description]
+     */
+    public function scopeSummaryLeadStats($query, Array $period, Array $fields = null)
     {
         $this->period = $period;
         if (! $fields) {
@@ -1291,7 +1297,8 @@ class Branch extends Model implements HasPresenter
             'active_leads',
            
          */
-         return $query
+        ray($this->fields);
+        return $query
             ->when(
                 in_array('leads', $this->fields), function ($q) {
                     $q->withCount( 

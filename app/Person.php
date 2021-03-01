@@ -117,7 +117,7 @@ class Person extends NodeModel
      * 
      * @return [type]        [description]
      */
-    public function scopeManagers($query, $roles=null)
+    public function scopeManagers(\Illuminate\Database\Eloquent\Builder $query, Array $roles=null)
     {
         if (! $roles) {
             $roles = [14,6,7,3];

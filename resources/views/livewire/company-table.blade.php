@@ -12,9 +12,7 @@
             </select>
         </div>
 
-        <div class="col">
-            <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
-        </div>
+        @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
     </div>
     <table class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
