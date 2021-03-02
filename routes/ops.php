@@ -180,7 +180,9 @@ use Illuminate\Http\Request;
         
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
-        
+        // Persons Data
+        Route::get('persondata', ['as'=>'persons.data.export', 'uses'=>'ExportController@index']);
+        Route::post('persondata/export', ['as'=>'exports.store', 'uses'=>'ExportController@store']);
         
         //   Sales Activity / Campaigns
 
