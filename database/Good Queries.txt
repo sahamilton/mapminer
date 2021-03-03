@@ -1017,7 +1017,7 @@ AND address_branch.updated_at < activities.activity_date
 AND activities.activity_date > '2020-10-01' 
 AND address_branch.address_id = addresses.id
 /**************************************************************
-/* Extract leads for person
+/* Extract leads for person (Now in PersonData Export)
 /**************************************************************
 SELECT
     CONCAT_WS(
@@ -1074,9 +1074,18 @@ $marketmanagers = App\Person::whereNull('deleted_at')
   ->get();
   /********************************************************
   relabel activities to branch
-
+*************/
   update activities, persons, branch_person set activities.bid = branch_person.branch_id where activities.bid is null and activities.user_id = persons.user_id and persons.id = branch_person.person_id and branch_person.role_id =9 and persons.deleted_at is null
 
   update activities, branches 
 set activities.branch_id = branches.id
 where activities.bid = branches.branch_id
+/************************************************** 
+Get Branch Leads by State Count 
+*************/
+$locations = App\AddressBranch::selectRaw('count(addresses.id), addresses.state')
+  ->join('addresses', 'address_branch.address_id', '=', 'addresses.id')
+  ->where('branch_id', 1580)
+  ->groupBy('state')
+  ->get();
+  /*****************************************************************
