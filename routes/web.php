@@ -50,7 +50,7 @@ Route::group(
         //Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
         Route::resource('activity', 'ActivityController');
         //Route::get('activity', [App\Http\Controllers\ActivityController::class, 'index'])->name('activity.index');
-        Route::get('activity', [App\Http\Livewire\ActivitiesTable::class])->name('activity.index');
+        //Route::get('activity', [App\Http\Livewire\ActivitiesTable::class])->name('activity.index');
         
         //     Address
         Route::post('address/merge', ['as'=>'addresses.merge', 'uses'=>'AddressController@mergeAddress']);
