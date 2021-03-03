@@ -2,19 +2,20 @@
 
 namespace App\Jobs;
 
-use App\UserImport;
-use App\User;
 use App\Person;
+use App\User;
+use App\UserImport;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ProcessUserImport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $import;
+
     /**
      * Create a new job instance.
      *
@@ -33,19 +34,19 @@ class ProcessUserImport implements ShouldQueue
     public function handle()
     {
         // update user record
-        $user= User::findOrFail($this->import->user_id);
+        $user = User::findOrFail($this->import->user_id);
         $user->email = $this->import->email;
         $user->save();
         // update roles
-        if (is_array($roles = explode(",", [$this->import->role_id]))) {
-                $user->roles()->sync($roles);
+        if (is_array($roles = explode(',', [$this->import->role_id]))) {
+            $user->roles()->sync($roles);
         } else {
             $user->roles()->sync([]);
         }
 
         // update servicelines
-        if (is_array($servicelines = ",", $this->import->serviceline)) {
-            $user->serviceline()->sync(explode(",", $this->import->serviceline));
+        if (is_array($servicelines = ',', $this->import->serviceline)) {
+            $user->serviceline()->sync(explode(',', $this->import->serviceline));
         } else {
             $user->serviceline()->sync();
         }

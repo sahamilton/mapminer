@@ -27,8 +27,8 @@ class DashboardController extends Controller
         Dashboard $dashboard,
         Person $person,
         Branch $branch,
-        User $user)
-    {
+        User $user
+    ) {
         $this->dashboard = $dashboard;
         $this->person = $person;
         $this->branch = $branch;
@@ -43,7 +43,7 @@ class DashboardController extends Controller
     {
         $myTeam = auth()->user()->person->myTeam()->get()->pluck('user_id')->toArray();
        
-        if(! session('manager') or ! in_array(session('manager'), $myTeam)) {
+        if (! session('manager') or ! in_array(session('manager'), $myTeam)) {
             session(['manager'=>auth()->user()->id]);
         }
         

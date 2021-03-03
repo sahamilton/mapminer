@@ -2,21 +2,22 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use App\Person;
 use App\UserImport;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class associateBranches implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $person;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param UserImport $person [description]
      */
     public function __construct(UserImport $person)
@@ -31,10 +32,9 @@ class associateBranches implements ShouldQueue
      */
     public function handle()
     {
-        
-        $branches = explode(",", str_replace(' ', '', $this->person->branches));     
+        $branches = explode(',', str_replace(' ', '', $this->person->branches));
         foreach ($branches as $branch) {
-            $data[$branch]=['role_id' => $this->person->role_id];
+            $data[$branch] = ['role_id' => $this->person->role_id];
         }
         $person = Person::findOrFail($person->person_id);
         $person->branchesServiced()->sync($data);

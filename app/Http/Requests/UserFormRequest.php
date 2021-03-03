@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserFormRequest extends FormRequest
 {
@@ -26,34 +26,35 @@ class UserFormRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-  
-        $salesrules=[];
-        $branchrules=[];
+        $salesrules = [];
+        $branchrules = [];
 
         $rules = [
             'roles'=>'required',
             'business_title'=>'required',
             'firstname'=>'required',
             'lastname'=>'required',
-            'email' => 'required|email|unique:users,email,' . request()->segment(3),
-            'employee_id' => 'required|unique:users,employee_id,' . request()->segment(3),
+            'email' => 'required|email|unique:users,email,'.request()->segment(3),
+            'employee_id' => 'required|unique:users,employee_id,'.request()->segment(3),
             'password'=>'confirmed',
             'serviceline'=>'required',
             'address'=>'required',
 
         ];
-        if (count(array_intersect(request('roles'), [5,6,7,8]))>0) {
+        if (count(array_intersect(request('roles'), [5, 6, 7, 8])) > 0) {
             $salesrules = ['reports_to'=>'required'];
         }
-        if (count(array_intersect(request('roles'), [9]))>0) {
+        if (count(array_intersect(request('roles'), [9])) > 0) {
             $branchrules = ['branches'=>'required_without:branchstring',
-                        'branchstring'=>'required_without:branches',];
+                        'branchstring'=>'required_without:branches', ];
         }
+
         return array_merge($salesrules, $branchrules, $rules);
     }
+
     /**
-     * [messages description]
-     * 
+     * [messages description].
+     *
      * @return [type] [description]
      */
     public function messages()

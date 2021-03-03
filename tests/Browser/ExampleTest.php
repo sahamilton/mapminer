@@ -3,9 +3,9 @@
 namespace Tests\Browser;
 
 use App\User;
-use Tests\DuskTestCase;
-use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
 class ExampleTest extends DuskTestCase
 {
@@ -14,10 +14,9 @@ class ExampleTest extends DuskTestCase
      *
      * @return void
      */
-    
     public function testAccountsView()
     {
-         $this->browse(function ($first) {
+        $this->browse(function ($first) {
             $first->loginAs(User::find(1))
             ->visit('/branches')
             ->waitForText('All Branches')
@@ -26,6 +25,6 @@ class ExampleTest extends DuskTestCase
             ->assertSee('Branch managed by')
             ->clickLink('List view')
             ->assertSee('Locations');
-         });
+        });
     }
 }

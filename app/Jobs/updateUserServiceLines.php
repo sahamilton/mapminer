@@ -2,21 +2,22 @@
 
 namespace App\Jobs;
 
+use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\User;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class updateUserServiceLines implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $users;
     public $newuser;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param array  $newuser [description]
      * @param [type] $users   [description]
      */
@@ -35,7 +36,7 @@ class updateUserServiceLines implements ShouldQueue
     {
         foreach ($this->users as $user) {
             // send to queue
-            $roles = explode(",", $this->newuser[$user->id]);
+            $roles = explode(',', $this->newuser[$user->id]);
             $user->serviceline()->sync($roles);
         }
     }

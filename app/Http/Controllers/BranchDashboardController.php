@@ -220,14 +220,14 @@ class BranchDashboardController extends DashboardController
        
         $data['pipelinechart'] = $this->_getPipeLine();
         // this should move over to Calendar
-        $data['calendar'] = $this->_getUpcomingCalendar($this->_getActivities());
+        //$data['calendar'] = $this->_getUpcomingCalendar($this->_getActivities());
 
         $data['period'] = $this->period;
         $branches = $this->_getBranches();
         if (count($branches) > 1) {
             $data['branches'] = $branches;
         }
-    
+        ray($data);
         return $data;
     }
 

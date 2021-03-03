@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Person;
+use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
-    
-
-
     /**
      * Display a listing of the resource.
      *
@@ -85,6 +82,7 @@ class TestController extends Controller
     {
         //
     }
+
     public function form()
     {
         return response()->view('test.index');
@@ -92,7 +90,6 @@ class TestController extends Controller
 
     public function select(Request $request)
     {
-
         return response()->json($this->states[request('country')], 201);
 
         //return response()->json($this->states[$cid],201);
@@ -100,14 +97,13 @@ class TestController extends Controller
 
     public function send(Request $request)
     {
-
         dd(request()->all());
     }
 
     public function test()
     {
         $person = Person::with('userdetails')->where('user_id', '=', auth()->user()->id)->first();
-        
+
         dd($person);
     }
 }

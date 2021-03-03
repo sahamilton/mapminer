@@ -26,7 +26,7 @@ class TrainingFormRequest extends FormRequest
         return [
             'title'=>'required',
             'reference'=>'required',
-            
+
         ];
     }
 }

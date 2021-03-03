@@ -249,10 +249,11 @@ class MgrDashboardController extends DashboardController
     private function _displayDashboard()
     {
         $data = $this->_getDashBoardData();
+        
         if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team']['me']->directReports()->get();
-            
+            ray($data);
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
           
         } else {
@@ -327,7 +328,7 @@ class MgrDashboardController extends DashboardController
                 return $person->branchesServiced->pluck('id');
             }
         )->flatten();
-        
+       
         //$branches = $branches;
 
         $mybranchdata = $branchdata->filter(
@@ -359,6 +360,7 @@ class MgrDashboardController extends DashboardController
     {
         
         $types =$mybranchdata->first()->activityFields;
+       
         foreach ($types as $type) {
             $type=str_replace(" ", "_", strtolower($type));
             $data[$type] = $mybranchdata->sum($type);
@@ -404,7 +406,7 @@ class MgrDashboardController extends DashboardController
         $string = '';
 
         foreach ($results as $branch) {
-            
+      
             $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
          
         }

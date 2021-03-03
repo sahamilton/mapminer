@@ -1,38 +1,36 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Comments;
 use App\Http\Requests\CommentFormRequest;
-use Mail;
-use App\User;
 use App\Mail\NotifyCommentsAdded;
+use App\User;
+use Mail;
 
 class CommentsController extends BaseController
 {
-
     /**
-     * Display a listing of People
+     * Display a listing of People.
      *
      * @return Response
      */
     public $comment;
-    
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Comments $comment [description]
      */
     public function __construct(Comments $comment)
     {
-        
         $this->comment = $comment;
         parent::__construct($comment);
     }
-    
-    
+
     /**
-     * [index description]
-     * 
+     * [index description].
+     *
      * @return [type] [description]
      */
     public function index()
@@ -41,12 +39,11 @@ class CommentsController extends BaseController
             ->orderBy('created_at', 'asc')
             ->get();
 
-
         return response()->view('comments.index', compact('comments', 'fields'));
     }
 
     /**
-     * Show the form for creating a new Comment
+     * Show the form for creating a new Comment.
      *
      * @return Response
      */
@@ -56,19 +53,19 @@ class CommentsController extends BaseController
     }
 
     /**
-     * [store description]
-     * 
+     * [store description].
+     *
      * @param CommentFormRequest $request [description]
-     * 
+     *
      * @return [type]                      [description]
      */
     public function store(CommentFormRequest $request)
     {
-        
         $data = request()->all();
         $data['user_id'] = auth()->user()->id;
         $data = $this->comment->create($data);
         $this->_notify($data);
+
         return redirect()->route('news.index');
     }
 
@@ -76,60 +73,57 @@ class CommentsController extends BaseController
      * Display the specified Comment.
      *
      * @param int $id [description]
-     * 
+     *
      * @return Response
      */
     public function show($id)
     {
-        
-    
         $people = $this->comment->with('manages')->findorFail($id->id);
+
         return response()->view('comments.showlist', compact('comment'));
     }
-    
+
     /**
      * Mark specified Comment as closed.
      *
      * @param int $id [description]
-     * 
+     *
      * @return Response
      */
     public function close($id)
     {
-        
         $comment = $this->comment->findOrFail($id);
-        
-        $comment->comment_status ='closed';
-        
+
+        $comment->comment_status = 'closed';
+
         $comment->save();
 
         $comments = $this->comment->all();
+
         return response()->view('comments.index', compact('comments'));
     }
-
-    
 
     /**
      * Show the form for editing the specified Comment.
      *
      * @param int $id [descripiton]
-     * 
+     *
      * @return Response
      */
     public function edit($id)
     {
-            
-            $comment = $this->comment->with('relatesTo', 'postedBy')
+        $comment = $this->comment->with('relatesTo', 'postedBy')
                 ->findOrFail($id);
-            return response()->view('comments.edit', compact('comment'));
+
+        return response()->view('comments.edit', compact('comment'));
     }
 
     /**
-     * [update description]
-     * 
+     * [update description].
+     *
      * @param CommentFormRequest $request [description]
      * @param [type]             $id      [description]
-     * 
+     *
      * @return [type]                      [description]
      */
     public function update(CommentFormRequest $request, $id)
@@ -145,7 +139,7 @@ class CommentsController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param int $id [description]
-     * 
+     *
      * @return Response
      */
     public function destroy($id)
@@ -157,13 +151,12 @@ class CommentsController extends BaseController
     }
 
     /**
-     * [download description]
-     * 
+     * [download description].
+     *
      * @return [type] [description]
      */
     public function download()
     {
-        
         Excel::download(
             'Comments', function ($excel) {
                 $excel->sheet(
@@ -176,21 +169,18 @@ class CommentsController extends BaseController
             }
         )->download('csv');
     }
-    
-    
+
     /**
-     * [_notify description]
-     * 
+     * [_notify description].
+     *
      * @param [type] $comment [description]
-     * 
+     *
      * @return [type]          [description]
      */
     private function _notify($comment)
     {
-        
         $comment->load('postedBy');
 
-        
         Mail::queue(new NotifyCommentsAdded($comment));
     }
 }

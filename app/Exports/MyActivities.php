@@ -1,17 +1,17 @@
 <?php
 
 namespace App\Exports;
-use App\Activity;
 
+use App\Activity;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Carbon\Carbon;
 
 class MyActivities implements FromView
 {
     /**
-     * [collection description]
-     * 
+     * [collection description].
+     *
      * @return [type] [description]
      */
     public function collection()
@@ -20,8 +20,8 @@ class MyActivities implements FromView
     }
 
     /**
-     * [view description]
-     * 
+     * [view description].
+     *
      * @return [type] [description]
      */
     public function view(): View
@@ -30,7 +30,7 @@ class MyActivities implements FromView
                 ->with('relatesToAddress')
                 ->with('type')
                 ->get();
-        
+
         return view('activities.export', compact('results'));
     }
 }

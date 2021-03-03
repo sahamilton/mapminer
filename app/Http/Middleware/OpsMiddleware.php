@@ -15,7 +15,6 @@ class OpsMiddleware
      */
     public function handle($request, Closure $next)
     {
-     
         if (! $request->user() or ! $request->user()->can('manage_imports')) {
             return redirect('home');
         }

@@ -1,3 +1,4 @@
+use Illuminate\Support\Facades\Request;
 @extends('site.layouts.default')
 
 {{-- Content --}}
@@ -12,7 +13,7 @@
 					<label class="col-md-2 control-label" for="firstname">First Name</label>
 					<div class="input-group input-group-lg ">
 
-						<input required class="form-control" type="text" name="firstname" id="firstname" value="{!! Input::old('firstname', isset($user->person->firstname) ? $user->person->firstname : null) !!}" 
+						<input required class="form-control" type="text" name="firstname" id="firstname" value="{!! Request::old('firstname', isset($user->person->firstname) ? $user->person->firstname : null) !!}" 
 						placeholder="first name"/>
 						{!! $errors->first('firstname', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -24,7 +25,7 @@
 					<label class="col-md-2 control-label" for="lastname">Last Name</label>
 					<div class="input-group input-group-lg ">
 
-						<input required class="form-control" type="text" name="lastname" id="lastname" value="{!!Input::old('lastname', isset($user->person->lastname) ? $user->person->lastname : null) !!}" 
+						<input required class="form-control" type="text" name="lastname" id="lastname" value="{!!Request::old('lastname', isset($user->person->lastname) ? $user->person->lastname : null) !!}" 
 						placeholder="last name"/>
 						{!! $errors->first('lastname', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -39,7 +40,7 @@
 
 						<input class="form-control" type="text" 
 						placeholder="Full address with city & state"
-						name="address" id="address" value="{!!Input::old('address', isset($user) ? $user->person->fullAddress() : null) !!}" 
+						name="address" id="address" value="{!!Request::old('address', isset($user) ? $user->person->fullAddress() : null) !!}" 
 						/>
 						{!! $errors->first('address', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -51,7 +52,7 @@
 					<label class="col-md-2 control-label" for="address">Phone</label>
 					<div class="input-group input-group-lg ">
 
-						<input class="form-control" type="text" name="phone" id="phone"  value="{!!Input::old('phone', isset($user) ? $user->person->phone : null) !!}" 
+						<input class="form-control" type="text" name="phone" id="phone"  value="{!!Request::old('phone', isset($user) ? $user->person->phone : null) !!}" 
 						placeholder="phone"/>
 						{!! $errors->first('phone', '<span class="help-inline">:message</span>') !!}
 					</div>

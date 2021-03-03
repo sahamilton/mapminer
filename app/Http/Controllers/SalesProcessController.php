@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\SalesProcess;
 use App\Http\Requests\SalesProcessStepRequest;
-
+use App\SalesProcess;
 use Illuminate\Http\Request;
 
 class SalesProcessController extends Controller
 {
     public $process;
+
     public function __construct(SalesProcess $process)
     {
-
         $this->process = $process;
     }
 
@@ -24,6 +23,7 @@ class SalesProcessController extends Controller
     public function index()
     {
         $process = $this->process->orderBy('sequence', 'asc')->get();
+
         return response()->view('salesprocess.index', compact('process'));
     }
 
@@ -35,6 +35,7 @@ class SalesProcessController extends Controller
     public function create()
     {
         $process = [];
+
         return response()->view('salesprocess.create', compact('process'));
     }
 
@@ -46,8 +47,8 @@ class SalesProcessController extends Controller
      */
     public function store(SalesProcessStepRequest $request)
     {
-        
         $this->process->create(request()->all());
+
         return redirect()->route('process.index');
     }
 
@@ -71,6 +72,7 @@ class SalesProcessController extends Controller
     public function edit($id)
     {
         $process = $this->process->findOrFail($id);
+
         return response()->view('salesprocess.create', compact('process'));
     }
 
@@ -99,6 +101,7 @@ class SalesProcessController extends Controller
     public function destroy($id)
     {
         $this->process->destroy($id);
+
         return redirect()->route('process.index');
     }
 }

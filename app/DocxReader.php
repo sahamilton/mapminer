@@ -8,11 +8,10 @@ class DocxReader implements TextInterface
 {
     public function read($data)
     {
-        $dataFile =  "word/document.xml";
+        $dataFile = 'word/document.xml';
         $zip = new \ZipArchive;
 
-
-    // Open received archive file
+        // Open received archive file
         if (true === $zip->open($data['basepath'])) {
             // If done, search for the data file in the archive
             if (($index = $zip->locateName($dataFile)) !== false) {

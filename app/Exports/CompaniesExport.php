@@ -2,30 +2,28 @@
 
 namespace App\Exports;
 
+use App\Company;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use App\Company;
 
 class CompaniesExport implements FromView
 {
     public function __construct()
     {
-        
-      
     }
+
     /**
-     * [view description]
-     * 
+     * [view description].
+     *
      * @return [type] [description]
      */
     public function view(): View
     {
         $companies = Company::with('industryVertical', 'managedBy', 'serviceline', 'type')
 
-                
                 ->get();
-        return view('companies.exportcompanies', compact('companies'));
 
+        return view('companies.exportcompanies', compact('companies'));
     }
 }
 /*Excel::download('AllCompanies',function($excel){

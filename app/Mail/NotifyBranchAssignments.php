@@ -2,14 +2,14 @@
 
 namespace App\Mail;
 
-use App\User;
-use App\Person;
 use App\Campaign;
+use App\Person;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifyBranchAssignments extends Mailable
 {
@@ -19,9 +19,10 @@ class NotifyBranchAssignments extends Mailable
     public $token;
     public $expiration;
     public $campaign;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Person   $person   [description]
      * @param Campaign $campaign [description]
      */
@@ -46,8 +47,8 @@ class NotifyBranchAssignments extends Mailable
             ->withSwiftMessage(
                 function ($message) {
                     $headers = $message->getHeaders();
-                    $headers->addTextHeader("X-Mailgun-Variables", '{"type": "branch-confirmation"}');
-                    $headers->addTextHeader("X-Mailgun-Tag", "branch-confirmation");
+                    $headers->addTextHeader('X-Mailgun-Variables', '{"type": "branch-confirmation"}');
+                    $headers->addTextHeader('X-Mailgun-Tag', 'branch-confirmation');
                 }
             );
     }

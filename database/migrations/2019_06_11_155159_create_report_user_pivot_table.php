@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateReportUserPivotTable extends Migration
 {
@@ -22,10 +22,8 @@ class CreateReportUserPivotTable extends Migration
 
         Schema::table(
             'report_user', function (Blueprint $table) {
-                
                 $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-              
             }
         );
     }

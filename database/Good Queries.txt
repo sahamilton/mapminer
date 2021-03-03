@@ -931,7 +931,7 @@ and branch_person.role_id = roles.id
 and branch_person.branch_id = branches.id
 
 /****************************************************************
-/********** delet selection above *******************************
+/********** delete selection above *******************************
 /****************************************************************
 delete from branch_person where person_id in (select * from (SELECT persons.id as PID
 FROM users, persons, branch_person b

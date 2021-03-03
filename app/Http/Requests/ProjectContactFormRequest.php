@@ -27,16 +27,16 @@ class ProjectContactFormRequest extends FormRequest
             'contact'=>'required',
         ];
     }
+
     /**
      * Get the error messages for the defined validation rules.
      *
      * @return array
      */
-
     public function messages()
-        {
-            return [
+    {
+        return [
                 'contact.required' => 'A name field is required',
             ];
-        }
+    }
 }

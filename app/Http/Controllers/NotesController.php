@@ -2,42 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NoteFormRequest;
+use App\Location;
 use App\Note;
 use App\User;
-use App\Location;
-use App\Http\Requests\NoteFormRequest;
 use Illuminate\Http\Request;
 
 class NotesController extends BaseController
 {
-
-    
     public $notes;
     public $locations;
     public $user;
 
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Note     $note     [description]
      * @param Location $location [description]
      * @param User     $user     [description]
      */
     public function __construct(Note $note, Location $location, User $user)
     {
-
         $this->notes = $note;
         $this->location = $location;
         $this->user = $user;
     }
+
     /**
-     * Display a listing of notes
+     * Display a listing of notes.
      *
      * @return Response
      */
     public function index()
     {
-    
         $notes = $this->notes
             ->where('type', '=', 'location')
             ->with('relatesToLocation', 'relatesToLocation.company', 'writtenBy')
@@ -47,7 +44,7 @@ class NotesController extends BaseController
     }
 
     /**
-     * Show the form for creating a new note
+     * Show the form for creating a new note.
      *
      * @return Response
      */
@@ -57,15 +54,14 @@ class NotesController extends BaseController
     }
 
     /**
-     * [store description]
-     * 
+     * [store description].
+     *
      * @param NoteFormRequest $request [description]
-     * 
+     *
      * @return [type]                   [description]
      */
     public function store(NoteFormRequest $request)
     {
-
         request()->merge(['user_id'=>auth()->user()->id]);
 
         $note = $this->notes->create(request()->all());
@@ -77,7 +73,7 @@ class NotesController extends BaseController
      * Display the specified note.
      *
      * @param int $id [description]
-     * 
+     *
      * @return Response
      */
     public function show($id)
@@ -88,29 +84,27 @@ class NotesController extends BaseController
     }
 
     /**
-     * [edit description]
-     * 
+     * [edit description].
+     *
      * @param [type] $note [description]
-     * 
+     *
      * @return [type]       [description]
      */
     public function edit($note)
     {
-        
         return response()->view('notes.edit', compact('note'));
     }
 
     /**
-     * [update description]
-     * 
+     * [update description].
+     *
      * @param NoteFormRequest $request [description]
      * @param [type]          $note    [description]
-     * 
+     *
      * @return [type]                   [description]
      */
     public function update(NoteFormRequest $request, $note)
     {
-        
         $note->update(['note'=>request('note')]);
         $note->load('relatesToLocation');
         switch ($note->type) {
@@ -130,24 +124,24 @@ class NotesController extends BaseController
     }
 
     /**
-     * [destroy description]
-     * 
+     * [destroy description].
+     *
      * @param [type] $note [description]
-     * 
+     *
      * @return [type]       [description]
      */
     public function destroy($note)
     {
-        
         $note->delete();
-        
+
         return redirect()->back();
     }
+
     /**
-     * [notify description]
-     * 
+     * [notify description].
+     *
      * @param [type] $data [description]
-     * 
+     *
      * @return [type]       [description]
      */
     private function _notify($data)
@@ -157,13 +151,13 @@ class NotesController extends BaseController
         // Only notify if there is national account manager
         if (isset($data['company'][0]->company['managedBy']->email)) {
             $data['user'] = $this->user->findOrFail($data['user_id']);
-            
-            $data['company']  = $this->location->where(
+
+            $data['company'] = $this->location->where(
                 'id', '=', $data['location_id']
             )
                 ->with('company')
                 ->get();
-            
+
             \Mail::send(
                 'emails.newnote', $data, function ($message) use ($data) {
                     $message->to($data['company'][0]->company['managedBy']->email)
@@ -172,17 +166,17 @@ class NotesController extends BaseController
             );
         }
     }
-    
+
     /**
-     * [companynotes description]
-     * 
+     * [companynotes description].
+     *
      * @param [type] $companyid [description]
-     * 
+     *
      * @return [type]            [description]
      */
     public function companynotes($companyid)
     {
-        $company =\App\Company::findOrFail($companyid);
+        $company = \App\Company::findOrFail($companyid);
         $notes = $this->notes
             ->where('type', '=', 'location')
             ->with('relatesTo', 'relatesTo.company', 'writtenBy')
@@ -195,23 +189,23 @@ class NotesController extends BaseController
 
         return response()->view('notes.companynotes', compact('notes', 'company'));
     }
+
     /**
      * Show notes of user.
-     *  
+     *
      * @return Response
      */
     public function mynotes()
     {
-        
         $user = auth()->user();
-        $types=['location','lead','project'];
+        $types = ['location', 'lead', 'project'];
         foreach ($types as $type) {
             $notes[$type] = $this->notes
                 ->where('user_id', '=', $user->id)
                 ->where('type', '=', $type)
                 ->with('relatesTo'.(ucwords($type)))->get();
         }
-        
+
         return response()->view('notes.show', compact('notes', 'types'));
     }
 }

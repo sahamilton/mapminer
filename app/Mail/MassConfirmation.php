@@ -3,14 +3,15 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MassConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
+
     /**
      * Create a new message instance.
      *
@@ -28,8 +29,6 @@ class MassConfirmation extends Mailable
      */
     public function build()
     {
-        
-
         return $this->markdown('emails.massConfirmation')->subject('Emails Sent');
     }
 }

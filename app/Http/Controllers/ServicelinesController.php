@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Serviceline;
-use App\Company;
 use App\Branch;
-use Illuminate\Http\Request;
+use App\Company;
 use App\Http\Requests\ServiceLineFormRequest;
+use App\Serviceline;
+use Illuminate\Http\Request;
 
 class ServicelinesController extends BaseController
 {
@@ -27,13 +28,12 @@ class ServicelinesController extends BaseController
     }
 
     /**
-     * Show the form for creating a new serviceline
+     * Show the form for creating a new serviceline.
      *
      * @return Response
      */
     public function create()
     {
-        
         return response()->view('servicelines.create');
     }
 
@@ -44,7 +44,6 @@ class ServicelinesController extends BaseController
      */
     public function store(ServiceLineFormRequest $request)
     {
-
         $this->serviceline->create(request()->all());
 
         return \redirect()->route('serviceline.index');

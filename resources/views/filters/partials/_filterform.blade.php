@@ -2,14 +2,14 @@
 
 <div class="form-group @if ($errors->has('filter')) has-error @endif">
 {{Form::label('filter')}}
-{{Form::text('filter',isset($filter->filter) ? $filter->filter: Input::old('filter'),array('class'=>'form-control'))}}
+{{Form::text('filter',isset($filter->filter) ? $filter->filter: Request::old('filter'),array('class'=>'form-control'))}}
  @if ($errors->has('filter')) <p class="help-block">{{ $errors->first('filter') }}</p> @endif
 </div>
 
 <!-- Color picker -->
 <div id="cp2" class="input-group colorpicker-component @if ($errors->has('color')) has-error @endif">
 {{Form::label('color')}}
-{{Form::text('color',isset($filter->color) ? "#".$filter->color: Input::old('color'),array('class'=>'form-control'))}}
+{{Form::text('color',isset($filter->color) ? "#".$filter->color: Request::old('color'),array('class'=>'form-control'))}}
 <span class="input-group-addon"><i></i></span>
  @if ($errors->has('color')) <p class="help-block">{{ $errors->first('color') }}</p> @endif
 </div>
@@ -18,6 +18,7 @@
 <div class="form-group @if ($errors->has('type')) has-error @endif">
 {{Form::label('type')}}
 <?php $options =['one'=>'select one of','multiple'=>'select multiple','group'=>'Group'];?>
+use Illuminate\Support\Facades\Request;
  @foreach($options as $key=>$value)
     @if((isset($filter->type) and $filter->type == $key) or (!isset($filter->type) and $key =='multiple'))
     	<div>{{Form::radio('type',$key,true)}}{{$value}}</div>

@@ -2,16 +2,15 @@
 
 namespace App;
 
-use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Database\Eloquent\Model;
+use McCool\LaravelAutoPresenter\HasPresenter;
 
 class BranchImport extends Imports
 {
     public $table = 'branchesimport';
-    public $nullFields =['address2','phone','fax'];
-    public $requiredFields = ['id','branchname','street','city','state','zip','lat','lng'];
+    public $nullFields = ['address2', 'phone', 'fax'];
+    public $requiredFields = ['id', 'branchname', 'street', 'city', 'state', 'zip', 'lat', 'lng'];
 
-    
     public function servicelines()
     {
         return $this->belongsToMany(Serviceline::class, 'branch_serviceline', 'branch_id');
@@ -21,7 +20,7 @@ class BranchImport extends Imports
     {
         return $this->belongsTo(Branch::class);
     }
-    
+
     public function getAdds()
     {
         return  $this->distinct()
@@ -50,18 +49,18 @@ class BranchImport extends Imports
 
     public function getChanges()
     {
-       /* return \DB::table('branchesimport')
-        ->join('branches','branches.id','branchesimport.id')
-        ->where(function($q){
-			$q->where('branches.street', '!=','branchesimport.street')
-                   ->orWhere ('branches.address2', '!=', 'branchesimport.address2')
-                    ->orWhere ('branches.city', '!=', 'branchesimport.city') 
-                    ->orWhere ('branches.state', '!=', 'branchesimport.state') 
-                    ->orWhere ('branches.zip', '!=', 'branchesimport.zip')
-                    ->orWhere ('branches.phone', '!=', 'branchesimport.phone');
-        })->get();*/
+        /* return \DB::table('branchesimport')
+         ->join('branches','branches.id','branchesimport.id')
+         ->where(function($q){
+             $q->where('branches.street', '!=','branchesimport.street')
+                    ->orWhere ('branches.address2', '!=', 'branchesimport.address2')
+                     ->orWhere ('branches.city', '!=', 'branchesimport.city')
+                     ->orWhere ('branches.state', '!=', 'branchesimport.state')
+                     ->orWhere ('branches.zip', '!=', 'branchesimport.zip')
+                     ->orWhere ('branches.phone', '!=', 'branchesimport.phone');
+         })->get();*/
 
-          $query = "select 
+        $query = 'select 
                     branches.id as branchid,
                     branches.branchname as branchname,
                     branches.street as orgstreet, 
@@ -84,9 +83,11 @@ class BranchImport extends Imports
                     OR trim(branches.city) != trim(branchesimport.city) 
                     OR trim(branches.state) != trim(branchesimport.state) 
                     OR trim(branches.zip) != trim(branchesimport.zip)
-                    OR trim(branches.phone) != trim(branchesimport.phone))";
+                    OR trim(branches.phone) != trim(branchesimport.phone))';
+
         return \DB::select($query);
     }
+
     public function fixId()
     {
         $query = "update branches set id = concat(repeat('0',4-char_length(id)),id) 
@@ -94,9 +95,9 @@ class BranchImport extends Imports
 
         return \DB::select($query);
     }
+
     public function addBranches($add_ids)
     {
-        
         $branchesToImport = $this->whereIn('id', $add_ids)
         ->get();
         foreach ($branchesToImport as $add) {
@@ -105,15 +106,15 @@ class BranchImport extends Imports
             $branch->save();
             $this->assignServiceLines($branch, $add);
         }
+
         return count($add_ids);
     }
 
     public function deleteBranches($delete_ids)
     {
-       
-
         Branch::destroy($delete_ids);
         $this->destroy($delete_ids);
+
         return count($delete_ids);
     }
 
@@ -121,7 +122,7 @@ class BranchImport extends Imports
     {
         $branchesToUpdate = $this->whereIn('id', $change_ids)
                     ->get();
-        
+
         foreach ($branchesToUpdate as $update) {
             $branchdata = $update->toArray();
 
@@ -129,14 +130,13 @@ class BranchImport extends Imports
             $branch->update($branchdata);
             $this->assignServiceLines($branch, $branchdata);
         }
+
         return count($change_ids);
     }
-    
 
     private function assignServiceLines($branch, $branchdata)
     {
-
-        $branchdata['servicelines']= explode(',', $branchdata['servicelines']);
+        $branchdata['servicelines'] = explode(',', $branchdata['servicelines']);
         $branch->servicelines()->sync($branchdata['servicelines']);
     }
 }

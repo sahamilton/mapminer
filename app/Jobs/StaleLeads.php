@@ -2,16 +2,15 @@
 
 namespace App\Jobs;
 
-
+use App\Exports\StaleLeadsExport;
 use App\Person;
 use Excel;
-use App\Exports\StaleLeadsExport;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class StaleLeads implements ShouldQueue
 {
@@ -19,19 +18,19 @@ class StaleLeads implements ShouldQueue
     public $file;
     public $leads;
     public $manager;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Address $leads   [description]
      * @param Person  $manager [description]
-     * @param String  $file    [description]
+     * @param string  $file    [description]
      */
     public function __construct(Collection $leads, Person $manager, String $file)
     {
         $this->leads = $leads;
         $this->manager = $manager;
-        $this->file =  $file;
-        
+        $this->file = $file;
     }
 
     /**
@@ -41,7 +40,6 @@ class StaleLeads implements ShouldQueue
      */
     public function handle()
     {
-        Excel::store(new StaleLeadsExport($this->leads, $this->manager),  '/public/'.$this->file);
-        
+        Excel::store(new StaleLeadsExport($this->leads, $this->manager), '/public/'.$this->file);
     }
 }

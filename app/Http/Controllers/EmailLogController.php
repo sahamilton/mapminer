@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\EmailLog;
+use Illuminate\Http\Request;
 
 class EmailLogController extends Controller
 {
     protected $emaillog;
 
-    public function __construct(EmailLog $emaillog) {
+    public function __construct(EmailLog $emaillog)
+    {
         $this->emaillog = $emaillog;
-
     }
 
     /**
@@ -21,10 +21,9 @@ class EmailLogController extends Controller
      */
     public function index()
     {
-        $logs = $this->emaillog->with('user','user.member')->get();
-     
-        return response()->view('emails.logs',compact('logs'));
+        $logs = $this->emaillog->with('user', 'user.member')->get();
 
+        return response()->view('emails.logs', compact('logs'));
     }
 
     /**
@@ -91,16 +90,17 @@ class EmailLogController extends Controller
     public function destroy($id)
     {
         $this->emaillog->destroy($id);
+
         return redirect()->back();
     }
 
     public function destroychecked(Request $request)
     {
         if ($request->has('ids')) {
-            $deleteIds = explode(',',request('ids'));
-        
+            $deleteIds = explode(',', request('ids'));
         }
         $this->emaillog->destroy($deleteIds);
+
         return redirect()->back();
     }
 }

@@ -13,7 +13,7 @@ class LeadImport extends Imports
             'state',
             'zip',
             'lat',
-            'lng'];
+            'lng', ];
 
     public $temptable = 'leadimport';
     public $dontCreateTemp = true;

@@ -3,12 +3,10 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-
-
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class UploadToDropbox implements ShouldQueue
 {
@@ -17,17 +15,16 @@ class UploadToDropbox implements ShouldQueue
     public $filesystem;
     public $file;
     public $path;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param string $file [description]
      */
     public function __construct($file)
     {
-        
         $this->file = $file;
-        $this->path =  storage_path('backups/');
-     
+        $this->path = storage_path('backups/');
     }
 
     /**
@@ -37,7 +34,6 @@ class UploadToDropbox implements ShouldQueue
      */
     public function handle()
     {
-        \Storage::disk('dropbox')->put("mapminer/".$this->file.".zip", fopen($this->path.$this->file.'.zip', 'r+'));
-       
+        \Storage::disk('dropbox')->put('mapminer/'.$this->file.'.zip', fopen($this->path.$this->file.'.zip', 'r+'));
     }
 }

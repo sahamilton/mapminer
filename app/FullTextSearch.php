@@ -5,10 +5,10 @@ namespace App;
 trait FullTextSearch
 {
     /**
-     * Replaces spaces with full text search wildcards
+     * Replaces spaces with full text search wildcards.
      *
      * @param string $term [d]
-     * 
+     *
      * @return string
      */
     protected function fullTextWildcards($term)
@@ -25,7 +25,7 @@ trait FullTextSearch
              * because smaller ones are not indexed by mysql
              */
             if (strlen($word) >= 3) {
-                $words[$key] = '+' . $word . '*';
+                $words[$key] = '+'.$word.'*';
             }
         }
 
@@ -34,13 +34,12 @@ trait FullTextSearch
         return $searchTerm;
     }
 
-
     /**
      * Scope a query that matches a full text search of term.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query 
-     * @param string                                $term   
-     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $term
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSearch($query, $term)
@@ -48,7 +47,7 @@ trait FullTextSearch
         $columns = implode(',', $this->searchable);
 
         $query->whereRaw(
-            "MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", 
+            "MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)",
             $this->fullTextWildcards($term)
         );
 

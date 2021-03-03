@@ -50,7 +50,8 @@ class Chart extends Model
                 return ['pid'=>$person->id,'name'=>$person->postName()];
             }
         );
-        $activitydata = collect($data['data'])->pluck('activitiestype');      
+        $activitydata = collect($data['data'])->pluck('activitiestype'); 
+        
         $labels = implode("','", $labels->pluck('name')->toArray());
         $chart['labels'] = $labels;
         foreach ($full as $color=>$activity) {

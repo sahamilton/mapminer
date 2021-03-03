@@ -15,26 +15,27 @@ class CompanyService extends Model
         $this->company = $company;
         $this->location = $location;
     }
+
     public function getCompany($id)
     {
         $company = $this->company->with('managedBy', 'locations')->findOrFail($id);
         $count = $company->countlocations()->first()->count;
         if ($count > $this->limit) {
-            dd("Contact Support - Companies Service - 20 ", $count, $this->location->getStateSummary($company->id));
+            dd('Contact Support - Companies Service - 20 ', $count, $this->location->getStateSummary($company->id));
             //dd($count,$this->location->getStateSummary($company->id));
         }
+
         return $company;
     }
 
     public function getCompanyServiceBranchDetails($locations, Company $company, $limit = 5)
     {
-        
         $servicelines = $company->serviceline->pluck('id')->toArray();
-    
+
         $data = [];
-        
+
         foreach ($locations as $location) {
-            $data['branches'][$location->id]=$location->nearbyBranches($servicelines, $limit)->get();
+            $data['branches'][$location->id] = $location->nearbyBranches($servicelines, $limit)->get();
         }
 
         return $data;
@@ -43,7 +44,7 @@ class CompanyService extends Model
     public function getServiceTeam($id, $state)
     {
         $company = $this->getCompany($id);
-        
+
         $service = $this->getCompanyServiceBranchDetails($company->locations, $company, $limit = 1);
         // get unique branches
         $branchids = $this->getUniqueBranches($service['branches']);
@@ -53,6 +54,7 @@ class CompanyService extends Model
         foreach ($branches as $branch) {
             $people = array_unique(array_merge($people, $branch->getManagementTeam()));
         }
+
         return Person::whereIn('id', $people)->with('userdetails', 'userdetails.roles')->get();
     }
 
@@ -62,6 +64,7 @@ class CompanyService extends Model
         foreach ($branches as $branch) {
             $branchids = array_unique(array_merge($branchids, $branch->pluck('id')->toArray()));
         }
+
         return $branchids;
     }
 
@@ -69,7 +72,7 @@ class CompanyService extends Model
     {
         $limited = false;
 
-        if (count($locations) >$this->limit) {
+        if (count($locations) > $this->limit) {
             $limited = $this->limit;
         }
 

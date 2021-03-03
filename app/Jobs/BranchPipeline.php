@@ -3,24 +3,24 @@
 namespace App\Jobs;
 
 use App\Branch;
-use Mail;
-use Excel;
-use Carbon\Carbon;
-use App\Report;
 use App\Exports\BranchPipelineExport;
 use App\Mail\BranchPipelineReport;
-
+use App\Report;
+use Carbon\Carbon;
+use Excel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Mail;
 
 class BranchPipeline implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $branches;
     public $period;
+
     /**
      * Create a new job instance.
      *
@@ -42,13 +42,13 @@ class BranchPipeline implements ShouldQueue
         $file = '/public/reports/branchpipeline.xlsx';
 
         Excel::store(new BranchPipelineExport($this->period, $this->branches), $file);
-        
-        $class= str_replace("App\Jobs\\", "", get_class($this));
+
+        $class = str_replace("App\Jobs\\", '', get_class($this));
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
         $distribution = $report->getDistribution();
         Mail::to($distribution)
-            ->send(new BranchPipelineReport($file, $this->period));   
+            ->send(new BranchPipelineReport($file, $this->period));
     }
 }

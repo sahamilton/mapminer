@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\OrderImport;
 use App\Address;
+use App\OrderImport;
 use Illuminate\Http\Request;
 
 class OrderImportController extends Controller
 {
     public $import;
     public $address;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param OrderImport $import  [description]
      * @param Address     $address [description]
      */
@@ -21,53 +22,55 @@ class OrderImportController extends Controller
         $this->import = $import;
         $this->address = $address;
     }
+
     /**
-     * [index description]
-     * 
+     * [index description].
+     *
      * @return [type] [description]
      */
     public function index()
     {
-        
-        if ($this->import->count() >0) {
-              // post import routine
-              // check if there are any companies to make
-              // check if there are any addresses to merge
-              // check if there are any contacts to add
+        if ($this->import->count() > 0) {
+            // post import routine
+            // check if there are any companies to make
+            // check if there are any addresses to merge
+            // check if there are any contacts to add
             $data = $this->import->getImportUpdates();
+
             return response()->view('orders.import.cleanseimport', compact('data'));
         } else {
             return redirect()->route('companies.importfile');
         }
     }
+
     /**
-     * [store description]
-     * 
+     * [store description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function store(Request $request)
     {
-
-     
         switch (request('type')) {
-        case 'addresses';
+        case 'addresses':
             $this->import->matchAddresses($request);
             break;
 
-        case 'companymatch';
+        case 'companymatch':
             $this->import->matchCompanies($request);
             break;
-        case 'contacts';
+        case 'contacts':
 
             break;
         }
+
         return redirect()->route('orderimport.index');
     }
+
     /**
-     * [finalize description]
-     * 
+     * [finalize description].
+     *
      * @return [type] [description]
      */
     public function finalize()
@@ -75,15 +78,16 @@ class OrderImportController extends Controller
         $this->import->createMissingCompanies();
         $this->import->addNewAddresses();
         $this->import->storeOrders();
+
         return redirect()->route('orders.index');
     }
+
     /**
-     * [flush description]
-     * 
+     * [flush description].
+     *
      * @return [type] [description]
      */
     public function flush()
     {
-        
     }
 }

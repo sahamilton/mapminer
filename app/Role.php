@@ -26,15 +26,16 @@ class Role extends Model
     public function assignRoles($role)
     {
         return $this->roles()->save(
-            Role::whereName($role)->firstOrFail()
+            self::whereName($role)->firstOrFail()
         );
     }
-    public function getCurrentPermissions(Role $role)
+
+    public function getCurrentPermissions(self $role)
     {
         $permissions = $this->whereId($role->id)->with('permissions')->first();
-        $currentPermissions=[];
+        $currentPermissions = [];
         foreach ($permissions->permissions as $permission) {
-            $currentPermissions[]= $permission->id;
+            $currentPermissions[] = $permission->id;
         }
 
         return $currentPermissions;

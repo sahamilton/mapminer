@@ -2,29 +2,31 @@
 
 namespace App\Exports;
 
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
-use App\Role;
 use App\Branch;
 use App\Campaign;
+use App\Role;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class BranchCampaginExport implements FromView
-{   
+class BranchCampaignExport implements FromView
+{
     public $branch;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Campaign   $campaign [description]
-     * @param Array|null $branch   [description]
+     * @param array|null $branch   [description]
      */
-    public function __construct(Campaign $campaign, Array $branch=null)
+    public function __construct(Campaign $campaign, array $branch = null)
     {
         $this->branch = $branch;
         $this->campaign = $campaign;
     }
+
     /**
-     * [view description]
-     * 
+     * [view description].
+     *
      * @return View [description]
      */
     public function view(): View
@@ -35,13 +37,14 @@ class BranchCampaginExport implements FromView
             $result = $result->campaignDetail($campaign)
                 ->whereIn('id', $this->branch)
                 ->get();
+
             return view('campaigns.exports.detail', compact('result'));
         } else {
             $result = $result->campaignStats($campaign)
                 ->whereIn('id', $campaign->branches->pluck('id')->toArray())
                 ->get();
+
             return view('campaigns.exports.summary', compact('result'));
         }
-        
     }
 }

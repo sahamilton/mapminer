@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateAddressPersonPivotTable extends Migration
 {
@@ -21,7 +21,7 @@ class CreateAddressPersonPivotTable extends Migration
             $table->timestamps();
         });
 
-         Schema::table('address_person', function (Blueprint $table) {
+        Schema::table('address_person', function (Blueprint $table) {
             $table->foreign('address_id')
             ->references('id')
             ->on('addresses')
@@ -31,7 +31,7 @@ class CreateAddressPersonPivotTable extends Migration
             ->on('persons')
             ->onDelete('cascade');
             $table->primary(['address_id', 'person_id']);
-         });
+        });
     }
 
     /**

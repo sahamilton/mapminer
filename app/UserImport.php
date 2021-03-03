@@ -2,40 +2,42 @@
 
 namespace App;
 
+use App\Jobs\associateBranches;
+use App\Jobs\associateIndustries;
+use App\Jobs\ProcessGeoCode;
+use App\Jobs\ProcessPersonRebuild;
+use App\Jobs\ProcessUserImport;
+use App\Jobs\updateUserRoles;
+use App\Jobs\updateUserServiceLines;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use App\Jobs\ProcessGeoCode;
-use App\Jobs\ProcessPersonRebuild;
-use App\Jobs\updateUserRoles;
-use App\Jobs\updateUserServiceLines;
-use App\Jobs\associateIndustries;
-use App\Jobs\associateBranches;
-use App\Jobs\ProcessUserImport;
 
 class UserImport extends Imports
 {
-    public $uniqueFields= ['employee_id'];
+    public $uniqueFields = ['employee_id'];
     public $table = 'usersimport';
-    public $requiredFields = ['employee_id','firstname','lastname','role_id','email'];
+    public $requiredFields = ['employee_id', 'firstname', 'lastname', 'role_id', 'email'];
     public $user;
     public $person;
-    
+
     /**
-     * [checkUniqueFields description]
-     * 
+     * [checkUniqueFields description].
+     *
      * @return [type] [description]
      */
     public function checkUniqueFields()
     {
         foreach ($this->uniqueFields as $field) {
-              return $importerrors = $this->checkFields($field);
+            return $importerrors = $this->checkFields($field);
         }
-         return false;
+
+        return false;
     }
+
     /**
-     * [getDataErrors description]
-     * 
+     * [getDataErrors description].
+     *
      * @return [type] [description]
      */
     public function getDataErrors()
@@ -48,175 +50,184 @@ class UserImport extends Imports
             return false;
         }
     }
+
     /**
-     * [_checkBranches description]
-     * 
+     * [_checkBranches description].
+     *
      * @return [type] [description]
      */
     private function _checkBranches()
     {
+        $data = [];
 
-        $data=[];
-  
         $branchesImported = $this->whereNotNull('branches')->pluck('branches', 'employee_id');
         $branches = Branch::pluck('id')->toArray();
         foreach ($branchesImported as $empid => $branchstring) {
-            $branchImport = explode(",", str_replace(" ", "", $branchstring));
+            $branchImport = explode(',', str_replace(' ', '', $branchstring));
             foreach ($branchImport as $checkId) {
                 if (! in_array($checkId, $branches)) {
-                    $data[$empid][]=$checkId;
+                    $data[$empid][] = $checkId;
                 }
             }
         }
-        if (count($data)>0) {
+        if (count($data) > 0) {
             return $data;
         } else {
             return false;
         }
-
     }
+
     /**
-     * [_checkEmails description]
-     * 
+     * [_checkEmails description].
+     *
      * @return [type] [description]
      */
     private function _checkEmails()
     {
-        $emails = \DB::select(\DB::raw("SELECT users.email as useremail,users.employee_id as userempid,usersimport.* FROM `usersimport`,`users` where `usersimport`.`email` = `users`.`email` and `usersimport`.`employee_id` != `users`.`employee_id`"));
-        if (count($emails) >0) {
+        $emails = \DB::select(\DB::raw('SELECT users.email as useremail,users.employee_id as userempid,usersimport.* FROM `usersimport`,`users` where `usersimport`.`email` = `users`.`email` and `usersimport`.`employee_id` != `users`.`employee_id`'));
+        if (count($emails) > 0) {
             return $emails;
         }
+
         return false;
     }
+
     /**
-     * [checkFields description]
-     * 
+     * [checkFields description].
+     *
      * @param [type] $field [description]
-     * 
+     *
      * @return [type]        [description]
      */
     private function checkFields($field)
     {
-        $query ="SELECT ". $this->table."." . $field ." from ". $this->table." 
-			left join users on ". $this->table."." . $field ." = users." . $field ."
-			where users." . $field ." is not null";
+        $query = 'SELECT '.$this->table.'.'.$field.' from '.$this->table.' 
+			left join users on '.$this->table.'.'.$field.' = users.'.$field.'
+			where users.'.$field.' is not null';
         if ($result = \DB::select(\DB::raw($query))) {
             $errors = $this->getImportErrors($field, $result);
             $errorfield = new \stdClass;
             $errorfield->Field = $field;
             $errors[] = $errorfield;
+
             return $errors;
         } else {
             return false;
         }
     }
+
     /**
-     * [invalidEmpId description]
-     * 
+     * [invalidEmpId description].
+     *
      * @return [type] [description]
      */
     public function invalidEmpId()
     {
     }
+
     /**
-     * [getImportErrors description]
-     * 
+     * [getImportErrors description].
+     *
      * @param [type] $field  [description]
      * @param [type] $result [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function getImportErrors($field, $result)
     {
-            
         foreach ($result as $error) {
             $items[] = $error->$field;
         }
-        
-        return \DB::select(\DB::raw('select * from ' . $this->table." where " . $field." in ('". implode("','", $items) ."')"));
+
+        return \DB::select(\DB::raw('select * from '.$this->table.' where '.$field." in ('".implode("','", $items)."')"));
     }
 
     /**
-     * [postImport description]
-     * 
+     * [postImport description].
+     *
      * @return [type] [description]
      */
     public function postImport()
     {
         // clean up null values in import db
-   
+
         $this->_cleanseImport();
         $this->_setUserId();
         $this->_setPersonId();
+
         return $this->_setManagersId();
     }
+
     /**
-     * [_setUserId description]
+     * [_setUserId description].
      *
      * @return bookean [<description>]
      */
     private function _setUserId()
     {
-
-        $queries =["update usersimport,users
+        $queries = ['update usersimport,users
 				set usersimport.user_id = users.id
-				where usersimport.employee_id = users.employee_id"];
+				where usersimport.employee_id = users.employee_id'];
+
         return $this->_executeImportQueries($queries);
     }
+
     /**
-     * [_setPersonId description]
+     * [_setPersonId description].
      *
-     * @return boolean
+     * @return bool
      */
     private function _setPersonId()
     {
-
-        $queries =["update usersimport,users, persons
+        $queries = ['update usersimport,users, persons
 				set usersimport.person_id = persons.id
 				where usersimport.employee_id = users.employee_id
-				and users.id = persons.user_id"];
+				and users.id = persons.user_id'];
+
         return $this->_executeImportQueries($queries);
     }
+
     /**
-     * [_setManagersId description]
+     * [_setManagersId description].
      *
      * @return [<description>]
      */
     private function _setManagersId()
     {
-
-        $queries =["update usersimport,users,persons
+        $queries = ["update usersimport,users,persons
 				set usersimport.reports_to = persons.id , 
                 usersimport.manager = concat_ws(' ', persons.firstname, persons.lastname)
 				where usersimport.mgr_emp_id = users.employee_id
 				and users.id = persons.user_id"];
+
         return $this->_executeImportQueries($queries);
     }
+
     /**
-     * [_cleanseImport description]
-     * 
+     * [_cleanseImport description].
+     *
      * @return [type] [description]
      */
     private function _cleanseImport()
     {
-        $fields = ['reports_to','branches','address','city','state','zip','industry','mgr_emp_id'];
+        $fields = ['reports_to', 'branches', 'address', 'city', 'state', 'zip', 'industry', 'mgr_emp_id'];
         foreach ($fields as $field) {
             if ($field == 'reports_to') {
-                $queries[] = "update usersimport set ". $field . " = null where ". $field." = 0";
+                $queries[] = 'update usersimport set '.$field.' = null where '.$field.' = 0';
             }
             if ($field == 'mgr_emp_id') {
-                $queries[] = "update usersimport set mgr_emp_id = left(mgr_emp_id,6) where char_length(mgr_emp_id)=7";
+                $queries[] = 'update usersimport set mgr_emp_id = left(mgr_emp_id,6) where char_length(mgr_emp_id)=7';
             }
 
-            $queries[] = "update usersimport set ". $field . " = null where ". $field." = ''";
+            $queries[] = 'update usersimport set '.$field.' = null where '.$field." = ''";
         }
 
         return $this->_executeImportQueries($queries);
     }
 
     /**
-     * [getUsersToDelete description]
-     * 
+     * [getUsersToDelete description].
+     *
      * @return [type] [description]
      */
     public function getUsersToDelete()
@@ -231,9 +242,10 @@ class UserImport extends Imports
         ->select('users.*')
         ->get();
     }
+
     /**
-     * [getUsersToCreate description]
-     * 
+     * [getUsersToCreate description].
+     *
      * @return [type] [description]
      */
     public function getUsersToCreate()
@@ -243,7 +255,7 @@ class UserImport extends Imports
                 $join->on('usersimport.employee_id', '=', 'users.employee_id');
             }
         )
-        
+
         ->whereNull('users.employee_id')
         ->with('role', 'manager')
         ->select('usersimport.*')
@@ -251,10 +263,10 @@ class UserImport extends Imports
     }
 
     /**
-     * [_executeImportQueries description]
-     * 
+     * [_executeImportQueries description].
+     *
      * @param [type] $queries [description]
-     * 
+     *
      * @return [type]          [description]
      */
     private function _executeImportQueries($queries)
@@ -265,27 +277,30 @@ class UserImport extends Imports
             }
         }
     }
+
     /**
-     * [role description]
-     * 
+     * [role description].
+     *
      * @return [type] [description]
      */
     public function role()
     {
         return $this->belongsTo(Role::class);
     }
+
     /**
-     * [manager description]
-     * 
+     * [manager description].
+     *
      * @return [type] [description]
      */
     public function manager()
     {
         return $this->belongsTo(Person::class, 'reports_to', 'id');
     }
+
     /**
-     * [user description]
-     * 
+     * [user description].
+     *
      * @return [type] [description]
      */
     public function user()
@@ -293,10 +308,9 @@ class UserImport extends Imports
         return $this->hasOne(User::class, 'email', 'email');
     }
 
-    
     /**
-     * [updateExistingUsers description]
-     * 
+     * [updateExistingUsers description].
+     *
      * @return [type] [description]
      */
     public function updateExistingUsers()
@@ -307,28 +321,28 @@ class UserImport extends Imports
             ->where('imported', '=', 0)
             ->chunk(
                 100, function ($users) {
-            
-                        $this->_updateImportRecords($users);
+                    $this->_updateImportRecords($users);
                 }
             );
     }
+
     /**
-     * [_updateImportRecords description]
-     * 
+     * [_updateImportRecords description].
+     *
      * @param [type] $users [description]
-     * 
+     *
      * @return [type]        [description]
      */
     private function _updateImportRecords($users)
     {
         foreach ($users as $userimport) {
-                ProcessUserImport::dispatch($userimport);
+            ProcessUserImport::dispatch($userimport);
         }
     }
 
     /**
-     * [handleUserErrors description]
-     * 
+     * [handleUserErrors description].
+     *
      * @return [type] [description]
      */
     public function handleUserErrors()
@@ -342,10 +356,12 @@ class UserImport extends Imports
                 unset($data['errors']['branch']);
             }
             if (! $data['errors']['emails']) {
-                 unset($data['errors']['emails']);
+                unset($data['errors']['emails']);
             }
+
             return $data;
         }
+
         return false;
     }
 }

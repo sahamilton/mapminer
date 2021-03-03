@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Avatar;
-use App\Person;
-Use Image;
-use Illuminate\Http\Request;
 use App\Http\Requests\AvatarFormRequest;
+use App\Person;
+use Illuminate\Http\Request;
+use Image;
 
 class AvatarController extends Controller
 {
@@ -15,7 +14,6 @@ class AvatarController extends Controller
     {
         $this->person = $person;
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -25,21 +23,18 @@ class AvatarController extends Controller
      */
     public function store(AvatarFormRequest $request)
     {
-
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $filename = request('person_id')."_". time() .".". $avatar->getClientOriginalExtension();
+            $filename = request('person_id').'_'.time().'.'.$avatar->getClientOriginalExtension();
             Image::make($avatar)->fit(300)->save(storage_path('/app/public/avatars/'.$filename));
             $person_id = request('person_id');
-            $person  = $this->person->findOrFail(request('person_id'));
+            $person = $this->person->findOrFail(request('person_id'));
             $person->avatar = $filename;
             $person->save();
         }
+
         return redirect()->back();
-
     }
-
-   
 
     /**
      * Update the specified resource in storage.

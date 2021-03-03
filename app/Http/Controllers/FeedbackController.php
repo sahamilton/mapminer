@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Mail;
+use App\Exports\FeedbackExport;
 use App\Feedback;
-use Illuminate\Http\Request;
-use App\Mail\FeedBackResponseEmail;
+use App\Http\Requests\FeedbackFormRequest;
 use App\Mail\FeedbackClosed;
 use App\Mail\FeedbackOpened;
+use App\Mail\FeedBackResponseEmail;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\FeedbackExport;
-use App\Http\Requests\FeedbackFormRequest;
+use Mail;
 
 class FeedbackController extends Controller
 {
@@ -18,10 +18,8 @@ class FeedbackController extends Controller
 
     public function __construct(Feedback $feedback)
     {
-
         $this->feedback = $feedback;
     }
-
 
     /**
      * Display a listing of the resource.
@@ -38,19 +36,18 @@ class FeedbackController extends Controller
             ->withCount('comments');
 
         if (! auth()->user()->hasRole(['admin'])) {
-            
             $feedback_open = $feedback_open->where('user_id', auth()->user()->id)->get();
             if (count($feedback_open) == 0) {
-                return redirect()->back()->withMessage("You have no open feedback items");
+                return redirect()->back()->withMessage('You have no open feedback items');
             }
             $feedback_closed = $feedback_closed->where('user_id', auth()->user()->id)->get();
-         
+
             return response()->view('feedback.index', compact('feedback_open', 'feedback_closed'));
         }
 
-
         $feedback_open = $feedback_open->get();
         $feedback_closed = $feedback_closed->get();
+
         return response()->view('feedback.index', compact('feedback_open', 'feedback_closed'));
     }
 
@@ -72,20 +69,18 @@ class FeedbackController extends Controller
      */
     public function store(Request $request)
     {
-       
         $data = request()->except('_token');
         $data['user_id'] = auth()->user()->id;
         $feedback = $this->feedback->create($data);
-        
-       
-        if (auth()->user()->hasRole(['admin','sales_operations'])) {
-            return redirect()->route('feedback.index')->withMessage("Feedback entered");
+
+        if (auth()->user()->hasRole(['admin', 'sales_operations'])) {
+            return redirect()->route('feedback.index')->withMessage('Feedback entered');
         } else {
             $feedback->load('providedBy', 'category');
-            
+
             Mail::queue(new FeedBackResponseEmail($feedback));
-        
-            return redirect()->back()->withMessage("Thanks,". $feedback->providedBy->person->firstname. " for your feedback");
+
+            return redirect()->back()->withMessage('Thanks,'.$feedback->providedBy->person->firstname.' for your feedback');
         }
     }
 
@@ -98,6 +93,7 @@ class FeedbackController extends Controller
     public function show(Feedback $feedback)
     {
         $feedback->load('providedBy', 'category', 'comments', 'comments.by');
+
         return response()->view('feedback.show', compact('feedback'));
     }
 
@@ -109,8 +105,9 @@ class FeedbackController extends Controller
      */
     public function edit(Feedback $feedback)
     {
-         $feedback->load('providedBy', 'category');
-         return response()->view('feedback.edit', compact('feedback'));
+        $feedback->load('providedBy', 'category');
+
+        return response()->view('feedback.edit', compact('feedback'));
     }
 
     /**
@@ -122,8 +119,8 @@ class FeedbackController extends Controller
      */
     public function update(FeedbackFormRequest $request, Feedback $feedback)
     {
-        
         $feedback->update(request()->except('_token'));
+
         return redirect()->route('feedback.index')->withMessage('Feedback updated');
     }
 
@@ -136,6 +133,7 @@ class FeedbackController extends Controller
     public function destroy(Feedback $feedback)
     {
         $feedback->delete();
+
         return redirect()->route('feedback.index')->withMessage('Feedback deleted');
     }
 
@@ -163,7 +161,6 @@ class FeedbackController extends Controller
 
     public function export()
     {
-
         return Excel::download(new FeedbackExport(), 'AllFeedback.csv');
     }
 }

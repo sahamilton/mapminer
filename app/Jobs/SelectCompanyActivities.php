@@ -2,18 +2,19 @@
 
 namespace App\Jobs;
 
-use App\Report;
 use App\Jobs\AccountOpportunities;
+use App\Report;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class SelectCompanyActivities implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $report;
+
     /**
      * Create a new job instance.
      *
@@ -32,27 +33,25 @@ class SelectCompanyActivities implements ShouldQueue
     public function handle()
     {
         $reports = Report::whereJob('AccountActivities')->with(
-            'companyreport', 
-            'companyreport.company', 
+            'companyreport',
+            'companyreport.company',
             'companyreport.distribution',
             'companyreport.distribution.person'
         )->first();
-        
+
         $period = $reports->period();
         foreach ($reports->companyreport as $company) {
             if ($distribution = $this->_getDistribution($company)) {
                 $report = AccountActivities::dispatch($company->company, $period, $distribution);
             }
-
-            
-            
-        }     
+        }
     }
+
     /**
-     * [_getDistribution description]
-     * 
+     * [_getDistribution description].
+     *
      * @param [type] $company [description]
-     * 
+     *
      * @return [type]          [description]
      */
     private function _getDistribution($company)
@@ -60,19 +59,15 @@ class SelectCompanyActivities implements ShouldQueue
         $distry = $company->distribution->map(
             function ($list) {
                 return [$list->pivot->type => $list->email];
-                
             }
         );
-        
-        $distribution= [];
+
+        $distribution = [];
 
         foreach ($distry as $person) {
-            
             $distribution[implode(',', array_keys($person))][] = implode(',', $person);
         }
-   
-        
-        return $distribution;
 
+        return $distribution;
     }
 }

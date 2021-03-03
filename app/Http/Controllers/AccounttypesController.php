@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\AccountType;
@@ -7,9 +8,9 @@ use App\Http\Requests\AccountTypeRequest;
 
 class AccounttypesController extends BaseController
 {
-
     public $accounttype;
     public $company;
+
     /**
      * [__construct description]
      * 
@@ -22,21 +23,20 @@ class AccounttypesController extends BaseController
         $this->company = $company;
     }
 
-
     /**
-     * Display a listing of accounttypes
+     * Display a listing of accounttypes.
      *
      * @return Response
      */
     public function index()
     {
         $accounttypes = $this->accounttype->withCount('companies')->get();
-        
+
         return response()->view('accounttypes.index', compact('accounttypes'));
     }
 
     /**
-     * Show the form for creating a new accounttype
+     * Show the form for creating a new accounttype.
      *
      * @return Response
      */
@@ -52,8 +52,6 @@ class AccounttypesController extends BaseController
      */
     public function store(AccountTypeRequest $request)
     {
-        
-
         $this->accounttype->create(request()->all());
 
         return redirect()->route('accounttype.index');
@@ -68,12 +66,9 @@ class AccounttypesController extends BaseController
      */
     public function show(AccountType $type)
     {
-        
         $companies = $this->company->where('accounttypes_id', $type->id)->companyStats()->get();
-        
-        return response()->view('accounttypes.show', compact('companies', 'type'));
 
-    
+        return response()->view('accounttypes.show', compact('companies', 'type'));
     }
 
     /**
@@ -85,8 +80,6 @@ class AccounttypesController extends BaseController
      */
     public function edit(Accounttype $accounttype)
     {
-        
-
         return response()->view('accounttypes.edit', compact('accounttype'));
     }
 
@@ -100,7 +93,6 @@ class AccounttypesController extends BaseController
      */
     public function update(Accounttype $accounttype, AccountTypeRequest $request)
     {
-
         $accounttype->update(request()->all());
 
         return redirect()->route('accounttype.index');

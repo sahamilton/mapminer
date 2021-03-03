@@ -2,28 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\BranchLeadImport;
 use App\Branch;
-use App\Imports;
+use App\BranchLeadImport;
 use App\Http\Requests\BranchImportFormRequest;
+use App\Imports;
 use Illuminate\Http\Request;
 
 class BranchLeadImportController extends ImportController
 {
-    
     public $branch;
     protected $serviceline;
     public $userServiceLines;
     public $import;
     public $importtable = 'branchesimport';
-    
+
     public function __construct(Branch $branch, BranchLeadImport $branchleadimport)
     {
-     
-      
-       
         $this->import = $branchleadimport;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,8 +28,8 @@ class BranchLeadImportController extends ImportController
      */
     public function index()
     {
-        
-        $requiredFields =   $this->import->requiredFields;
+        $requiredFields = $this->import->requiredFields;
+
         return response()->view('imports.branchleads.import', compact('requiredFields'));
     }
 

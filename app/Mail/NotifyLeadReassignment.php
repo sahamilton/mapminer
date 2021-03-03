@@ -5,11 +5,10 @@ namespace App\Mail;
 use App\Address;
 use App\Branch;
 use App\Person;
-
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifyLeadReassignment extends Mailable
 {
@@ -18,6 +17,7 @@ class NotifyLeadReassignment extends Mailable
     public $branch;
     public $person;
     public $sender;
+
     /**
      * Create a new message instance.
      *

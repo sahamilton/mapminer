@@ -5,9 +5,9 @@ namespace App\Mail;
 use App\Person;
 use App\Project;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifyProjectTransfer extends Mailable
 {
@@ -15,9 +15,10 @@ class NotifyProjectTransfer extends Mailable
     public $project;
     public $person;
     public $transferor;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Project $project    [description]
      * @param Person  $person     [description]
      * @param Person  $transferor [description]
@@ -36,7 +37,6 @@ class NotifyProjectTransfer extends Mailable
      */
     public function build()
     {
-        
         return $this->markdown('emails.projecttransfernotify')
             ->to($this->person->userdetails->email, $this->person->postName())
             ->subject('Project Transferred');

@@ -2,10 +2,10 @@
 
 namespace App\Exports;
 
+use App\Branch;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Carbon\Carbon;
-use App\Branch;
 
 class OpenTop25BranchOpportunitiesExport implements FromView
 {
@@ -13,24 +13,24 @@ class OpenTop25BranchOpportunitiesExport implements FromView
     public $branch;
 
     /**
-     * [__construct description]
-     * 
-     * @param Array      $period [description]
+     * [__construct description].
+     *
+     * @param array      $period [description]
      * @param array|null $branch [description]
      */
-    public function __construct(Array $period, array $branch=null)
+    public function __construct(array $period, array $branch = null)
     {
         $this->period = $period;
         $this->branch = $branch;
     }
+
     /**
-     * [view description]
-     * 
+     * [view description].
+     *
      * @return [type] [description]
      */
     public function view(): View
     {
-
         $branches = Branch::agingOpportunities($this->period);
 
         if ($this->branch) {
@@ -38,8 +38,9 @@ class OpenTop25BranchOpportunitiesExport implements FromView
         }
         $branches = $branches->with('manager')
             ->get();
-         
+
         $period = $this->period;
+
         return view('reports.agingOpportunities', compact('branches', 'period'));
     }
 }

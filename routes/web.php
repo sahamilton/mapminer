@@ -2,6 +2,7 @@
 use \Carbon\Carbon;
 use App\User;
 use App\Mail\SendWeeklyActivityReminder;
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,10 +43,14 @@ Route::group(
            //     Activities/
         Route::get('branch/{branch}/activity/{activitytype?}', ['as'=>'branch.activity', 'uses'=>'ActivityController@getBranchActivtiesByType']);
         Route::get('activity/{activity}/complete', ['as'=>'activity.complete', 'uses'=>'ActivityController@complete']);
+        
+
         Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityController@export']);
 
-        Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
+        //Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
         Route::resource('activity', 'ActivityController');
+        //Route::get('activity', [App\Http\Controllers\ActivityController::class, 'index'])->name('activity.index');
+        Route::get('activity', [App\Http\Livewire\ActivitiesTable::class])->name('activity.index');
         
         //     Address
         Route::post('address/merge', ['as'=>'addresses.merge', 'uses'=>'AddressController@mergeAddress']);
@@ -104,6 +109,7 @@ Route::group(
         Route::get('dashboard/reset',['as'=>'dashboard.reset', 'uses'=> 'DashboardController@reset']);
         Route::post('dashboard/setmanager',['as'=>'dashboard.setManager', 'uses'=> 'DashboardController@setManager']);
         Route::get('mgrsummary', ['as'=>'newmgrsummary', 'uses'=>'MgrDashboardController@mgrSummary']);
+        Route::get('namsummary', ['as'=>'namsummary', 'uses'=>'NamDashboardController@show']);
         Route::resource('mgrdashboard', 'MgrDashboardController');
         Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
         Route::resource('namdashboard', 'NAMDashboardController');
@@ -260,8 +266,8 @@ Route::group(
         //     Branch Sales Campaigns
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
 
-       Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
-       Route::post('branchcampaigns/remove', ['as'=>'branchcampaign.delete', 'uses'=>'BranchCampaignController@delete']);
+        Route::post('branchcampaigns/add', ['as'=>'branchcampaign.add', 'uses'=>'BranchCampaignController@store']);
+        Route::post('branchcampaigns/remove', ['as'=>'branchcampaign.delete', 'uses'=>'BranchCampaignController@delete']);
 
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 

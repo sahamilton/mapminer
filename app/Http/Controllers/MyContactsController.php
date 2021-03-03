@@ -11,9 +11,9 @@ class MyContactsController extends Controller
 
     public function __construct(Contact $contacts)
     {
-
         $this->contacts = $contacts;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +22,8 @@ class MyContactsController extends Controller
     public function index()
     {
         $contacts = $this->contacts->getMyContacts();
-        $title="My Contacts";
+        $title = 'My Contacts';
+
         return response()->view('contacts.index', compact('contacts', 'title'));
     }
 

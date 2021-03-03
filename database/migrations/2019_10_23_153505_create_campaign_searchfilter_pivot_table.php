@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateCampaignSearchfilterPivotTable extends Migration
 {
@@ -23,7 +23,6 @@ class CreateCampaignSearchfilterPivotTable extends Migration
             'campaign_searchfilter', function (Blueprint $table) {
                 $table->foreign('searchfilter_id')->references('id')->on('searchfilters')->onDelete('cascade');
                 $table->foreign('campaign_id')->references('id')->on('campaigns')->onDelete('cascade');
-            
             }
         );
     }

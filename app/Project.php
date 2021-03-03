@@ -6,12 +6,11 @@ use App\Presenters\LocationPresenter;
 
 class Project extends Model
 {
-    
     use Geocode, Addressable;
-    public $table="projects";
+    public $table = 'projects';
     public $incrementing = false;
-    public $statuses = ['Claimed','Closed'];
-    public $fillable=[
+    public $statuses = ['Claimed', 'Closed'];
+    public $fillable = [
            'source_ref',
            'project_title',
            'street',
@@ -38,19 +37,19 @@ class Project extends Model
            'pr_status',
            'lat',
            'lng',
-           'position'
-           
+           'position',
+
            ];
-    public $getStatusOptions =  [
+    public $getStatusOptions = [
         1=>'Project data is completely inaccurate. No project or project completed.',
         2=>'Project data is incomplete and / or not useful.',
         3=>'Project data is accurate but there is no sales / service opportunity.',
         4=>'Project data is accurate and there is a possibility of sales / service.',
-        5=>'Project data is accurate and there is a definite opportunity for sales / service'
+        5=>'Project data is accurate and there is a definite opportunity for sales / service',
       ];
+
     public function contacts()
     {
-
         return $this->belongsToMany(ProjectContact::class, 'project_company_contact', 'contact_id', 'project_id')->withPivot('type', 'company_id');
     }
 
@@ -58,12 +57,12 @@ class Project extends Model
     {
         return $this->belongsToMany(ProjectCompany::class, 'project_company_contact', 'project_id', 'company_id')->withPivot('type', 'contact_id');
     }
-    
+
     public function owner()
     {
         return $this->belongsToMany(Person::class, 'person_project', 'related_id')->withPivot('status', 'ranking');
     }
-   
+
     public function source()
     {
         return $this->belongsTo(ProjectSource::class, 'project_source_id');
@@ -71,7 +70,6 @@ class Project extends Model
 
     public function owned()
     {
-     
         return $this->belongsToMany(Person::class, 'person_project', 'related_id')
             ->withPivot('status', 'ranking', 'type')
             ->wherePivot('type', '=', 'project')
@@ -79,22 +77,18 @@ class Project extends Model
             ->first();
     }
 
-    
-
     public function ownersProjects($id)
     {
-
         return $this->belongsToMany(Person::class, 'person_project', 'related_id')
         ->withPivot('status')
         ->where('person_id', '=', $id)->get();
     }
+
     public function relatedNotes()
     {
-
         return $this->hasMany(Note::class, 'related_id')->where('type', '=', 'project')->with('writtenBy');
     }
-    
-  
+
     public function projectcount()
     {
         return \DB::select('select count(`id`) as total from projects');
@@ -102,21 +96,20 @@ class Project extends Model
 
     public function projectStats($id = null)
     {
-     
         if ($id) {
-            $query="select source,firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
+            $query = "select source,firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
         from `persons` ,`person_project`, `projects`, `projectsource` 
         where `persons`.`id` = `person_project`.`person_id` 
         and `person_project`.`related_id` = `projects`.`id` 
         and `person_project`.`type`='project'
         and `projects`.`project_source_id` = `projectsource`.`id` 
-        and `projectsource`.`id` = " . $id ."
-        group by `person_id`,`pstatus`";
+        and `projectsource`.`id` = ".$id.'
+        group by `person_id`,`pstatus`';
         } else {
-             $query="select firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
+            $query = 'select firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
          from `persons` ,`person_project`
          where `persons`.`id` = `person_project`.`person_id` 
-         group by `person_id`,`pstatus`";
+         group by `person_id`,`pstatus`';
         }
 
         return \DB::select($query);
@@ -124,15 +117,14 @@ class Project extends Model
 
     public function _import_csv($filename, $table, $fields)
     {
-        $filename = str_replace("\\", "/", $filename);
+        $filename = str_replace('\\', '/', $filename);
 
-        $query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
-        
-        
+        $query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ".$table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.');', $filename);
+
         try {
             return  \DB::connection()->getpdo()->exec($query);
         } catch (Exception $e) {
-             throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+            throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
         }
     }
 }

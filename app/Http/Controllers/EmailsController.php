@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Email;
-use Mail;
-use App\SearchFilter;
-use App\Role;
-use App\Salesactivity;
-use App\Person;
+use App\Http\Requests\EmailFormRequest;
 use App\Mail\MassConfirmation;
 use App\Mail\SendEmail;
-use App\Http\Requests\EmailFormRequest;
+use App\Person;
+use App\Role;
+use App\Salesactivity;
+use App\SearchFilter;
+use Illuminate\Http\Request;
+use Mail;
 
 class EmailsController extends Controller
 {
@@ -20,9 +20,10 @@ class EmailsController extends Controller
     public $person;
     public $searchfilters;
     public $campaign;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Email        $email        [description]
      * @param SearchFilter $searchfilter [description]
      * @param Role         $role         [description]
@@ -35,13 +36,13 @@ class EmailsController extends Controller
         Person $person,
         Salesactivity $campaign
     ) {
-
         $this->email = $email;
         $this->searchfilter = $searchfilter;
         $this->role = $role;
         $this->person = $person;
         $this->campaign = $campaign;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -50,6 +51,7 @@ class EmailsController extends Controller
     public function index()
     {
         $emails = $this->email->all();
+
         return response()->view('emails.index', compact('emails'));
     }
 
@@ -60,32 +62,30 @@ class EmailsController extends Controller
      */
     public function create()
     {
-        
-
         return response()->view('emails.create');
     }
 
     /**
-     * [store description]
-     * 
+     * [store description].
+     *
      * @param EmailFormRequest $request [description]
-     * 
+     *
      * @return [type]                    [description]
      */
     public function store(EmailFormRequest $request)
     {
-
         $email = $this->email->create(request()->all());
 
         $email->recipients()->attach(auth()->user()->person->id);
+
         return redirect()->route('emails.show', $email->id);
     }
 
     /**
-     * [show description]
-     * 
+     * [show description].
+     *
      * @param Email $email [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function show(Email $email)
@@ -93,15 +93,16 @@ class EmailsController extends Controller
         $email->load('recipients');
         $roles = $this->role->all();
         $verticals = $this->searchfilter->industrysegments();
-        $campaigns = $this->campaign->currentActivities()->get(); 
+        $campaigns = $this->campaign->currentActivities()->get();
+
         return response()->view('emails.edit', compact('roles', 'verticals', 'email', 'campaigns'));
     }
 
     /**
-     * [edit description]
-     * 
+     * [edit description].
+     *
      * @param Email $email [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function edit(Email $email)
@@ -110,48 +111,53 @@ class EmailsController extends Controller
     }
 
     /**
-     * [update description]
-     * 
+     * [update description].
+     *
      * @param Request $request [description]
      * @param Email   $email   [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function update(Request $request, Email $email)
     {
         //
     }
+
     /**
-     * [clone description]
-     * 
+     * [clone description].
+     *
      * @param Request $request [description]
      * @param Email   $email   [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function clone(Request $request, Email $email)
     {
         $email = $email->replicate();
-        $email->subject = $email->subject ." - copy";
-        $email->sent= null;
+        $email->subject = $email->subject.' - copy';
+        $email->sent = null;
         $email->save();
+
         return redirect()->route('emails.index');
     }
+
     /**
-     * [destroy description]
-     * 
+     * [destroy description].
+     *
      * @param Email $email [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function destroy(Email $email)
     {
         $email->delete();
+
         return redirect()->route('emails.index');
     }
+
     /**
-     * [addRecipients description]
-     * 
+     * [addRecipients description].
+     *
      * @param Request $request [description]
      *
      * @return redirect [<description>]
@@ -179,28 +185,27 @@ class EmailsController extends Controller
                     );
                 }
             );
-            
         }
 
         $email->recipients()->sync($recipients);
+
         return redirect()->route('emails.show', $email->id);
     }
+
     /**
-     * [sendEmail description]
-     * 
+     * [sendEmail description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function sendEmail(Request $request)
     {
-
-
         $email = $this->email->with('recipients', 'recipients.userdetails')->findOrFail(request('id'));
         if (request()->filled('test')) {
             $data['test'] = true;
         }
-        
+
         // get email text and variables
         $data['message'] = $email->message;
         $fields = $this->_getTemplateFields($data['message']);
@@ -217,11 +222,9 @@ class EmailsController extends Controller
                 // personalize emails
                 $data['html'] = $this->_replaceFormFields($data['message'], $fields, $participant);
 
-              
-
                 // send emails
                 Mail::queue(new SendEmail($data, $participant));
-               
+
                 $recipients[] = $participant->id;
             }
             $email->sent = now();
@@ -230,14 +233,15 @@ class EmailsController extends Controller
 
             return redirect()->route('emails.index');
         }
-        
+
         return redirect()->route('emails.index');
     }
+
     /**
-     * [_getIndustryVerticalRecipients description]
-     * 
+     * [_getIndustryVerticalRecipients description].
+     *
      * @param [type] $verticals [description]
-     * 
+     *
      * @return [type]            [description]
      */
     private function _getIndustryVerticalRecipients($verticals)
@@ -248,11 +252,12 @@ class EmailsController extends Controller
             }
         )->pluck('id')->toArray();
     }
+
     /**
-     * [_getRoleRecipients description]
-     * 
+     * [_getRoleRecipients description].
+     *
      * @param [type] $roles [description]
-     * 
+     *
      * @return [Array Role Recipients       [description]
      */
     private function _getRoleRecipients($roles)
@@ -263,20 +268,19 @@ class EmailsController extends Controller
             }
         )->pluck('id')->toArray();
     }
+
     /**
-     * [changelist description]
-     * 
+     * [changelist description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function changelist(Request $request)
     {
-
-
         $email = $this->email->findOrFail(request('email_id'));
         $recipient = request('id');
-        
+
         switch (request('action')) {
         case 'add':
             if ($email->recipients()->attach($recipient)) {
@@ -285,7 +289,7 @@ class EmailsController extends Controller
                 return 'error';
             }
             break;
-        
+
         case 'remove':
             if ($email->recipients()->detach($recipient)) {
                 return 'success';
@@ -293,75 +297,69 @@ class EmailsController extends Controller
                 return 'error';
             }
 
-            
             break;
         }
     }
+
     /**
-     * [recipients description]
-     * 
+     * [recipients description].
+     *
      * @param [type] $id [description]
-     * 
+     *
      * @return [type]     [description]
      */
     public function recipients($id)
     {
-       
         $email = $this->email->with('recipients', 'recipients.userdetails')->findOrFail($id);
+
         return response()->view('emails.show', compact('email'));
     }
 
-   
-    
     /**
-     * [_sendConfirmationEmail description]
-     * 
+     * [_sendConfirmationEmail description].
+     *
      * @param [type] $participants [description]
      * @param [type] $data         [description]
-     * 
+     *
      * @return [type]               [description]
      */
     private function _sendConfirmationEmail($participants, $data)
     {
-        
-        
         $data['participants'] = $participants;
-        
+
         Mail::to(auth()->user()->email)->queue(new MassConfirmation($data));
     }
+
     /**
-     * [_sendTestMessage description]
-     * 
+     * [_sendTestMessage description].
+     *
      * @param [type] $participants [description]
      * @param [type] $data         [description]
      * @param [type] $fields       [description]
-     * 
+     *
      * @return [type]               [description]
      */
     private function _sendTestMessage($participants, $data, $fields)
     {
-           
-            $participant = $participants->random();
-        
-            $data['message'] = "<div class='alert alert-warning'>Test Message</div>" . $data['message'];
-            $data['html'] = $this->_replaceFormFields($data['message'], $fields, $participant);
-           
-            Mail::queue(new SendEmail($data, $participant));
-           
-            return $data;
+        $participant = $participants->random();
+
+        $data['message'] = "<div class='alert alert-warning'>Test Message</div>".$data['message'];
+        $data['html'] = $this->_replaceFormFields($data['message'], $fields, $participant);
+
+        Mail::queue(new SendEmail($data, $participant));
+
+        return $data;
     }
-   
 
     /**
-     * [confirmed description]
-     * 
+     * [confirmed description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function confirmed(Request $request)
     {
-
         $data = request()->all();
 
         if (isset($data['edit'])) {
@@ -372,49 +370,45 @@ class EmailsController extends Controller
 
         return $this->sendEmails($data);
     }
-    
+
     /**
-     * [_getTemplateFields description]
-     * 
+     * [_getTemplateFields description].
+     *
      * @param  [type] $template [description]
-     * 
+     *
      * @return [type]           [description]
      */
     private function _getTemplateFields($template)
     {
+        $fieldList = [];
 
-        $fieldList=[];
+        $fieldsCount = preg_match_all('/(?<fullfield>(?<=\{)(?<field>.*?)(?=(\}|\:))(?<default>.*?)(?=(\}|\:)))(?=\})/', $template, $fields);
 
-        $fieldsCount=preg_match_all('/(?<fullfield>(?<=\{)(?<field>.*?)(?=(\}|\:))(?<default>.*?)(?=(\}|\:)))(?=\})/', $template, $fields);
-       
         return $fields;
     }
+
     /**
-     * [_replaceFormFields description]
-     * 
+     * [_replaceFormFields description].
+     *
      * @param [type] $emailtext  [description]
      * @param [type] $formFields [description]
      * @param [type] $recipient  [description]
-     * 
+     *
      * @return [type]             [description]
      */
     private function _replaceFormFields($emailtext, $formFields, $recipient)
     {
-
-       
-        $textstring=str_replace("\r\n", "<br />", $emailtext);
-        $a=0;
+        $textstring = str_replace("\r\n", '<br />', $emailtext);
+        $a = 0;
 
         foreach ($formFields[0] as $field) {
             $fieldvalue = $formFields[2][$a];
             if (isset($recipient->$fieldvalue)) {
-                $textstring=str_replace("{".$field."}", $recipient->$fieldvalue, $textstring);
+                $textstring = str_replace('{'.$field.'}', $recipient->$fieldvalue, $textstring);
             }
             $a++;
         }
-       
 
         return $textstring;
-        ;
     }
 }

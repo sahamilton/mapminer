@@ -23,18 +23,18 @@ class PersonFormRequest extends FormRequest
      */
     public function rules()
     {
-        if (!empty(array_intersect($this->attributes->get('role'), ['5','6','7','8']))) {
+        if (! empty(array_intersect($this->attributes->get('role'), ['5', '6', '7', '8']))) {
             return [
             'email'=>'required|email',
             'mgrtype' => 'required',
             'reportsTo'=>'required',
-        
+
             ];
         } else {
             return [
             'email'=>'required|email',
             'mgrtype' => 'required',
-        
+
             ];
         }
     }

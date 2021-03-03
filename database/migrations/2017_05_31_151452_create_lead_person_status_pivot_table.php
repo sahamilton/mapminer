@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateLeadPersonStatusPivotTable extends Migration
 {
@@ -22,7 +22,7 @@ class CreateLeadPersonStatusPivotTable extends Migration
             $table->foreign('status_id')->references('id')->on('lead_status')->onDelete('cascade');
             $table->integer('rating');
             $table->timestamps();
-            $table->primary(['lead_id', 'person_id','status_id'], 'primary_key');
+            $table->primary(['lead_id', 'person_id', 'status_id'], 'primary_key');
         });
     }
 

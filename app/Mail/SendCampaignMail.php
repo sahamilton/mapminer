@@ -3,14 +3,15 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendCampaignMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
+
     /**
      * Create a new message instance.
      *
@@ -30,7 +31,6 @@ class SendCampaignMail extends Mailable
     {
         return $this->markdown('salesactivity.campaignemail')
             ->subject($this->data['activity']->title)
-            ->to($this->data['sales']->userdetails->email, $this->data['sales']->firstname . " " . $this->data['sales']->lastname);
-        ;
+            ->to($this->data['sales']->userdetails->email, $this->data['sales']->firstname.' '.$this->data['sales']->lastname);
     }
 }

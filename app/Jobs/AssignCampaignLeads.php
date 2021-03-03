@@ -2,17 +2,19 @@
 
 namespace App\Jobs;
 
+use App\Branch;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Branch;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
 class AssignCampaignLeads implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $branch_id;
     public $addresses;
+
     /**
      * Create a new job instance.
      *
@@ -31,12 +33,11 @@ class AssignCampaignLeads implements ShouldQueue
      */
     public function handle()
     {
-        $attach=[];
-           
+        $attach = [];
+
         foreach ($this->addresses as $address) {
-            $attach[$address]=['status_id'=>1];
+            $attach[$address] = ['status_id'=>1];
         }
         Branch::find($this->branch_id)->leads()->attach($attach);
-
     }
 }

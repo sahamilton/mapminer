@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Excel;
+use Illuminate\Database\Eloquent\Model;
+
 class Export extends Model
 {
     //

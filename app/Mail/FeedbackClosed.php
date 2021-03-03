@@ -1,23 +1,23 @@
 <?php
 
-
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Feedback;
 use App\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 
 class FeedbackClosed extends Mailable
 {
     use Queueable, SerializesModels;
     public $feedback;
     public $user;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Feedback $feedback [description]
      */
     public function __construct(Feedback $feedback)
@@ -38,7 +38,5 @@ class FeedbackClosed extends Mailable
             ->cc(config('mapminer.system_contact'))
             ->bcc(config('mapminer.developer_email'))
             ->subject('Feedback Closed');
-
-        
     }
 }

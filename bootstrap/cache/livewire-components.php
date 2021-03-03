@@ -11,6 +11,7 @@
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
   'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
+  'nam-dashboard' => 'App\\Http\\Livewire\\NamDashboard',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
   'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
@@ -18,4 +19,5 @@
   'usertrack-leads' => 'App\\Http\\Livewire\\UsertrackLeads',
   'usertrack-logins' => 'App\\Http\\Livewire\\UsertrackLogins',
   'usertrack-opportunities' => 'App\\Http\\Livewire\\UsertrackOpportunities',
+  'nam-summary' => 'App\\Http\\Livewire\\namSummary',
 );

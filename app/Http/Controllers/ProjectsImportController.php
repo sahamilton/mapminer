@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use App\Http\Requests\ProjectsImportFormRequest;
 use App\Project;
 use App\ProjectImport;
 use App\ProjectSource;
-use App\Http\Requests\ProjectsImportFormRequest;
+use Illuminate\Http\Request;
 
 class ProjectsImportController extends ImportController
 {
     public $project;
     public $sources;
     public $import;
-    public $projectfields =['id',
+    public $projectfields = ['id',
                             'project_title',
                             'street',
                             'addr2',
@@ -43,11 +42,11 @@ class ProjectsImportController extends ImportController
                             'pr_status',
                             'serviceline_id',
                             'project_source_id',
-                            'created_at'];
+                            'created_at', ];
 
-    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zip','county','phone'];
-    public $projectcompanyimportfields =['company_id','firm', 'addr1','addr2','city','state','zip','county','phone'];
-    public $projectcontactfields = ['id','contact','title','company_id','contactphone','contactemail'];
+    public $projectcompanyfields = ['id', 'firm', 'addr1', 'addr2', 'city', 'state', 'zip', 'county', 'phone'];
+    public $projectcompanyimportfields = ['company_id', 'firm', 'addr1', 'addr2', 'city', 'state', 'zip', 'county', 'phone'];
+    public $projectcontactfields = ['id', 'contact', 'title', 'company_id', 'contactphone', 'contactemail'];
 
     public function __construct(Project $project, ProjectSource $source, ProjectImport $import)
     {
@@ -60,38 +59,35 @@ class ProjectsImportController extends ImportController
     {
         $requiredFields = $this->import->requiredFields;
 
-        $source= request('source');
+        $source = request('source');
 
-        $sources= $this->sources->all()->pluck('source', 'id');
-        $tables = ['projects','projectcompanies','projectcontacts'];
+        $sources = $this->sources->all()->pluck('source', 'id');
+        $tables = ['projects', 'projectcompanies', 'projectcontacts'];
+
         return response()->view('projects.import', compact('sources', 'source', 'tables', 'requiredFields'));
     }
 
-
     public function import(ProjectsImportFormRequest $request)
     {
-      
-
         $data = $this->uploadfile(request()->file('upload'));
-        $data['table']=request('table');
+        $data['table'] = request('table');
 
         switch ($data['table']) {
-            case 'projects';
+            case 'projects':
                 $data['step'] = 1;
-                $data['table']= 'projectsimport';
+                $data['table'] = 'projectsimport';
                 $data['additionaldata']['project_source_id'] = request('source');
-                $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
+                $skip = ['created_at', 'updated_at', 'project_source_id', 'company_id', 'pr_status', 'serviceline_id'];
                     break;
             case 'projectcompanies':
-                $data['step']=2;
-                $data['table']='projectcompanyimport';
+                $data['step'] = 2;
+                $data['table'] = 'projectcompanyimport';
                 $data['additionaldata'] = [];
-                $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
+                $skip = ['created_at', 'updated_at', 'project_source_id', 'company_id', 'pr_status', 'serviceline_id'];
                 break;
         }
-     
 
-        $data['type']=request('type');
+        $data['type'] = request('type');
         $data['route'] = 'projects.mapfields';
         $fields = $this->getFileFields($data);
 
@@ -101,32 +97,30 @@ class ProjectsImportController extends ImportController
 
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'skip', 'requiredFields'));
     }
-    
+
     public function mapfields(Request $request)
     {
-        
         $data = $this->getData($request);
 
         if ($multiple = $this->import->detectDuplicateSelections(request('fields'))) {
-            return redirect()->route('projects.importfile')->withError(['You have mapped a field more than once.  Field: '. implode(' , ', $multiple)]);
+            return redirect()->route('projects.importfile')->withError(['You have mapped a field more than once.  Field: '.implode(' , ', $multiple)]);
         }
         if ($missing = $this->import->validateImport(request('fields'))) {
-            return redirect()->route('projects.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ', $missing)]);
+            return redirect()->route('projects.importfile')->withError(['You have to map all required fields.  Missing: '.implode(' , ', $missing)]);
         }
         $this->import->setFields($data);
-
 
         if ($this->import->import()) {
             return $this->postImport($data);
         }
     }
-    
+
     private function postImport($data)
     {
-  
         switch ($data['step']) {
             case 1:
                 $this->copyProjects();
+
                 return redirect()->route('project_company.importfile')->with('success', 'Projects imported; Now import the related companies');
             break;
 
@@ -136,18 +130,18 @@ class ProjectsImportController extends ImportController
                 $this->updateContacts();
                 $this->createContactId();
                 $this->copyProjectCompanies();
-                
+
                 $this->copyProjectContacts();
                 $this->updatePivot();
-                
+
                 return redirect()->route('projectsource.index')->with('success', 'Projects, Companies & Contacts Linked');
             break;
         }
     }
+
     private function copyProjects()
     {
-        
-         $query = "insert ignore into projects (" . implode(",", $this->projectfields) . ") select t.". implode(",t.", $this->projectfields). " FROM `projectsimport` t";
+        $query = 'insert ignore into projects ('.implode(',', $this->projectfields).') select t.'.implode(',t.', $this->projectfields).' FROM `projectsimport` t';
         if (\DB::select(\DB::raw($query))) {
             return true;
         }
@@ -169,21 +163,20 @@ class ProjectsImportController extends ImportController
         }
     }
 
-    
     private function cleanseProjectContacts()
     {
-        $fields = ['firstname','lastname','contact'];
+        $fields = ['firstname', 'lastname', 'contact'];
         foreach ($fields as $field) {
-            $query="update `projectscompanyimport` set ' $field .' = null where '. $field. ' ='';";
+            $query = "update `projectscompanyimport` set ' $field .' = null where '. $field. ' ='';";
             \DB::select(\DB::raw($query));
         }
+
         return true;
     }
-    
-    
+
     private function updateContacts()
     {
-            $query = "update projectcompanyimport set contact = concat(firstname,lastname) where contact is null";
+        $query = 'update projectcompanyimport set contact = concat(firstname,lastname) where contact is null';
         if (\DB::select(\DB::raw($query))) {
             return true;
         }
@@ -191,30 +184,27 @@ class ProjectsImportController extends ImportController
 
     private function copyProjectContacts()
     {
-
-         $query = "insert ignore into projectcontacts (" . implode(",", $this->projectcontactfields) . ") select t.". implode(",t.", $this->projectcontactfields). " FROM `projectscompanyimport` t where t.contact is not null";
+        $query = 'insert ignore into projectcontacts ('.implode(',', $this->projectcontactfields).') select t.'.implode(',t.', $this->projectcontactfields).' FROM `projectscompanyimport` t where t.contact is not null';
         if (\DB::select(\DB::raw($query))) {
             return true;
         }
     }
 
-    
     private function updatePivotTable()
     {
-        $query =  "Insert ignore into project_company_contact (project_id,company_id,type,contact_id) 
-    Select project_id,company_id,type,contact_id from projectcompanyimport;";
-    
+        $query = 'Insert ignore into project_company_contact (project_id,company_id,type,contact_id) 
+    Select project_id,company_id,type,contact_id from projectcompanyimport;';
 
         if (\DB::select(\DB::raw($query))) {
-            return \DB::statement("TRUNCATE TABLE `projectsimport`");
+            return \DB::statement('TRUNCATE TABLE `projectsimport`');
         }
     }
-    
+
     public function copyProjectCompanies()
     {
-        $query = "insert ignore into projectcompanies (" . implode(",", $this->projectcompanyfields) . ") select t.". implode(",t.", $this->projectcompanyimportfields). " FROM `projectcompanyimport` t
-            ";
-    
+        $query = 'insert ignore into projectcompanies ('.implode(',', $this->projectcompanyfields).') select t.'.implode(',t.', $this->projectcompanyimportfields).' FROM `projectcompanyimport` t
+            ';
+
         if (\DB::select(\DB::raw($query))) {
             return true;
         }

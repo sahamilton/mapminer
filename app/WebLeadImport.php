@@ -14,9 +14,10 @@ class WebLeadImport extends Imports
             'phone',
             'firstname',
             'lastname',
-            
+
             ];
     public $table = 'webleads';
+
     public function __construct()
     {
     }

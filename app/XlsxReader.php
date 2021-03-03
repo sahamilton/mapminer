@@ -8,9 +8,9 @@ class XlsxReader implements TextInterface
 {
     public function read($data)
     {
-        $xml_filename = "xl/sharedStrings.xml"; //content file name
+        $xml_filename = 'xl/sharedStrings.xml'; //content file name
         $zip_handle = new ZipArchive;
-        $output_text = "";
+        $output_text = '';
 
         if (true === $zip_handle->open($data['basepath'])) {
             if (($xml_index = $zip_handle->locateName($xml_filename)) !== false) {
@@ -20,12 +20,13 @@ class XlsxReader implements TextInterface
 
                 $output_text .= strip_tags($dom->saveXML());
             } else {
-                $output_text .="";
+                $output_text .= '';
             }
-                $zip_handle->close();
+            $zip_handle->close();
         } else {
-            $output_text .="";
+            $output_text .= '';
         }
+
         return $output_text;
     }
 }

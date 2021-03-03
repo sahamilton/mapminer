@@ -15,7 +15,6 @@ class SalesAdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-     
         if (! $request->user() or ! $request->user()->can('manage_leads')) {
             return redirect('home');
         }

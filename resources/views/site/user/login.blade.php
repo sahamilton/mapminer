@@ -1,3 +1,4 @@
+use Illuminate\Support\Facades\Request;
 @extends('site.layouts.default')
 
 {{-- Web site Title --}}
@@ -20,7 +21,7 @@ User login ::
         <div class="form-group">
             <label class="col-md-2 control-label" for="email">Email</label>
             <div class="col-md-10">
-                <input class="form-control" tabindex="1" placeholder="Your email" type ="email" name="email" id="email" value="{{ Input::old('email') }}">
+                <input class="form-control" tabindex="1" placeholder="Your email" type ="email" name="email" id="email" value="{{ Request::old('email') }}">
             </div>
         </div>
         <div class="form-group">

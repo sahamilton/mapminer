@@ -6,8 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class BranchManagementRequest extends FormRequest
 {
-    
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -15,7 +13,6 @@ class BranchManagementRequest extends FormRequest
      */
     public function authorize()
     {
-        
         return true;
     }
 
@@ -30,27 +27,29 @@ class BranchManagementRequest extends FormRequest
             'branch.*' => 'exists:branches,id', // check each item in the array
         ];
     }
+
     /**
-     * [messages description]
-     * 
+     * [messages description].
+     *
      * @return [type] [description]
      */
     public function messages()
     {
         return [
         'branch.*.exists' => 'One or more of the branch ids is invalid',
-       
+
         ];
     }
+
     /**
-     * [getValidatorInstance description]
-     * 
+     * [getValidatorInstance description].
+     *
      * @return [type] [description]
      */
     protected function getValidatorInstance()
     {
         $data = $this->all();
-        $data['branch'] = array_filter(array_unique(explode(",", $data['branches'])));
+        $data['branch'] = array_filter(array_unique(explode(',', $data['branches'])));
         $this->getInputSource()->replace($data);
 
         /*modify data before send to validator*/
