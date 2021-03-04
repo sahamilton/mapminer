@@ -18,7 +18,7 @@ class OpportunityTable extends Component
     public $setPeriod = 'All';
     public $period;
     public $branch_id;
-    public $filter = 0;
+    public $filter = '0';
     public $myBranches;
 
 
@@ -75,12 +75,6 @@ class OpportunityTable extends Component
             [
                 'opportunities' => Opportunity::query()
                     ->select('opportunities.*', 'businessname')
-                    ->when(
-                        $this->filter != 'All', function ($q) {
-                            $q->where('closed', $this->filter);
-                        }
-                    )
-                    
                     ->join('addresses', 'addresses.id', '=', 'opportunities.address_id')
                     ->withLastactivity()
                     ->when(
@@ -88,7 +82,16 @@ class OpportunityTable extends Component
                             $q->search($this->search);
                         }
                     )
-                    
+                    ->when(
+                        $this->setPeriod !='All', function ($q) {
+                            $q->whereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']]);
+                        }
+                    ) 
+                    ->when(
+                        $this->filter != 'All', function ($q) {
+                            $q->where('closed', $this->filter);
+                        }
+                    )
                     ->where('branch_id', $this->branch_id)
                     ->distinct()
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')

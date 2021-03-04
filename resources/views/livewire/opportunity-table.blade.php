@@ -1,6 +1,10 @@
 <div>
-    <h2>{{$branch->branchname}} Branch Opportunities</h2>
-
+    <h2>{{$branch->branchname}} Branch {{$filters[$filter]}} Opportunities</h2>
+    @if ($this->setPeriod !="All")
+    <p>Created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
+    @else
+    <p>Created in all time periods</p>
+    @endif
     <p>
         <a href="{{route('branchdashboard.show', $branch->id)}}">
             Return To Branch {{$branch->id}} Dashboard
