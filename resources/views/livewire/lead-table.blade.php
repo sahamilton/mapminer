@@ -1,43 +1,37 @@
 <div>
-<h1>{{$branch->branchname . " leads"}}</h1>
-<h4>
-    @switch($withOps)
-    @case('All')
-    With or Without Any Opportunities
-    @break
-    @case('Without')
-    {{$withOps}} Any Opportunities
-    @break
-    @case('Only Open')
-    With {{$withOps}} Opportunities
-    @break
-    @case('Any')
-    With {{$withOps}} Opportunities
-    @break
-    @endswitch
-</h4>
+    <h1>{{$branch->branchname . " leads"}}</h1>
+    <h4>
+        @switch($withOps)
+        @case('All')
+        With or Without Any Opportunities
+        @break
+        @case('Without')
+        {{$withOps}} Any Opportunities
+        @break
+        @case('Only Open')
+        With {{$withOps}} Opportunities
+        @break
+        @case('Any')
+        With {{$withOps}} Opportunities
+        @break
+        @endswitch
+    </h4>
+    @if ($this->setPeriod !="All")
+    <p>created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
+    @else
+    <p>created in all time periods</p>
+    @endif
+    <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
-<p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
-
-@if(count($myBranches) > 1)
-    <div class="col-sm-4">
-       
-            <select
-                wire:model="branch_id" 
-                class="form-control input-sm" 
-                id="branchselect" >               >
-                @foreach ($myBranches as $key=>$branchname)
-                    <option value="{{$key}}">{{$branchname}}</option>
-                @endforeach 
-            </select>
-
-        
-    </div>
-@endif
+    @include('livewire.partials._branchselector')
 
     
     <div class="row">
         @include('livewire.partials._perpage')
+        <div wire:loading>
+            <div class="spinner-border"></div>
+        </div>
+        @include('livewire.partials._periodselector', ['all'=>true])
         <div class="col form-inline">
             <label>With / W/O Opportunities</label>
              <select wire:model="withOps" class="form-control">
@@ -50,7 +44,7 @@
         
         
     </div>
-    </div>
+
    
     <div class="row">
         <table class='table table-striped table-bordered table-condensed table-hover'>

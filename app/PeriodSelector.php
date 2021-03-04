@@ -89,7 +89,7 @@ trait PeriodSelector
      */
     private function today()
     {
-        $data['from'] = Carbon::today()->statOfDay();
+        $data['from'] = Carbon::today()->startOfDay();
         $data['to'] = Carbon::today()->endOfDay();
         $data['period'] = 'today';
         return $data;
@@ -175,7 +175,7 @@ trait PeriodSelector
     private function thisMonth()
     {
         $data['from'] = Carbon::now()->startOfMonth()->startOfDay();
-        $data['to'] = Carbon::now()->endOfMonth()->endtOfDay();
+        $data['to'] = Carbon::now()->endOfMonth()->endOfDay();
         $data['period'] = 'thisMonth';
         return $data;
 
@@ -234,8 +234,7 @@ trait PeriodSelector
         
         
         $data['from'] = Carbon::now()->firstOfQuarter()->startOfDay();;
-        $data['to'] = Carbon::now()->endOfDay();;
-        
+        $data['to'] = Carbon::now()->endOfDay();
         $data['period'] = 'thisQuarterToDate';
         return $data;
     }

@@ -31,13 +31,6 @@
       0 => 'Baum\\BaumServiceProvider',
     ),
   ),
-  'dionera/laravel-beanstalkd-ui' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Dionera\\BeanstalkdUI\\BeanstalkdUIServiceProvider',
-    ),
-  ),
   'facade/ignition' => 
   array (
     'providers' => 

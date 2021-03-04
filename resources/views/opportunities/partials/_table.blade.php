@@ -102,7 +102,7 @@
   <tfoot>
     <tr>
       <th colspan=9></th>
-      <th style="text-align:right">${{number_format($opportunities->where('closed', 0)->sum('value'),0)}}
+      <th style="text-align:right">${{number_format($opportunities->sum('value'),0)}}
       </th>
       <th colspan=3></th>
     </tr>

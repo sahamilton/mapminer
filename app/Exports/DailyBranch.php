@@ -33,9 +33,9 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
     ];
 
     public $activityFields  =  [
-        'proposal'=>'# Completed Proposals',
-        'sales_appointment'=>'# Completed Sales Appts',
-        'site_visit'=>'# Completed Site Visits'
+        7=>'Proposals',
+        4=>'Sales Appointments',
+        10=>'Site Visits'
 
     ];
 
@@ -51,7 +51,7 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
        
         $this->period = $period;
         $this->branches = $branches;
-        $this->allFields = array_merge($this->fields, $this->leadFields, $this->activityFields);
+        $this->allFields = $this->_getAllFields();
 
        
     }
@@ -122,13 +122,30 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
     public function query()
     {
        
-        return Branch::query()->summaryStats($this->period, array_keys($this->leadFields))
-            ->summaryActivities($this->period, array_keys($this->activityFields))
+        return Branch::query()->summaryLeadStats($this->period, array_keys($this->leadFields))
+            ->summaryActivities($this->period, $this->activityFields)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {
                     $q->whereIn('id', $this->branches);
                 }
             );
+    }
+
+    /**
+     * [_getAllFields Required to normalize the activityFields 
+     *     for the summary activity method]
+     * 
+     * @return Array merged array of lead, main and activity fields
+     */
+    private function _getAllFields()
+    {
+        foreach ($this->activityFields as $key=>$field)
+        {
+            $data[str_replace(" ", "_", strtolower($field))] = $field;
+        }
+
+        return array_merge($this->fields, $this->leadFields, $data);
+       
     }
 }

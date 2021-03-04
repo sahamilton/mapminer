@@ -51,7 +51,7 @@ class BackupDatabase extends Command
             $this->process->mustRun();
             $this->info('The backup has been processed successfully.');
             ZipBackUp::withChain([new UploadToDropbox($this->filename)])
-            ->dispatch($this->filename)->onQueue('mapminer');
+            ->dispatch($this->filename);
             Mail::queue(new ConfirmBackup($this->filename));
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.'. $exception);

@@ -20,7 +20,7 @@
 				@foreach ($people as $person)
 
 				<tr>
-					<td>{{$person->fullName}}</td>
+					<td>{{$person->fullName()}}</td>
 					<td>
 						@foreach ($person->userdetails->roles as $role)
 						<li>{{$role->display_name}}</li>

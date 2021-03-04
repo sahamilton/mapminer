@@ -63,6 +63,15 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        'sftp' => [
+            'driver' => 'sftp',
+            'host' => 'dev.tbmapminer.com',
+            'username' => 'forge',
+ 
+            // Settings for SSH key based authentication...
+            'privateKey' => 'C:\Users\steph\.ssh\id_rsa.ppk',
+            'password' => 'Lytham7018!',
+        ],
 
     ],
 

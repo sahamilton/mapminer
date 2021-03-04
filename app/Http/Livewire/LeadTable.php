@@ -8,6 +8,7 @@ use App\Person;
 use App\ActivityType;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\AddressBranch;
 
 class LeadTable extends Component
 {
@@ -20,7 +21,8 @@ class LeadTable extends Component
    
     public $withOps = 'All';
     //public $updateMode = false;
-
+    public $setPeriod = 'All';
+    public $period;
     public $activitytype_id;
     public $note;
     public $activity_date='2021-02-03';
@@ -30,7 +32,7 @@ class LeadTable extends Component
     public $address_id;
     public $branch_id;
     public $lead_source_id = 'All';
-
+   
     public $myBranches;
 
  
@@ -62,18 +64,14 @@ class LeadTable extends Component
     /**
      * [mount description]
      * 
-     * @param [type] $branch [description]
-     * @param [type] $search [description]
-     * 
      * @return [type]         [description]
      */
     public function mount($branch, $search = null)
     {
-     
-        $this->branch_id = $branch;
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->search = $search;
+        $this->branch_id = array_keys($this->myBranches)[0];
         
     }
     /**
@@ -83,23 +81,12 @@ class LeadTable extends Component
      */
     public function render()
     {
-        
-        $this->_getLeadSources();
+        $this->_setPeriod();
+        $this->_setBranchSession();
         return view(
             'livewire.lead-table', [
-            'leads' => AddressBranch::query()
+            'leads' => Address::query()
                 ->search($this->search)
-                
-                ->whereIn(
-                    'addresses.id', function ($query) {
-                        $query->select('address_id')
-                            ->from('address_branch')
-                            ->where('branch_id', $this->branch_id)
-                            ->where('status_id', 2);
-                    }
-                )
-                ->search($this->search)
-                ->with('assignedToBranch')
                 ->when(
                     $this->withOps != 'All', function ($q) {
                         $q->when(
@@ -114,6 +101,7 @@ class LeadTable extends Component
                                         $q->where('closed', 0);
                                     }
                                 );
+                                
                             }
                         )
                         ->when(
@@ -124,6 +112,23 @@ class LeadTable extends Component
                         
                     }
                 )
+
+                ->whereIn(
+                    'addresses.id', function ($query) {
+                        $query->select('address_id')
+                            ->from('address_branch')
+                            ->where('branch_id', $this->branch_id)
+                            ->where('status_id', 2)
+                            ->when(
+                                $this->setPeriod != 'All', function ($q) {
+                                    $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                                }
+                            );
+                    }
+                )
+            
+                ->with('assignedToBranch')
+
                 
                 ->withLastActivityId()
                 ->with('lastActivity')
@@ -139,80 +144,16 @@ class LeadTable extends Component
         );
     }
 
-     
-    
-    /**
-     * [_resetInputFields description]
-     *
-     * @return [type] [description]
-     */
-    private function _resetInputFields()
+    private function _setBranchSession()
     {
-        $this->activitytype_id='';
-        $this->note='';
-        $this->activity_date=now()->format('Y-m-d');
-        $this->completed=1;
-        $this->followup_date='';
-        $this->followup_activity='';
-        $this->address_id='';
-    
-
-
-    }
-    /**
-     * [openModal description]
-     *
-     * @return [type] [description]
-     */
-    public function openModal()
-    {
-
-        $this->isOpen = true;
-
-    }
-    /**
-     * [closeModal description]
-     *
-     * @return [type] [description]
-     */
-    public function closeModal()
-    {
-
-        $this->isOpen = false;
-
+        session(['branch'=>$this->branch_id]);
     }
 
-    public function store()
+    private function _setPeriod()
     {
-        dd('hree we are');
-        $this->validate(
-            [
-             
-            ]
-        );
-
-        $activity = Activity::updateOrCreate(
-            ['id' => $this->account_id],
-            [
-                'activitytype_id' => $this->activitytype_id,
-                'note' => $this->note,
-                'activity_date' => $this->activity_date,
-                'completed'=>$this->completed,
-                'followup_date'=>$this->followup_date,
-                'followup_activity'=>$this->followup_activity,
-                'address_id'=>$this->address_id,
-                'branch_id'=>$this->branch_id,
-                'user_id' => auth()->user()->id
-
-            ]
-        );
-        ray($activity);
+        if ($this->setPeriod != 'All') {
+            $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
+        }
+        
     }
-    public function cancel()
-    {
-        $this->updateMode = false;
-        $this->_resetInputFields();
-    }
-
-
 }

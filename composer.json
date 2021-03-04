@@ -34,8 +34,6 @@
         "jenssegers/agent": "^2.6",
         "predis/predis": "^1.1",
         "doctrine/dbal": "^2.10",
-        "pda/pheanstalk": "^4.0.3",
-        "dionera/laravel-beanstalkd-ui": "^3.1",
         "livewire/livewire": "^2.0",
         "spatie/laravel-fractal": "^5.7",
         "awobaz/compoships": "^2.0.5",
@@ -43,7 +41,8 @@
         "spatie/laravel-uptime-monitor": "^4.0",
         "spatie/laravel-ray": "^1.9",
         "pragmarx/version": "^1.2",
-        "laravel/horizon": "^5.7"
+        "laravel/horizon": "^5.7",
+        "league/flysystem-sftp": "~1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

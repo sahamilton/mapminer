@@ -12,24 +12,7 @@
     class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
       <th>
-        <!-- 
-           
-      "active_leads" => 42
-      "lost_opportunities" => 0
-      "open_opportunities" => 20
-      "top25_opportunities" => 0
-      "won_opportunities" => 1
-      "active_value" => "377200"
-      "lost_value" => null
-      "won_value" => "23000"
-      "sales_appointment" => 0
-      "stop_by" => 13
-      "proposal" => 4
-      "site_visit" => 7
-      "log_a_call" => 44
-      "in_person" => 4
-      "activities_count" => 72
-      -->
+        
           <a wire:click.prevent="sortBy('branchname')" role="button" href="#">
              Branch
               @include('includes._sort-icon', ['field' => 'branchname'])

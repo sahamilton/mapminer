@@ -200,12 +200,15 @@ class DashboardController extends Controller
             "won_value",
         ];
         $activityFields = [
-            'sales_appointment',
-            'stop_by',
-            'proposal',
-            'site_visit',
-            'log_a_call',
-            'in_person',
+
+            '4'=>'sales_appointment',
+            '5'=>'stop_by',
+            '7'=>'proposal',
+            '10'=>'site_visit',
+            '13'=>'log_a_call',
+            '14'=>'in_person'
+
+
 
         ];
 

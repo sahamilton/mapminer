@@ -177,8 +177,8 @@ use Illuminate\Http\Request;
                 //$companies = App\Company::whereIn('id', [532])->get();
                 //$opportunity = App\Opportunity::whereHas('branch')->whereHas('location')->latest()->first();
 
-                $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek(), 
-                    'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()];
+                $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay(), 
+                    'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay()];
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
                 //App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
@@ -186,8 +186,8 @@ use Illuminate\Http\Request;
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
-                //App\Jobs\BranchLogins::dispatch();
-                App\Jobs\DailyBranch::dispatch($period);
+                App\Jobs\BranchLogins::dispatch();
+                //App\Jobs\DailyBranch::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);

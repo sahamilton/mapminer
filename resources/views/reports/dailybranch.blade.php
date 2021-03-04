@@ -17,7 +17,7 @@
 		@foreach ($people as $person)
 			@if(! $loop->first)
 				<tr>
-					<td>{{$person->fullName}}</td>
+					<td>{{$person->fullName()}}</td>
 					
 					<td>
 						@foreach($person->branchesServiced as $branch)

@@ -143,7 +143,7 @@ class Branch extends Model implements HasPresenter
     {
         if ($role) {
             return $this->belongsToMany(Person::class)
-                ->wherePivot('role_id', '=', $role);
+                ->wherePivot('role_id', '=', $role)->withDefault(['firstname'=>'No Person in this role at this branch']);
         } else {
             return $this->belongsToMany(Person::class)
                 ->withTimestamps()
@@ -299,7 +299,7 @@ class Branch extends Model implements HasPresenter
      */
     public function manager()
     {
-        return $this->relatedPeople($this->branchManagerRole);
+        return $this->belongsToMany(Person::class)->wherePivot('role_id', $this->branchManagerRole);
     }
     /**
      * [businessmanager description]
@@ -308,7 +308,7 @@ class Branch extends Model implements HasPresenter
      */
     public function businessmanager()
     {
-        return $this->relatedPeople($this->businessManagerRole);
+        return $this->belongsToMany(Person::class)->wherePivot('role_id', $this->businessManagerRole);
     }
     /**
      * [marketmanager description]
@@ -318,7 +318,7 @@ class Branch extends Model implements HasPresenter
     public function marketmanager()
     {
        
-        return $this->relatedPeople($this->marketManagerRole);
+        return $this->belongsToMany(Person::class)->wherePivot('role_id', $this->marketManagerRole);
     }
     /**
      * [servicelines description]
@@ -1248,31 +1248,33 @@ class Branch extends Model implements HasPresenter
      * [scopeSummaryActivities description]
      * 
      * @param [type] $query  [description]
-     * @param [type] $period [description]
-     * 
+     * @param array  $period [description]
+     * @param array  $fields 
+     *                       key is activity type id
+     *                       value is label for activi
+     *                        
      * @return [type]         [description]
      */
-    public function scopeSummaryActivities($query, $period, $fields = null)
+    public function scopeSummaryActivities($query, Array $period, Array $fields = null)
     {
+       
         $this->period = $period;
-        if ($fields) {
-            $this->fields = $fields;
-        
+        if (isset($fields)) {
+            $this->activityFields = $fields;
             foreach ($this->activityFields as $key=>$field) {
-                if (in_array($field, $this->fields)) {
-                    $label = str_replace(" ", "_", strtolower($field));
-                    $query->withCount(
-                        [
-                            'activities as '.$label=>function ($query) use ($key) {
-                                $query->whereBetween(
-                                    'activity_date', [$this->period['from'],$this->period['to']]
-                                )->where('completed', 1)
-                                    ->where('activitytype_id', $key);
-                            }
-                        ]
-                    ); 
-                }
+                $label = str_replace(" ", "_", strtolower($field));
+                $query->withCount(
+                    [
+                        'activities as '.$label => function ($query) use ($key) {
+                            $query->whereBetween(
+                                'activity_date', [$this->period['from'],$this->period['to']]
+                            )->where('completed', 1)
+                                ->where('activitytype_id', $key);
+                        }
+                    ]
+                ); 
             }
+        
         }
         $query->withCount(
             [
@@ -1285,8 +1287,14 @@ class Branch extends Model implements HasPresenter
         );
 
     }
-
-    public function scopeSummaryLeadStats($query,$period, $fields = null)
+    /**
+     * [scopeSummaryLeadStats description]
+     * @param  [type] $query  [description]
+     * @param  [type] $period [description]
+     * @param  [type] $fields [description]
+     * @return [type]         [description]
+     */
+    public function scopeSummaryLeadStats($query, Array $period, Array $fields = null)
     {
         $this->period = $period;
         if (! $fields) {
@@ -1388,6 +1396,7 @@ class Branch extends Model implements HasPresenter
     public function scopeSummaryStats($query,$period, $fields = null)
     {
         $this->period = $period;
+    
         return $query->withCount(       
             [
                 'leads'=>function ($query) {
@@ -1948,9 +1957,9 @@ class Branch extends Model implements HasPresenter
      
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
-        if(! $companies) {
+        if (! $companies) {
             $this->company_ids = $campaign->companies->pluck('id')->toarray();
-        }else {
+        } else {
             $this->company_ids = $companies;
         }
         

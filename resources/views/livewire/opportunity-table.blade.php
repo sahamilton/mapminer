@@ -1,31 +1,31 @@
 <div>
-  <h2>{{$branch->branchname}} Branch Opportunities</h2>
-
-<p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch {{$branch->id}} Dashboard</a></p>
-
-@php $activityTypes = \App\ActivityType::all(); @endphp
-@if(count($myBranches)>1)
-
-<div class="col-sm-4">
-   
-
-    <select wire:model="branch_id" class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
-          @foreach ($myBranches as $key=>$branchname)
-                <option value="{{$key}}">{{$branchname}}</option>
-          @endforeach 
-    </select>
+    <h2>{{$branch->branchname}} Branch {{$filters[$filter]}} Opportunities</h2>
+    @if ($this->setPeriod !="All")
+    <p>Created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
+    @else
+    <p>Created in all time periods</p>
+    @endif
+    <p>
+        <a href="{{route('branchdashboard.show', $branch->id)}}">
+            Return To Branch {{$branch->id}} Dashboard
+        </a>
+    </p>
 
 
-</div>
-@endif  
-<div class="row mb-4">
+    @include('livewire.partials._branchselector')
+    
+    <div class="row mb-4">
         @include('livewire.partials._perpage')
+        @include('livewire.partials._periodselector', ['all'=>true])
+        <div wire:loading>
+            <div class="spinner-border"></div>
+        </div>
         <div class="col form-inline">
             Status: &nbsp;
             <select wire:model="filter" class="form-control">
-                <option value="0">Open</option>
-                <option value="1">Closed-Won</option>
-                <option value="2">Closed-Lost</option>
+                @foreach ($filters as $key=>$value)
+                    <option value="{{$key}}">{{$value}}</option>
+                @endforeach
             </select>
         </div>
 

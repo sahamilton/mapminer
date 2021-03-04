@@ -43,8 +43,7 @@ class Chart extends Model
                 return in_array($person->id, array_keys($data['data']));
             }
         );
-        
-    
+           
         // Initialize
         $labels = $team->map(
             function ($person) {
@@ -61,7 +60,7 @@ class Chart extends Model
             $type = str_replace(" ", "_", strtolower($activity));
             $chart['data'][$activity]['data'] = implode(",", $activitydata->pluck($type)->toArray());
         }
-        ray($data, $chart);
+       
         return $chart;
         
     }

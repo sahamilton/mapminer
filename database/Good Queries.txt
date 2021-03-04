@@ -1016,3 +1016,76 @@ AND activities.branch_id != address_branch.branch_id
 AND address_branch.updated_at < activities.activity_date 
 AND activities.activity_date > '2020-10-01' 
 AND address_branch.address_id = addresses.id
+/**************************************************************
+/* Extract leads for person (Now in PersonData Export)
+/**************************************************************
+SELECT
+    CONCAT_WS(
+        ' ',
+        persons.firstname,
+        persons.lastname
+    ) AS sr,
+    addresses.id,
+    addresses.businessname,
+    addresses.street,
+    addresses.address2,
+    addresses.city,
+    addresses.state,
+    addresses.zip,
+    addresses.phone,
+    addresses.contact,
+    addresses.description,
+    addresses.created_at,
+    addresses.updated_at,
+    opportunities.branch_id,
+    opportunities.closed,
+    opportunities.Top25,
+    opportunities.value,
+    opportunities.requirements,
+    opportunities.duration,
+    opportunities.description,
+    opportunities.comments,
+    opportunities.created_at,
+    opportunities.updated_at,
+    opportunities.title,
+    opportunities.expected_close,
+    opportunities.actual_close,
+    opportunities.csp,
+    contacts.fullname,
+    contacts.title,
+    contacts.email,
+    contactphone,
+    contacts.comments
+FROM
+    persons,
+    addresses
+LEFT JOIN opportunities ON addresses.id = opportunities.address_id
+LEFT JOIN contacts ON addresses.id = contacts.address_id
+WHERE
+    persons.id IN(3686, 4008) AND persons.user_id = addresses.user_id
+ORDER BY
+    sr
+
+//*************************** Get Market Managers email and full name
+$marketmanagers = App\Person::whereNull('deleted_at')
+->managers([3])
+->join('users', 'persons.user_id', '=', 'users.id')
+  ->selectRaw("persons.id, concat_ws(' ',firstname, lastname) as fullName, users.email")
+  ->get();
+  /********************************************************
+  relabel activities to branch
+*************/
+  update activities, persons, branch_person set activities.bid = branch_person.branch_id where activities.bid is null and activities.user_id = persons.user_id and persons.id = branch_person.person_id and branch_person.role_id =9 and persons.deleted_at is null
+
+  update activities, branches 
+set activities.branch_id = branches.id
+where activities.bid = branches.branch_id
+/************************************************** 
+Get Branch Leads by State Count 
+*************/
+$locations = App\AddressBranch::selectRaw('count(addresses.id), addresses.state')
+  ->join('addresses', 'address_branch.address_id', '=', 'addresses.id')
+  ->where('branch_id', 1580)
+  ->groupBy('state')
+  ->get();
+  /*****************************************************************

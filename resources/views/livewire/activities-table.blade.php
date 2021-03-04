@@ -3,38 +3,15 @@
     <h4>Activities</h4>
     <p>for the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
     <div class="row mb4" style="padding-bottom: 10px">
-        @if(count($myBranches) >1)
-
-
-        <div class="col mb8">
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <i class="fas fa-leaf"></i>
-                </span>
-                <select wire:model="branch_id" 
-                class="form-control">
-                @foreach ($myBranches as $key=>$mybranch)
-                    <option value="{{$key}}"> {{$mybranch}}
-                    </option>
-                @endforeach 
-                </select>
-            </div>
-        </div>
-
-        @endif
-    
-            
-        <div class="col mb8">
-            <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
-        
-                <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
-            </div>
-        </div>
+        @include('livewire.partials._branchselector')
+        @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
     </div>
 
     <div class="row mb-4 ">
         @include('livewire.partials._perpage')
+        <div wire:loading>
+            <div class="spinner-border"></div>
+        </div>
         <div class="col form-inline">
             <label for="status">Status:</label>
             <select wire:model="status" 

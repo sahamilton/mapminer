@@ -33,10 +33,10 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
 
     ];
 
-    public $activityFields  =  [
-        'proposal'=>'# Completed Proposals',
-        'sales_appointment'=>'# Completed Sales Appts',
-        'site_visit'=>'# Completed Site Visits'
+    public $activityFields = [
+            '4'=>'Sales Appointments',
+            '7'=>'Proposals',
+            '10'=>'Site Visits'
 
     ];
 
@@ -51,15 +51,15 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
        
         $this->period = $period;
         $this->branches = $branches;
-        $this->allFields = array_merge($this->fields, $this->leadFields,$this->activityFields);
-
+        
+        ray($this->allFields);
 
        
     }
         
     public function headings(): array
     {
-        
+        $this->allFields = $this->_getAllFields();
 
         return [
             [' '],
@@ -73,30 +73,31 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     
     public function map($branch): array
     {
-        
+        ray($branch);
         foreach ($this->allFields as $key=>$field) {
+            ray($key, $field);
             switch ($key) {
             
             case 'branchname':
-                $detail[] = $branch->branchname;
+                $detail['branchname'] = $branch->branchname;
                 break;
             
             case 'manager':
-                $detail[] = $branch->manager->count() ? $branch->manager->first()->postName() :'';
+                $detail['manager'] = $branch->manager->count() ? $branch->manager->first()->postName() :'';
                 break;
 
             case 'reportsto':
-                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
-                        $detail[] =  $branch->manager->first()->reportsTo->fullName();
-                } else {
-                        $detail[] = 'No direct reporting manager';
-                }
+                $detail['reportsto'] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->postName() :'';
+                break;
             default:
-                $detail[]=$branch->$key;
+                $value = str_replace(" ", "-", strtolower($key));
+                $detail[$value] = $branch->$value;
                 break;
             }
         }
+        ray($detail);
         return $detail;
+
     }
 
     public function columnFormats(): array
@@ -114,13 +115,29 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     public function query()
     {
       
-        return Branch::query()->summaryStats($this->period, array_keys($this->leadFields))
-            ->summaryActivities($this->period, array_keys($this->activityFields))
+        return Branch::query()->summaryLeadStats($this->period, array_keys($this->leadFields))
+            ->summaryActivities($this->period, $this->activityFields)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {
                     $q->whereIn('id', $this->branches);
                 }
             );
+    }
+    /**
+     * [_getAllFields Required to normalize the activityFields 
+     *     for the summary activity method]
+     * 
+     * @return Array merged array of lead, main and activity fields
+     */
+    private function _getAllFields()
+    {
+        foreach ($this->activityFields as $key=>$field)
+        {
+            $data[str_replace(" ", "_", strtolower($field))] = $field;
+        }
+
+        return array_merge($this->fields, $this->leadFields, $data);
+       
     }
 }

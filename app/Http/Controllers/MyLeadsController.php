@@ -46,28 +46,32 @@ class MyLeadsController extends BaseController
      */
     public function index(Branch $branch=null)
     {
-        ray($branch);
+       
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
 
-        if (! $branch) {
+        if (! $this->_checkMyBranch($branch)) {
+
+            return redirect()->back()->withError(' That is not one of your branches');
+        }
+        if (! $branch && ! session('branch')) {
             $branch_ids = array_keys($myBranches);
-            $branch_id = reset($branch_ids);
-            $branch = $this->branch->findOrFail($branch_id);
-        } else {
-            if (! in_array($branch->id, array_keys($myBranches))) {
-                return redirect()->back()->withError(' That is not one of your branches');
-            }
-            $branch_id = $branch->id;
+            $branch_id = $branch_ids[0];
+            
+            session(['branch'=>$branch_id]);
+        } elseif ($branch) {
+
+            session(['branch'=>$branch->id]); 
+            
         }
         
-        session(['branch'=>$branch_id]);
+        $branch = $this->branch->findOrFail(session('branch'));
         // necessary if using impersonate
         session()->forget('manager');
         
         $search = null;
-        $campaigns = $this->_getCurrentOpenCampaigns($branch_id);
+        $campaigns = $this->_getCurrentOpenCampaigns($branch->id);
       
         return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
         
@@ -521,5 +525,13 @@ class MyLeadsController extends BaseController
             ->with('assignedToBranch')
             ->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])
             ->get();
+    }
+
+    private function _checkMyBranch($branch = null)
+    {
+        if ($branch) {
+
+        }
+        return true;
     }
 }

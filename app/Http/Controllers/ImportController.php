@@ -19,9 +19,8 @@ class ImportController extends BaseController
      */
     public function index()
     {
-        $imports = ['branches', 'branch_team', 'companies', 'locations', 'users'];
-        $exports = ['allcompanies', 'branches', 'branches_team', 'companies', 'nomanager', 'person', 'projects', 'vertical', 'watch'];
-
+        $imports = ['branches','branch_team','companies','locations','users'];
+        $exports = ['allcompanies','branches','branches_team','companies','nomanager','person','projects','vertical','watch', 'persons_data'];
         return response()->view('imports.index', compact('imports', 'exports'));
     }
 
