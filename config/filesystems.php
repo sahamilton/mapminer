@@ -37,7 +37,7 @@ return [
     | may even configure multiple disks of the same driver. Defaults have
     | been setup for each driver as an example of the required options.
     |
-    | Supported Drivers: "local", "ftp", "sftp", "s3"
+    | Supported Drivers: "local", "ftp", "public", sftp", "s3"
     |
     */
 
@@ -45,7 +45,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => storage_path(),
         ],
 
         'public' => [
@@ -62,6 +62,10 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
+        ],
+        'dropbox' => [
+            'driver' => 'dropbox',
+            'authorization_token'=>env('DROPBOX_TOKEN')
         ],
         'sftp' => [
             'driver' => 'sftp',
