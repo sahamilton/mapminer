@@ -200,8 +200,9 @@ use Illuminate\Http\Request;
                  App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
                         ->dispatch($filename)->onQueue('mapminer');
                  }*/
-                 
-                 /*}
+                 $filename = 'mapminer-2021-03-05-22-58-02.zip';
+                 App\Jobs\TransferFileJob::dispatch($filename)->onQueue('mapminer');
+                 /*
                  
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
