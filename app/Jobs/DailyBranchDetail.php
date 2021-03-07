@@ -3,15 +3,18 @@
 namespace App\Jobs;
 
 use \Carbon\Carbon;
+use Excel;
+use Mail;
+
 use App\Person;
 use App\User;
 use App\Branch;
 use App\Report;
-use Mail;
+
 use App\Mail\SendReport;
-use Excel;
 use App\Mail\DailyBranchReport;
 use App\Exports\DailyBranch;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -64,6 +67,7 @@ class DailyBranchDetail implements ShouldQueue
         
         (new DailyBranch($this->period, $this->branches))
             ->store($this->file);
+        
         Mail::to([$this->user->getFormattedEmail()])
                         ->send(new SendReport($this->file, $this->period, $this->report, $this->user));
     }

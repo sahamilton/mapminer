@@ -179,15 +179,16 @@ use Illuminate\Http\Request;
 
                 $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay(), 
                     'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay()];
+              
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
-                //App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
+                ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
                 //App\Jobs\BranchLogins::dispatch();
-                //App\Jobs\DailyBranch::dispatch($period);
+                //App\Jobs\DailyBranch::dispatch();
                 //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);
@@ -199,14 +200,16 @@ use Illuminate\Http\Request;
                  $filename = pathinfo($file)['filename'];
                  App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
                         ->dispatch($filename)->onQueue('mapminer');
-                 }*/
-                 $filename = 'mapminer-2021-03-05-22-58-02.zip';
+                 }
+                 $filename = 'mapminer-2021-03-06-22-58-01.zip';
                  App\Jobs\TransferFileJob::dispatch($filename)->onQueue('mapminer');
-                 /*
+                 
                  
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
-                 App\Jobs\WeeklyActivityReminder::dispatch($period);*/
+                 
+                App\Jobs\WeeklyActivityReminder::dispatch($period);
+                */
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  //$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                 // $period['to'] = \Carbon\Carbon::now();

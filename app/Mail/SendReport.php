@@ -27,7 +27,7 @@ class SendReport extends Mailable implements ShouldQueue
      */
     public function __construct($file, $period, Report $report, User $user)
     {
-        $this->file = 'app'. $file;
+        $this->file =   'app/'. $file;
         $this->period = $period;
         $this->report = $report;
         $this->user = $user;
@@ -41,7 +41,7 @@ class SendReport extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        
+       
         return $this->from(config('mail.from'))
             ->markdown('emails.reportsent')
             ->subject($this->report->report)

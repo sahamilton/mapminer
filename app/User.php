@@ -249,19 +249,30 @@ class User extends Authenticatable
 
     }
 
-
-    public function watching () 
+    /**
+     * [watching description]
+     * 
+     * @return [type] [description]
+     */
+    public function watching() 
     {
         return $this->belongsToMany(Address::class, 'location_user');
 
     }
-    
+    /**
+     * [scopeSearch description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $search [description]
+     * 
+     * @return [type]         [description]
+     */
     public function scopeSearch($query, $search)
     { 
         
         return  $query->where('users.email', 'like', "%{$search}%")
-                ->orWhere('firstname', 'like', "%{$search}%")
-                ->orWhere('lastname', 'like', "%{$search}%");
+            ->orWhere('firstname', 'like', "%{$search}%")
+            ->orWhere('lastname', 'like', "%{$search}%");
      
 
     }
