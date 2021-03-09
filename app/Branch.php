@@ -1297,7 +1297,7 @@ class Branch extends Model implements HasPresenter
             'active_leads',
            
          */
-        ray($this->fields);
+        
         return $query
             ->when(
                 in_array('leads', $this->fields), function ($q) {

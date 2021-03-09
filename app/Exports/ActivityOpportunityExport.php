@@ -48,7 +48,7 @@ class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings,
     {
         $this->period = $period;
         $this->branches = $branches;
-
+        
     }
 
     public function headings(): array

@@ -179,11 +179,20 @@ use Illuminate\Http\Request;
 
                 $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay(), 
                     'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay()];
-              
+                $branches =  [ 0 => "8032",
+                              1 => "2977",
+                              2 => "2986",
+                              3 => "1415",
+                              4 => "8047",
+                              5 => "1196",
+                              6 => "1179",
+                              7 => "7209",
+                              8 => "1182"];
+
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
                 ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
-                //App\Jobs\ActivityOpportunity::dispatch($period);
+                App\Jobs\ActivityOpportunity::dispatch($period, $branches);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();

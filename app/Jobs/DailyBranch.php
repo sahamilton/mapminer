@@ -48,11 +48,10 @@ class DailyBranch
         $this->report = Report::where('job', 'DailyBranch')->with('distribution.person')->firstOrFail();
         
         foreach ($this->report->distribution as $recipient) {
-            $this->file = '/public/reports/'. strtolower(Str::slug($recipient->person->fullName()." ".$this->report->filename ." ". $this->period['from']->format('Y_m_d'), '_')). ".xlsx";
             
             $branches = $recipient->person->getMyBranches();
             
-            DailyBranchDetail::dispatch($recipient, $this->report, $branches, $this->file, $this->period);
+            DailyBranchDetail::dispatch($recipient, $this->report, $branches, $this->period);
             
         }
     }

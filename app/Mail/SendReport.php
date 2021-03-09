@@ -25,9 +25,9 @@ class SendReport extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($file, $period, Report $report, User $user)
+    public function __construct(String $file, Array $period, Report $report, User $user)
     {
-        $this->file =   'app/'. $file;
+        $this->file =   $file;
         $this->period = $period;
         $this->report = $report;
         $this->user = $user;
@@ -42,11 +42,12 @@ class SendReport extends Mailable implements ShouldQueue
     public function build()
     {
        
+        
         return $this->from(config('mail.from'))
             ->markdown('emails.reportsent')
             ->subject($this->report->report)
             ->attach(
-                storage_path($this->file, ['mime' => 'application/xlsx'])
+                storage_path('app/'.$this->file, ['mime' => 'application/xlsx'])
             );
             
     }

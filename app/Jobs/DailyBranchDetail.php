@@ -15,6 +15,7 @@ use App\Mail\SendReport;
 use App\Mail\DailyBranchReport;
 use App\Exports\DailyBranch;
 
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -37,8 +38,11 @@ class DailyBranchDetail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(User $user, Report $report,$branches, $file, array $period = null)
-    {
+    public function __construct(
+        User $user, 
+        Report $report, 
+        Array $branches, phpArray $period = null
+    ) {
         
         if (! $period) {
 
@@ -51,7 +55,7 @@ class DailyBranchDetail implements ShouldQueue
         $this->person = $user->person;
         $this->report = $report;
         $this->branches = $branches;
-        $this->file = $file;
+        $this->file = $this->_makeFileName();
         
 
     }
@@ -65,8 +69,7 @@ class DailyBranchDetail implements ShouldQueue
     {
 
         
-        (new DailyBranch($this->period, $this->branches))
-            ->store($this->file);
+        Excel::store(new DailyBranch($this->period, $this->branches), $this->file, 'local');
         
         Mail::to([$this->user->getFormattedEmail()])
                         ->send(new SendReport($this->file, $this->period, $this->report, $this->user));
@@ -81,5 +84,18 @@ class DailyBranchDetail implements ShouldQueue
     public function failed($exception)
     {
        
+    }
+
+    private function _makeFileName()
+    {
+        return '/public/reports/'.
+            strtolower(
+                Str::slug(
+                    $user->person->fullName()." ".
+                    $this->report->filename ." ". 
+                    $this->period['from']->format('Y_m_d'), 
+                    '_'
+                )
+            ). ".xlsx";
     }
 }
