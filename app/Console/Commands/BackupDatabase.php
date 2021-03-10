@@ -57,7 +57,7 @@ class BackupDatabase extends Command
                     Mail::queue(new ConfirmBackup($this->filename))
                 ]
             )
-            ->dispatch($this->filename)->onQueue('mapminer');            
+            ->dispatch($this->filename);            
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.'. $exception);
             Mail::queue(new FailedBackup($this->file));
