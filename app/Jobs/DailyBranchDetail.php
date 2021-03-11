@@ -41,9 +41,10 @@ class DailyBranchDetail implements ShouldQueue
     public function __construct(
         User $user, 
         Report $report, 
-        Array $branches, phpArray $period = null
+        Array $branches, 
+        Array $period = null
     ) {
-        
+        ray($user);
         if (! $period) {
 
             $this->period['from'] = Carbon::yesterday()->startOfDay();
@@ -91,7 +92,7 @@ class DailyBranchDetail implements ShouldQueue
         return '/public/reports/'.
             strtolower(
                 Str::slug(
-                    $user->person->fullName()." ".
+                    $this->user->person->fullName()." ".
                     $this->report->filename ." ". 
                     $this->period['from']->format('Y_m_d'), 
                     '_'
