@@ -111,7 +111,8 @@ use Illuminate\Http\Request;
         //     Project Source
         Route::resource('projectsource', 'ProjectSourceController');
 
-        
+        // Export Persons data
+        Route::post('exports/store', ['as'=>'export.store', 'uses'=>'ExportController@store']);
 
         //Leads Import       
         Route::get('leads/import/{id?}', ['as'=>'prospects.importfile', 'uses'=>'LeadImportController@getFile']);
