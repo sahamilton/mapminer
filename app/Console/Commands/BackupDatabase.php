@@ -54,10 +54,12 @@ class BackupDatabase extends Command
             ZipBackUp::withChain(
                 [
                     new UploadToDropbox($this->filename),
-                    Mail::queue(new ConfirmBackup($this->filename))
+                    new TransferFileJob($this->fiename),
+                    
                 ]
             )
-            ->dispatch($this->filename);            
+            ->dispatch($this->filename);
+            Mail::queue(new ConfirmBackup($this->filename));           
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.'. $exception);
             Mail::queue(new FailedBackup($this->file));

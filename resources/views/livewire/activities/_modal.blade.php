@@ -31,7 +31,8 @@
            type="button" 
            class="btn btn-default close-modal" 
            data-dismiss="modal">Cancel</button> 
-           <button  wire:click.prevent="store()"
+           
+           <button wire:click.prevent="store()"
            
            class="btn btn-danger" />Record Activity</div>
             </div>

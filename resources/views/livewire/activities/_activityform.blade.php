@@ -82,7 +82,14 @@
                 @endforeach
               </select>
           </div>
-          <input type="hidden" id="address_id" name="address_id" value=""/>
-          <input type="hidden" id = "branch_id" name="branch_id" value=""/>
+          <input type="hidden" 
+          wire:model="address_id" 
+          id="address_id" 
+          name="address_id" 
+          value=""/>
+          <input 
+          type="hidden" 
+          id = "branch_id" 
+          wire:model="address_id" accept="" name="branch_id" value=""/>
 
          
