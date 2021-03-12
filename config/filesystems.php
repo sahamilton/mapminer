@@ -37,7 +37,7 @@ return [
     | may even configure multiple disks of the same driver. Defaults have
     | been setup for each driver as an example of the required options.
     |
-    | Supported Drivers: "local", "ftp", "sftp", "s3"
+    | Supported Drivers: "local", "ftp", "public", sftp", "s3"
     |
     */
 
@@ -64,6 +64,10 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'dropbox' => [
+            'driver' => 'dropbox',
+            'authorization_token'=>env('DROPBOX_TOKEN')
+        ],
         'sftp' => [
             'driver' => 'sftp',
             'host' => 'dev.tbmapminer.com',

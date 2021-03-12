@@ -8,6 +8,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Mail\ConfirmBackup;
 use App\Mail\FailedBackup;
 use App\Jobs\ZipBackUp;
+use App\Jobs\TransferFileJob;
 use App\Jobs\UploadToDropbox;
 use Mail;
 class BackupDatabase extends Command
@@ -50,9 +51,15 @@ class BackupDatabase extends Command
         try { 
             $this->process->mustRun();
             $this->info('The backup has been processed successfully.');
-            ZipBackUp::withChain([new UploadToDropbox($this->filename)])
+            ZipBackUp::withChain(
+                [
+                    new UploadToDropbox($this->filename),
+                    new TransferFileJob($this->fiename),
+                    
+                ]
+            )
             ->dispatch($this->filename);
-            Mail::queue(new ConfirmBackup($this->filename));
+            Mail::queue(new ConfirmBackup($this->filename));           
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.'. $exception);
             Mail::queue(new FailedBackup($this->file));

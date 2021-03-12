@@ -7,21 +7,16 @@ use App\Jobs\RebuildBranchesXMLJob;
 
 class BranchObserver
 {
-    private $observableEventNames = [
-                'created',
-                'updated',
-                'deleted',
-                'saved',
-                'restored',
-            ];
-    //
-    //
-    //$this->_rebuildXMLfile();
-    //
-
-    /**
-     * [created description].
-     *
+    private $observableEventNames  = [
+            "created",
+            "updated",
+            "deleted",
+            "saved",
+            "restored",
+        ];
+     /*
+     * [created description]
+     * 
      * @param Branch $branch [description]
      *
      * @return [type]         [description]

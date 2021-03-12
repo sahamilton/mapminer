@@ -20,7 +20,10 @@ class CalendarController extends Controller
     }
     /**
      * [index description]
-     * @return [type] [description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
      */
     public function index(Request $request)
     {

@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
 
         Schema::defaultStringLength(191);
         Activity::observe(ActivityObserver::class);
-        Person::observe(PersonObserver::class);
+        
         Branch::observe(BranchObserver::class);
         User::observe(UserObserver::class);
         Opportunity::observe(OpportunityObserver::class);

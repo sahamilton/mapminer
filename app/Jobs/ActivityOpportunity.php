@@ -39,23 +39,7 @@ class ActivityOpportunity implements ShouldQueue
      *
      * @return void
      */
-    /*public function handle()
-    {
-        // create the file
-
-        $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
-        $distribution = $report->getDistribution();
-        Excel::store(new ActivityOpportunityExport($this->period, $this->branches), $file);
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        $report = Report::with('distribution', 'distribution.person', 'distribution.person.userdetails')
-            ->where('job', $class)
-            ->firstOrFail();
-     
-        
-       
-        Mail::to($distribution)
-            ->send(new WeeklyActivityOpportunityReport($file, $this->period));
-    }*/
+    
     /**
      * Execute the job.
      *
@@ -63,12 +47,13 @@ class ActivityOpportunity implements ShouldQueue
      */
     public function handle()
     {
-        
+   
         $report = Report::with('distribution')
             ->where('job', 'ActivityOpportunity')
             ->firstOrFail();
         
-        // create the file
+
+
         $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
        
         (new ActivityOpportunityExport($this->period, $this->branches))->store($this->file)->chain(

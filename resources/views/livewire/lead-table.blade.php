@@ -113,13 +113,7 @@
             <a href="{{route('address.show',$lead->id)}}">
                 {{$lead->businessname}}
             </a>
-            <a data-toggle="modal" 
-            data-target="#add-lwactivity" 
-            data-title="{{$lead->businessname}}"
-            data-address_id = "{{$lead->id}}"
-            data-branch_id = "{{$branch->id}}"
-            title="Add activity at {{$lead->businessname}}" >
-            <i class="fas fa-plus-circle text text-success"></i> </a>
+            
         </td>
 
         <td>{{$lead->street}}</td>
