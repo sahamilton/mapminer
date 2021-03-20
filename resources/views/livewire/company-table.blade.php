@@ -29,7 +29,7 @@
             <th>Email</th>
             <th>Vertical</th>
             <th>Locations</th>
-            <th>Service Lines</th>
+           
             @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
 
             <th>Actions</th>
@@ -42,22 +42,12 @@
 
     </table>
     <div class="row">
+        
         <div class="col">
             {{ $companies->links() }}
         </div>
 
-        <div class="col text-right text-muted">
-            Showing {{ $companies->firstItem() }} to {{ $companies->lastItem() }} out of {{ $companies->total() }} results
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            {{ $companies->links() }}
-        </div>
-
-        <div class="col text-right text-muted">
-            Showing {{ $companies->firstItem() }} to {{ $companies->lastItem() }} out of {{ $companies->total() }} results
-        </div>
+       
     </div>
 
 </div>

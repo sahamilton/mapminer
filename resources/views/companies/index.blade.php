@@ -36,7 +36,7 @@ Export to Excel</a></p>
 @endif
 
 	@livewire('company-table')
-<p><span class="text text-danger"><sup>*</sup></span> within 25 miles of your location.</p>
+
 @include('partials/_modal')
 @include('partials/_scripts')
 @endsection
