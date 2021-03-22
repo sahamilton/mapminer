@@ -82,7 +82,7 @@ use Illuminate\Http\Request;
         Route::get('users/serviceline/{serviceline}', ['as'=>'serviceline.user', 'uses'=>'Admin\AdminUsersController@index']);
         Route::get('users/nomanager', ['as'=>'nomanager', 'uses'=>'SalesOrgController@noManager']);
         Route::get('users/nomanager/export', ['as'=>'nomanager.export', 'uses'=>'SalesOrgController@noManagerExport']);
-
+        Route::get('users/export', ['as'=>'users.export', 'uses'=>'UsersController@export']);
         Route::resource('users', 'Admin\AdminUsersController');
 
         Route::post('lastlogged', ['as'=>'lastlogged', 'uses'=>'Admin\AdminUsersController@lastlogged']);
