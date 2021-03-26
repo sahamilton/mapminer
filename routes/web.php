@@ -297,7 +297,7 @@ Route::group(
         //   Sales Notes
         Route::get('salesnotes/{company}', ['as'=>'salesnotes.company', 'uses'=>'SalesNotesController@show']);
         Route::get('salesnotes/print/{company}', ['as'=>'salesnotes.print', 'uses'=>'SalesNotesController@printSalesNotes']);
-        Route::resource('salesnotes', 'SalesNotesController');
+        Route::resource('salesnotes', 'SalesNotesController')->only(['show']);
         
         //   Sales Resources
         Route::get('resources', ['as'=>'resources.view', 'uses'=>'WatchController@getCompaniesWatched']);

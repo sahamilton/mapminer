@@ -14,7 +14,11 @@ class Howtofield extends NodeModel
         
         return belongsToMany(Company::class);
     }
+    protected $parentColumnName = 'parent_id';
 
+    protected $leftColumnName = 'lft';
+   
+    protected $rightColumnName = 'rgt';
     public function getTypes()
     {
         return ['tab'=>'tab',

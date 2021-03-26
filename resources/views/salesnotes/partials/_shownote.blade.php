@@ -5,11 +5,11 @@
                     
           
                       <a class="nav-link nav-item @if($loop->first) active @endif" 
-                          id="{{$tab->fieldname}}-tab" 
+                          id="{{$loop->index}}-tab" 
                           data-toggle="tab" 
-                          href="#{{$tab->fieldname}}" 
+                          href="#tab{{$loop->index}}" 
                           role="tab" 
-                          aria-controls="{{$tab->fieldname}}" 
+                          aria-controls="tab{{$loop->index}}" 
                           aria-selected="true">
                         <strong> {{$tab->fieldname}}</strong>
                       </a>
@@ -20,7 +20,8 @@
         <div class="tab-content" id="nav-tabContent"> 
 
             @foreach ($fields->where('depth', 1) as $tab)
-                <div id="{{$tab->fieldname}}" class="tab-pane show @if($loop->first) active @endif" >
+                <div id="tab{{$loop->index}}" 
+                  class="tab-pane  @if($loop->first) show active @else fade @endif" >
                   
                     @foreach ($tab->getDescendants() as $field)
                  
@@ -31,6 +32,7 @@
                         @php $notelets = $salesnote->where('howtofield_id', $field->id); @endphp
                          
                              @foreach($notelets as $notelet)
+                             @ray($notelet->fieldvalue)
                                 <p>{!! $notelet->fieldvalue !!}</p>
                               @endforeach
                         

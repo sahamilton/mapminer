@@ -437,8 +437,8 @@ class AddressController extends BaseController
                 return $branch->pivot->status_id == 2;
             }
         );
-        
-        if (! $owner) {
+
+        if (! $owner->count()) {
             return false;
         }
         return true;

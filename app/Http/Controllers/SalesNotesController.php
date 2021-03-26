@@ -30,7 +30,7 @@ class SalesNotesController extends BaseController {
             $this->attachmentField = $howtofield->where('type', '=', 'attachment')->pluck('id');
             parent::__construct($salesnote);
    
-     }
+    }
     /**
      * [index description]
      * 
