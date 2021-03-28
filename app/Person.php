@@ -168,7 +168,7 @@ class Person extends NodeModel
                 $servicelines, function ($q1) use ($servicelines) {
                     $q1->whereIn('servicelines.id', $servicelines);
                 }
-            )->pluck('id')->toArray();
+            )->orderBy('id')->pluck('id')->toArray();
         } else {
             $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
         }
@@ -189,7 +189,9 @@ class Person extends NodeModel
                     return $branch->branchesServiced->pluck('id')->toArray();
                 }
             );
-        return array_unique($branches->flatten()->toArray());
+
+            return  array_unique($branches->sortBy('id')->flatten()->toArray());
+            
     }
     /**
      * [getMyAccounts description]

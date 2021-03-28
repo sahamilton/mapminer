@@ -441,7 +441,8 @@ class BranchesController extends BaseController
      */
     public function listNearbyLocations(Branch $branch)
     {        
-        $branch->load('manager.reportsTo','manager.userdetails');
+        
+        $branch->load('manager.reportsTo', 'manager.userdetails');
         return response()->view(
             'branches.showlist', 
             compact('branch')

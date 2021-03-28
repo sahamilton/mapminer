@@ -8,6 +8,7 @@
   'company-table' => 'App\\Http\\Livewire\\CompanyTable',
   'dashboard-table' => 'App\\Http\\Livewire\\DashboardTable',
   'feedback-table' => 'App\\Http\\Livewire\\FeedbackTable',
+  'lead-source-table' => 'App\\Http\\Livewire\\LeadSourceTable',
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
   'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
