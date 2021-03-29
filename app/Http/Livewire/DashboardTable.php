@@ -47,9 +47,10 @@ class DashboardTable extends Component
             ->distinct()
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->paginate($this->perPage),
-            'roles'=>Role::whereIn('id', $this->defaultRoles)->select('id','display_name')->get(),
+            'roles'=>Role::whereIn('id', $this->defaultRoles)->select('id', 'display_name')->get(),
 
-        ]);
+            ]
+        );
 
     }
 }
