@@ -5,21 +5,24 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Address;
-use App\Branch;
+use App\Person;
 use App\Company;
+use App\Branch;
+
 
 class CompanyLocationTable extends Component
 {
     use WithPagination;
 
     public $perPage = 10;
-    public $sortField = 'id';
+    public $sortField = 'distance';
     public $state='All';
     public Company $company;
     public $company_id;
     public $sortAsc = true;
     public $search ='';
-    public Branch $branch;
+    //public Branch $branch;
+    public Person $person;
     public $claimed='All';
    
 
@@ -43,7 +46,7 @@ class CompanyLocationTable extends Component
         
         $this->company_id = $company_id;
         $this->company = Company::findOrFail($company_id);
-        $this->branch = Branch::findOrFail(1506);
+        $this->person = Person::where('user_id', auth()->user()->id)->first();
         
     }
     public function render()
@@ -52,7 +55,7 @@ class CompanyLocationTable extends Component
         return view(
             'livewire.company-location-table', [
                 'locations'=>Address::query()
-                    
+                    ->withDistance($this->person)
                     ->where('company_id', $this->company_id)
                     ->when(
                         $this->state != 'All', function ($q) {

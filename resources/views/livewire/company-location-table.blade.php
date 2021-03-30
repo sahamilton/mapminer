@@ -49,7 +49,8 @@
                 </th>
                 <th>Address</th>
 
-                <th><a wire:click.prevent="sortBy('city')" role="button" href="#">
+                <th>
+                    <a wire:click.prevent="sortBy('city')" role="button" href="#">
                         City
                         @include('includes._sort-icon', ['field' => 'city'])
                     </a>
@@ -60,6 +61,11 @@
                     </a>
                 </th>
                 <th>Assigned to Branch</th>
+                <th>
+                    <a wire:click.prevent="sortBy('distance')" role="button" href="#">
+                        Distance from you
+                    @include('includes._sort-icon', ['field' => 'distance'])
+                </th>
                
             </thead>
             <tbody>
