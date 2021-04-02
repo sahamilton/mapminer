@@ -12,6 +12,7 @@
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
   'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
+  'namdashboard' => 'App\\Http\\Livewire\\Namdashboard',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
   'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
   'user-table' => 'App\\Http\\Livewire\\UserTable',

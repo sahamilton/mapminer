@@ -32,7 +32,7 @@ class NAMDashboardController extends Controller
      */
     public function index()
     {
-        
+        return response()->view('dashboards.newnamdashboard');
         $manager = $this->person->with('managesAccount')->findOrFail(auth()->user()->person->id);
         return response()->view('managers.namdashboard', compact('manager'));
 
@@ -56,7 +56,9 @@ class NAMDashboardController extends Controller
      */
     public function select(Request $request)
     {
-        
+
+        $account = request('account');
+        return response()->view('dashboards.newnamdashboard', compact('account'));
         $period['from'] = Carbon::now()->subMonth();
         $period['to'] = Carbon::now();
         
