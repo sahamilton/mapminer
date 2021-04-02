@@ -508,9 +508,10 @@ trait GeoCode
      * 
      * @return [type]           [description]
      */
-    public function scopeWithDistance($query, $position)
+    public function scopeWithDistance($query, $location)
     {
-        return $query->selectRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) AS distance');
+        return $query->selectRaw("*, (ST_DISTANCE_SPHERE(POINT($location->lng, $location->lat), POINT(lng, lat))/1609.344) as distance");
+        //ST_DISTANCE_SPHERE(POINT($position->lng, $position->lat), POINT(lng, lat)) 
     }
 
     /**

@@ -30,10 +30,16 @@ class DashboardTable extends Component
 
         $this->sortField = $field;
     }
-    
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
-        return view('livewire.dashboard-table',[
+        return view(
+            'livewire.dashboard-table',
+            [
             'managers' => Person::query()->wherehas(
                 'userdetails.roles', function ($q) {
                     $q->whereIn('role_id', $this->showRoles);
