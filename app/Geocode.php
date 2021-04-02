@@ -101,17 +101,17 @@ trait GeoCode
             ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
 
-        $query = $query
+        return $query
             ->select()//pick the columns you want here.
             ->selectRaw("{$this->_haversine($location)} AS distance")
             ->mergeBindings($sub->getQuery())
             ->whereRaw("{$this->_haversine($location)} < $radius ")
-            ->orderBy('distance', 'ASC');
-        if ($limit) {
-            $query = $query->limit($limit);
-        }
-      
-        return $query;
+            ->orderBy('distance', 'ASC')
+            ->when(
+                $limit, function ($q) use ($limit) {
+                    $query = $query->limit($limit);
+                }
+            );
     }
 
     public function scopeCountNearby($query, array $latlng, $radius = 100, $limit = null)
@@ -120,17 +120,15 @@ trait GeoCode
         $location->lat = $latlng['lat'];
         $location->lng= $latlng['lng'];
 
-        ray($location);
-        $query = $query
+        return  $query
             ->selectRaw("count('id')")//pick the columns you want here.
             
             ->whereRaw("{$this->_haversine($location)} < $radius ")
-            ->orderBy('distance', 'ASC');
-        if ($limit) {
-            $query = $query->limit($limit);
-        }
-      
-        return $query;
+            ->orderBy('distance', 'ASC')->when(
+                $limit, function ($q) use ($limit) {
+                    $query = $query->limit($limit);
+                }
+            );
     }
     /*
      * ScopeNewNearby [description]
@@ -154,17 +152,16 @@ trait GeoCode
             ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
 
-        $query = $query
+        return $query
             ->select()//pick the columns you want here.
             ->selectRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 AS distance")
             ->mergeBindings($sub->getQuery())
             ->whereRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 < $radius ")
-            ->orderBy('distance', 'ASC');
-        if ($limit) {
-            $query = $query->limit($limit);
-        }
-      
-        return $query;
+            ->orderBy('distance', 'ASC')->when(
+                $limit, function ($q) use ($limit) {
+                    $query = $query->limit($limit);
+                }
+            );
     }
     /**
      * LocationsNearbyBranches [description]
@@ -496,9 +493,12 @@ trait GeoCode
      * 
      * @return [type]           [description]
      */
-    public function scopeDistance($query, $position, $dist)
+    public function scopeDistance($query, $position, $dist=null)
     {
+        
         return $query->whereRaw('ST_Distance_Sphere(position, POINT(' . $position->lng ."," .$position->lat . ')) < ' . $dist);
+        
+
     }
     /**
      * ScopeWithDistance [description]

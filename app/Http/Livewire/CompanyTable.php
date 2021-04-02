@@ -48,7 +48,7 @@ class CompanyTable extends Component
             'livewire.company-table', [
             'companies' => Company::query()
                 
-                
+                ->search($this->search)
                 ->with('managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
                 ->withCount('locations')
                 ->when(
