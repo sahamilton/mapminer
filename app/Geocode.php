@@ -109,7 +109,7 @@ trait GeoCode
             ->orderBy('distance', 'ASC')
             ->when(
                 $limit, function ($q) use ($limit) {
-                    $query = $query->limit($limit);
+                    $query = $q->limit($limit);
                 }
             );
     }
@@ -126,7 +126,7 @@ trait GeoCode
             ->whereRaw("{$this->_haversine($location)} < $radius ")
             ->orderBy('distance', 'ASC')->when(
                 $limit, function ($q) use ($limit) {
-                    $query = $query->limit($limit);
+                    $query = $q->limit($limit);
                 }
             );
     }
@@ -157,9 +157,10 @@ trait GeoCode
             ->selectRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 AS distance")
             ->mergeBindings($sub->getQuery())
             ->whereRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 < $radius ")
+
             ->orderBy('distance', 'ASC')->when(
                 $limit, function ($q) use ($limit) {
-                    $query = $query->limit($limit);
+                    $query = $q->limit($limit);
                 }
             );
     }
