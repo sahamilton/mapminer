@@ -41,6 +41,13 @@ class CompanyLocationTable extends Component
 
         $this->sortField = $field;
     }
+    /**
+     * [mount description]
+     * 
+     * @param [type] $company_id [description]
+     * 
+     * @return [type]             [description]
+     */
     public function mount($company_id)
     {
         
@@ -49,9 +56,14 @@ class CompanyLocationTable extends Component
         $this->person = Person::where('user_id', auth()->user()->id)->first();
         
     }
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
-        
+        ray($this->person);
         return view(
             'livewire.company-location-table', [
                 'locations'=>Address::query()
@@ -89,5 +101,10 @@ class CompanyLocationTable extends Component
             ]
         );
         
+    }
+
+    private function myPosition()
+    {
+        $this->person->getMyPosition();
     }
 }
