@@ -1,7 +1,7 @@
 <div>
     <h2>{{$manager->fullName()}}'s Dashboard</h2>
     <h4>for {{$company->companyname}} locations</h4>
-    @include('livewire.partials._periodSelector')
+    @include('livewire.partials._periodselector')
     @include('livewire.partials._companyselector')
     <h4>Account Summary</h4>
      <div wire:loading>
