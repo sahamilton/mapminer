@@ -35,7 +35,7 @@
     <h4>Branch Summary</h4>
     <p>For the period {{$this->period['from']}} to {{$this->period['to']}}</p>
     @include('livewire.partials._search', ['placehodler'=>'Search branches ...'])
-    @include('livewire.partials._perPage')
+    @include('livewire.partials._perpage')
     <div class="col form-inline">
             <label for="status">Status:</label>
             <select wire:model="status" 
