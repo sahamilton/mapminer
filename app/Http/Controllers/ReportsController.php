@@ -231,23 +231,27 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, RunReportFormRequest $request)
     {
+        if (request()->has('fromdate')) {
+                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+            
+        } elseif (session()->has('period')) {
+            $period=session('period');
         
-        if ($data = $this->_getMyBranches($request)) {
+        } else {
+            $period = [];
+        }
+        if (! $report->export) {
+            $job = "\App\Jobs\\". $report->job;
+            $job::dispatch($period);
+  
+        } elseif ($data = $this->_getMyBranches($request)) {
 
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
             
-            if (request()->has('fromdate')) {
-                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
-                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
             
-            } elseif (session()->has('period')) {
-                $period=session('period');
-            
-            } else {
-                $period = [];
-            }
             
             $export = "\App\Exports\\". $report->export;
             switch ($report->object) {

@@ -190,9 +190,10 @@ use Illuminate\Http\Request;
                               8 => "1182"];
 
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
+                App\Jobs\WeeklySummary::dispatch($period);
                 ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
-                App\Jobs\ActivityOpportunity::dispatch($period, $branches);
+                //App\Jobs\ActivityOpportunity::dispatch($period, $branches);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
