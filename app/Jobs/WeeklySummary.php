@@ -8,7 +8,7 @@ use App\User;
 use App\Activity;
 use App\Address;
 use App\Opportunity;
-use App\REport;
+use App\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
