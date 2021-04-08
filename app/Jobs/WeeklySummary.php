@@ -41,12 +41,13 @@ class WeeklySummary implements ShouldQueue
     {
         $priorPeriod = $this->_getPriorPeriod();
         $data = $this->_getPeriodStats();
-
+        // here's the data
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
         $distribution = $report->getDistribution();
+        // send mail to confirm
         Mail::to($distribution)
             ->send(new WeeklySummaryStatsReport($data, $this->period, $this->priorPeriod));  
     }
@@ -54,7 +55,6 @@ class WeeklySummary implements ShouldQueue
     private function _getPeriodStats()
     {
       
-        
         return [
             'current'=>
             [
