@@ -7,7 +7,8 @@ use App\Howtofield;
 use App\Http\Requests\SalesNotesFormRequest;
 use Illuminate\Http\Request;
 
-class SalesNotesController extends BaseController {
+class SalesNotesController extends BaseController 
+{
     public $salesnote;
     public $howtofield;
     public $company;
@@ -131,15 +132,41 @@ class SalesNotesController extends BaseController {
      */
     public function update(Request $request, Company $company)
     {
-       
+        
         $data = $this->_reformatRequestData($request);
-
+        $data = $this->_cleanseBlankDataFromArray($data);
         $company->salesnotes()->detach();
         foreach ($data as $field) {
-           
+            foreach ($field as $fn) {
+                if (is_null($fn['fieldvalue'])) {
+                    unset($fn["fieldvalue"]); 
+                }
+            }
+            
             $company->salesnotes()->attach($field);
+            
+            
         }
         return redirect()->route('salesnotes.show', $company->id);
+    }
+    /**
+     * _cleanseBlankDataFromArray remove empty fields]
+     * 
+     * @param Array $data from Request
+     * 
+     * @return Array       cleansed data
+     */
+    private function _cleanseBlankDataFromArray(Array $data)
+    {
+        foreach ($data as $key=>$field) {
+            foreach ($field as $el) {
+                if (is_null($el['fieldvalue'])) {
+                    unset($data[$key]);
+                    
+                }
+            }
+        }
+        return $data;
     }
 
     /**
@@ -263,20 +290,24 @@ class SalesNotesController extends BaseController {
         
     }
     /**
-     * [_reformatRequestData description]
+     * [_reformatRequestData retrieve request data and transform to 
+     *     array for updating model
      * 
      * @param Request $request [description]
      * 
-     * @return [type]           [description]
+     * @return Array Reformatted data
      */
     private function _reformatRequestData(Request $request)
     {
-        //dd(request()->all());
+       
         foreach (request()->except(['_token', 'submit','_method']) as $key=>$value) {
-            foreach ($value as $val) {
-                $data[][$key] = ['fieldvalue'=>$val];
+            if (is_array($value)) {      
+                foreach ($value as $val) {
+                    $data[][$key] = ['fieldvalue'=>$val];
+                }   
             }
         }
+       
         return $data;
     }
     
