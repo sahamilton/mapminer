@@ -67,8 +67,7 @@ class Kernel extends ConsoleKernel
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new WeeklySummary($period))
                 ->daily()
-                
-                ->at('17:05');
+                ->at('08:45');
             // Stephanie Harp Report
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
