@@ -8,7 +8,7 @@
         class="form-control input-sm" 
         id="branchselect" 
         name="branch">
-            <option value='All'>All Branches</option>
+            
               @foreach ($myBranches as $key=>$branchname)
                     <option value="{{$key}}">{{$branchname}}</option>
               @endforeach 
