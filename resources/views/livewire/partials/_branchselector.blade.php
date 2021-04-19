@@ -1,6 +1,6 @@
 @php $myBranches = auth()->user()->person->myBranches(); @endphp
 @if(count($myBranches)>1)
-<div class="col form-inline"> 
+<div class="col form-inline"  title="Select branch"> 
     <div class="input-group-prepend">
         <span class="input-group-text"><i class="fab fa-pagelines"></i></span>
     </div>

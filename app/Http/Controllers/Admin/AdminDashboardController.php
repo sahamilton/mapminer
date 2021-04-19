@@ -305,7 +305,7 @@ class AdminDashboardController extends BaseController
     {
     
            
-        $from = Carbon::today()->subMonth()->toDateString();
+        $from = Carbon::today()->subMonth()->startOfDay()->toDateString();
         $query = "select *
                 from (
                     select users.id as uid, 

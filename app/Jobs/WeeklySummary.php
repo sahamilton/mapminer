@@ -9,6 +9,7 @@ use App\Activity;
 use App\Address;
 use App\Opportunity;
 use App\Report;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,8 +29,10 @@ class WeeklySummary implements ShouldQueue
      */
     public function __construct(Array $period)
     {
+       
         $this->period = $period;
-        $this->priorPeriod = $this->_getPriorPeriod();
+        $this->_getPriorPeriod();
+       
     }
 
     /**
@@ -39,8 +42,9 @@ class WeeklySummary implements ShouldQueue
      */
     public function handle()
     {
-        $priorPeriod = $this->_getPriorPeriod();
+       
         $data = $this->_getPeriodStats();
+      
         // here's the data
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution')
@@ -59,7 +63,7 @@ class WeeklySummary implements ShouldQueue
             'current'=>
             [
                 'logins' => Track::whereBetween('lastactivity', [$this->period['from'], $this->period['to']])->count(),
-                'active_users' => User::withTrashed()->whereBetween('lastlogin', [$this->period['from'], $this->period['to']])->count(),
+                'active_users' => Track::whereBetween('lastactivity', [$this->period['from'], $this->period['to']])->distinct('user_id')->count(),
                 'new_users' => User::withTrashed()->whereBetween('created_at', [$this->period['from'], $this->period['to']])->count(),
                 'deleted_users' => User::withTrashed()->whereBetween('deleted_at', [$this->period['from'], $this->period['to']])->count(),
                 'activities' => Activity::completed()->whereBetween('activity_date', [$this->period['from'], $this->period['to']])->count(),
@@ -72,7 +76,7 @@ class WeeklySummary implements ShouldQueue
             [
 
                 'logins' => Track::whereBetween('lastactivity', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
-                'active_users' => User::withTrashed()->whereBetween('lastlogin', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
+                'active_users' => Track::whereBetween('lastactivity', [$this->priorPeriod['from'], $this->priorPeriod['to']])->distinct('user_id')->count(),
                 'new_users' => User::withTrashed()->whereBetween('created_at', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
                 'deleted_users' => User::withTrashed()->whereBetween('deleted_at', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
                 'activities' => Activity::completed()->whereBetween('activity_date', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
@@ -89,6 +93,7 @@ class WeeklySummary implements ShouldQueue
     }
     private function _getPriorPeriod()
     {
+
         $days = $this->period['from']->diffInDays($this->period['to']);
 
         if ($days <= 7) {
