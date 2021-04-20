@@ -14,12 +14,12 @@ class WeeklySummaryStatsReport extends Mailable
     public $data;
     public $priorPeriod;
 
-    public function __construct(array $data, array $period, array $priorPeriod)
+    public function __construct(array $data)
     {
         $this->data = $data;
-        $this->period = $period;
-        $this->priorPeriod = $priorPeriod;
-      
+        $this->period = $data['period']['current'];
+        $this->priorPeriod = $data['period']['prior'];
+        
     }
 
     /**

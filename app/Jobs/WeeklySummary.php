@@ -3,12 +3,10 @@
 namespace App\Jobs;
 use Mail;
 use App\Mail\WeeklySummaryStatsReport;
-use App\Track;
-use App\User;
-use App\Activity;
-use App\Address;
-use App\Opportunity;
+use App\Stats;
 use App\Report;
+use App\Person;
+
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -21,17 +19,18 @@ class WeeklySummary implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
-    public $priorPeriod;
+    public $manager;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Array $period)
+    public function __construct(Array $period, $manager = null)
     {
        
         $this->period = $period;
-        $this->_getPriorPeriod();
+        $this->manager = $manager;
+       
        
     }
 
@@ -42,67 +41,29 @@ class WeeklySummary implements ShouldQueue
      */
     public function handle()
     {
-       
-        $data = $this->_getPeriodStats();
-      
-        // here's the data
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        $report = Report::with('distribution')
-            ->where('job', $class)
-            ->firstOrFail();
-        $distribution = $report->getDistribution();
-        // send mail to confirm
-        Mail::to($distribution)
-            ->send(new WeeklySummaryStatsReport($data, $this->period, $this->priorPeriod));  
-    }
-
-    private function _getPeriodStats()
-    {
-      
-        return [
-            'current'=>
-            [
-                'logins' => Track::whereBetween('lastactivity', [$this->period['from'], $this->period['to']])->count(),
-                'active_users' => Track::whereBetween('lastactivity', [$this->period['from'], $this->period['to']])->distinct('user_id')->count(),
-                'new_users' => User::withTrashed()->whereBetween('created_at', [$this->period['from'], $this->period['to']])->count(),
-                'deleted_users' => User::withTrashed()->whereBetween('deleted_at', [$this->period['from'], $this->period['to']])->count(),
-                'activities' => Activity::completed()->whereBetween('activity_date', [$this->period['from'], $this->period['to']])->count(),
-                'new_leads' => Address::whereBetween('created_at', [$this->period['from'], $this->period['to']])->count(),
-                'new_opportunities' => Opportunity::whereBetween('created_at', [$this->period['from'], $this->period['to']])->count(),
-                'won_opportunities' => Opportunity::whereBetween('actual_close', [$this->period['from'], $this->period['to']])->where('closed', 1)->count(),
-                'won_value' => Opportunity::whereBetween('actual_close', [$this->period['from'], $this->period['to']])->where('closed', 1)->sum('value'),
-            ],
-            'prior'=>
-            [
-
-                'logins' => Track::whereBetween('lastactivity', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
-                'active_users' => Track::whereBetween('lastactivity', [$this->priorPeriod['from'], $this->priorPeriod['to']])->distinct('user_id')->count(),
-                'new_users' => User::withTrashed()->whereBetween('created_at', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
-                'deleted_users' => User::withTrashed()->whereBetween('deleted_at', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
-                'activities' => Activity::completed()->whereBetween('activity_date', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
-                'new_leads' => Address::whereBetween('created_at', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
-                'new_opportunities' => Opportunity::whereBetween('created_at', [$this->priorPeriod['from'], $this->priorPeriod['to']])->count(),
-                'won_opportunities' => Opportunity::whereBetween('actual_close', [$this->priorPeriod['from'], $this->priorPeriod['to']])->where('closed', 1)->count(),
-                'won_value' => Opportunity::whereBetween('actual_close', [$this->priorPeriod['from'], $this->priorPeriod['to']])->where('closed', 1)->sum('value'),
-
-
-            ]
-        ];
-
         
+        $stats = new Stats($this->period, $this->manager);
+        $data = $stats->getUsageStats();
+
+        $distribution = $this->_getThisDistribution();
+        
+        Mail::to($distribution)
+            ->cc([['email'=>auth()->user()->email, 'name'=>auth()->user()->person->fullName()]])
+            ->send(new WeeklySummaryStatsReport($data));  
     }
-    private function _getPriorPeriod()
+
+    private function _getThisDistribution()
     {
-
-        $days = $this->period['from']->diffInDays($this->period['to']);
-
-        if ($days <= 7) {
-            $this->priorPeriod['from'] = $this->period['from']->copy()->subWeek(); 
+        if ($this->manager) {
+           
+            return $distribution = [['email'=>$this->manager->userdetails->email, 'name'=>$this->manager->fullName()]];
         } else {
-            
-            $this->priorPeriod['from'] = $this->period['from']->copy()->subMonth(intdiv($days, 28));
+            $class= str_replace("App\Jobs\\", "", get_class($this));
+            $report = Report::with('distribution')
+                ->where('job', $class)
+                ->firstOrFail();
+            return $report->getDistribution();
         }
-        $this->priorPeriod['to'] = $this->period['from']->copy()->subDay();
     }
 
 }
