@@ -52,8 +52,8 @@ class BaseController extends Controller
     }
     protected function setDates($data)
     {
-        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
-        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
+        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom'])->startOfDay();
+        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto'])->endOfDay();
          return$data;
     }
 

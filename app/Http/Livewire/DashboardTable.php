@@ -8,7 +8,8 @@ use Livewire\WithPagination;
 
 class DashboardTable extends Component
 {
-     use WithPagination;
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     public $perPage = 10;
     public $sortField = 'lastname';
@@ -16,6 +17,7 @@ class DashboardTable extends Component
     public $search ='';
     public $showRoles = [3,6,7,9,14];
     public $defaultRoles = [3,6,7,9,14];
+
     public function updatingSearch()
     {
         $this->resetPage();

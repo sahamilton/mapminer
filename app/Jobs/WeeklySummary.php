@@ -46,10 +46,13 @@ class WeeklySummary implements ShouldQueue
         $data = $stats->getUsageStats();
 
         $distribution = $this->_getThisDistribution();
+       
+            Mail::to($distribution)
+                
+                ->send(new WeeklySummaryStatsReport($data));  
+
         
-        Mail::to($distribution)
-            ->cc([['email'=>auth()->user()->email, 'name'=>auth()->user()->person->fullName()]])
-            ->send(new WeeklySummaryStatsReport($data));  
+       
     }
 
     private function _getThisDistribution()
