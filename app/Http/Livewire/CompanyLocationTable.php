@@ -13,7 +13,7 @@ use App\Branch;
 class CompanyLocationTable extends Component
 {
     use WithPagination;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'distance';
     public $state='All';
@@ -24,7 +24,7 @@ class CompanyLocationTable extends Component
     //public Branch $branch;
     public Person $person;
     public $claimed='All';
-   
+    
 
 
     public function updatingSearch()

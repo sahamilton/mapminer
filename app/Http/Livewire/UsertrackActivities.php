@@ -11,7 +11,7 @@ use Livewire\WithPagination;
 class UsertrackActivities extends Component
 {
     use WithPagination;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'activity_date';
     public $activitytype='All';

@@ -21,7 +21,7 @@ class BranchOpportunityTable extends Component
     public $manager;
     public $person;
     public $accounttype=false;
-
+    public $paginationTheme = 'bootstrap';
     public function updatingSearch()
     {
         $this->resetPage();

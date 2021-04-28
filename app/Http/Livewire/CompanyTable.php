@@ -17,7 +17,7 @@ class CompanyTable extends Component
     public $search = '';
     public $types;
     public $accounttype=false;
-    
+    public $paginationTheme = 'bootstrap';
 
     public function updatingSearch()
     {

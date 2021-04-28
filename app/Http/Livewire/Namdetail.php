@@ -3,16 +3,17 @@
 namespace App\Http\Livewire;
 use App\Address;
 use App\Activity;
-use App\Branch;
+use App\Company;
 use App\Person;
+use App\PeriodSelector;
 use App\ActivityType;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\AddressBranch;
 
-class LeadTable extends Component
+class Namdetail extends Component
 {
-    use WithPagination;
+    use WithPagination, PeriodSelector;
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'businessname';
@@ -22,7 +23,7 @@ class LeadTable extends Component
     public $withOps = 'All';
     //public $updateMode = false;
     public $setPeriod = 'All';
-    public $period;
+
     public $activitytype_id;
     public $note;
     public $activity_date='2021-02-03';
@@ -30,10 +31,11 @@ class LeadTable extends Component
     public $followup_date;
     public $followup_activity;
     public $address_id;
-    public $branch_id;
     public $lead_source_id = 'All';
+    public Person $manager;
+    public Company $company;
    
-    public $myBranches;
+   
 
  
     public function updatingSearch()
@@ -66,13 +68,17 @@ class LeadTable extends Component
      * 
      * @return [type]         [description]
      */
-    public function mount($branch, $search = null)
+    public function mount($branch_id=null)
     {
-        $person = new Person();
-        $this->myBranches = $person->myBranches();
-        $this->search = $search;
-        $this->branch_id = array_keys($this->myBranches)[0];
+       
+        $this->manager = Person::with('managesAccount')
+            ->findOrFail(auth()->user()->person->id);
+      
         
+        $this->period = $this->getPeriod();
+        $this->company = $this->manager->managesAccount->first();
+        $this->company_id = $this->manager->managesAccount->first()->id;
+        $this->setPeriod = $this->period['period'];
     }
     /**
      * [render description]
@@ -82,10 +88,11 @@ class LeadTable extends Component
     public function render()
     {
         $this->_setPeriod();
-        $this->_setBranchSession();
+        
         return view(
             'livewire.lead-table', [
             'leads' => Address::query()
+                ->where('company_id', $this->company_id)
                 ->search($this->search)
                 ->when(
                     $this->withOps != 'All', function ($q) {
@@ -112,45 +119,32 @@ class LeadTable extends Component
                         
                     }
                 )
-
-                ->whereIn(
-                    'addresses.id', function ($query) {
-                        $query->select('address_id')
-                            ->from('address_branch')
-                            ->where('branch_id', $this->branch_id)
-                            ->where('status_id', 2)
-                            ->when(
-                                $this->setPeriod != 'All', function ($q) {
-                                    $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
-                                }
-                            );
-                    }
+                ->whereHas(
+                    [
+                        'assignedToBranch'=>function ($q) {
+                            $q->where('address_branch.branch_id', $this->branch_id);
+                        }
+                    ]
                 )
-            
                 ->with('assignedToBranch')
 
-                
                 ->withLastActivityId()
                 ->with('lastActivity')
                 ->dateAdded()
-                
-
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-                'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),
                 'opstatus'=>['All', 'Without', 'Only Open', 'Any'],
                 'activities'=>ActivityType::pluck('activity', 'id')->toArray(),
+                'companies'=>Company::where('person_id', $this->manager->id)
+                    ->pluck('companyname', 'id')->toArray(),
             ]
         );
     }
 
-    private function _setBranchSession()
-    {
-        session(['branch'=>$this->branch_id]);
-    }
-
+    
     private function _setPeriod()
     {
+        //dd(Person::where('user_id', auth()->user()->id)->first());
         if ($this->setPeriod != 'All') {
             $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
         }

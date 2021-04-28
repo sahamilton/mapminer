@@ -27,7 +27,7 @@ class ActivitiesTable extends Component
  
     public $status='All';
     public $user;
-
+    public $paginationTheme = 'bootstrap';
 
 
     public function updatingSearch()

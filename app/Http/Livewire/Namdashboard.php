@@ -13,6 +13,7 @@ class Namdashboard extends Component
 {
     
     use WithPagination, PeriodSelector;
+    public $paginationTheme = 'bootstrap';
     public $perPage=10;
     public $sortField='id';
     public $sortAsc=true;
