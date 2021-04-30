@@ -1,4 +1,3 @@
-
 <script type="text/javascript">
     $(window).load(function(){
         $('#flashNews').modal('show');

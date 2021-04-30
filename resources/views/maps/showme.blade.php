@@ -1,6 +1,6 @@
 @extends('site.layouts.maps')
 @section('content')
-@include('partials._newsflash')
+
 <h2>Use the Search Options</h2>
 @include('companies.partials._searchbar')
 <div id="message" style="color:#F00">{{\Session::get('message')}}</div>

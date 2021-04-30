@@ -48,6 +48,7 @@
 
 @include ('site.layouts._navbar')
 <div class="container">
+@include('partials._newsflash')
 <main class="py-4 flex-grow">
 
 

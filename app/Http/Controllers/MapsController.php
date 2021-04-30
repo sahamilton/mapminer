@@ -51,16 +51,9 @@ class MapsController extends BaseController
     {
     
 
-        $user = $this->user->findOrFail(auth()->id());
-        $nonews = $user->nonews;
-        $now = date('Y-m-d h:i:s');
 
-        if (! isset($nonews)) {
-            $nonews = now('America/Vancouver')->subYear()->toDateTimeString();
-        }
-        $news = $this->news->currentNews();
         $filtered = $this->location->isFiltered(['companies'], ['vertical']);
-        return view()->make('maps.showme', compact('news', 'filtered'));
+        return view()->make('maps.showme', compact('filtered'));
     }
     
     
