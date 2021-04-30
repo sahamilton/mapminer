@@ -40,7 +40,7 @@ class UserObserver
 
     public function updated(User $user)
     {
-        RebuildPeople::dispatch();
+        //RebuildPeople::dispatch();
         
         // Mail::queue(new UserNotification($user));
     }

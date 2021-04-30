@@ -453,7 +453,7 @@ class User extends Authenticatable
      * 
      * @return QueryBuilder [description]
      */
-    public function scopeLastLogin($query,$interval=null)
+    public function scopeLastLogin($query, $interval=null)
     {
         if ($interval) {
             return $query->whereBetween('lastlogin', [$interval['from'],$interval['to']]);

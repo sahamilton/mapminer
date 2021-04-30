@@ -42,16 +42,16 @@
                                         Edit {{$type->type}} account type
                                 </a>
                                 @if($type->companies_count == 0)
-                                <a class="dropdown-item"
-                                    data-href="{{route('accounttype.destroy',$type->id)}}" 
-                                    data-toggle="modal" 
-                                    data-target="#confirm-delete" 
-                                    data-title = " the {{$type->type}} account type"
-                                    title ="Delete {{$type->type}} account type" 
-                                    href="#">
-                                    <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-                                    Delete {{$type->type}} account type
-                                </a>
+                                    <a class="dropdown-item"
+                                        data-href="{{route('accounttype.destroy',$type->id)}}" 
+                                        data-toggle="modal" 
+                                        data-target="#confirm-delete" 
+                                        data-title = " the {{$type->type}} account type"
+                                        title ="Delete {{$type->type}} account type" 
+                                        href="#">
+                                        <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+                                        Delete {{$type->type}} account type
+                                    </a>
                                 @endif
                             </ul>
                         </div>

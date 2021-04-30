@@ -1089,3 +1089,18 @@ $locations = App\AddressBranch::selectRaw('count(addresses.id), addresses.state'
   ->groupBy('state')
   ->get();
   /*****************************************************************
+
+Get Company addresses with ditance from location
+*************/
+  SELECT companyname, businessname,street,city, state, zip, ST_Distance_Sphere(
+    point(-87.763, 41.878),
+    point(lng, lat)
+)* .000621371192 as distance
+from companies, addresses
+where addresses.company_id = companies.id
+and ST_Distance_Sphere(
+    point(-87.763, 41.878),
+    point(lng, lat)
+)* .000621371192 < 100
+and companies.id not in (512,514)
+order by companyname ASC, distance DESC

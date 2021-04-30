@@ -1,22 +1,39 @@
 <div>
+    <h2>{{$company->companyname}} locations 
+        @if($state !='All') 
+        in {{$state}}
+        @endif
+
+    </h2>
+    @if($claimed != 'All')
+        <p>{{ucwords($claimed)}} by Branches</p>
+
+    @endif
+       
     <div class="row" style="margin-top:5px">
         @include('livewire.partials._perpage')
         <div wire:loading>
             <div class="spinner-border"></div>
         </div>
-        @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
-    </div>
-    <div class="row" style="margin-top:5px">
         <div class="col form-inline">
             State: &nbsp;
             <select wire:model="state" class="form-control">
                 <option value="All">All</option>
                 @foreach ($allstates as $state)
-                    <option value="{{$state->state}}">{{$state->state}}</option>
+                    <option value="{{$state}}">{{$state}}</option>
                 @endforeach
             </select>
         </div>
-        
+        <div class="col form-inline">
+            Claimed: &nbsp;
+            <select wire:model="claimed" class="form-control">
+                <option value="All">All</option>
+                <option value="claimed">Claimed</option>
+                <option value="unclaimed">Unclaimed</option>    
+                
+            </select>
+        </div>
+        @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
     </div>
     <div class="row">
         <table 
@@ -32,7 +49,8 @@
                 </th>
                 <th>Address</th>
 
-                <th><a wire:click.prevent="sortBy('city')" role="button" href="#">
+                <th>
+                    <a wire:click.prevent="sortBy('city')" role="button" href="#">
                         City
                         @include('includes._sort-icon', ['field' => 'city'])
                     </a>
@@ -43,6 +61,11 @@
                     </a>
                 </th>
                 <th>Assigned to Branch</th>
+                <th>
+                    <a wire:click.prevent="sortBy('distance')" role="button" href="#">
+                        Distance from you
+                    @include('includes._sort-icon', ['field' => 'distance'])
+                </th>
                
             </thead>
             <tbody>

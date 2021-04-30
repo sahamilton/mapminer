@@ -69,6 +69,7 @@
 <body>
 	<div id="app">
 	@include('site.layouts.partials._googletagmanager')
+	@include('partials._newsflash')
 	@if(config('app.env')=='production')
 		@include('site.layouts.partials._fullstory')
 	@endif
@@ -76,9 +77,11 @@
 		
 	@include ('site.layouts._navbar')
 	@include ('site.layouts._alert')
+
 		<!-- Container -->
 	<div class="container">
-    
+		
+    	@include('partials._newsflash')
 		<main class="py-4 flex-grow">
 			
 			<!-- Notifications -->
@@ -98,8 +101,8 @@
 		
 @livewireScripts
 		@include('partials.besnappy')
-
+		
 		@yield('scripts')
-	
+		
 	</body>
 </html>

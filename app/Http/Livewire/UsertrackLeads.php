@@ -10,7 +10,7 @@ use Livewire\WithPagination;
 class UsertrackLeads extends Component
 {
     use WithPagination;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'businessname';
     public $sortAsc = true;

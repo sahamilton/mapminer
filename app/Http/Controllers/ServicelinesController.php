@@ -11,7 +11,11 @@ use Illuminate\Http\Request;
 class ServicelinesController extends BaseController
 {
     public $serviceline;
-
+    public function __construct(Serviceline $serviceline)
+    {
+        $this->serviceline = $serviceline;
+        parent::__construct($serviceline);
+    }
     
     /**
      * [index description]
@@ -49,4 +53,51 @@ class ServicelinesController extends BaseController
         return \redirect()->route('serviceline.index');
     }
 
+    /**
+     * [show description]
+     * 
+     * @param [type] $id   [description]
+     * @param [type] $type [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function show($id, $type = null)
+    {
+       
+        // Can the user see this service line?
+                
+        if (! in_array($id, $this->userServiceLines)) {
+            return redirect()->route('serviceline.index');
+        }
+       
+        ray($id, $type);
+        $serviceline = $this->serviceline->findOrFail($id);
+      
+        if (! $type) {
+            $branches = Branch::with('region', 'manager')
+                ->whereHas(
+                    'servicelines', function ($q) use ($id) {
+                        $q->where('serviceline_id', '=', $id);
+                    }
+                )
+                ->get();
+            
+            return response()->view('servicelines.show', compact('serviceline', 'branches'));
+        } else {
+            $companies = Company::with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'countlocations')
+                ->whereHas(
+                    'serviceline', function ($q) use ($id) {
+                        $q->where('serviceline_id', '=', $id)
+                            ->whereIn('serviceline_id', $this->userServiceLines);
+                    }
+                )
+            ->get();
+            $locationFilter = 'both';
+            
+            $filtered=null;
+            $title = 'All ' .$serviceline->ServiceLine .' Accounts';
+        
+            return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
+        }
+    }
 }

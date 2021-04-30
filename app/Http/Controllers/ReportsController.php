@@ -232,24 +232,31 @@ class ReportsController extends Controller {
     public function run(Report $report, RunReportFormRequest $request)
     {
         
-        if ($data = $this->_getMyBranches($request)) {
+        
+        if (request()->has('fromdate')) {
+                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+            
+        } elseif (session()->has('period')) {
+            $period=session('period');
+        
+        } else {
+            $period = [];
+        }
+        if (! $report->export) {
+            $job = "\App\Jobs\\". $report->job;
+            $job::dispatch($period);
+  
+        } elseif ($data = $this->_getMyBranches($request)) {
 
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
             
-            if (request()->has('fromdate')) {
-                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
-                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
             
-            } elseif (session()->has('period')) {
-                $period=session('period');
-            
-            } else {
-                $period = [];
-            }
             
             $export = "\App\Exports\\". $report->export;
+
             switch ($report->object) {
             case 'Company':
 
@@ -309,7 +316,10 @@ class ReportsController extends Controller {
             if (request()->has('company')) {
                 $company = $this->company->findOrFail(request('company'));
                 dispatch(new $job($company, $period, $myBranches, $report));
-            } else {
+            } elseif ($report->mail == 1) {
+                
+                dispatch(new $job($period, $manager));
+            } else {    
                 dispatch(new $job($period, $myBranches, $report));
             }   
             return redirect()->back();
@@ -372,20 +382,26 @@ class ReportsController extends Controller {
         if (request()->filled('manager')) {
             $person = $this->person->findOrFail(request('manager'));
             $branches = $person->getMyBranches();
+            $team = $this->_getMyTeam($person);
             
 
         } else {
             if (auth()->user()->hasRole(['sales_operations', 'admin'])) {
                 $person = $this->person->getCapoDiCapo();
+                $branches = $person->getMyBranches();
+                $team = $this->_getMyTeam($person);
+                $person = null;
             } else {
                 $person = $this->person->where('user_id', auth()->user()->id)->first();
+                $branches = $person->getMyBranches();
+                $team = $this->_getMyTeam($person);
             }
-            $branches = $person->getMyBranches();
+            
         
         } 
 
 
-        $team = $this->_getMyTeam($person);
+        
         return $data = ['team'=>$team, 'manager'=>$person, 'branches'=>$branches];
     }
     

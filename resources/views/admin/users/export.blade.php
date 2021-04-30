@@ -8,6 +8,7 @@
         <th>Roles</th>
         <th>ServiceLine</th>
         <th>Last Activity</th>
+        <th>Deleted</th>
     </tr>
 </thead>
 <tbody>
@@ -29,6 +30,7 @@
         </td>
 
         <td>{{ $user->lastlogin ? $user->lastlogin->format('M j, Y h:i a') : ''}}</td>
+        <td>{{ $user->deleted_at ? $user->deleted_at->format('Y-m-d') : ''}}</td>
 
     </tr>
 @endforeach

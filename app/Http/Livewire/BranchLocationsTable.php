@@ -10,12 +10,13 @@ class BranchLocationsTable extends Component
     
     use WithPagination;
     public $perPage = 10;
-    public $sortField = 'companyname';
+    public $sortField = 'businessname';
     public $sortAsc = true;
     public $search = '';
     public $branch;
+    public $range;
     public $accounttype=false;
-
+    public $paginationTheme = 'bootstrap';
 
     public function updatingSearch()
     {
@@ -36,22 +37,25 @@ class BranchLocationsTable extends Component
     {
         
         $this->branch = Branch::findOrFail($branch);
+        $this->range = $this->branch->radius;
     }
 
 
 
     public function render()
     {
-        return view('livewire.branch-locations-table', [
+        
+        return view(
+            'livewire.branch-locations-table', [
             'addresses'=>
-            Address::query()
-            ->nearby($this->branch, 25)
-            ->search($this->search)
-            ->with('company')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->paginate($this->perPage),
+                Address::query()
+                    ->search($this->search)
+                    ->nearby($this->branch, $this->range)
+                    ->whereDoesntHave('assignedToBranch')
+                    ->with('company', 'industryVertical')
+                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->paginate($this->perPage),
             ]
-
         );
     }
 }

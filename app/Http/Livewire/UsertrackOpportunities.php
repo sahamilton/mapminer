@@ -10,7 +10,7 @@ use Livewire\WithPagination;
 class UsertrackOpportunities extends Component
 {
     use WithPagination;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'opportunities.created_at';
     public $sortAsc = true;

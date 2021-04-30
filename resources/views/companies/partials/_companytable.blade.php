@@ -52,17 +52,7 @@
                 </a>
                 @endif
         </td>
-            <td>
-            <ul>
-                @foreach ($company->serviceline as $serviceline)
-
-                <li><a href="{{route('serviceline.accounts',[$serviceline->id,'co'])}}"
-                title="See all {{$serviceline->ServiceLine}} companies" >
-                {{$serviceline->ServiceLine}}
-                </a></li>
-                @endforeach
-                </ul>
-            </td>
+           
 
             @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
                 <td>

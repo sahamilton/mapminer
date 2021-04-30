@@ -82,7 +82,7 @@ use Illuminate\Http\Request;
         Route::get('users/serviceline/{serviceline}', ['as'=>'serviceline.user', 'uses'=>'Admin\AdminUsersController@index']);
         Route::get('users/nomanager', ['as'=>'nomanager', 'uses'=>'SalesOrgController@noManager']);
         Route::get('users/nomanager/export', ['as'=>'nomanager.export', 'uses'=>'SalesOrgController@noManagerExport']);
-
+        Route::get('users/export', ['as'=>'users.export', 'uses'=>'UsersController@export']);
         Route::resource('users', 'Admin\AdminUsersController');
 
         Route::post('lastlogged', ['as'=>'lastlogged', 'uses'=>'Admin\AdminUsersController@lastlogged']);
@@ -190,9 +190,10 @@ use Illuminate\Http\Request;
                               8 => "1182"];
 
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
+                App\Jobs\WeeklySummary::dispatch($period);
                 ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
-                App\Jobs\ActivityOpportunity::dispatch($period, $branches);
+                //App\Jobs\ActivityOpportunity::dispatch($period, $branches);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();

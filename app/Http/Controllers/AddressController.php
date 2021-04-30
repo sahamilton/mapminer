@@ -125,7 +125,7 @@ class AddressController extends BaseController
       
         $rankingstatuses = $this->address->getStatusOptions;
         $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->getMyBranches();
-     
+        
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
         
@@ -437,8 +437,8 @@ class AddressController extends BaseController
                 return $branch->pivot->status_id == 2;
             }
         );
-        
-        if (! $owner) {
+
+        if (! $owner->count()) {
             return false;
         }
         return true;

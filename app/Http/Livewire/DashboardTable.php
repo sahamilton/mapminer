@@ -8,7 +8,8 @@ use Livewire\WithPagination;
 
 class DashboardTable extends Component
 {
-     use WithPagination;
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     public $perPage = 10;
     public $sortField = 'lastname';
@@ -16,6 +17,7 @@ class DashboardTable extends Component
     public $search ='';
     public $showRoles = [3,6,7,9,14];
     public $defaultRoles = [3,6,7,9,14];
+
     public function updatingSearch()
     {
         $this->resetPage();
@@ -30,10 +32,16 @@ class DashboardTable extends Component
 
         $this->sortField = $field;
     }
-    
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
-        return view('livewire.dashboard-table',[
+        return view(
+            'livewire.dashboard-table',
+            [
             'managers' => Person::query()->wherehas(
                 'userdetails.roles', function ($q) {
                     $q->whereIn('role_id', $this->showRoles);
@@ -47,9 +55,10 @@ class DashboardTable extends Component
             ->distinct()
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->paginate($this->perPage),
-            'roles'=>Role::whereIn('id', $this->defaultRoles)->select('id','display_name')->get(),
+            'roles'=>Role::whereIn('id', $this->defaultRoles)->select('id', 'display_name')->get(),
 
-        ]);
+            ]
+        );
 
     }
 }

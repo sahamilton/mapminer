@@ -18,7 +18,7 @@ class BranchTable extends Component
     public $sortAsc = true;
     public $search ='';
     public $userServiceLines;
-
+    public $paginationTheme = 'bootstrap';
 
 
     public function updatingSearch()
