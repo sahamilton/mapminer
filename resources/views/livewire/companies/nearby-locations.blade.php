@@ -1,6 +1,11 @@
 <div>
     <h4>{{isset($company_ids[0]) ? 'Selected': 'All'}} Companies</h4>
-
+    <p>
+        <a href="{{route('company.index')}}" title="Return to all companies">
+            <i class="far fa-building"></i>
+                Return to all companies
+        </a>
+    </p>
     
     <div class="row mb-4 ">
         

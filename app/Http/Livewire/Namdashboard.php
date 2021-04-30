@@ -4,37 +4,40 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
-use App\Branch;
 use App\Company;
+use App\Address;
 use App\Person;
+use App\User;
 
-class Namdashboard extends Component
+class NamDashboard extends Component
 {
-    
-    use WithPagination, PeriodSelector;
-    public $paginationTheme = 'bootstrap';
-    public $perPage=10;
-    public $sortField='id';
-    public $sortAsc=true;
-    public $search ='';
-    public $myBranches;
-    public $status = 'withOpportunities';
-    
-    public $setPeriod;
-   
-    public Company $company;
+    use WithPagination;
+
+    public $perPage = 10;
+    public $sortField = 'businessname';
+    public $sortAsc = true;
+    public $search = null;
+    public $companies;
+    public $state_code = 'All';
     public $company_id;
-    public Person $manager;
+    public $person;
+    public $person_id;
+    public $status = 'Unassigned';
+    public $withOps = 'All';
+    public $managers;
+
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
-    public function updatingCompany_id()
-    {
-        $this->resetPage();
-    }
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]       [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -45,21 +48,27 @@ class Namdashboard extends Component
 
         $this->sortField = $field;
     }
-    public function mount($manager_id=null)
+    /**
+     * [mount description]
+     * 
+     * @return [type] [description]
+     */
+    public function mount()
     {
-        if (! $manager_id) {
-            $this->manager = Person::with('managesAccount')
-                ->findOrFail(auth()->user()->person->id);
+        if (auth()->user()->hasRole(['admin'])) {
+            $this->managers = $this->_getNAMS();
+            $this->person = $this->managers->first();
+            $this->person_id = $this->person->id;
         } else {
-            $this->manager = Person::with('managesAccount')
-                ->findOrFail($manager_id);
+            $this->person = Person::findOrFail(auth()->user()->person->id);
+            $this->person_id = $this->person->id;
         }
         
-        $this->period = $this->getPeriod();
-        $this->company = $this->manager->managesAccount->first();
-        $this->company_id = $this->manager->managesAccount->first()->id;
-        $this->setPeriod = $this->period['period'];
+        $this->_setCompany();
+       
+        
     }
+    
     /**
      * [render description]
      * 
@@ -67,58 +76,103 @@ class Namdashboard extends Component
      */
     public function render()
     {
-        $this->_setPeriod();
-        $this->_getCompanySummary();
+        ray($this->company_id);
+        if ($this->person_id != $this->person->id) {
+            $this->_setPerson();
+            $this->_setCompany();
+        }
         return view(
-            'livewire.namdashboard', 
+            'livewire.dashboards.nam-dashboard',
             [
-                'branches'=>Branch::select('id', 'branchname')
+                'locations' => Address::where('company_id', $this->company_id)
+                    
+                    ->search($this->search)
+                    ->withLastActivityId()
                     ->when(
-                        $this->status == 'withOpportunities', function ($q) {
-                            $q->whereHas(
-                                'opportunities', function ($q) {
-                                    $q->where('opportunities.created_at', '<', $this->period['to'])
-                                        ->where(
-                                            function ($q) {
-                                                $q->where('closed', 0)
-                                                    ->orWhere(
-                                                        function ($q) {
-                                                            $q->where('actual_close', '>', $this->period['to'])
-                                                                ->orWhereNull('actual_close');
-                                                        }
-                                                    );
-                                            }
-                                        )
-                                        ->whereHas(
-                                            'location', function ($q) {
-                                                $q->where('company_id', $this->company_id);
-                                            }
-                                        );
-                                }
-                            );
+                        $this->state_code != 'All', function ($q) {
+                            $q->whereState($this->state_code);
                         }
                     )
-                    ->summaryNAMStats($this->period, [$this->company_id])
-                    ->with('manager', 'manager.reportsTo')
+                    ->when(
+                        $this->status == 'All', function ($q) {
+                            $q->with('assignedToBranch');
+                        }
+                    )
+                    ->when(
+                        $this->status == 'Unassigned', function ($q) {
+                            $q->doesntHave('assignedToBranch');
+                        }
+                    )
+                    ->when(
+                        $this->status == 'Assigned', function ($q) {
+                            $q->has('assignedToBranch')
+                                ->with('assignedToBranch');
+                        }
+                    )
+                    ->when(
+                        $this->withOps != 'All', function ($q) {
+                            $q->when(
+                                $this->withOps == 'Without', function ($q) {
+                                    $q->whereDoesntHave('opportunities');
+                                }
+                            )
+                            ->when(
+                                $this->withOps == 'Only Open', function ($q) {
+                                    $q->whereHas(
+                                        'opportunities', function ($q) {
+                                            $q->where('closed', 0);
+                                        }
+                                    );
+                                }
+                            )
+                            ->when(
+                                $this->withOps == 'Any', function ($q) {
+                                    $q->has('opportunities');
+                                }
+                            );
+                            
+                        }
+                    )
+                    ->with('lastActivity')
+                    ->dateAdded()
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'companies'=>Company::where('person_id', $this->manager->id)
-                    ->pluck('companyname', 'id')->toArray(),
-            ]
-        ); 
+                'states' => Address::where('company_id', $this->company_id)
+                    ->distinct('state')->orderBy('state')->pluck('state'),
+                'company'=>Company::findOrFail($this->company_id),
+                'opstatus'=>['All', 'Without', 'Only Open', 'Any'],
 
+                    ]
+        );
     }
 
-    private function _setPeriod()
+    private function _getNAMS()
     {
-        if ($this->setPeriod != session('period')) {
-            $this->livewirePeriod($this->setPeriod);
+       
+        return 
+            Person::
+                whereHas(
+                    'userdetails.roles', function ($q) {
+                        $q->whereIn('name', ['national_account_manager']);
+                    }
+                )
+                ->has('managesAccount')
+                ->get();
             
-        }
     }
-
-    private function _getCompanySummary()
+    private function _setPerson()
     {
-        $this->company = Company::companyDetail($this->period)->findOrFail($this->company_id);
+        $this->person = Person::findOrFail($this->person_id);
+    }
+    private function _setCompany()
+    {
+        $companies = Company::whereHas(
+            'managedBy', function ($q) {
+                $q->where('id', $this->person->id);
+            }
+        )
+        ->has('locations')->get();
+        $this->companies = $companies->pluck('companyname', 'id')->toArray();
+        $this->company_id = array_keys($this->companies)[0];
     }
 }

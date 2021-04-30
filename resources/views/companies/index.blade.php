@@ -3,6 +3,7 @@
 @if(! isset($title))
 @can('manage_accounts')
 <h1>All Companies</h1>
+<p><a href="{{route('nearbycompanies')}}"><i class="fas fa-drafting-compass"></i> See nearby company locations</p>
 <p><a href="{{route('allcompanies.export')}}">
 <i class="far fa-file-excel"></i>
 Export to Excel</a></p>
