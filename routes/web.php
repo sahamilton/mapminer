@@ -147,6 +147,8 @@ Route::group(
         Route::get('/company/{accounttype}', ['as'=>'company.type', 'uses'=>'CompaniesController@byType']);
         Route::get('/companies', ['as'=>'company.index', 'uses'=>'CompaniesController@index']);
         Route::get('/companies/{company}', ['as'=>'company.show', 'uses'=>'CompaniesController@show']);
+
+        Route::get('/nearbycompanies', ['as'=>'nearbycompanies', 'uses'=>'CompaniesController@nearby']);
         //Route::resource('companies', 'CompaniesController', ['only' => ['index', 'show']])->name('company');
         
         
@@ -190,7 +192,7 @@ Route::group(
         Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
         Route::get('location/nearby', ['as' => 'nearby/location', 'uses' => 'LocationsController@mapNearbyLocations']);
         Route::post('location/contact', ['as'=>'location.addcontact', 'uses'=>'LocationContactController@store']);
-        
+       
         Route::resource('locations', 'LocationsController', ['only' => ['show']]);
         
         //     Managers

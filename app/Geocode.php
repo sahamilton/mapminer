@@ -12,7 +12,7 @@ trait GeoCode
        */
     public function getGeoCode($geoCode)
     {
-        
+       
         if (is_array($geoCode) && count($geoCode) >0 ) {
             
                 $data['lat'] = $geoCode[0]['latitude'];
@@ -106,7 +106,7 @@ trait GeoCode
             ->selectRaw("{$this->_haversine($location)} AS distance")
             ->mergeBindings($sub->getQuery())
             ->whereRaw("{$this->_haversine($location)} < $radius ")
-            ->orderBy('distance', 'ASC')
+            
             ->when(
                 $limit, function ($q) use ($limit) {
                     $query = $q->limit($limit);
