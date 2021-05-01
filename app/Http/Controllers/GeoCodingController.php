@@ -56,7 +56,7 @@ class GeoCodingController extends BaseController
     public function findMe(FindMeFormRequest $request)
     {
         $geocode = app('geocoder')->geocode(request('search'))->get();
-        dd($geocode, request('search'));
+        
         if (request()->filled('search')) {
             $address = trim(request('search'));
         }

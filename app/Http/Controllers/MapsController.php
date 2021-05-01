@@ -56,7 +56,7 @@ class MapsController extends BaseController
 
         $filtered = $this->location->isFiltered(['companies'], ['vertical']);
 
-        return view()->make('maps.showme', compact('news', 'filtered'));
+        return view()->make('maps.showme', compact( 'filtered'));
     }
 
     public function getLocationsPosition($id)

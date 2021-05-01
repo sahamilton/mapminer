@@ -7,9 +7,32 @@
         </a>
     </p>
     
+    <p>Lat: {{$location->lat}}, Lng:{{$location->lng}} {{$accounttype}}</p>
+    <div class="row mb-4">
+        <div class="col form-inline">
+            
+            <label for="accounttype">Account Type:</label>
+            <select wire:model="accounttype" 
+
+            class="form-control">
+                <option value="0">All</option>
+                @foreach ($accounttypes as $key=>$value)
+                    <option value="{{$key}}">{{$value}}</option>
+                @endforeach
+            </select>
+            <label for="company_ids">Companies:</label>
+            <select wire:model="company_ids" 
+            multiple
+            size="3"
+            class="form-control">
+                <option>All</option>
+                @foreach ($companies as $key=>$value)
+                    <option value="{{$key}}">{{$value}}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     <div class="row mb-4 ">
-        
-        
         <div class="col form-inline">
            <label for="distance">With locations within&nbsp;</label>
            <select wire:model="distance"  
@@ -30,17 +53,6 @@
                     </button>
             </form>
         </div>
-    </div>
-    <div class="col form-inline">
-        <label for="company_ids">Companies:</label>
-        <select wire:model="company_ids" 
-        multiple
-        class="form-control">
-            <option>All</option>
-            @foreach ($companies as $key=>$value)
-                <option value="{{$key}}">{{$value}}</option>
-            @endforeach
-        </select>
     </div>
     <button class="btn btn-success" 
     title="Export to Excel"
@@ -69,6 +81,8 @@
             <th>State</th>
             <th>ZIP</th>
             
+            <th>Number of Contacts</th>
+            <th>Created / Updated</th>
             <th>Assigned to Branch</th>
             <th>
                 <a wire:click.prevent="sortBy('distance')" 
@@ -81,16 +95,28 @@
         @foreach ($locations as $location)
           
             <tr>
-               <td>{{$location->company->companyname}}</td>
-               <td>{{$location->businessname}}</td>
+               <td>
+                    <a href="{{route('company.show', $location->company_id)}}">
+                            
+                        {{$location->company->companyname}}
+                    </a>
+                </td>
+               <td>
+                    <a href="{{route('address.show', $location->id)}}">
+                        {{$location->businessname}}
+                    </a>
+                
+               </td>
                <td>{{$location->street}}</td>
                <td>{{$location->city}}</td>
                <td>{{$location->state}}</td>
                <td>{{$location->zip}}</td>
-               
+               <td>{{$location->contacts_count}}</td>
+               <td>{{max($location->created_at, $location->updated_at)->format('Y-m-d')}}</td>
                <td>
+                
                     @foreach($location->assignedToBranch as $branch)
-                        {{$branch->branch_id}}
+                        {{$branch->id}}
                         {{! $loop->last ? ',' :''}}
                     @endforeach
                 </td>
