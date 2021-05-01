@@ -7,7 +7,7 @@
         </a>
     </p>
     
-    <p>Lat: {{$location->lat}}, Lng:{{$location->lng}} {{$accounttype}}</p>
+    
     <div class="row mb-4">
         <div class="col form-inline">
             
