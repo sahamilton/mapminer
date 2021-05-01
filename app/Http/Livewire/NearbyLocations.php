@@ -19,7 +19,7 @@ class NearbyLocations extends Component
     public $company_ids=[];
     public $address;
     public $distance = 25;
-    public $sortField = 'businessname';
+    public $sortField = 'distance';
     public $sortAsc ='true';
     public $perPage =10;
     public $accounttype = 0;
