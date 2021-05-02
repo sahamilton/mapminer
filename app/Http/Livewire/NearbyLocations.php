@@ -30,6 +30,12 @@ class NearbyLocations extends Component
     {
         $this->resetPage();
     }
+
+    public function updatingAccountype()
+    {
+        $this->$company_ids[0] = 'All';
+    }
+
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
