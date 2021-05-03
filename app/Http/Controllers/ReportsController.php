@@ -313,6 +313,7 @@ class ReportsController extends Controller {
             $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
             $period['to'] = Carbon::parse(request('todate'))->endOfDay();
             $job = "\App\Jobs\\". $report->job; 
+            
             if (request()->has('company')) {
                 $company = $this->company->findOrFail(request('company'));
                 dispatch(new $job($company, $period, $myBranches, $report));

@@ -116,7 +116,10 @@
                <td>
                 
                     @foreach($location->assignedToBranch as $branch)
-                        {{$branch->id}}
+                       
+                            <a href="{{route('branches.show', $branch->id)}}" title="Visit {{$branch->branchname}}">{{$branch->branchname}}
+                            </a>
+                        
                         {{! $loop->last ? ',' :''}}
                     @endforeach
                 </td>

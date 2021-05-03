@@ -39,6 +39,9 @@
         @break
         @endswitch
     @endif
+    <div wire:loading>
+            <div class="spinner-border"></div>
+        </div>
     <div class="row">
         <table class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
@@ -69,7 +72,7 @@
                         </a>
                     </th>
                     <th>Assigned to Branch(es)</th>
-                                        
+                    <th>Opportunities Value</th>                   
                     <th>
                         <a wire:click.prevent="sortBy('last_activity_id')" role="button" href="#">
                             Last activity
@@ -97,12 +100,21 @@
             <td>{{$lead->city}}</td>
             <td>{{$lead->state}}</td>
             <td>
-                
-                {{$lead->assignedToBranch ? implode(",",$lead->assignedToBranch->pluck('branchname')->toArray()) : ''}}
+                @foreach ($lead->assignedToBranch as $branch)
+                    <a href="{{route('branches.show', $branch->id)}}" title="Visit {{$branch->branchname}}">{{$branch->branchname}}
+                            </a>
+                        
+                        {{! $loop->last ? ',' :''}}
+
+                @endforeach
                 
             <td>
+                {{$lead->opportunities ? '$' . number_format($lead->opportunities->sum('value'),0) : ''}}
+
+            </td>    
+            <td>
                 @if($lead->lastActivity)
-                    {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
+                    ${{$lead->lastActivity->activity_date->format('Y-m-d')}}        
                 @endif
             </td>
             
