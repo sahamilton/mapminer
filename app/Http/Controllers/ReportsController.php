@@ -310,8 +310,8 @@ class ReportsController extends Controller {
 
             $myBranches = $data['branches'];
             $team = $data['team'];
-            $period['from']=Carbon::parse(request('fromdate')->startOfDay());
-            $period['to'] = Carbon::parse(request('todate')->endOfDay());
+            $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+            $period['to'] = Carbon::parse(request('todate'))->endOfDay();
             $job = "\App\Jobs\\". $report->job; 
             if (request()->has('company')) {
                 $company = $this->company->findOrFail(request('company'));

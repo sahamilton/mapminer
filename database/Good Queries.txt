@@ -1103,4 +1103,13 @@ and ST_Distance_Sphere(
     point(lng, lat)
 )* .000621371192 < 100
 and companies.id not in (512,514)
-order by companyname ASC, distance DESC
+order by companyname ASC, distance DESC\
+*****************************************************************
+Canadian leads geocoded incorrectly
+*****************************************************************
+SELECT addresses.id, businessname, street, city, state, zip, lat, lng, branch_id, leadsources.source
+FROM `addresses` , address_branch, leadsources
+where addresses.id = address_branch.address_id
+and addresses.lead_source_id = leadsources.id
+and state in ('AB','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT')
+and lat < 48
