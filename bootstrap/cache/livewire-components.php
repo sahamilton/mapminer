@@ -1,5 +1,6 @@
 <?php return array (
   'account-location' => 'App\\Http\\Livewire\\AccountLocation',
+  'accounttype-table' => 'App\\Http\\Livewire\\AccounttypeTable',
   'activities-table' => 'App\\Http\\Livewire\\ActivitiesTable',
   'branch-locations-table' => 'App\\Http\\Livewire\\BranchLocationsTable',
   'branch-opportunity-table' => 'App\\Http\\Livewire\\BranchOpportunityTable',
