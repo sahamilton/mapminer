@@ -43,7 +43,8 @@
               <label class="col-md-4 control-label" for="activity_date">Activity Date</label>
               
               <input class="form-control activity_date" 
-                  type="text" 
+                  type="text"
+                  required 
                   name="activity_date" 
                   autocomplete='off' 
                   id="activitydate" 
@@ -60,7 +61,7 @@
               type="checkbox" 
               name="completed" 
               id="completed" 
-              value="1" {{isset($user) && $user->completed==0 ? '' : 'checked'}}/>
+              value=1 {{isset($user) && $user->completed==0 ? '' : 'checked'}}/>
               {!! $errors->first('completed', '<span class="help-inline">:message</span>') !!}
             </div>
           </div>     

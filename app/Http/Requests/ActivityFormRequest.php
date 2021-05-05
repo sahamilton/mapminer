@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Factory;
 class ActivityFormRequest extends FormRequest
 {
     /**
@@ -23,9 +23,9 @@ class ActivityFormRequest extends FormRequest
      */
     public function rules()
     {
+        
         return [
-      
-            'activity_date'=>'date:required|exclude_unless:completed,1|before_or_equal:today',
+            'activity_date'=>'date|required',
             'activitytype_id'=>'required',
             'note'=>'required',
             'followup_date'=>'date|nullable|after:activity_date',
@@ -43,5 +43,18 @@ class ActivityFormRequest extends FormRequest
     public function messages()
     {
         return ['activity_date.before_or_equal:today'=>'The activity date for a completed activity must be a date before or equal to today.'];
+    }
+
+    public function validator(Factory $factory)
+    {
+        $validator = $factory->make($this->input(), $this->rules(), $this->messages(), $this->attributes());
+
+        $validator->sometimes(
+            'activity_date', 'before_or_equal:today', function ($input) {
+                return $input->completed === '1' ;
+            }
+        );
+
+        return $validator;
     }
 }
