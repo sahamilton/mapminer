@@ -37,7 +37,7 @@
 			</div>
 			<div class="col-md-6">
 				<p>
-					{!! Str::limit($post->news, 200) !!}
+					{!! Illuminate\Support\Str::limit($post->news, 200) !!}
 				</p>
 				<p><a class="btn btn-mini btn-default" href="{!!route('news.show', $post->slug)!!}">Read more</a></p>
 			</div>
