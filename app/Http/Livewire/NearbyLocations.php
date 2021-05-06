@@ -23,7 +23,7 @@ class NearbyLocations extends Component
     public $sortAsc ='true';
     public $perPage =10;
     public $accounttype = 0;
-
+    public $search='';
 
 
     public function updatingSearch()
@@ -65,6 +65,7 @@ class NearbyLocations extends Component
         return view(
             'livewire.companies.nearby-locations', [
                 'locations'=>Address::has('company')
+                    ->search($this->search)
                     ->when(
                         count($this->company_ids) && $this->company_ids[0] != 'All', function ($q) {
                             $q->whereIn('company_id', $this->company_ids);
