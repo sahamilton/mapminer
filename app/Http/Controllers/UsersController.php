@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Branch;
-
+use Excel;
+use App\Exports\UsersExport;
 use App\Http\Requests\UserProfileFormRequest;
 
 class UsersController extends Controller
@@ -142,5 +143,11 @@ class UsersController extends Controller
         }
         return redirect()->route('users.index')
             ->withMessage('Update '. $users->count() . ' api tokens');
+    }
+
+    public function export()
+    {
+        return Excel::download(new UsersExport, 'UsersExport.csv');
+//return Excel::download(new UsersExport($interval), $title.'.csv');
     }
 }

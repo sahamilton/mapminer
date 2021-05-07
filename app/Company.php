@@ -677,9 +677,9 @@ class Company extends NodeModel
 
     }
 
-    public function scopeCompanyDetail($query, $period, $branches)
+    public function scopeCompanyDetail($query, $period)
     {
-        $this->branches = $branches;
+       
         $this->period = $period;
 
         return $query->withCount(       
@@ -695,6 +695,8 @@ class Company extends NodeModel
                     }
                 );
             },
+            
+            
             'locations as worked'=>function ($query) {
                 $query->whereHas(
                     'assignedToBranch', function ($q) {
@@ -703,9 +705,17 @@ class Company extends NodeModel
                     }
                 );
             },
-
+            'opportunities as open_opportunities'=>function ($q1) {
+                $q1->open($this->period);
+            },
             
             ]
+        )->withSum(
+            [
+                'opportunities as open_value'=>function ($query) {
+                    $query->open($this->period);
+                },
+            ], 'value'
         );
     }
     /**
@@ -715,8 +725,9 @@ class Company extends NodeModel
      * 
      * @return [type]        [description]
      */
-    public function scopeCompanyStats($query)
+    public function scopeCompanyStats($query, $period = null)
     {
+        $this->period = $period;
         return $query->withCount('locations')
             ->withCount(
                 ['locations as leads' => function ($q) {

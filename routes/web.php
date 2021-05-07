@@ -50,7 +50,7 @@ Route::group(
         //Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
         Route::resource('activity', 'ActivityController');
         //Route::get('activity', [App\Http\Controllers\ActivityController::class, 'index'])->name('activity.index');
-       //Route::get('activity', [App\Http\Livewire\ActivitiesTable::class])->name('activity.index');
+        //Route::get('activity', [App\Http\Livewire\ActivitiesTable::class])->name('activity.index');
         
         //     Address
         Route::post('address/merge', ['as'=>'addresses.merge', 'uses'=>'AddressController@mergeAddress']);
@@ -147,6 +147,8 @@ Route::group(
         Route::get('/company/{accounttype}', ['as'=>'company.type', 'uses'=>'CompaniesController@byType']);
         Route::get('/companies', ['as'=>'company.index', 'uses'=>'CompaniesController@index']);
         Route::get('/companies/{company}', ['as'=>'company.show', 'uses'=>'CompaniesController@show']);
+
+        Route::get('/nearbycompanies', ['as'=>'nearbycompanies', 'uses'=>'CompaniesController@nearby']);
         //Route::resource('companies', 'CompaniesController', ['only' => ['index', 'show']])->name('company');
         
         
@@ -190,7 +192,7 @@ Route::group(
         Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
         Route::get('location/nearby', ['as' => 'nearby/location', 'uses' => 'LocationsController@mapNearbyLocations']);
         Route::post('location/contact', ['as'=>'location.addcontact', 'uses'=>'LocationContactController@store']);
-        
+       
         Route::resource('locations', 'LocationsController', ['only' => ['show']]);
         
         //     Managers
@@ -303,7 +305,7 @@ Route::group(
         //   Sales Notes
         Route::get('salesnotes/{company}', ['as'=>'salesnotes.company', 'uses'=>'SalesNotesController@show']);
         Route::get('salesnotes/print/{company}', ['as'=>'salesnotes.print', 'uses'=>'SalesNotesController@printSalesNotes']);
-        Route::resource('salesnotes', 'SalesNotesController');
+        Route::resource('salesnotes', 'SalesNotesController')->only(['show']);
         
         //   Sales Resources
         Route::get('resources', ['as'=>'resources.view', 'uses'=>'WatchController@getCompaniesWatched']);

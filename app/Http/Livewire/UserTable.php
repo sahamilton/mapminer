@@ -9,14 +9,14 @@ use Livewire\WithPagination;
 class UserTable extends Component
 {
     use WithPagination;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortAsc = true;
     public $search = '';
     public $serviceline =false;
     public $selectRole = false;
-
+    
 
     public function sortBy($field)
     {

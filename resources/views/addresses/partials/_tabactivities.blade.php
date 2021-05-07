@@ -34,7 +34,7 @@
                     @if($activity->user)
                         {{$activity->user->person->fullName()}}
                     @else
-                    No Long with Company
+                    No Longer with Company
                     @endif
                 </td>
                 <td>@if($activity->type)
@@ -62,7 +62,7 @@
                         <a class="dropdown-item" 
                         title="Edit Activity"
                           href="{{route('activity.edit',$activity->id)}}">
-                        <i class="far fa-edit text-info"" aria-hidden="true"> </i>
+                        <i class="far fa-edit text-info" aria-hidden="true"> </i>
                         Edit activity</a>
                         @if(! $activity->completed)
                         <a class="dropdown-item"

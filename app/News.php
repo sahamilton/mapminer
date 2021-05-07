@@ -38,6 +38,7 @@ class News extends Model
     public function currentNews($slug = null)
     {
         $nonews = auth()->user()->nonews;
+        
         $now = now('America/Vancouver');
         if (! isset($nonews)) {
             $nonews = now('America/Vancouver')->subYear();
@@ -106,7 +107,7 @@ class News extends Model
      */
     public function audience($id)
     {
-        dd($id);
+        
 
         // find all people by role
         $audience = [];

@@ -10,10 +10,8 @@ use App\Person;
 
 class LocationContacts extends Component
 {
-    use WithPagination;
-
-    
-
+    use WithPagination;    
+    public $paginationTheme = 'bootstrap';
     public $branch_id;
     public $myBranches;
     public $perPage=10;

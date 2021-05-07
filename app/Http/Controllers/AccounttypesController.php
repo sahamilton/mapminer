@@ -30,9 +30,9 @@ class AccounttypesController extends BaseController
      */
     public function index()
     {
-        $accounttypes = $this->accounttype->withCount('companies')->get();
+        
 
-        return response()->view('accounttypes.index', compact('accounttypes'));
+        return response()->view('accounttypes.index');
     }
 
     /**

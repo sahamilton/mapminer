@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\WeeklyActivityReminder;
+use App\Jobs\WeeklySummary;
 use App\Jobs\Top25WeeklyReport;
 use App\Jobs\ActivityOpportunity;
 use App\Jobs\AccountActivities;
@@ -61,7 +62,13 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
-            
+            // Weekly Summary Mapminer Stats
+            $period['from'] = Carbon::now()->subWeek()->startOfWeek()->startOfDay();
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek()->endOfDay();
+            $schedule->job(new WeeklySummary($period))
+                ->weekly()
+                ->mondays()
+                ->at('3:12');
             // Stephanie Harp Report
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();

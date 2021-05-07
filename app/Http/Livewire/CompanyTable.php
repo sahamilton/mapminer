@@ -17,7 +17,7 @@ class CompanyTable extends Component
     public $search = '';
     public $types;
     public $accounttype=false;
-
+    public $paginationTheme = 'bootstrap';
 
     public function updatingSearch()
     {
@@ -37,21 +37,24 @@ class CompanyTable extends Component
     public function mount()
     {
         $this->types = AccountType::all();
+        
     }
 
 
     public function render()
     {
+        
         return view(
             'livewire.company-table', [
             'companies' => Company::query()
+                
                 ->search($this->search)
                 ->with('managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
                 ->withCount('locations')
                 ->when(
                     $this->accounttype && $this->accounttype != 'All', function ($q) {
                         $q->whereHas(
-                            'type', function($q) {
+                            'type', function ($q) {
                                 $q->where('accounttypes.id', $this->accounttype);
                             }
                         );

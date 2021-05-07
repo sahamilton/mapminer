@@ -79,10 +79,11 @@ class LeadSource extends Model
     public function branchleads()
     {
 
-      return $this->hasManyThrough(AddressBranch::class, Address::class, 'lead_source_id', 'address_id');
+        return $this->hasManyThrough(AddressBranch::class, Address::class, 'lead_source_id', 'address_id');
     }
     /**
      * [unassigned description]
+     * 
      * @return [type] [description]
      */
     public function unassigned()
@@ -240,5 +241,10 @@ class LeadSource extends Model
               group by persons.id,status";
 
         return \DB::select($query);
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('source', 'like', "%{$search}%");
     }
 }

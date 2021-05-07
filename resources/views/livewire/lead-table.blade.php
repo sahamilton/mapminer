@@ -33,8 +33,12 @@
         </div>
         @include('livewire.partials._periodselector', ['all'=>true])
         <div class="col form-inline">
-            <label>With / W/O Opportunities</label>
-             <select wire:model="withOps" class="form-control">
+            <div class="input-group-prepend">
+                <span class="input-group-text h-38" title="With or Without Opportunities">
+                    <i class="fas fa-funnel-dollar"></i>
+                </span>
+            </div>
+             <select wire:model="withOps" class="form-control" title="With or Without Opportunities">
                 @foreach ($opstatus as $key)
                     <option value="{{$key}}">{{$key}}</option>
                 @endforeach

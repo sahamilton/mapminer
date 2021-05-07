@@ -46,7 +46,7 @@ class MyLeadsController extends BaseController
      */
     public function index(Branch $branch=null)
     {
-       
+        // Validate branch assignements
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
@@ -55,6 +55,7 @@ class MyLeadsController extends BaseController
 
             return redirect()->back()->withError(' That is not one of your branches');
         }
+        // set / read session variable
         if (! $branch && ! session('branch')) {
             $branch_ids = array_keys($myBranches);
             $branch_id = $branch_ids[0];

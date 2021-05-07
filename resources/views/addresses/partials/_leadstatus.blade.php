@@ -100,7 +100,7 @@
       name="branch_id" 
       value = "{{$myBranches[0]}}" />
     @else 
-    <select name="branch_id">
+    <select name="branch_id" required>
       @foreach ($myBranches as $branch_id)
         <option  value="{{$branch_id}}" >{{$branch_id}}</option>
       

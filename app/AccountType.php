@@ -22,4 +22,8 @@ class AccountType extends Model
     {
         return $this->hasMany(Company::class, 'accounttypes_id');
     }
+
+    
+
+    //$query->where('companyname', 'like', "%{$search}%");
 }

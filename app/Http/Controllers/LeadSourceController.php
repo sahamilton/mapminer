@@ -83,22 +83,7 @@ class LeadSourceController extends Controller
     public function index()
     {
     
-        $leadsources = $this->leadsource->withCount(
-            ['addresses',
-            'addresses as assigned'=>function ($query) {
-                $query->has('assignedToBranch')
-                    ->orHas('assignedToPerson');
-            },
-            'addresses as unassigned' => function ($query) {
-                $query->whereDoesntHave('assignedToBranch')
-                    ->whereDoesntHave('assignedToPerson');
-            },
-            'addresses as closed' => function ($query) {
-                    $query->has('closed');
-            }]
-        )->get();
-
-        return response()->view('leadsource.index', compact('leadsources'));
+        return response()->view('leadsource.index');
     }
 
     /**
@@ -355,24 +340,8 @@ class LeadSourceController extends Controller
     public function flushManagerLeads()
     {
         
-        $leadsources = $this->leadsource
-            ->whereHas(
-                'branchleads', function ($q) {
-                    $q->doesntHave('activities')
-                        ->doesntHave('opportunities');
-                }
-            )
-            ->withCount(
-                ['branchleads'=>function ($q) {
-                    $q->doesntHave('activities')
-                        ->doesntHave('opportunities');
-                }
-                ]
-            )->get();
-        
-        $managers = $this->person->managers();
-        
-        return response()->view('leadsource.flush', compact('managers', 'leadsources'));
+
+        return response()->view('leadsource.flush');
     }
     /**
      * [flushManagerLeadsConfirm description]

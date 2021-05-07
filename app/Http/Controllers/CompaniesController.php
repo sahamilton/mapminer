@@ -639,4 +639,10 @@ class CompaniesController extends BaseController
             new CompanyWithLocationsExport($company), $company->companyname. " locations.csv"
         );
     }
+
+    public function nearby()
+    {
+
+        return response()->view('companies.nearby');
+    }
 }

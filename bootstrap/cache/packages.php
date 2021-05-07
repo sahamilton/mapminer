@@ -6,13 +6,6 @@
       0 => 'Askedio\\SoftCascade\\Providers\\GenericServiceProvider',
     ),
   ),
-  'awobaz/compoships' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Awobaz\\Compoships\\ComposhipsServiceProvider',
-    ),
-  ),
   'barryvdh/laravel-debugbar' => 
   array (
     'providers' => 

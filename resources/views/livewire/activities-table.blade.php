@@ -33,21 +33,15 @@
                 @endforeach
             </select>
         </div>
-        <div class="row mb-4 ">
 
-        </div>
         <div wire:loading>
-            Processing Payment...
+            <div class="spinner-border"></div>
         </div>
     
     </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
-            <th>
-                
-                    Company
-                   
-            </th>
+            <th>Company</th>
             <th>
                 <a wire:click.prevent="sortBy('activity_date')" 
                 role="button" href="#" 

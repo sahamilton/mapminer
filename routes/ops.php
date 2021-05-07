@@ -160,6 +160,7 @@ use Illuminate\Http\Request;
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
         Route::get('salesnotes/edit/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@edit']);
+        Route::resource('salesnotes', 'SalesNotesController')->except(['show']);
         //   OrderImports
         
         Route::resource('orderimport', 'OrderImportController');

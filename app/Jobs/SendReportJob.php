@@ -38,6 +38,9 @@ class SendReportJob implements ShouldQueue
     public function handle()
     {
         $distribution = $this->report->getDistribution();
-        Mail::to($distribution)->send(new BranchStatsReportthis->($file, $this->period));
+        
+        Mail::from(config('mail.from'))
+            ->to($distribution)
+            ->send(new BranchStatsReport($file, $this->period));
     }
 }

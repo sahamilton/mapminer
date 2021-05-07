@@ -11,6 +11,7 @@ class ManagerSummary extends Component
 {
     
     use WithPagination, PeriodSelector;
+    public $paginationTheme = 'bootstrap';
     public $perPage=10;
     public $sortField='branchname';
     public $sortAsc=true;
