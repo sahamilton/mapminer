@@ -26,7 +26,7 @@ class NamDashboard implements DashboardInterface {
 
     public function isValid(Person $person)
     {
-        $this->companies =  $person->->getMyAccounts();
+        $this->companies =  $person->getMyAccounts();
        
         if (in_array($this->company->id, $this->companies)) {
             return true;

@@ -34,7 +34,7 @@ class AccountManagerCampaignController extends Controller
         $this->branch = $branch;
         $this->campaign = $campaign;
         $this->company = $company;
-        $this->opportunity = $opportunity
+        $this->opportunity = $opportunity;
         $this->person = $person;
     }
     
