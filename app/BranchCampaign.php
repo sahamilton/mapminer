@@ -10,12 +10,12 @@ class BranchCampaign extends Model
     protected $increments = false;
     protected $fillable = ['branch_id', 'campaign_id'];
 
-    public function $branch()
+    public function branch()
     {
         return $this->belongsTo(Branch::class);
     }
 
-    public function $campaign()
+    public function campaign()
     {
         return $this->belongsTo(Campaign::class);
     }

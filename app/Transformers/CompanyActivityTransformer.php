@@ -8,7 +8,7 @@ use League\Fractal;
 
 class CompanyActivityTransformer extends  Fractal\TransformerAbstract
 {
-    $fields = [];
+    
     /**
      * [transform description]
      * 
