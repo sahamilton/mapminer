@@ -2,13 +2,16 @@
     <h2>{{$branch->branchname}}</h2>
     <h4>Activities</h4>
     <p>for the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
-    <div class="row mb4" style="padding-bottom: 10px">
-        @include('livewire.partials._branchselector')
-        @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+    <div class="row mb4" style="padding-bottom: 10px"> 
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._branchselector')
+            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+        </div>
     </div>
 
     <div class="row mb-4 ">
-        @include('livewire.partials._perpage')
+       
         <div wire:loading>
             <div class="spinner-border"></div>
         </div>

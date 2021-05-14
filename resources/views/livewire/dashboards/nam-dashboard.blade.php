@@ -5,12 +5,14 @@
         @include('livewire.partials._NAMselector')
     </div>
     @endif
-    @include('livewire.partials._perpage')
-     <div class="col form-inline"> 
+   
+     <div class="col form-inline">  
+        @include('livewire.partials._perpage')
         @include('livewire.partials._companyselector')
         @include('livewire.partials._search', ['placeholder'=>'Search addresses'])
     </div>
     <div class="col form-inline"> 
+        <label><i class="fas fa-filter text-danger"></i> Filters</label>
         @include('livewire.partials._stateselector')
         @include('livewire.partials._assigned')
         @if ($status != 'Unassigned')
@@ -40,8 +42,8 @@
         @endswitch
     @endif
     <div wire:loading>
-            <div class="spinner-border"></div>
-        </div>
+        <div class="spinner-border"></div>
+    </div>
     <div class="row">
         <table class='table table-striped table-bordered table-condensed table-hover'>
             <thead>

@@ -11,11 +11,11 @@
     @endif
        
     <div class="row" style="margin-top:5px">
-        @include('livewire.partials._perpage')
-        <div wire:loading>
-            <div class="spinner-border"></div>
-        </div>
         <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            
+        
+            <i class="fas fa-filter text-danger"></i>
             State: &nbsp;
             <select wire:model="state" class="form-control">
                 <option value="All">All</option>
@@ -23,8 +23,7 @@
                     <option value="{{$state}}">{{$state}}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="col form-inline">
+        
             Claimed: &nbsp;
             <select wire:model="claimed" class="form-control">
                 <option value="All">All</option>
@@ -33,6 +32,9 @@
                 
             </select>
         </div>
+        <div wire:loading>
+        <div class="spinner-border"></div>
+    </div>
         @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
     </div>
     <div class="row">

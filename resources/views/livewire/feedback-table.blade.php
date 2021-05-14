@@ -7,12 +7,13 @@
         <div class="spinner-border"></div>
     </div>
 
-    <button class="btn btn-success" 
+    <button class="btn btn-success float-right" 
     title="Export to Excel"
     wire:click='export'>Export <i class="far fa-file-excel"></i></button>
     <div class="row mb-4 ">
-        @include('livewire.partials._perpage')
         <div class="col form-inline">
+        @include('livewire.partials._perpage')
+        <label>&nbsp;&nbsp;<i class="fas fa-filter text-danger"></i> Filters &nbsp;&nbsp;</label>
             <label for="accounttype">Status:</label>
             <select wire:model="status" 
 

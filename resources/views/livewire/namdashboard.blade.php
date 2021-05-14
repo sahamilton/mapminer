@@ -34,9 +34,12 @@
     </x-table.table>
     <h4>Branch Summary</h4>
     <p>For the period {{$this->period['from']}} to {{$this->period['to']}}</p>
-    @include('livewire.partials._search', ['placehodler'=>'Search branches ...'])
-    @include('livewire.partials._perpage')
+    <div class="row form-inline">
+        @include('livewire.partials._perpage')
+        @include('livewire.partials._search', ['placehodler'=>'Search branches ...'])
+    </div>
     <div class="col form-inline">
+        <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
             <label for="status">Status:</label>
             <select wire:model="status" 
             class="form-control">

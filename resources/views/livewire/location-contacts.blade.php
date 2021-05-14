@@ -7,14 +7,15 @@
     </div>
 
     <div class="row mb-4 ">
-        @include('livewire.partials._perpage')
-        <div wire:loading>
-            <div class="spinner-border"></div>
-        </div>
         <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            <div wire:loading>
+                <div class="spinner-border"></div>
+            </div>
+            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
             <div class="input-group-prepend">
             <span class="input-group-text">
-                <i class="fas fa-filter"></i>
+                <i class="fas fa-filter text-danger"></i>
             </span>
 
             <select wire:model="filter" 
@@ -25,14 +26,16 @@
                 
                 
             </select>
-            <p style="margin-left:20px;" >
-                <i  class="far fa-file-excel text-success"></i>
-                <a href="{{route('contacts.export', [$branch->id, 'filter'=>$filter])}}">
-                    <strong> Export Contacts</strong>
-                </a>
-            </p>
-        </div>   
-    
+            
+        </div> 
+
+    </div>
+    <div class="float-right">
+            <a href="{{route('contacts.export', [$branch->id, 'filter'=>$filter])}}">
+                <button class="btn btn-success">
+                    Export Contacts
+                </button> 
+        </a> 
     </div>
     <table  style="margin-top:20px" class='table table-striped table-bordered table-condensed table-hover'>
         <thead>

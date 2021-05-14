@@ -3,8 +3,11 @@
     <h2>Branch Summaries</h2>
 
     <p>for the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
-    @include('livewire.partials._periodselector')
-    @include('livewire.partials._perpage')
+    <div class="row form-inline">
+      @include('livewire.partials._perpage')
+      @include('livewire.partials._periodselector')
+    </div>
+    
     <div wire:loading>
         <div class="spinner-border"></div>
     </div>

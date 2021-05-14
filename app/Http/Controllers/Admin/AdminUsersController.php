@@ -118,7 +118,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-        $roles = Role::all();
+        /*$roles = Role::all();
         if (! $serviceline) {
         
             $servicelines = $this->userServiceLines;
@@ -128,8 +128,8 @@ class AdminUsersController extends BaseController
             $title = $serviceline->ServiceLine ." users";
         }
      
-        // Show the page
-        return response()->view('admin.users.index', compact('title' , 'roles', 'serviceline'));
+        // Show the page*/
+        return response()->view('admin.users.index', compact('serviceline'));
     }
 
     /**
@@ -566,7 +566,7 @@ class AdminUsersController extends BaseController
         $user = $this->user->onlyTrashed()->with('deletedperson')->findOrFail($id);
         $user->restore();
         $user->deletedperson->restore();
-        return redirect()->route('deleted.users')->withMessage($user->deletedperson->fullName() . ' has been restored');
+        return redirect()->route('users.index')->withMessage($user->deletedperson->fullName() . ' has been restored');
     }
 
     /**
@@ -584,7 +584,8 @@ class AdminUsersController extends BaseController
         $user->deletedperson->forceDelete();
         $user->forceDelete();
 
-        return redirect()->route('deleted.users')->withWarning($user->deletedperson->fullName() . ' has been permanently deleted');
+        return redirect()->route('users.index')
+            ->withWarning($user->deletedperson->fullName() . ' has been permanently deleted');
     }
 
     public function bulkdelete()

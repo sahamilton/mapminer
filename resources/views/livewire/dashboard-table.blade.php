@@ -1,19 +1,23 @@
 <div>
 
      <div class="row mb-4">
-        @include('livewire.partials._perpage')
-        <div wire:loading>
-            <div class="spinner-border"></div>
-        </div>
+       
+        
         <div class="col form-inline">
-            Filter: &nbsp;
+             @include('livewire.partials._perpage')
+             <label><i class="fas fa-filter text-danger"></i> Filter: &nbsp;</label>
             <select wire:model="showRoles" class="form-control" multiple>
 
                 @foreach ($roles as $role)
                 <option value="{{$role->id}}">{{$role->display_name}}</option>
                 @endforeach
-            </select>
+            </select> 
+            <div wire:loading>
+                <div class="spinner-border"></div>
+            </div>
         </div>
+    </div>
+    <div class="row mb-4">
         @include('livewire.partials._search', ['placeholder'=>'Search Managers'])
     </div>
 

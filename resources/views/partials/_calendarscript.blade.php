@@ -11,8 +11,8 @@
         var calendar = $('#calendar').fullCalendar({
             eventLimit: true,
             events: "{{route('calendar.index',$data['period']['period'])}}",
-            displayEventTime: true,
-            editable: true,
+            displayEventTime: false,
+            editable: false,
             eventRender: function (event, element, view) {
                 if (event.allDay === 'true') {
                     element.allDay = true;

@@ -1,7 +1,8 @@
 <div>   
     <p>for the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
     <div class="row mb4" style="padding-bottom: 10px">
-            
+        <div class="col form-inline">
+             @include('livewire.partials._perpage')
             <div class="col mb8">
                 <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -9,10 +10,12 @@
                 <input wire:model="search" class="form-control" type="text" placeholder="Search companies...">
             </div></div>
         </div>
+    </div>
        
     <div class="row mb-4 ">
-        @include('livewire.partials._perpage')
         <div class="col form-inline">
+            @include('livewire.partials._periodselector')
+            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filters:&nbsp;&nbsp;</label>
             <label for="status">Status:</label>
             <select wire:model="status" 
             class="form-control">
@@ -22,7 +25,7 @@
                 
             </select>
         </div>
-        @include('livewire.partials._periodselector')
+        
          <div class="col form-inline">
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 

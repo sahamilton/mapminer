@@ -19,12 +19,12 @@
 				
 				<tr>
 					<td>
-						<a href="{{route('activitytype.show',$activitytype->id">
+						<a href="{{route('activitytype.show',$activitytype->id)}}">
 							{{$activitytype->activity}}
 						</a>
 					</td>
 					
-					<td>{{$activitytype->activities_count}}</td>
+					<td>{{number_format($activitytype->activities_count,0)}}</td>
 					<td bgcolor='#{{$activitytype->color}}'>#{{$activitytype->color}}
 					</td>
 					<td>{{$activitytype->definition}}</td>
@@ -38,7 +38,7 @@
 
 					            <a class="dropdown-item"
 					                 href="{{route('activitytype.edit',$activitytype->id)}}">
-					                 <i class="far fa-edit text-info"" aria-hidden="true"> </i>
+					                 <i class="far fa-edit text-info"  aria-hidden="true"> </i>
 					                    Edit {{$activitytype->activity}} activity type
 					            </a>
 								<a class="dropdown-item"
@@ -57,6 +57,11 @@
 				</tr>
 				@endforeach
 			</tbody>
+			<tfoot>
+				<tr>
+				<td></td><td>{{number_format($activitytypes->sum('activities_count'),0)}}</td>
+			</tr>
+			</tfoot>
 		</table>
 
 	</div>

@@ -81,7 +81,7 @@ class UserTrackingController extends Controller
      */
     public function detail($model)
     {
-    
+        
         $this->user = User::with('person')->findOrFail(session('trackuser'));
         $this->period= session('period');
         $persons = $this->_getBranchManagers();

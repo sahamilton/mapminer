@@ -1,7 +1,9 @@
 <div>
     <div class="row" style="margin-top:5px">
-        @include('livewire.partials._perpage')
-        @include('livewire.partials._periodselector')
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._periodselector')
+        </div>
         <div wire:loading>
             <div class="spinner-border"></div>
         </div>

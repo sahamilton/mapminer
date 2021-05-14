@@ -15,12 +15,15 @@
     @include('livewire.partials._branchselector')
     
     <div class="row mb-4">
-        @include('livewire.partials._perpage')
-        @include('livewire.partials._periodselector', ['all'=>true])
-        <div wire:loading>
-            <div class="spinner-border"></div>
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._periodselector', ['all'=>true])
+            <div wire:loading>
+                <div class="spinner-border"></div>
+            </div>
         </div>
         <div class="col form-inline">
+            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
             Status: &nbsp;
             <select wire:model="filter" class="form-control">
                 @foreach ($filters as $key=>$value)

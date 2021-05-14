@@ -3,9 +3,10 @@
     <h2>Branch Summaries</h2>
     <!-- account name -->
     <p>for the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
-    @include('livewire.partials._periodselector')
-    @include('livewire.partials._perpage')
-    <div class="col form-inline"> 
+    
+    <div class="col form-inline">
+      @include('livewire.partials._periodselector')
+      @include('livewire.partials._perpage') 
       @include('livewire.partials._companyselector')
     </div>
     <div wire:loading>

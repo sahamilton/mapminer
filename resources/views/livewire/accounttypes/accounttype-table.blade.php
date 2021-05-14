@@ -11,9 +11,10 @@
            
         </div>
     <div class="row mb4" style="padding-bottom: 10px">
-        
-        @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
-        @include('livewire.partials._perpage')
+        <div class="col form-inline">
+            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+            @include('livewire.partials._perpage')
+        </div>
     </div>
      <div class="row mb-4">
         <div class="col form-inline">

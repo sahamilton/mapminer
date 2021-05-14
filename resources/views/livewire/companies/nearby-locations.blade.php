@@ -53,13 +53,18 @@
                     </button>
             </form>
         </div>
+    
+        <div class="float-right">
+            <button class="btn btn-success" 
+            title="Export to Excel"
+            wire:click='export'>Export <i class="far fa-file-excel"></i></button>
+        </div>
     </div>
-    <button class="btn btn-success" 
-    title="Export to Excel"
-    wire:click='export'>Export <i class="far fa-file-excel"></i></button>
     <div class="row mb-4 ">
-        @include('livewire.partials._perpage')
-        @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+        </div>
        
     </div>
     <div wire:loading>

@@ -80,13 +80,13 @@
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                   Sales Organization</a>
                   
-                  
-                  
+                
                   
                 @can ('manage_opportunities')
                     
                     <a class="dropdown-item" href="{{route('branch.leads')}}">
                     <i class="fas fa-arrow-right"></i> Branch Leads</a>
+
                    <a class="dropdown-item"  href="{{route('opportunity.index')}}">
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
                     Branch Opportunities</a>

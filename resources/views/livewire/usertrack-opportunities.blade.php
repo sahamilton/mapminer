@@ -3,9 +3,10 @@
 @php $activityTypes = \App\ActivityType::all(); @endphp
  
 <div class="row mb-4">
-        @include('livewire.partials._perpage')
-        @include('livewire.partials._periodSelector')
+        
         <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._periodSelector')
             Status: &nbsp;
             <select wire:model="filter" class="form-control">
                 <option value="all">All</option>
@@ -15,7 +16,7 @@
             </select>
         </div>
 
-        <div class="col">
+        <div class="row">
             <input wire:model="search" class="form-control" type="text" placeholder="Search opportunities...">
         </div>
     </div>

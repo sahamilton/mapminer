@@ -1,8 +1,10 @@
 <div>
     <div class="row mb-4">
-        @include('livewire.partials._perpage')
+        
          <div class="col form-inline">
-            Type:
+            @include('livewire.partials._perpage')
+            
+            <i class="fas fa-filter text-danger"></i> Type:
             <select wire:model="accounttype" 
             class="form-control">
                 <option>All</options>

@@ -31,8 +31,8 @@
     title="Export to Excel"
     wire:click='export'>Export <i class="far fa-file-excel"></i></button>
     <div class="row mb-4 ">
-        @include('livewire.partials._perpage')
         <div class="col form-inline">
+            @include('livewire.partials._perpage')
             <label for="accounttype">Account Type:</label>
             <select wire:model="accounttype" 
 

@@ -7,7 +7,7 @@
         <p>
             <a href="{{route('usertracking.index')}}">Return to all user tracking</a>
         </p>
-        @switch ($model) 
+        @switch (ucwords($model))
             
             @case ('Opportunity')
                 @livewire('usertrack-opportunities', ['period'=>$period, 'user'=>$user])

@@ -37,11 +37,8 @@ class CalendarController extends Controller
             $period['to'] = $period['to']->endOfWeek();
         }
         
-
         return $this->_getEventsToJson($period);
          
-
-        
     }
     
     /**

@@ -22,12 +22,17 @@
     <p>created in all time periods</p>
     @endif
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
-
-    @include('livewire.partials._branchselector')
-
+    <div class="row" style="margin-bottom:10px">
+        <div class="col form-inline">
+            @include('livewire.partials._branchselector')
+            @include('livewire.partials._search', ['placeholder'=>'Search leads'])
+        </div>
+    </div>
     
     <div class="row">
-        @include('livewire.partials._perpage')
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+        </div>
         <div wire:loading>
             <div class="spinner-border"></div>
         </div>
@@ -44,7 +49,7 @@
                 @endforeach
             </select>
         </div>
-        @include('livewire.partials._search', ['placeholder'=>'Search leads'])
+       
         
         
     </div>
