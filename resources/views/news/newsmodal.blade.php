@@ -19,7 +19,7 @@
             </button>
             </div>
             <div class="modal-body" >
-               @ray($news)
+              
                @foreach ($news as $new)
                 
                     <h4>{{$new->title}}</h4>

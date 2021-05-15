@@ -253,7 +253,7 @@ class MgrDashboardController extends DashboardController
         if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team']['me']->directReports()->get();
-            ray($data);
+       
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
           
         } else {

@@ -3,7 +3,7 @@
         <tr></tr>
         <tr><th>Mapminer Summary Statistics</th></tr>
         <tr>
-            @ray($manager)
+          
             @if($manager->count()) 
               <th> for {{$manager->fullName()}}'s team</th>
             @endif

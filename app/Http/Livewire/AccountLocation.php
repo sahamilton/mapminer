@@ -49,7 +49,7 @@ class AccountLocation extends Component
     {
         if ($this->address) {
             $geocode = app('geocoder')->geocode($this->address)->get();
-            ray($geocode->first()->getCoordinates());
+           
             
             $this->latlng['lat'] = $geocode->first()->getCoordinates()->getLatitude();
             $this->latlng['lng'] = $geocode->first()->getCoordinates()->getLongitude();

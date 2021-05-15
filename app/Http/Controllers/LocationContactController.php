@@ -33,8 +33,8 @@ class LocationContactController extends Controller
      */
     public function index()
     {
- 
-         return response()->view('contacts.index');
+        $myBranches = $this->person->myBranches();
+        return response()->view('contacts.index', compact('myBranches'));
     }
     /**
      * [branchContacts description]

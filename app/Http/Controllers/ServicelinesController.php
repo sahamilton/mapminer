@@ -70,7 +70,7 @@ class ServicelinesController extends BaseController
             return redirect()->route('serviceline.index');
         }
        
-        ray($id, $type);
+  
         $serviceline = $this->serviceline->findOrFail($id);
       
         if (! $type) {

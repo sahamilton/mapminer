@@ -12,7 +12,7 @@
             <div wire:loading>
                 <div class="spinner-border"></div>
             </div>
-            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
+            
             <div class="input-group-prepend">
             <span class="input-group-text">
                 <i class="fas fa-filter text-danger"></i>

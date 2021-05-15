@@ -13,7 +13,7 @@ class LocationContacts extends Component
     use WithPagination;    
     public $paginationTheme = 'bootstrap';
     public $branch_id;
-    public $myBranches;
+    public Person $person;
     public $perPage=10;
     public $sortField='lastname';
     public $sortAsc=true;
@@ -39,17 +39,16 @@ class LocationContacts extends Component
     {
         
 
-        
-        $person = new Person();
-        $this->myBranches = $person->myBranches();
-        $this->branch_id = array_key_first($this->myBranches);
+        $this->person = Person::where('user_id', auth()->user()->id)->first();
+       
        
     }
 
     public function render()
     {
-
-              
+        $this->_getInitialBranchId();
+       
+        @ray($this->branch_id);    
         return view(
             'livewire.location-contacts', [
                 'contacts'=>AddressBranch::query()
@@ -65,10 +64,21 @@ class LocationContacts extends Component
                     ->search($this->search)
                     ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'branch'=>Branch::query()->findOrFail($this->branch_id),
+                'myBranches' => $this->person->myBranches(),
+                'branch'=>Branch::findOrFail($this->branch_id),
             ]
         );
     }
     
-    
+    private function _getInitialBranchId()
+    {
+        
+        if (! $this->branch_id) {
+            
+            $myBranches= $this->person->myBranches();
+           
+            $this->branch_id = array_key_first($myBranches);
+
+        }
+    }
 }

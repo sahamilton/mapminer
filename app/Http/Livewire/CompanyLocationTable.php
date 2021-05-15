@@ -63,7 +63,7 @@ class CompanyLocationTable extends Component
      */
     public function render()
     {
-        ray($this->person);
+        
         return view(
             'livewire.company-location-table', [
                 'locations'=>Address::query()

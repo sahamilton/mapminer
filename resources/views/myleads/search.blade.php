@@ -25,7 +25,7 @@
 <div class="row">
         @include('maps.partials._form')
 </div>
-@ray($search, $branch)
+
 @livewire('lead-table',['search'=>$search, 'branch'=>$branch])
 @include('myleads.partials._mylead')
   

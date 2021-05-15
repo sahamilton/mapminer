@@ -32,7 +32,7 @@
                         @php $notelets = $salesnote->where('howtofield_id', $field->id); @endphp
                          
                              @foreach($notelets as $notelet)
-                             @ray($notelet->fieldvalue)
+                           
                                 <p>{!! $notelet->fieldvalue !!}</p>
                               @endforeach
                         

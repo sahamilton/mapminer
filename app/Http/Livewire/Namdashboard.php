@@ -76,7 +76,7 @@ class NamDashboard extends Component
      */
     public function render()
     {
-        ray($this->company_id);
+       
         if ($this->person_id != $this->person->id) {
             $this->_setPerson();
             $this->_setCompany();

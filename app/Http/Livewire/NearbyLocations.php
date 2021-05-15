@@ -120,7 +120,7 @@ class NearbyLocations extends Component
     public function export()
     {
         $this->updateAddress();
-        ray($this->company_ids);
+       
         return Excel::download(
             new ExportNearbyLocations(
                 $this->location, 

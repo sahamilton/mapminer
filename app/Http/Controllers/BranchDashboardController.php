@@ -227,7 +227,7 @@ class BranchDashboardController extends DashboardController
         if (count($branches) > 1) {
             $data['branches'] = $branches;
         }
-        ray($data);
+       
         return $data;
     }
 
