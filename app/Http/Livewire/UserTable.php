@@ -18,6 +18,7 @@ class UserTable extends Component
     public $serviceline ='All';
     public $selectRole = false;
     public $status = 'current';
+    public $showConfirmation=false;
 
     
 
@@ -84,5 +85,20 @@ class UserTable extends Component
                     'servicelines'=>ServiceLine::pluck('serviceline', 'id'),
             ]
         );
+    }
+
+
+    public function restore(Int $user_id)
+    {
+        $user = User::onlyTrashed()->with('deletedperson')->findOrFail($user_id);
+        $user->restore();
+        $user->deletedperson->restore();
+        session()->flash('message', $user->person->fullName(). " has been restored");
+
+    }
+
+    public function delete()
+    {
+        $this->showConfirmation = true;
     }
 }

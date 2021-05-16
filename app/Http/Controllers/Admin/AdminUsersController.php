@@ -555,7 +555,7 @@ class AdminUsersController extends BaseController
         return response()->view('admin.users.deleted', compact('users'));
     }
     /**
-     * Restre soft deleted person
+     * Restore soft deleted person
      * 
      * @param Int $id id of deleted user
      * 

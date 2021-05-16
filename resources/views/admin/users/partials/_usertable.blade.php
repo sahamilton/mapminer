@@ -38,7 +38,15 @@
         <td>{{$user->lastlogin ? $user->lastlogin->format('M j, Y h:i a'): ''}}</td>
         <td>@if($user->updated_at) {{$user->updated_at->format('M j, Y h:i a')}} @endif</td>
         @if($status != 'current')
-            <td>@if($user->deleted_at) {{$user->deleted_at->format('M j, Y h:i a')}} @endif</td>
+            <td>
+                @if($user->deleted_at)
+                   {{$user->deleted_at->format('M j, Y h:i a')}}<br /> 
+                   <i wire:click="restore({{$user->id}})" class="fas fa-trash-restore text-success" title="Restore {{$user->deletedperson->fullName()}} "></i>
+                   
+                @endif 
+               
+            </td>
+
         @endif
         <td class="col-md-2">
             <div class="btn-group">
@@ -48,12 +56,8 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     @if($user->deleted_at)
-                        <a class="dropdown-item"
-                            href="{{route('users.restore',$user->id)}}">
-                            <i class="far fa-edit text-info"" 
-                            aria-hidden="true"> </i>Restore {{ $user->deletedperson->fullName()}}</a>
-
-                            <a class="dropdown-item" 
+                    
+                        <a class="dropdown-item" 
                             data-href="{{route('users.permdestroy',$user->id)}}" 
                             data-toggle="modal" 
                             data-target="#confirm-delete" 
@@ -63,21 +67,21 @@
                             Permanently Delete  {{$user->deletedperson->fullName()}}</a>
 
                     @else
-                    <a class="dropdown-item"
-                        href="{{route('users.edit',$user->id)}}">
-                        <i class="far fa-edit text-info" 
-                            aria-hidden="true"> 
-                        </i>Edit {{$user->person ? $user->person->fullName(): 'this person'}}
-                    </a>
+                        <a class="dropdown-item"
+                            href="{{route('users.edit',$user->id)}}">
+                            <i class="far fa-edit text-info" 
+                                aria-hidden="true"> 
+                            </i>Edit {{$user->person ? $user->person->fullName(): 'this person'}}
+                        </a>
 
-                    <a class="dropdown-item" 
-                        data-href="{{route('users.destroy',$user->id)}}" 
-                        data-toggle="modal" 
-                        data-target="#confirm-delete" 
-                        data-title = "{{$user->person ? $user->person->fullName(): 'this person'}}" href="#">
-                        <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-                        Delete  {{$user->person ? $user->person->fullName(): 'this person'}}
-                    </a>
+                        <a class="dropdown-item" 
+                            data-href="{{route('users.destroy',$user->id)}}" 
+                            data-toggle="modal" 
+                            data-target="#confirm-delete" 
+                            data-title = "{{$user->person ? $user->person->fullName(): 'this person'}}" href="#">
+                            <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+                            Delete  {{$user->person ? $user->person->fullName(): 'this person'}}
+                        </a>
                     @endif
                 </ul>
             </div>

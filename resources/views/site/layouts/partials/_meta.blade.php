@@ -1,8 +1,8 @@
 <meta charset="utf-8" />
 		<title>
-			@section('title')
+			
 			{{env('APP_NAME')}}
-			@show
+			
 		</title>
 		<meta name="keywords" content="National Accounts, {{config('mapminer.client')}},Branch & Location Mapping " />
 		<meta name="author" content="{{config('mapminer.author')}}, {{config('mapminer.developer')}} />

@@ -9,7 +9,7 @@ use App\Address;
 use App\Person;
 use App\User;
 
-class NamDashboard extends Component
+class Namdashboard extends Component
 {
     use WithPagination;
 

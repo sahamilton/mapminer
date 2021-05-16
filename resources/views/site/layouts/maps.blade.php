@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}">
-	 <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	 <script src="https://kit.fontawesome.com/cf4e43f4c0.js" crossorigin="anonymous"></script>
     <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
     <script src="//maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>

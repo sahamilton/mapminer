@@ -95,7 +95,7 @@
                     @include('includes._sort-icon', ['field' => 'users.updated_at'])
                 </a>
             </th>
-            @if($status !='current')
+            @if($status != 'current')
                 <th class="col-md-2">
                     <a wire:click.prevent="sortBy('users.deleted_at')" role="button" href="#">
                         Deleted
@@ -120,4 +120,8 @@
             Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} out of {{ $users->total() }} results
         </div>
     </div>
+
+    @if($showConfirmation)
+        @include('livewire.partials._modal')
+    @endif
 </div>
