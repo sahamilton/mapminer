@@ -1,7 +1,8 @@
 <?php
 
 namespace App;
-
+// this is a troublesome file dont understand why it keeps
+// reappearing.
 use Illuminate\Database\Eloquent\Model;
 
 class NamDashboard implements DashboardInterface {
