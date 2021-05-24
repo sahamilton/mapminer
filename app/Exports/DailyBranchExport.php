@@ -22,6 +22,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     public $person;
     public $fields = [
         'branchname'=>'Branch',
+        'country'=>'Country',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
         
@@ -52,8 +53,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
         $this->period = $period;
         $this->branches = $branches;
         
-        ray($this->allFields);
-
+       
        
     }
         
@@ -73,15 +73,19 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     
     public function map($branch): array
     {
-        ray($branch);
+        
         foreach ($this->allFields as $key=>$field) {
-            ray($key, $field);
+           
             switch ($key) {
             
             case 'branchname':
                 $detail['branchname'] = $branch->branchname;
                 break;
-            
+
+            case 'country':
+                $detail['country'] = $branch->country;
+                break;
+
             case 'manager':
                 $detail['manager'] = $branch->manager->count() ? $branch->manager->first()->postName() :'';
                 break;
@@ -89,13 +93,14 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
             case 'reportsto':
                 $detail['reportsto'] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->postName() :'';
                 break;
+
             default:
                 $value = str_replace(" ", "-", strtolower($key));
                 $detail[$value] = $branch->$value;
                 break;
             }
         }
-        ray($detail);
+       
         return $detail;
 
     }
