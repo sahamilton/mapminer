@@ -27,6 +27,8 @@ class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings,
      */
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
+        'country'=>'Country',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
         'salesappts'=>'# Completed Sales Appts',
@@ -90,7 +92,7 @@ class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings,
     public function columnFormats(): array
     {
         return [
-            'F' => NumberFormat::FORMAT_CURRENCY_USD,
+            'H' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 

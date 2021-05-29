@@ -21,6 +21,7 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
     public $person;
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
         'country' =>'Country',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',

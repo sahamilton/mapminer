@@ -22,6 +22,8 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     public $branches;
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
+        'country'=>'Country',
         'manager'=>'Branch Manager',
         'reportsto'=>'Reports To',
         'businessname'=>'Company',
@@ -128,10 +130,10 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     public function columnFormats(): array
     {
         return [
-            'H' => NumberFormat::FORMAT_CURRENCY_USD,
-            'I' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'J' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'M' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'J' => NumberFormat::FORMAT_CURRENCY_USD,
+            'K' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'L' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'O' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
     /**

@@ -22,6 +22,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     public $person;
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
         'country'=>'Country',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
