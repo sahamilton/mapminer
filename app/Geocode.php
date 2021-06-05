@@ -54,13 +54,19 @@ trait GeoCode
                 $data['state']=null;
              
             }
-     
+            if ($geoCode->first()->getCountry()) {
+                $data['country'] = $geoCode->first()
+                    ->getCountry()
+                    ->getCode();     
+
+            }
 
             $data['fulladdress'] = trim(
                 $data['address'] 
                     .' ' . $data['city']
-                    . ' ' . $data['state'] 
+                    .' ' . $data['state'] 
                     .' ' . $data['zip']
+                    .' ' . $data['country']
             );
             $data['position']= $this->setLocationAttribute($data);
         } else {

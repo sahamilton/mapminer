@@ -42,7 +42,8 @@ class Person extends NodeModel
                         'geostatus',
                         'business_title',
                         'user_id',
-                        'position'];
+                        'position',
+                        'country'];
     protected $searchable = [
         'firstname',
         'lastname'
@@ -139,6 +140,8 @@ class Person extends NodeModel
      */
     public function managers(Array $roles=null)
     {
+        
+        // this sucks .... why are these hard coded?
         if (! $roles) {
             $roles = [14,6,7,3];
         }
