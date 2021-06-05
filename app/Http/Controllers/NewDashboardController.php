@@ -67,6 +67,7 @@ class NewDashboardController extends Controller
         //      2.  NAM - All branches with associated companies associated 
         //      3.  Campaign Manager - All branches in associated campaigns
         //      4.  Other - All associated branches
+        //      5.  Serviceline manager - All branches in serviceline
         //      
         //      End result is either 
 
@@ -83,6 +84,7 @@ class NewDashboardController extends Controller
 
             break;     
         case 'admin':
+        case 'serviceline_manager':
             
             return response()->view('dashboards.select');
             break; 
@@ -182,6 +184,8 @@ class NewDashboardController extends Controller
                 break;
 
             case 'admin':
+            case 'serviceline_manager':
+
                 $managers = $this->_selectDashboard();
                 return response()->view('dashboards.select', compact('managers'));
                 break;

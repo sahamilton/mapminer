@@ -150,9 +150,9 @@ class AdminUsersController extends BaseController
 
         // Service lines
 
-        $servicelines = $this->person->getUserServiceLines();
+        $servicelines = auth()->user()->currentServiceLineIds();
         // get all branches of this serviceline
-  
+       
         $branches =$this->branch->wherehas(
             'servicelines', function ($q) use ($servicelines) {
                 $q->whereIn('servicelines.id', array_keys($servicelines));

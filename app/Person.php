@@ -151,8 +151,14 @@ class Person extends NodeModel
 
                     $q->whereIn('role_id', $roles);
             }
+        )
+        ->whereHas(
+            'userdetails.serviceline', function ($q) {
+                $q->whereIn('serviceline_id', array_keys($this->userdetails->currentServiceLineIds()));
+            }
         )->orderBy('lastname')
-         ->orderBy('firstname')->get();
+        ->orderBy('firstname')
+        ->get();
     }
     /**
      * GetMyBranches finds branch managers in reporting
@@ -165,16 +171,9 @@ class Person extends NodeModel
     public function getMyBranches(Array $servicelines=null)
     {
         
-        if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
-
-            return Branch::when(
-                $servicelines, function ($q1) use ($servicelines) {
-                    $q1->whereIn('servicelines.id', $servicelines);
-                }
-            )->orderBy('id')->pluck('id')->toArray();
-        } else {
-            $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
-        }
+        
+        $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
+       
         
         $branches = $branchMgrs->with('branchesServiced')
             ->when(
@@ -246,7 +245,7 @@ class Person extends NodeModel
             $user = $this->_getPersonFromAuth();
            
             $person = $user->person;
-            if ($user->hasRole(['admin', 'sales_operations'])) {
+            if ($user->hasRole(['admin', 'sales_operations', 'serviceline_manager'])) {
                 return $this->_getBranchesInServicelines($user->serviceline);
             } else {
                 return $this->_getBranchesFromTeam($person); 
@@ -1136,8 +1135,21 @@ class Person extends NodeModel
     {
         if (auth()->user()->hasRole('admin')) {
             return true;
+        } elseif (auth()->user()->hasRole('serviceline_manager')) {
+            return $this->inMyServiceLine($person);
+        } else {
+            return $person->isDescendantOf(auth()->user()->person);
         }
-        return $person->isDescendantOf(auth()->user()->person);
+    }
+
+    private function inMyServiceLine(Person $person)
+    {
+        $myServiceLines = auth()->user()->serviceline->pluck('id')->toArray();
+        $personsServicelines = $person->userdetails->serviceline->pluck('id')->toArray();
+        if (array_intersect($myServiceLines, $personsServicelines)) {
+            return true;
+        }
+        return false;
     }
     /**
      * [inMyAccounts description]

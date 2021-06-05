@@ -60,7 +60,9 @@ class DashboardController extends Controller
             break;
 
         case 'admin':
+        case 'serviceline_manager':
             $managers = $this->_selectDashboard();
+            
             return response()->view('dashboards.select', compact('managers'));
             break;
 
@@ -98,6 +100,8 @@ class DashboardController extends Controller
             break;
 
         case 'admin':
+        case 'serviceline_manager':
+
             $managers = $this->_selectDashboard();
             return response()->view('dashboards.select', compact('managers'));
             break;
@@ -224,7 +228,7 @@ class DashboardController extends Controller
 
     private function _selectDashboard()
     {
-        return $this->person->managers([3,4,6,7,9]);
+        return auth()->user()->person->managers([3,4,6,7,9]);
     }
    
 }
