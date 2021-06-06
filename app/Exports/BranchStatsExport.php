@@ -21,6 +21,8 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
+        'country'=>'Country', 
         'id'=>'ID',
         'manager'=>'Manager',
         'opened'=>'# Opportunities Opened in Period',
@@ -83,9 +85,9 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     public function columnFormats(): array
     {
         return [
-            'B'=>NumberFormat::FORMAT_TEXT,
-            'G' => NumberFormat::FORMAT_CURRENCY_USD,
-            'J' => NumberFormat::FORMAT_CURRENCY_USD,
+            'D'=>NumberFormat::FORMAT_TEXT,
+            'I' => NumberFormat::FORMAT_CURRENCY_USD,
+            'K' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 

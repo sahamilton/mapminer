@@ -19,6 +19,8 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
 
     public $fields = [
         'branchname' => 'Branch',
+        'state'=>'State',
+        'country'=>'Country',
         'manager' => 'Manager',
         'reportsto' => 'Reports To',
         'businessname' => 'Business',
@@ -113,10 +115,10 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     public function columnFormats(): array
     {
         return [
-            'F' => NumberFormat::FORMAT_CURRENCY_USD,
-            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H' => NumberFormat::FORMAT_CURRENCY_USD,
             'I' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'J' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'K' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 

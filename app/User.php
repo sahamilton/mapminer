@@ -367,7 +367,10 @@ class User extends Authenticatable
      */
     public function currentServiceLineIds()
     {
-        return $this->serviceline->pluck('id')->toArray();
+        if ($this->hasRole(['admin'])) {
+            return Serviceline::pluck('ServiceLine', 'id')->toArray();
+        }
+        return $this->serviceline->pluck('ServiceLine', 'id')->toArray();
     }
 
     /**

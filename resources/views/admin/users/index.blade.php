@@ -12,6 +12,7 @@
 		@livewire('user-table');	
 	</div>
     
-
+@include('partials/_modal')   
+@include('partials/_scripts')
 
 @endsection

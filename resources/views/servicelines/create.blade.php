@@ -11,7 +11,7 @@ Create a Service Line::
 		Create a New Service Line
 
 		<div class="float-right">
-			<a href="{{ route('serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
+			<a href="{{route('serviceline.index')}}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	</h3>
 </div>
@@ -21,10 +21,10 @@ Create a Service Line::
 @php $buttonLabel = 'Create Service Line' @endphp
 <form name="serviceline"
     method='post'
-    action = "{{route('serviceline.store'}}"
+    action = "{{route('serviceline.store')}}"
     >
     @csrf
-    @method="patch"
+   
     @include('servicelines.partials._form')
 </form>
 </div>

@@ -3,11 +3,12 @@
 	<label class="col-md-2 control-label" for="email">Email</label>
 	<div class="col-md-10">
 		<input
+		readonly onfocus="this.removeAttribute('readonly');" 
 		required 
 		class="form-control" 
 		type="text" 
 		name="email" 
-		autocomplete = 'off'
+		autocomplete = "false"
 		id="email" 
 		value="{{ old('email', isset($user) ? $user->email : '') }}" 
 		placeholder="email@peopleready.com"
@@ -41,12 +42,14 @@
 	<label class="col-md-2 control-label" for="password">Password</label>
 	<div class="col-md-10">
 		<input 
+		readonly onfocus="this.removeAttribute('readonly');" 
+		required 
 		class="form-control" 
 		type="password" 
-		autocomplete = 'off'
+		autocomplete = 'false'
 		name="password" 
 		id="password" 
-		autocomplete="off"
+
 		value="" />
 		{!! $errors->first('password', '<span class="help-inline">:message</span>') !!}
 	</div>
@@ -58,6 +61,7 @@
 	<label class="col-md-2 control-label" for="password_confirmation">Password Confirm</label>
 	<div class="col-md-10">
 		<input 
+		readonly onfocus="this.removeAttribute('readonly');" 
 		class="form-control" 
 		autocomplete = 'off'
 		type="password" 

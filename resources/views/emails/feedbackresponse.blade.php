@@ -18,6 +18,7 @@ Posted By: {{$feedback->providedBy->person->fullName()}}
 
 Email: {{$feedback->providedBy->email}}
 
+
 @endcomponent
 
 

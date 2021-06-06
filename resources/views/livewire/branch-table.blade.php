@@ -10,12 +10,23 @@
         </div>
     </div>
     <div class="row" style="margin-top:5px">
+
         <div class="col form-inline">
+            <i class="fas fa-filter text-danger"></i>
             State: &nbsp;
             <select wire:model="state" class="form-control">
                 <option value="All">All</option>
                 @foreach ($allstates as $state)
                     <option value="{{$state->state}}">{{$state->state}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col form-inline">
+            Service Line: &nbsp;
+            <select wire:model="serviceline" class="form-control">
+                <option value="All">All</option>
+                @foreach ($userServiceLines as $key=>$value)
+                    <option value="{{$key}}">{{$value}}</option>
                 @endforeach
             </select>
         </div>

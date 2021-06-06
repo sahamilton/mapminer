@@ -22,6 +22,8 @@ class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadin
     public $types;
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
+        'country'=>'Country',
         'manager'=>'Manager',
         'week'=>'Week Begining',
         'activity'=>'Activity',

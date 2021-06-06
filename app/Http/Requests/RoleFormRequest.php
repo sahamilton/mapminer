@@ -23,7 +23,11 @@ class RoleFormRequest extends FormRequest
      */
     public function rules()
     {
-        return ['name' => 'required',
-        'name'  => 'unique:roles,name,'.$this->segment(3), ];
+        return [
+            'display_name'  => 'required|unique:roles,name,'.$this->segment(3), 
+        ];
     }
+
+    
+
 }

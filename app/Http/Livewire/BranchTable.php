@@ -17,6 +17,7 @@ class BranchTable extends Component
     public $region='All';
     public $sortAsc = true;
     public $search ='';
+    public $serviceline = 'All';
     public $userServiceLines;
     public $paginationTheme = 'bootstrap';
 
@@ -25,6 +26,7 @@ class BranchTable extends Component
     {
         $this->resetPage();
     }
+
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -35,10 +37,11 @@ class BranchTable extends Component
 
         $this->sortField = $field;
     }
+
     public function mount()
     {
         
-        $this->userServiceLines = auth()->user()->load('serviceline')->serviceline->pluck('id')->toArray();
+        $this->userServiceLines = auth()->user()->currentServiceLineIds();
     }
     public function render()
     {
@@ -62,15 +65,26 @@ class BranchTable extends Component
                         $q->where('region_id', $this->region);
                     }
                 )
-            ->whereHas(
-                'servicelines', function ($q) {
-                        $q->whereIn('serviceline_id', $this->userServiceLines);
+                ->when(
+                    $this->serviceline != 'All', function ($q) {
+                        $q->whereHas(
+                            'servicelines', function ($q) {
+                                $q->where('serviceline_id', $this->serviceline);
 
-                }
-            )
-            ->search($this->search)
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->paginate($this->perPage),
+                            }
+                        );
+                    }, function ($q) {
+                        $q->whereHas(
+                            'servicelines', function ($q) {
+                                $q->whereIn('serviceline_id', array_keys($this->userServiceLines));
+
+                            }
+                        );
+                    }
+                )
+                ->search($this->search)
+                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                ->paginate($this->perPage),
             'allstates' => Branch::select('state')
                 ->distinct('state')
                 

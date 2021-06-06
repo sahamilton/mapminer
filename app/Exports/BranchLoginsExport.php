@@ -21,6 +21,8 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
     public $branches;
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
+        'country'=>'Country',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
         'logins'=>'Logins',

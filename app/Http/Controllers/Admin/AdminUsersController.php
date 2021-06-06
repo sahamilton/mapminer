@@ -118,17 +118,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
-        /*$roles = Role::all();
-        if (! $serviceline) {
         
-            $servicelines = $this->userServiceLines;
-            $serviceline = 'All';
-            $title = 'People / User Management';
-        } else {
-            $title = $serviceline->ServiceLine ." users";
-        }
-     
-        // Show the page*/
         return response()->view('admin.users.index', compact('serviceline'));
     }
 
@@ -160,9 +150,9 @@ class AdminUsersController extends BaseController
 
         // Service lines
 
-        $servicelines = $this->person->getUserServiceLines();
+        $servicelines = auth()->user()->currentServiceLineIds();
         // get all branches of this serviceline
-  
+       
         $branches =$this->branch->wherehas(
             'servicelines', function ($q) use ($servicelines) {
                 $q->whereIn('servicelines.id', array_keys($servicelines));
@@ -504,7 +494,8 @@ class AdminUsersController extends BaseController
         }
         if ($user->person->directReports()->count() >0) {
             
-            $person = $user->person->load('directReports');
+            $person = $user->person->load('directReports', 'reportsTo');
+            
             return response()->view('admin.users.hasreports', compact('person'));
         }
      

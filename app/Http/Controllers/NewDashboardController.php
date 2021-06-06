@@ -67,6 +67,7 @@ class NewDashboardController extends Controller
         //      2.  NAM - All branches with associated companies associated 
         //      3.  Campaign Manager - All branches in associated campaigns
         //      4.  Other - All associated branches
+        //      5.  Serviceline manager - All branches in serviceline
         //      
         //      End result is either 
 
@@ -83,6 +84,7 @@ class NewDashboardController extends Controller
 
             break;     
         case 'admin':
+        case 'serviceline_manager':
             
             return response()->view('dashboards.select');
             break; 
@@ -106,13 +108,13 @@ class NewDashboardController extends Controller
     private function _getNamAccounts()
     {
         return $this->person->has('managesAccount')
-                ->with('managesAccount')
-                ->find(auth()->user()->person->id);
+            ->with('managesAccount')
+            ->find(auth()->user()->person->id);
                 
     }
     public function show(Person $manager)
     {
-        
+     
         return $this->showManager($manager);
             
     }
@@ -161,12 +163,13 @@ class NewDashboardController extends Controller
     }
     public function showManager(Person $person)
     {
-        
+
         if ($this->_isValidManager($person)) {
            
             session(['manager'=>$person->userdetails->id]);
             
             $person->load('userdetails.roles');
+
             $myRoles = $person->userdetails->roles->pluck('name')->toArray();
             
             switch ($myRoles[0]) {
@@ -181,6 +184,8 @@ class NewDashboardController extends Controller
                 break;
 
             case 'admin':
+            case 'serviceline_manager':
+
                 $managers = $this->_selectDashboard();
                 return response()->view('dashboards.select', compact('managers'));
                 break;
@@ -191,37 +196,7 @@ class NewDashboardController extends Controller
                 break;
 
             } 
-            /*$myBranches = $this->branch->whereIn('id', $person->getMyBranches())->get();
-            if ($person->userdetails->hasRole(['national_account_manager'])) {
-                $fields = [
-                    'top_25opportunities', 
-                    'top_25value',
-                    'won_opportunities',
-                    'won_value', 
-                    'lost_opportunities', 
-                    'open_opportunities',
-                    'active_opportunities',
-                    'active_value',
-                    'open_leads',
-                    'open_value',
-                    'unassigned_leads', 
-                    'active_leads'
-                ];
-                if (! $companies = $this->_getNAMDashboard($person, $fields)) {
-                    return redirect()->back()->withError($person->fullName() . ' is not assigned to any accounts');
-                } 
-                $data = $this->_getNAMChartData($companies);
-              
-                $period = $this->period;
-                return response()->view('dashboards.namdashboard', compact('companies', 'person', 'period', 'data'));
 
-            } elseif ($myBranches->count()) {
-             
-                return redirect()->route('branchdashboard.show', $myBranches->first()->id);
-
-            } else {
-                return redirect()->back()->withError('You do not have any dashboards');    
-            }*/
         }
         return redirect()->back()->withError($person->fullName() . ' is not part of your team');   
     }

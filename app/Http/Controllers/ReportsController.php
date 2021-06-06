@@ -125,7 +125,7 @@ class ReportsController extends Controller {
         }
         if (auth()->user()->hasRole(['admin', 'sales_ops'])){
             
-            $managers = $this->person->managers();
+            $managers = auth()->user()->person->managers();
         } else {
             $managers = auth()->user()->person->descendants()->get();
         }
@@ -391,6 +391,12 @@ class ReportsController extends Controller {
                 $person = $this->person->getCapoDiCapo();
                 $branches = $person->getMyBranches();
                 $team = $this->_getMyTeam($person);
+                $person = null;
+            } elseif (auth()->user()->hasRole(['serviceline_manager'])) {
+                $servicelines = auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
+                $person = $this->person->getCapoDiCapo();
+                $branches = $person->getMyBranches($servicelines);
+                //$team = $this->_getMyTeam($person);
                 $person = null;
             } else {
                 $person = $this->person->where('user_id', auth()->user()->id)->first();

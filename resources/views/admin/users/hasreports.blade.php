@@ -4,7 +4,7 @@
 <div class="col-sm-6">
 	<h2>{{$person->fullName()}}'s Direct Reports</h2>
 <div class="alert-danger"><p>You must re-assign these reports before you can delete {{$person->firstname}}</p></div>
-
+<p>Note that {{$person->fullName()}} reports to {{$person->reportsTo->fullName()}}</p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		<tr>

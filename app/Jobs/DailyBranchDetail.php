@@ -44,7 +44,7 @@ class DailyBranchDetail implements ShouldQueue
         Array $branches, 
         Array $period = null
     ) {
-        ray($user);
+
         if (! $period) {
 
             $this->period['from'] = Carbon::yesterday()->startOfDay();

@@ -21,6 +21,8 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
     public $person;
     public $fields = [
         'branchname'=>'Branch',
+        'state'=>'State',
+        'country' =>'Country',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
         
@@ -95,6 +97,7 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
             case 'reportsto':
                 $detail[] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->postName() :'';
                 break;
+            
             default:
                 $detail[]=$branch->$key;
                 break;

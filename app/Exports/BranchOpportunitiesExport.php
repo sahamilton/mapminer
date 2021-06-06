@@ -20,6 +20,8 @@ class BranchOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadings,
     public $fields = [
         'branchname'=>'Branch',
         'id'=>'ID',
+        'state'=>'State',
+        'country'=>'Country',
         'manager'=>'Manager',
         'reportsto'=>"Reports To",
         'open'=>'# All Open Opportunities Count',
@@ -80,7 +82,7 @@ class BranchOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadings,
     public function columnFormats(): array
     {
         return [
-            'F' => NumberFormat::FORMAT_CURRENCY_USD,
+            'H' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
     /**

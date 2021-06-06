@@ -85,7 +85,11 @@ class AdminRolesController extends BaseController
      */
     public function store(RoleFormRequest $request)
     {
-        if (! $role = Role::create(request()->all())) {
+        $data = request()->all();
+       
+        $data['name'] = strtolower(str_replace(" ", "_", $data['display_name']));
+        
+        if (! $role = Role::create($data)) {
             return redirect()->to('admin/roles/create')->with('error', 'Unable to create role');
         }
 

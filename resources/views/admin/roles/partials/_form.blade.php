@@ -1,12 +1,12 @@
 {{-- Create Role Form --}}
 
 		<!-- Name -->
-				<div class="form-group {{{ $errors->has('name') ? 'has-error' : '' }}}">
+				<div class="form-group {{{ $errors->has('display_name') ? 'has-error' : '' }}}">
 					<label class="col-md-2 control-label" for="name">Name</label>
                     <div class="col-md-10">
-    					<input required class="form-control" type="text" name="name" id="name" 
-                        value="{{old('name', isset($role) ?  $role->display_name : '')}}" />
-    					{!! $errors->first('name', '<span class="help-inline has-error">:message</span>') !!}
+    					<input required class="form-control" type="text" name="display_name" id="display_name" 
+                        value="{{old('display_name', isset($role) ?  $role->display_name : '')}}" />
+    					{!! $errors->first('display_name', '<span class="help-inline has-error">:message</span>') !!}
                     </div>
 				</div>
 				<!-- ./ name -->
