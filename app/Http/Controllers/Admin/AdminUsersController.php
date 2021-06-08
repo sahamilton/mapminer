@@ -131,10 +131,10 @@ class AdminUsersController extends BaseController
     {
         // All roles
         
-        $roles = $this->role->all();
+        $roles = $this->role->orderBy('display_name')->get();
 
         // Get all the available permissions
-        $permissions = $this->permission->all();
+        $permissions = $this->permission->orderBy('display_name')->get();
 
         // Selected groups
         $selectedRoles = [];
@@ -237,8 +237,8 @@ class AdminUsersController extends BaseController
         
         if ($user) {
             $user->load('serviceline', 'person', 'person.branchesServiced', 'person.industryfocus', 'roles');
-            $roles = $this->role->all();
-            $permissions = $this->permission->all();
+            $roles = $this->role->orderBy('display_name')->get();
+            $permissions = $this->permission->orderBy('display_name')->get();
 
 
             $title = 'Update user';
