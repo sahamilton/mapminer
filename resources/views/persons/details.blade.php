@@ -163,6 +163,7 @@
 						<a href="{{route('team.show',$person->id)}}" class="btn btn-info">	See Teams Mapminer Usage</a>
 						</div>
 						@endif
+						<li>Mapminer User since: {{$user->created_at ? $user->created_at->format('Y-m-d') : ''}}</li>
 						<li>Total Logins: {{$user->usage_count}}</li>
 						<li>Last Login:
 							
