@@ -370,7 +370,7 @@ class User extends Authenticatable
         if ($this->hasRole(['admin'])) {
             return Serviceline::pluck('ServiceLine', 'id')->toArray();
         }
-        return $this->serviceline->pluck('ServiceLine', 'id')->toArray();
+        return Serviceline::orderBy('ServiceLine')->pluck('ServiceLine', 'id')->toArray();
     }
 
     /**
