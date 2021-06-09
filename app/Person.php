@@ -118,8 +118,9 @@ class Person extends NodeModel
      * 
      * @return [type]        [description]
      */
-    public function scopeManagers(\Illuminate\Database\Eloquent\Builder $query, Array $roles=null)
+    public function scopeManagers(\Illuminate\Database\Eloquent\Builder $query, Array $roles=null, Array $servicelines=null)
     {
+        
         if (! $roles) {
             $roles = [14,6,7,3];
         }
@@ -128,6 +129,14 @@ class Person extends NodeModel
             'userdetails.roles', function ($q) use ($roles) {
 
                     $q->whereIn('role_id', $roles);
+            }
+        )->when(
+            $servicelines, function ($q) use ($servicelines) {
+                $q->whereHas(
+                    'userdetails.serviceline', function ($q) use ($servicelines) {
+                        $q->whereIn('serviceline.id', $servicelines);
+                    }  
+                );
             }
         );
     }
@@ -138,7 +147,7 @@ class Person extends NodeModel
      * 
      * @return [type]        [description]
      */
-    public function managers(Array $roles=null)
+    public function managers(Array $roles=null, Array $servicelines=null)
     {
         
         // this sucks .... why are these hard coded?
@@ -150,6 +159,14 @@ class Person extends NodeModel
             'userdetails.roles', function ($q) use ($roles) {
 
                     $q->whereIn('role_id', $roles);
+            }
+        )->when(
+            $servicelines, function ($q) use ($servicelines) {
+                $q->whereHas(
+                    'userdetails.serviceline', function ($q) use ($servicelines) {
+                        $q->whereIn('servicelines.id', $servicelines);
+                    }  
+                );
             }
         )->orderBy('lastname')
          ->orderBy('firstname')->get();
@@ -222,7 +239,7 @@ class Person extends NodeModel
             ->withRoles([9])
                 
             ->with('branchesServiced.manager')->get();
-       // dd(1968, $this, $this->descendants()->get());
+     
         return $team->map(
             function ($people) {
                 return $people->branchesServiced;
@@ -246,7 +263,7 @@ class Person extends NodeModel
             $user = $this->_getPersonFromAuth();
            
             $person = $user->person;
-            if ($user->hasRole(['admin', 'sales_operations'])) {
+            if ($user->hasRole(['admin', 'sales_operations', 'serviceline_manager'])) {
                 return $this->_getBranchesInServicelines($user->serviceline);
             } else {
                 return $this->_getBranchesFromTeam($person); 
@@ -1134,8 +1151,16 @@ class Person extends NodeModel
      */
     public function inMyTeam(Person $person)
     {
+   
         if (auth()->user()->hasRole('admin')) {
             return true;
+        }
+        if (auth()->user()->hasRole('serviceline_manager')) {
+            return $person->whereHas(
+                'userdetails.serviceline', function ($q) {
+                    $q->whereIn('servicelines.id', auth()->user()->serviceline->pluck('id')->toArray());
+                }
+            );
         }
         return $person->isDescendantOf(auth()->user()->person);
     }

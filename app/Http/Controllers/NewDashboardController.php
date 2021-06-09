@@ -112,7 +112,7 @@ class NewDashboardController extends Controller
     }
     public function show(Person $manager)
     {
-     
+
         return $this->showManager($manager);
             
     }
@@ -154,7 +154,7 @@ class NewDashboardController extends Controller
 
             return response()->view('dashboards.namcompanydashboard', compact('person', 'companies', 'fields', 'period', 'type'));
         }
-        dd($person->userdetails->roles->pluck('name')->toArray());
+        dd(157, $person->userdetails->roles->pluck('name')->toArray());
         //depending on roles get leads
         // is this person you or in your team
         // else )
@@ -405,7 +405,7 @@ class NewDashboardController extends Controller
         $codata = null;
         foreach ($companies as $company) {
             if (($company->won_opportunities + $company->lost_opportunities) > 0) {
-                //dd($company->won_opportunities / ($company->won_opportunities + $company->lost_opportunities));
+                
                 $codata.= ($company->won_opportunities / ($company->won_opportunities + $company->lost_opportunities) ) * 100 .",";
             } else {
                 $codata.= '0,';
