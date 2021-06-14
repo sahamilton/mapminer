@@ -83,6 +83,7 @@ class NewDashboardController extends Controller
 
             break;     
         case 'admin':
+        case 'serviceline_manager':
             
             return response()->view('dashboards.select');
             break; 
@@ -182,6 +183,7 @@ class NewDashboardController extends Controller
                 break;
 
             case 'admin':
+            case 'serviceline_manager':
                 $managers = $this->_selectDashboard();
                 return response()->view('dashboards.select', compact('managers'));
                 break;
