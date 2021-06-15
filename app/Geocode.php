@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-trait GeoCode
+trait Geocode
 {
       /**
        * GetGeoCode Geocoder Trait renamed

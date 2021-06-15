@@ -8,7 +8,7 @@ use \Carbon\Carbon;
 
 class Branch extends Model implements HasPresenter
 {
-    use GeoCode, PeriodSelector, \Awobaz\Compoships\Compoships;
+    use Geocode, PeriodSelector, \Awobaz\Compoships\Compoships;
     public $table ='branches';
     protected $hidden = ['created_at','updated_at','position'];
     protected $primaryKey = 'id'; // or null
