@@ -17,7 +17,7 @@ class DashboardTable extends Component
     public $search ='';
     public $showRoles = [3,6,7,9,14];
     public $defaultRoles = [3,6,7,9,14];
-    public $servicelines = [10 => 'Canada']; 
+    public $servicelines; 
 
     public function updatingSearch()
     {
@@ -36,7 +36,7 @@ class DashboardTable extends Component
 
     public function mount()
     {
-           // $this->servicelines = auth()->user()->currentServiceLineIds();
+           $this->servicelines = auth()->user()->currentServiceLineIds();
     }
     /**
      * [render description]
