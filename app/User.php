@@ -361,8 +361,9 @@ class User extends Authenticatable
         return $roleIds;*/
     }
 
-     /**
+    /**
      * Returns user's current role ids only.
+     * 
      * @return array|bool
      */
     public function currentServiceLineIds()

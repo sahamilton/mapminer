@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Campaign extends Model 
 {
-    use GeoCode;
+    use Geocode;
     public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status', 'type'];
     
     public $dates =['datefrom', 'dateto'];
