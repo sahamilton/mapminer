@@ -48,7 +48,17 @@ class DashboardTable extends Component
         return view(
             'livewire.dashboard-table',
             [
-            'managers' => [],
+            'managers' => Person::query()
+                ->with('userdetails.roles', 'reportsTo', 'branchesServiced')
+            
+                ->when(
+                    $this->search && $this->search !='All', function ($q) {
+                        $q->search($this->search);
+                    }
+                )
+                ->distinct()
+                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                ->paginate($this->perPage),
             'roles'=>Role::whereIn('id', $this->defaultRoles)->select('id', 'display_name')->get(),
 
             ]
