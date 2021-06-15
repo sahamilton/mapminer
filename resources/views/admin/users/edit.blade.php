@@ -9,7 +9,10 @@
 
 	{{-- Edit User Form --}}
 
-	<form class="form-horizontal" method="post" action="{{ route('users.update' , $user->id ) }}" autocomplete="off">
+	<form class="form-horizontal" 
+		method="post" 
+		action="{{ route('users.update' , $user->id ) }}" 
+		autocomplete="off">
 	<input type="hidden" name="_method" value="put" />
 		<!-- CSRF Token -->
 		<input type="hidden" name="_token" value ="{{{ csrf_token() }}}" />

@@ -105,7 +105,8 @@
 				@if ($mode == 'create')
             		<option value="{{ $role->id }}"{{ ( in_array($role->id, $selectedRoles) ? ' selected="selected"' : '') }}>{{ $role->display_name }}</option>
             	@else
-					<option value="{{ $role->id }}"{{ ( array_search($role->id, $user->currentRoleIds()) !== false && array_search($role->id, $user->currentRoleIds()) >= 0 ? ' selected="selected"' : '') }}>{{ $role->display_name }}</option>
+					<option value="{{ $role->id }}" 
+						{{ ( array_search($role->id, $user->currentRoleIds()) !== false && array_search($role->id, $user->currentRoleIds()) >= 0 ? ' selected="selected"' : '') }}>{{ $role->display_name }}</option>
 				@endif
             @endforeach
 		</select>
@@ -120,6 +121,7 @@
 <!-- Service Lines -->
 <div class="form-group @if ($errors->has('serviceline')) has-error @endif">
 	<label class="col-md-2 control-label" for="roles">Service Lines</label>
+	
 	<div class="col-md-6">
 		<select 
         required
@@ -130,14 +132,16 @@
 		 />
 
 			@foreach ($servicelines as $id=>$serviceline)
-				
-            	<option 
-            	value="{{ $id }}"
-            	@if(isset($user) &&  in_array($id, $user->currentServicelineIds())) selected @endif
-            	>
-            	{{ $serviceline }}
-            </option>
-            	
+				@if ($mode == 'create')
+            		<option value="{{ $id }}">
+	            		{{ $serviceline }}
+	            	</option>
+	            @else
+	            	<option 
+	            	value="{{ $id }}"
+	            	 {{ ( array_search($serviceline, $user->currentServicelineIds()) !== false && array_search($serviceline, $user->currentServicelineIds()) >= 0 ? ' selected ' : '') }}>{{ $serviceline  }}
+	            	</option>
+            	@endif
             @endforeach
 		</select>
 
