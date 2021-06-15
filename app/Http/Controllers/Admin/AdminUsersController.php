@@ -273,6 +273,7 @@ class AdminUsersController extends BaseController
         //$oldUser = clone($user);
 
         if ($user->update(request()->except('password'))) {
+            $user = $this->_checkIsConfirmed($user, $request);
             $user->load('person');
             $user->saveRoles(request('roles'));
             $this->_updatePassword($request, $user);
@@ -287,7 +288,24 @@ class AdminUsersController extends BaseController
                 ->with('error', 'Unable to update user');
         }
     }
-    
+    /**
+     * [_checkIsConfirmed description]
+     * 
+     * @param User    $user    [description]
+     * @param Request $request [description]
+     * 
+     * @return User $user           [description]
+     */
+    private function _checkIsConfirmed(User $user, Request $request)
+    {
+        if ($request->filled('confirmed')) {
+            $user->confirmed = true; 
+        } else {
+            $user->confirmed = false;
+        }
+        $user->save();
+        return $user;
+    }
     /**
      * [_updatePassword description]
      * 
