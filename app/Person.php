@@ -174,12 +174,12 @@ class Person extends NodeModel
         
         $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
        
-        
+     
         $branches = $branchMgrs->with('branchesServiced')
             ->when(
                 $servicelines, function ($q) use ($servicelines) {
                     $q->whereHas(
-                        'servicelines', function ($q1) use ($servicelines) {
+                        'userdetails.serviceline', function ($q1) use ($servicelines) {
                             $q1->whereIn('servicelines.id', $servicelines);
                         }
                     );
@@ -191,8 +191,8 @@ class Person extends NodeModel
                     return $branch->branchesServiced->pluck('id')->toArray();
                 }
             );
-
-            return  array_unique($branches->sortBy('id')->flatten()->toArray());
+       
+           return array_unique($branches->sortBy('id')->flatten()->toArray());
             
     }
     /**

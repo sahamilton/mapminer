@@ -147,7 +147,8 @@
 				</div>
 			@endcan
 			@can('manage_accounts')
-				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
+				<div class="list-group-item"><p class="list-group-item-text">
+					<strong>Accounts Managed</strong></p>
 					<ul style="list-style-type: none;">
 						@foreach($person->managesAccount as $account)
 							<li><a href="{{route('company.show',$account->id)}}">{{$account->companyname}}</a></li>
@@ -163,6 +164,7 @@
 						<a href="{{route('team.show',$person->id)}}" class="btn btn-info">	See Teams Mapminer Usage</a>
 						</div>
 						@endif
+						<li>Mapminer User since: {{$user->created_at ? $user->created_at->format('Y-m-d') : ''}}</li>
 						<li>Total Logins: {{$user->usage_count}}</li>
 						<li>Last Login:
 							
