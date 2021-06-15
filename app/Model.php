@@ -280,9 +280,12 @@ class Model extends \Eloquent
      */
     public function getUserServiceLines()
     {
+        if (auth()->user()->hasRole('admin')) {
+            $this->userServicelines = Serviceline::pluck('servicelines.id')->toArray();
+        } else {
+            $this->userServicelines= auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
+        }
         
-        $this->userServicelines= auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
-
         session()->put('user.servicelines', $this->userServicelines) ;
         return $this->userServicelines;
     }

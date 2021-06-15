@@ -160,16 +160,14 @@ class Person extends NodeModel
 
                     $q->whereIn('role_id', $roles);
             }
-        )->when(
-            $servicelines, function ($q) use ($servicelines) {
-                $q->whereHas(
-                    'userdetails.serviceline', function ($q) use ($servicelines) {
-                        $q->whereIn('servicelines.id', $servicelines);
-                    }  
-                );
+        )
+        ->whereHas(
+            'userdetails.serviceline', function ($q) {
+                $q->whereIn('serviceline_id', array_keys($this->userdetails->currentServiceLineIds()));
             }
         )->orderBy('lastname')
-         ->orderBy('firstname')->get();
+        ->orderBy('firstname')
+        ->get();
     }
     /**
      * GetMyBranches finds branch managers in reporting
@@ -182,22 +180,15 @@ class Person extends NodeModel
     public function getMyBranches(Array $servicelines=null)
     {
         
-        if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
-
-            return Branch::when(
-                $servicelines, function ($q1) use ($servicelines) {
-                    $q1->whereIn('servicelines.id', $servicelines);
-                }
-            )->orderBy('id')->pluck('id')->toArray();
-        } else {
-            $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
-        }
         
+        $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
+       
+     
         $branches = $branchMgrs->with('branchesServiced')
             ->when(
                 $servicelines, function ($q) use ($servicelines) {
                     $q->whereHas(
-                        'servicelines', function ($q1) use ($servicelines) {
+                        'userdetails.serviceline', function ($q1) use ($servicelines) {
                             $q1->whereIn('servicelines.id', $servicelines);
                         }
                     );
@@ -209,8 +200,8 @@ class Person extends NodeModel
                     return $branch->branchesServiced->pluck('id')->toArray();
                 }
             );
-
-            return  array_unique($branches->sortBy('id')->flatten()->toArray());
+       
+           return array_unique($branches->sortBy('id')->flatten()->toArray());
             
     }
     /**
@@ -1154,15 +1145,21 @@ class Person extends NodeModel
    
         if (auth()->user()->hasRole('admin')) {
             return true;
+        } elseif (auth()->user()->hasRole('serviceline_manager')) {
+            return $this->inMyServiceLine($person);
+        } else {
+            return $person->isDescendantOf(auth()->user()->person);
         }
-        if (auth()->user()->hasRole('serviceline_manager')) {
-            return $person->whereHas(
-                'userdetails.serviceline', function ($q) {
-                    $q->whereIn('servicelines.id', auth()->user()->serviceline->pluck('id')->toArray());
-                }
-            );
+    }
+
+    private function inMyServiceLine(Person $person)
+    {
+        $myServiceLines = auth()->user()->serviceline->pluck('id')->toArray();
+        $personsServicelines = $person->userdetails->serviceline->pluck('id')->toArray();
+        if (array_intersect($myServiceLines, $personsServicelines)) {
+            return true;
         }
-        return $person->isDescendantOf(auth()->user()->person);
+        return false;
     }
     /**
      * [inMyAccounts description]

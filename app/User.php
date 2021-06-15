@@ -361,16 +361,17 @@ class User extends Authenticatable
         return $roleIds;*/
     }
 
-     /**
+    /**
      * Returns user's current role ids only.
+     * 
      * @return array|bool
      */
     public function currentServiceLineIds()
     {
         if ($this->hasRole(['admin'])) {
-            return Serviceline::pluck('ServiceLine', 'id')->toArray();
+            return Serviceline::orderBy('ServiceLine')->pluck('ServiceLine', 'id')->toArray();
         }
-        return $this->serviceline->pluck('ServiceLine', 'id')->toArray();
+        return $this->serviceline()->orderBy('ServiceLine')->pluck('ServiceLine', 'servicelines.id')->toArray();
     }
 
     /**

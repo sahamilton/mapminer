@@ -1,8 +1,8 @@
 <div>
-
+    <h2>Select Managers Dashboard</h2>
      <div class="row mb-4">
        
-        
+       <p> {{implode(",", $showRoles)}} </p>
         <div class="col form-inline">
              @include('livewire.partials._perpage')
              <label><i class="fas fa-filter text-danger"></i> Filter: &nbsp;</label>

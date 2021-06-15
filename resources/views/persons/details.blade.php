@@ -147,7 +147,8 @@
 				</div>
 			@endcan
 			@can('manage_accounts')
-				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
+				<div class="list-group-item"><p class="list-group-item-text">
+					<strong>Accounts Managed</strong></p>
 					<ul style="list-style-type: none;">
 						@foreach($person->managesAccount as $account)
 							<li><a href="{{route('company.show',$account->id)}}">{{$account->companyname}}</a></li>

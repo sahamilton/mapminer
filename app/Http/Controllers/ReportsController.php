@@ -125,7 +125,7 @@ class ReportsController extends Controller {
         }
         if (auth()->user()->hasRole(['admin', 'sales_ops'])){
             
-            $managers = $this->person->managers();
+            $managers = auth()->user()->person->managers();
         } else {
             $managers = auth()->user()->person->descendants()->get();
         }
@@ -231,7 +231,7 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, RunReportFormRequest $request)
     {
-        
+     
         
         if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
@@ -248,7 +248,7 @@ class ReportsController extends Controller {
             $job::dispatch($period);
   
         } elseif ($data = $this->_getMyBranches($request)) {
-
+      
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
@@ -256,7 +256,7 @@ class ReportsController extends Controller {
             
             
             $export = "\App\Exports\\". $report->export;
-
+        
             switch ($report->object) {
             case 'Company':
 
@@ -379,7 +379,7 @@ class ReportsController extends Controller {
      */
     private function _getMyBranches(Request $request)
     {
-        
+     
         if (request()->filled('manager')) {
             $person = $this->person->findOrFail(request('manager'));
             $branches = $person->getMyBranches();
@@ -391,6 +391,13 @@ class ReportsController extends Controller {
                 $person = $this->person->getCapoDiCapo();
                 $branches = $person->getMyBranches();
                 $team = $this->_getMyTeam($person);
+                $person = null;
+            } elseif (auth()->user()->hasRole(['serviceline_manager'])) {
+                $servicelines = auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
+                $person = $this->person->getCapoDiCapo();
+                $team = $this->_getMyTeam($person);
+                $branches = $person->getMyBranches($servicelines);
+                //$team = $this->_getMyTeam($person);
                 $person = null;
             } else {
                 $person = $this->person->where('user_id', auth()->user()->id)->first();

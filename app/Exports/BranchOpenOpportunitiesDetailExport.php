@@ -82,7 +82,9 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
                 
                 switch($key) {
                 case 'branchname':
-                    $line[$n][] = $branch->branchname;
+                case 'state':
+                case 'country':
+                    $line[$n][] = $branch->$key;
                     break;
                 case 'manager':
                     if (! is_null($branch->manager)) {
@@ -153,22 +155,4 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     }
 
 
-    /**
-     * View
-     * 
-     * @return \Illuminate\Support\Collection
-     */
-    /*public function view(): View
-    {
-        
-        $branches = Branch::branchOpenOpportunitiesDetail($this->period);
-  
-        if ($this->branches) {
-            $branches =$branches->whereIn('id', $this->branches);
-        }   
-        $branches = $branches->with('manager')->get();
-        $period = $this->period;
-        return view('reports.branchopenopportunitiesdetail', compact('branches', 'period'));
-
-    }*/
 }

@@ -75,7 +75,9 @@ class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadin
                 
                 switch($key) {
                 case 'branchname':
-                    $line[$n][] = $branch->branchname;
+                case 'state':
+                case 'country':
+                    $line[$n][] = $branch->$key;
                     break;
                 case 'manager':
                     $line[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';

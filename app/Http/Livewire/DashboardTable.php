@@ -36,7 +36,7 @@ class DashboardTable extends Component
 
     public function mount()
     {
-            $this->servicelines = auth()->user()->currentServiceLineIds();
+           $this->servicelines = auth()->user()->currentServiceLineIds();
     }
     /**
      * [render description]
@@ -64,7 +64,7 @@ class DashboardTable extends Component
                     $q->search($this->search);
                 }
             )
-            ->distinct()
+            
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->paginate($this->perPage),
             'roles'=>Role::whereIn('id', $this->defaultRoles)->select('id', 'display_name')->get(),

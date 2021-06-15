@@ -17,6 +17,9 @@ class AccounttypeTable extends Component
     public $search ='';
     public $accounttype = 'All';
     public $manager = 'All';
+    public $activityTypeModal = false;
+    public ActivityType $activityType;
+
     
     public function updatingSearch()
     {
@@ -31,6 +34,14 @@ class AccounttypeTable extends Component
         }
 
         $this->sortField = $field;
+    }
+
+    public function rules() {
+        return [
+
+            'activity.type'=>'required',
+
+        ];
     }
 
     public function render()
@@ -65,5 +76,25 @@ class AccounttypeTable extends Component
                     ->unique(),            
             ]
         );
+    }
+
+    public function addAccounttype()
+    {
+        $this->_createBlankAccountType();
+
+        $this->activityTypeModal = true;
+    }
+
+    public function addActivityType()
+    {
+        $this->validate();
+        $this->activityType->save();
+        $this->activityTypeModal = false;
+
+    }
+
+    private function createBlankAccountType()
+    {
+        $this->activityType = ActivityType::make();
     }
 }

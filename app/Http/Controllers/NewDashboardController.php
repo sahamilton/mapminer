@@ -67,6 +67,7 @@ class NewDashboardController extends Controller
         //      2.  NAM - All branches with associated companies associated 
         //      3.  Campaign Manager - All branches in associated campaigns
         //      4.  Other - All associated branches
+        //      5.  Serviceline manager - All branches in serviceline
         //      
         //      End result is either 
 
