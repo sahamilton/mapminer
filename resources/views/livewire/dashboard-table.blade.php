@@ -41,5 +41,13 @@
             </tbody>
         </table>
     </div>
-    
+    <div class="row">
+        <div class="col">
+            {{ $managers->links() }}
+        </div>
+
+        <div class="col text-right text-muted">
+            Showing {{ $managers->firstItem() }} to {{ $managers->lastItem() }} out of {{ $managers->total() }} results
+        </div>
+    </div>
 </div>
