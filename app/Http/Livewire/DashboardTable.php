@@ -54,7 +54,11 @@ class DashboardTable extends Component
                 }
             )
             ->with('userdetails.roles', 'reportsTo', 'branchesServiced')
-            
+            ->whereHas(
+                'userdetails.serviceline', function ($q) {
+                    $q->whereIn('serviceline_id', array_keys($this->servicelines));
+                }
+            )
             ->when(
                 $this->search && $this->search !='All', function ($q) {
                     $q->search($this->search);
