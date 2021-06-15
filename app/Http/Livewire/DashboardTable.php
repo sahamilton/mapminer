@@ -17,7 +17,7 @@ class DashboardTable extends Component
     public $search ='';
     public $showRoles = [3,6,7,9,14];
     public $defaultRoles = [3,6,7,9,14];
-    public $servicelines; 
+    public $servicelines = [10 => 'Canada']; 
 
     public function updatingSearch()
     {
@@ -36,7 +36,7 @@ class DashboardTable extends Component
 
     public function mount()
     {
-            $this->servicelines = auth()->user()->currentServiceLineIds();
+           // $this->servicelines = auth()->user()->currentServiceLineIds();
     }
     /**
      * [render description]
@@ -54,11 +54,7 @@ class DashboardTable extends Component
                 }
             )
             ->with('userdetails.roles', 'reportsTo', 'branchesServiced')
-            ->whereHas(
-                'userdetails.serviceline', function ($q) {
-                    $q->whereIn('serviceline_id', array_keys($this->servicelines));
-                }
-            )
+            
             ->when(
                 $this->search && $this->search !='All', function ($q) {
                     $q->search($this->search);
