@@ -34,6 +34,7 @@ class UploadToDropbox implements ShouldQueue
      */
     public function handle()
     {
-        \Storage::disk('dropbox')->put('mapminer/'.$this->file.'.zip', fopen($this->path.$this->file.'.zip', 'r+'));
+        \Storage::disk('dropbox')
+            ->put('mapminer/'.$this->file.'.zip', fopen($this->path.$this->file.'.zip', 'r+'));
     }
 }

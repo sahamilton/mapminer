@@ -20,8 +20,7 @@
                     <option value="{{$state->state}}">{{$state->state}}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="col form-inline">
+        
             Service Line: &nbsp;
             <select wire:model="serviceline" class="form-control">
                 <option value="All">All</option>
@@ -29,14 +28,21 @@
                     <option value="{{$key}}">{{$value}}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="col form-inline">
+        
+        
             Region: &nbsp;
             <select wire:model="region" class="form-control">
                 <option value="All">All</option>
                 @foreach ($regions as $region)
                     <option value="{{$region->id}}">{{$region->region}}</option>
                 @endforeach
+            </select>
+            Managers: &nbsp;
+            <select wire:model="manager" class="form-control">
+                <option value="All">All</option>
+                <option value="with">With manager</option>
+                <option value="without">Without manager</option>
+                
             </select>
         </div>
     </div>

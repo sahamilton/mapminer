@@ -20,8 +20,7 @@ class Person extends NodeModel
     
     protected $table ='persons';
     protected $hidden = ['created_at','updated_at','deleted_at','position'];
-    
-    
+
     protected $parentColumnName = 'reports_to';
 
     protected $leftColumnName = 'lft';
@@ -139,6 +138,10 @@ class Person extends NodeModel
                 );
             }
         );
+    }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user', 'id', 'user_id' );
     }
     /**
      * [managers description]

@@ -20,6 +20,7 @@ class BranchTable extends Component
     public $serviceline = 'All';
     public $userServiceLines;
     public $paginationTheme = 'bootstrap';
+    public $manager = 'All';
 
 
     public function updatingSearch()
@@ -54,6 +55,18 @@ class BranchTable extends Component
                         'manager', 
                         'relatedPeople.userdetails.roles', 
                         'servicelines'
+                    )
+                    ->when(
+                        $this->manager != 'All', function ($q) {
+                            $q->when(
+                                $this->manager == 'with', function ($q) {
+                                    $q->whereHas('manager');
+                                }, function ($q) {
+                                    $q->whereDoesntHave('manager');
+                                }
+                            );
+                            
+                        }
                     )
                     ->when(
                         $this->state != 'All', function ($q) {

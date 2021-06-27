@@ -323,7 +323,10 @@ class ManagersController extends BaseController {
         return $notes;
         
     }
-    
+    public function livewireManagers()
+    {
+        return response()->view('managers.table');
+    }
 
     /**
      * [companywatchexport description]
