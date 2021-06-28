@@ -15,7 +15,12 @@
                 <i class="fas fa-users"></i> All Users
             </a>
         </li>
-        
+        <li>
+            <a class="dropdown-item" 
+            href="{{ route('managers.livewire') }}">
+                <i class="fas fa-tasks"></i> Management Teams
+            </a>
+        </li>
 
         <div class="dropdown-divider"></div>
         <li>
@@ -31,12 +36,7 @@
                 <i class="fas fa-check-double"></i> Permissions
             </a>
         </li>
-        <div class="dropdown-divider"></div>
-        <li>
-            <a class="dropdown-item" 
-            href="{{ route('nomanager') }}">
-                <i class="fas fa-ban"></i> Without Managers
-            </a>
-        </li>
+        
+        
     </ul>
 </li>

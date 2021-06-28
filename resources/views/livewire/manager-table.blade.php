@@ -51,7 +51,7 @@
                 <option value="no">Without Direct Reports</option>
                 
             </select>
-            @include('livewire.partials._periodselector', ['all'=>true])
+            @include('livewire.partials._periodselector', ['title'=>'Logins', 'all'=>true])
         </div>
     </div>
     

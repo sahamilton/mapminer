@@ -1,5 +1,7 @@
 <div class="col form-inline" title="Select time period"> 
-
+        @if(isset($title))
+            {{$title}}
+        @endif
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
         </div>
