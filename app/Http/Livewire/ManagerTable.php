@@ -6,15 +6,17 @@ use Livewire\Component;
 use App\Person;
 use App\Role;
 use Livewire\WithPagination;
+use App\PeriodSelector;
 
 class ManagerTable extends Component
 {
-    use WithPagination;
+    use WithPagination, PeriodSelector;
     
     public Person $capoDiCapo;
-    public array $role_ids = ['All'];
+    public $role_id = 'All';
     public $branchcount = 'All';
     public $directReports = 'All';
+    public $setPeriod = 'All';
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'lastname';
@@ -53,22 +55,30 @@ class ManagerTable extends Component
 
     public function render()
     {
+        $this->_setPeriod();
         return view(
             'livewire.manager-table', 
-            ['managers'=>$this->capoDiCapo
-                ->descendantsandSelf()
+            ['managers'=>Person::query()
+                ->with('reportsTo')
+                ->select('persons.*')
                 ->search($this->search)
+                ->join('users', 'persons.user_id', '=', 'users.id')
                 ->when(
-                    ! in_array('All', $this->role_ids), function ($q) {
+                    $this->role_id != 'All', function ($q) {
                         $q->whereHas(
                             'userdetails', function ($q) {
                                 $q->whereHas(
                                     'roles', function ($q) {
-                                        $q->whereIn('roles.id', $this->role_ids);
+                                        $q->where('roles.id', $this->role_id);
                                     }
                                 );
                             } 
                         );
+                    }
+                )
+                ->when(
+                    $this->setPeriod != 'All', function ($q) {
+                        $q->whereBetween('lastlogin',  $this->period);
                     }
                 )
                 ->when(
@@ -100,5 +110,18 @@ class ManagerTable extends Component
                 'roles'=> Role::orderBy('display_name')->pluck('display_name', 'id'),
             ]
         );
+    }
+
+    /**
+     * [_setPeriod description]
+     *
+     * @return setPeriod
+     */
+    private function _setPeriod()
+    {
+        if ($this->setPeriod != session('period')) {
+            $this->livewirePeriod($this->setPeriod);
+            
+        }
     }
 }

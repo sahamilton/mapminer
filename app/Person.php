@@ -139,16 +139,13 @@ class Person extends NodeModel
             }
         );
     }
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'role_user', 'id', 'user_id' );
-    }
     /**
      * [managers description]
      * 
-     * @param [type] $roles [description]
+     * @param Array|null $roles        [description]
+     * @param Array|null $servicelines [description]
      * 
-     * @return [type]        [description]
+     * @return [type]                   [description]
      */
     public function managers(Array $roles=null, Array $servicelines=null)
     {
@@ -182,11 +179,9 @@ class Person extends NodeModel
      */
     public function getMyBranches(Array $servicelines=null)
     {
-        
-        
+                
         $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
        
-     
         $branches = $branchMgrs->with('branchesServiced')
             ->when(
                 $servicelines, function ($q) use ($servicelines) {
@@ -240,7 +235,28 @@ class Person extends NodeModel
             }
         )->flatten()->unique()->sortBy('id');
     }
+    /**
+     * [scopeLastLogin description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeLastLogin($query, array $period=null)
+    {
 
+        return $query
+            ->when(
+                isset($period), function ($q) use ($period) {
+                    $q->whereHas(
+                        'userdetails', function ($q) use ($period) {
+                            $q->lastLogin($period);
+                        }
+                    );
+                }
+            )->withMax('userdetails', 'lastlogin');
+    }
 
     /**
      * [myBranches description]
@@ -1007,7 +1023,7 @@ class Person extends NodeModel
     }
     /**
      * [updatePersonsAddress description]
-     * 
+     * This should be in a controller!
      * @param UserFormRequest $request [description]
      * 
      * @return [type]                   [description]
