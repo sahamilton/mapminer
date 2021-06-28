@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
         
         //   Activity types
         Route::resource('activitytype', 'ActivityTypeController');
-           //     AccountTypes
+        //     AccountTypes
         Route::resource('accounttype', 'AccounttypesController');
         //   Address
         Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
@@ -106,7 +106,8 @@ use Illuminate\Http\Request;
         Route::get('projects/exportstats', ['as'=>'project.exportstats', 'uses'=>'ProjectsController@exportProjectStats']);
         Route::get('projects/{id}/owner', ['as'=>'project.owner', 'uses'=>'ProjectsController@ownedProjects']);
         Route::post('projects/{id}/release', ['as'=>'projects.release', 'uses'=>'ProjectsController@release']);
-
+        // Managemnet Team
+        Route::get('managers',['as'=>'managers.livewire', 'uses'=>'ManagersController@livewireManagers']);
 
         //     Project Source
         Route::resource('projectsource', 'ProjectSourceController');

@@ -114,7 +114,7 @@ use Illuminate\Http\Request;
         Route::get('person/import', ['as'=>'person.bulkimport', 'uses'=>'PersonsController@import']);
         Route::post('person/import', ['as'=>'person.import', 'uses'=>'PersonsController@processimport']);
         Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
-        Route::get('managers',['as'=>'managers.livewire', 'uses'=>'ManagersController@livewireManagers']);
+        
         //     ServiceLines
         Route::resource('serviceline', 'ServicelinesController');
 

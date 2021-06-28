@@ -5,13 +5,16 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Person;
 use App\Role;
-
+use Livewire\WithPagination;
 
 class ManagerTable extends Component
 {
+    use WithPagination;
     
     public Person $capoDiCapo;
     public array $role_ids = ['All'];
+    public $branchcount = 'All';
+    public $directReports = 'All';
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'lastname';
@@ -46,6 +49,8 @@ class ManagerTable extends Component
     {
         $this->capoDiCapo = Person::findOrFail(config('mapminer.topdog'));
     }
+
+
     public function render()
     {
         return view(
@@ -55,10 +60,40 @@ class ManagerTable extends Component
                 ->search($this->search)
                 ->when(
                     ! in_array('All', $this->role_ids), function ($q) {
-                        $q->whereIn('userdetails.roles', $this->role_ids);
+                        $q->whereHas(
+                            'userdetails', function ($q) {
+                                $q->whereHas(
+                                    'roles', function ($q) {
+                                        $q->whereIn('roles.id', $this->role_ids);
+                                    }
+                                );
+                            } 
+                        );
                     }
                 )
-                ->withCount('branchesserviced')
+                ->when(
+                    $this->branchcount != 'All', function ($q) {
+                        $q->when(
+                            $this->branchcount == 'no', function ($q) {
+                                $q->whereDoesntHave('branchesserviced');
+                            }, function ($q) {
+                                 $q->whereHas('branchesserviced');
+                            }
+                        );
+                        
+                    }
+                )->when(
+                    $this->directReports != 'All', function ($q) {
+                        $q->when(
+                            $this->directReports == 'no', function ($q) {
+                                $q->whereDoesntHave('directReports');
+                            }, function ($q) {
+                                 $q->whereHas('directReports');
+                            }
+                        );
+                        
+                    }
+                )->withCount('branchesserviced')
                 ->withCount('directReports')
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),

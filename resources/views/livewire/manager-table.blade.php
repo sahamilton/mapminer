@@ -1,9 +1,10 @@
 <div>
+    <h2>Branch Management Team</h2>
     <div class="row" style="margin-top:5px">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             
-            @include('livewire.partials._search', ['placeholder'=>'Search Branches'])
+            @include('livewire.partials._search', ['placeholder'=>'Search Managers'])
             <div wire:loading>
                 <div class="spinner-border"></div>
             </div>
@@ -11,12 +12,27 @@
     </div>
     <div class="row" style="margin-top:5px">
         <div class="col form-inline">
+            <i class="fas fa-filter text-danger"></i>
             Roles: 
             <select multiple wire:model="role_ids" class="form-control">
                 <option value="All">All</option>
                 @foreach ($roles as $key=>$value)
                 <option value="{{$key}}">{{$value}}</option>
                 @endforeach
+            </select>
+             Branches: &nbsp;
+            <select wire:model="branchcount" class="form-control">
+                <option value="All">All</option>
+                <option value="yes">With Branches</option>
+                <option value="no">Without Branches</option>
+                
+            </select>
+             Direct Reports: &nbsp;
+            <select wire:model="directReports" class="form-control">
+                <option value="All">All</option>
+                <option value="yes">With Direct Reports</option>
+                <option value="no">Without Direct Reports</option>
+                
             </select>
         </div>
     </div>
@@ -43,14 +59,22 @@
             <tbody>
                 @foreach ($managers as $manager)
                 <tr>
-                    <td>{{$manager->fullName()}}</td>
+                    <td>
+                        <a href="{{route('person.details', $manager->id)}}">
+                            {{$manager->fullName()}}
+                        </a>
+                    </td>
                     <td>
                         @foreach ($manager->userdetails->roles as $role)
                             {{! $loop->first ? "," :''}}
                             {{$role->display_name}}
                         @endforeach
                     </td>
-                    <td>{{$manager->reportsTo->fullName()}}</td>
+                    <td>
+                        <a href="{{route('person.details', $manager->reports_to)}}">
+                            {{$manager->reportsTo->fullName()}}
+                        </a>
+                    </td>
                     <td>{{$manager->direct_reports_count}}</td>
                     <td>{{$manager->branchesserviced_count}}</td>
                 </tr>
@@ -67,6 +91,4 @@
             </div>
         </div>
     </div>
-
-
 </div>
