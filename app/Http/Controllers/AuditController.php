@@ -17,7 +17,13 @@ class AuditController extends Controller
     {
         return response()->view('audit.index');
     }
-
+    /**
+     * [show description]
+     * 
+     * @param Audit $audit [description]
+     * 
+     * @return view        [description]
+     */
     public function show(Audit $audit)
     {
         $audit->load('user.person');
@@ -27,12 +33,12 @@ class AuditController extends Controller
             $model = User::with('person')->withTrashed()->find($audit->auditable_id);
             break;
 
-        case "person": 
+        case "person":
+        case "App\Person":
             $model = Person::with('userdetails')->withTrashed()->find($audit->auditable_id);
             break;
         
         default:
-
                 dd($audit);
             break;
         }

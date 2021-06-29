@@ -9,6 +9,7 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 use Crypt;
 use Carbon\Carbon;
 use OwenIt\Auditing\Contracts\Auditable; 
+use Illuminate\Support\Arr;
 
 
 class User extends Authenticatable implements Auditable
@@ -41,7 +42,28 @@ class User extends Authenticatable implements Auditable
     ];
     protected $auditExclude = [
         'lastlogin',
+        'updated_at'
     ];
+
+    protected $auditEvents = [
+        'created',
+        'updated',
+        'deleted',
+        'restored', 
+        'pivotAttached'.
+        'pivotDetached',
+        'pivotUpdated'
+    ];
+
+    public function transformAudit(array $data): array
+    {
+        if (Arr::has($data, 'new_values.role_id')) {
+            $data['old_values']['role_name'] = Role::find($this->getOriginal('role_id'))->dislay_name;
+            $data['new_values']['role_name'] = Role::find($this->getAttribute('role_id'))->display_name;
+        }
+
+        return $data;
+    }
     /**
      * [canImpersonate description]
      * 

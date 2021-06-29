@@ -6,12 +6,9 @@
         <div class="col form-inline">
             @include('livewire.partials._perpage')
            
-            @include('livewire.partials._search', ['placeholder'=>'Search Audits'])
-        </div>
-    </div>
 
-    <div class="row mb-4 ">
-       
+        </div>
+    
         <div wire:loading>
             <div class="spinner-border"></div>
         </div>
@@ -43,7 +40,7 @@
             <th>Model</th>
             <th>Event</th>
             <th>
-                <a wire:click.prevent="sortBy('created_date')" 
+                <a wire:click.prevent="sortBy('created_at')" 
                 role="button" href="#" 
                 wire:loading.class="bg-danger">
                     Date
