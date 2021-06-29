@@ -42,19 +42,20 @@
     38 => 'McCool\\LaravelAutoPresenter\\AutoPresenterServiceProvider',
     39 => 'Carbon\\Laravel\\ServiceProvider',
     40 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    41 => 'PragmaRX\\Version\\Package\\ServiceProvider',
-    42 => 'PragmaRX\\Yaml\\Package\\ServiceProvider',
-    43 => 'Spatie\\Fractal\\FractalServiceProvider',
-    44 => 'Spatie\\LaravelRay\\RayServiceProvider',
-    45 => 'Spatie\\UptimeMonitor\\UptimeMonitorServiceProvider',
-    46 => 'Geocoder\\Laravel\\Providers\\GeocoderService',
-    47 => 'Bugsnag\\BugsnagLaravel\\BugsnagServiceProvider',
-    48 => 'App\\Providers\\AppServiceProvider',
-    49 => 'App\\Providers\\AuthServiceProvider',
-    50 => 'App\\Providers\\EventServiceProvider',
-    51 => 'App\\Providers\\HorizonServiceProvider',
-    52 => 'App\\Providers\\RouteServiceProvider',
-    53 => 'App\\Providers\\DropboxServiceProvider',
+    41 => 'OwenIt\\Auditing\\AuditingServiceProvider',
+    42 => 'PragmaRX\\Version\\Package\\ServiceProvider',
+    43 => 'PragmaRX\\Yaml\\Package\\ServiceProvider',
+    44 => 'Spatie\\Fractal\\FractalServiceProvider',
+    45 => 'Spatie\\LaravelRay\\RayServiceProvider',
+    46 => 'Spatie\\UptimeMonitor\\UptimeMonitorServiceProvider',
+    47 => 'Geocoder\\Laravel\\Providers\\GeocoderService',
+    48 => 'Bugsnag\\BugsnagLaravel\\BugsnagServiceProvider',
+    49 => 'App\\Providers\\AppServiceProvider',
+    50 => 'App\\Providers\\AuthServiceProvider',
+    51 => 'App\\Providers\\EventServiceProvider',
+    52 => 'App\\Providers\\HorizonServiceProvider',
+    53 => 'App\\Providers\\RouteServiceProvider',
+    54 => 'App\\Providers\\DropboxServiceProvider',
   ),
   'eager' => 
   array (
@@ -222,6 +223,7 @@
     'form' => 'Collective\\Html\\HtmlServiceProvider',
     'Collective\\Html\\HtmlBuilder' => 'Collective\\Html\\HtmlServiceProvider',
     'Collective\\Html\\FormBuilder' => 'Collective\\Html\\HtmlServiceProvider',
+    'OwenIt\\Auditing\\Contracts\\Auditor' => 'OwenIt\\Auditing\\AuditingServiceProvider',
   ),
   'when' => 
   array (
@@ -265,6 +267,9 @@
     array (
     ),
     'Collective\\Html\\HtmlServiceProvider' => 
+    array (
+    ),
+    'OwenIt\\Auditing\\AuditingServiceProvider' => 
     array (
     ),
   ),

@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
      *  Admin Routes
      *  ------------------------------------------
      */
-    
+        
+        Route::get('audits', 'AuditController@index');
+
         Route::get('accounttype/locations', ['as'=>'accounttype.locations', 'uses'=>'AccounttypesController@locations']);
 
         Route::get('branchassignments/select', ['as'=>'branchassignment.check', 'uses'=>'Admin\BranchManagementController@select']);

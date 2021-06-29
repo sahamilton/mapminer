@@ -2,6 +2,7 @@
   'account-location' => 'App\\Http\\Livewire\\AccountLocation',
   'accounttype-table' => 'App\\Http\\Livewire\\AccounttypeTable',
   'activities-table' => 'App\\Http\\Livewire\\ActivitiesTable',
+  'audit-table' => 'App\\Http\\Livewire\\AuditTable',
   'branch-locations-table' => 'App\\Http\\Livewire\\BranchLocationsTable',
   'branch-opportunity-table' => 'App\\Http\\Livewire\\BranchOpportunityTable',
   'branch-table' => 'App\\Http\\Livewire\\BranchTable',

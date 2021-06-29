@@ -5,11 +5,11 @@ use App\Presenters\LocationPresenter;
 use App\Http\Requests\UserFormRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
 //use McCool\LaravelAutoPresenter\HasPresenter;
+use OwenIt\Auditing\Contracts\Auditable; 
 
-
-class Person extends NodeModel
+class Person extends NodeModel implements Auditable
 {
-    use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch;
+    use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch, \OwenIt\Auditing\Auditable;
     public $salesroles = ['5','9'];
     public $branchroles = ['9'];
     // Add your validation rules here

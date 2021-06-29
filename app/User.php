@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Crypt;
 use Carbon\Carbon;
+use OwenIt\Auditing\Contracts\Auditable; 
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements Auditable
 {
-    use Notifiable,HasRoles, Geocode, SearchableTrait, SoftDeletes;
+    use Notifiable,HasRoles, Geocode, SearchableTrait, SoftDeletes, \OwenIt\Auditing\Auditable;
 
 
     protected $expiration = '2880';
@@ -38,7 +39,9 @@ class User extends Authenticatable
             'persons' => ['users.id','persons.user_id'],
         ],
     ];
-    
+    protected $auditExclude = [
+        'lastlogin',
+    ];
     /**
      * [canImpersonate description]
      * 
