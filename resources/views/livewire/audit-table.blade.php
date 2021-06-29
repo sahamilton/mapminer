@@ -37,8 +37,6 @@
                 <option value="deleted">Restored</option>
             </select>
         </div>
-
-    
     </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
@@ -62,7 +60,9 @@
               
                 <tr>
                    <td>
+                    <a href="{{route('audits.show', $audit->id)}}">
                        {{ $audit->auditable_type }} (id: {{ $audit->auditable_id }})
+                   </a>
                     </td>
                    <td> {{ $audit->event }}</td>
                    <td>{{$audit->created_at->format('Y-m-d')}}</td> 
@@ -91,16 +91,14 @@
                 </tr>
             @endforeach
         </tbody>
-
     </table>
     <div class="row">
-            <div class="col">
-                {{ $audits->links() }}
-            </div>
+        <div class="col">
+            {{ $audits->links() }}
+        </div>
 
-            <div class="col text-right text-muted">
-                Showing {{ $audits->firstItem() }} to {{ $audits->lastItem() }} out of {{ $audits->total() }} results
-            </div>
+        <div class="col text-right text-muted">
+            Showing {{ $audits->firstItem() }} to {{ $audits->lastItem() }} out of {{ $audits->total() }} results
         </div>
     </div>
 </div>

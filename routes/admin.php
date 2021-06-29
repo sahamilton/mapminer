@@ -5,7 +5,8 @@ use Illuminate\Http\Request;
      *  ------------------------------------------
      */
         
-        Route::get('audits', 'AuditController@index');
+        Route::resource('audits', 'AuditController');
+      
 
         Route::get('accounttype/locations', ['as'=>'accounttype.locations', 'uses'=>'AccounttypesController@locations']);
 

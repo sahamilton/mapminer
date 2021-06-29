@@ -40,7 +40,12 @@
                                 <i class="fas fa-recycle"></i> Import / Export
                             </a>
                         </li>
-                        
+                        <li>
+                            <a class="dropdown-item"
+                                href="{{route('audits.index')}}">
+                                <i class="fas fa-clipboard-list"></i> Audit
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
