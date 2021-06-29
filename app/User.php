@@ -40,9 +40,16 @@ class User extends Authenticatable implements Auditable
             'persons' => ['users.id','persons.user_id'],
         ],
     ];
+    /**
+     * Attributes to exclude from the Audit.
+     *
+     * @var array
+     */
     protected $auditExclude = [
-        'lastlogin',
-        'updated_at'
+        
+        'updated_at',
+        'confirmed', 
+        'remember_token',  
     ];
 
     protected $auditEvents = [
@@ -64,6 +71,9 @@ class User extends Authenticatable implements Auditable
 
         return $data;
     }
+
+
+
     /**
      * [canImpersonate description]
      * 
@@ -90,8 +100,7 @@ class User extends Authenticatable implements Auditable
                 'confirmed',
                 'confirmation_code',
                 'employee_id',
-                'api_token',
-                'avatar'];
+                'api_token',];
     /**
      * Get user by username
      * 
