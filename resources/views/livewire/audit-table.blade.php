@@ -61,9 +61,9 @@
                        {{ $audit->auditable_type }} (id: {{ $audit->auditable_id }})
                    </a>
                     </td>
-                   <td> {{ $audit->event }}</td>
-                   <td>{{$audit->created_at->format('Y-m-d')}}</td> 
-                   <td>{{$audit->user->person->fullName()}}</td> 
+                   <td> {{$audit->event }}</td>
+                   <td>{{$audit->created_at->format('Y-m-d h:i a')}}</td> 
+                   <td>{{isset($audit->user) ? $audit->user->person->fullName() : ''}}</td> 
                    
                    <td>
                       <table class="table">

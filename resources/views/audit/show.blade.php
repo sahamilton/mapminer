@@ -7,7 +7,7 @@
             @break
 
             @case ("App\Person")
-                <h2><a href="{{route('person.details', $model->id)}}">{{$model->fullName()}}</h2>
+                <h2><a href="{{route('person.details', $model->id)}}">{{$model->fullName()}}</a></h2>
             @break
         @endswitch
         <p>{{$audit->event}} by {{$audit->user->person->fullName()}}</p>
