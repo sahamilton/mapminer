@@ -46,7 +46,7 @@ class User extends Authenticatable implements Auditable
      * @var array
      */
     protected $auditExclude = [
-        
+        'lastlogin',
         'updated_at',
         'confirmed', 
         'remember_token',  
@@ -57,7 +57,7 @@ class User extends Authenticatable implements Auditable
         'updated',
         'deleted',
         'restored', 
-        'pivotAttached'.
+        'pivotAttached',
         'pivotDetached',
         'pivotUpdated'
     ];

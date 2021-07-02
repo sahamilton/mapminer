@@ -89,4 +89,15 @@ class GitVersion extends Model
             }
         }
     }
+
+    public function scopePeriodActions($query, array $period)
+    {
+        return $query->whereBetween('commitdate', [$period['from'], $period['to']]);
+       
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('message',  'like', "%{$search}%");
+    }
 }

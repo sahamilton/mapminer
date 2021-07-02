@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
         
         Route::resource('audits', 'AuditController');
       
-
         Route::get('accounttype/locations', ['as'=>'accounttype.locations', 'uses'=>'AccounttypesController@locations']);
 
         Route::get('branchassignments/select', ['as'=>'branchassignment.check', 'uses'=>'Admin\BranchManagementController@select']);
@@ -182,7 +181,7 @@ use Illuminate\Http\Request;
 
                 $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay(), 
                     'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay()];
-                $branches =  [ 0 => "8032",
+                /*$branches =  [ 0 => "8032",
                               1 => "2977",
                               2 => "2986",
                               3 => "1415",
@@ -191,7 +190,7 @@ use Illuminate\Http\Request;
                               6 => "1179",
                               7 => "7209",
                               8 => "1182"];
-
+                */
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
                 App\Jobs\WeeklySummary::dispatch($period);
                 ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
