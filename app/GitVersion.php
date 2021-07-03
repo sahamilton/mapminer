@@ -39,6 +39,7 @@ class GitVersion extends Model
     public function history()
     {
         $lastCommit = $this->max('commitdate');
+       
         $command = 'git log --after="'.$lastCommit.'"';
         $dir = app_path();
         $output = [];

@@ -1,5 +1,6 @@
 <div>
     <h1>Version History</h1>
+    <a href="{{route('versions.create')}}"><i class="fas fa-sync text-success"></i></a>
     <div class="row mb-4 ">
         @include('livewire.partials._search', ['placeholder'=>'Search Git Commits'])
     </div>
@@ -17,7 +18,18 @@
             @include('livewire.partials._periodselector')
         </div>
     </div>
-    @include('git.table');
+    <table class='table table-striped table-bordered table-condensed table-hover'>
+        <thead>
+            <a wire:click.prevent="sortBy('commitdate')" role="button" href="#">
+                    Commit Date
+                    @include('includes._sort-icon', ['field' => 'commitdate'])
+            </a>
+            <th>Message</th>
+            <th>Author</th>     
+        </thead>
+        @include('git.table');
+    </table>
+    
     <div class="row">
         <div class="col">
             {{ $versions->links() }}

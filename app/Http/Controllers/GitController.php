@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class GitController extends Controller
 {
-    protected $git;
+    public $git;
 
     /**
      * [__construct description].
@@ -26,11 +26,15 @@ class GitController extends Controller
      */
     public function index()
     {
-        $this->git->history();
+        return response()->view('git.index');
+    }
 
-        $versions = $this->git->all();
-
-        return response()->view('git.index', compact('versions'));
+    public function create()
+    {
+        $git = new GitVersion;
+        $git->history();
+        
+        return redirect()->back()->withSuccess('git refreshed');
     }
 
     /**
