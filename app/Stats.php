@@ -68,6 +68,18 @@ class Stats extends Model
                         }
                     )
                     ->count(),
+                'active_branches' => Branch::wherehas(
+                    'activities', function ($q) {
+                        $q->whereBetween('activity_date',  [$this->period['from'], $this->period['to']]);
+                    }
+                )
+                ->count(),
+                'inactive_branches' => Branch::whereDoesntHave(
+                    'activities', function ($q) {
+                        $q->whereBetween('activity_date',  [$this->period['from'], $this->period['to']]);
+                    }
+                )
+                ->count(),
                 'activities' => Activity::completed()->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
                     ->when(
                         $this->branches, function ($q) {

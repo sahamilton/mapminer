@@ -29,7 +29,8 @@ class WeeklySummaryStatsReport extends Mailable
      */
     public function build()
     {
-        return $this->from(config('mail.from'))->markdown('emails.weeklysummarystatsreport')  
+        return $this->from(config('mail.from'))
+            ->markdown('emails.weeklysummarystatsreport')  
             ->subject('Mapminer Summary Stats Report');
             
     }
