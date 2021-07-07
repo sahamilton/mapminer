@@ -24,29 +24,30 @@
 
                     
                 @endif
-            </p>
-          
-           
-            <p>
-                <strong>
-                    {{$people->reportsTo->business_title}}
-                    <a href="{{route('person.show',$people->reportsTo->id)}}"
-                        title = "See {{$people->reportsTo->firstname}}'s organizational details">
-                        {{$people->reportsTo->postName()}} </a> 
+            
+                @if(isset($people->reportsTo->id))
+                    reports to:
+                    <strong>
+                        
+                        {{$people->reportsTo->business_title}}
+                        <a href="{{route('person.show',$people->reportsTo->id)}}"
+                            title = "See {{$people->reportsTo->firstname}}'s organizational details">
+                            {{$people->reportsTo->postName()}} </a> 
 
-                       
-                    
-                </strong>  
+
+                        
+                    </strong>  
                     @if($people->reportsTo->phone !='')
                         <i class="fas fa-phone" aria-hidden="true"></i>
                         {{$people->reportsTo->phone}} 
-                   @endif 
+                    @endif 
                         <i class="far fa-envelope" aria-hidden="true"></i>
                         <a href="mailto:{{$people->reportsTo->userdetails->email}}"
                             title="Email {{$people->reportsTo->firstname}}">
                         {{$people->reportsTo->userdetails->email}}</a> 
-              
-                
+                @else
+                    No Manager
+                @endif
              </p>
           
         @endforeach

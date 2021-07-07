@@ -96,7 +96,7 @@
 			</div>
 
 			@endif
-			@if($user->person->reportsTo || $user->person->directReports->count()>0)
+			@if(isset($user->person->reportsTo->id))
 				<div class="list-group-item">
 					<div class="row">
 
@@ -105,10 +105,14 @@
 						<ul style="list-style-type: none;">
 						@if($user->person->reportsTo)
 							<li>Reports To:
-
+							@if($user->person->reportsTo()->count() >0)
+							
 							<a href="{{route('salesorg.show',$user->person->reportsTo->id)}}">
 								{{$user->person->reportsTo->fullName()}}
 							</a>
+							@else
+								No Manager
+							@endif
 						@endif
 						@if($user->person->directReports->count()>0)
 							<li>Team:</li>
@@ -125,7 +129,7 @@
 					</ul>
 				</div>
 				<div class="col-sm-8">
-					@if($user->person->directReports->count()>0)
+					@if(isset($user->person->directReports->id))
 						@include('site.user._teammap')
 						@endif
 					</div>
