@@ -70,14 +70,15 @@ return [
         ],
         'sftp' => [
             'driver' => 'sftp',
-            'host' => 'dev.tbmapminer.com',
+            'host' => env('sftp_host'),
             'username' => 'forge',
- 
             // Settings for SSH key based authentication...
-            'privateKey' => 'C:\Users\steph\.ssh\id_rsa.ppk',
-            'password' => 'Lytham7018!',
-        ],
+            'privateKey' => env('sftp_key'),
+            'password' => env('sftp_key_pwd'),
+            'visibility' => 'public',
+            'permPublic' => 0766, /// <- this one did the trick
 
+        ],
 
     ],
 

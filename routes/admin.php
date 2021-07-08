@@ -191,8 +191,10 @@ use Illuminate\Http\Request;
                               7 => "7209",
                               8 => "1182"];
                 */
+               
+               
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
-                App\Jobs\WeeklySummary::dispatch($period);
+                //App\Jobs\WeeklySummary::dispatch($period);
                 ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period, $branches);
@@ -213,9 +215,10 @@ use Illuminate\Http\Request;
                  App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
                         ->dispatch($filename)->onQueue('mapminer');
                  }
-                 $filename = 'mapminer-2021-03-06-22-58-01.zip';
+                 */
+                 $filename = 'mapminer-2021-07-07-22-58-02.zip';
                  App\Jobs\TransferFileJob::dispatch($filename)->onQueue('mapminer');
-                 
+                 /*
                  
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
