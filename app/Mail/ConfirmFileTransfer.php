@@ -13,12 +13,12 @@ class ConfirmFileTransfer extends Mailable
 
     /**
      * Create a new message instance.
-     *
+     * 
      * @return void
      */
-    public function __construct()
+    public function __construct($filename)
     {
-        //
+        $this->backup = $filename;
     }
 
     /**
@@ -28,6 +28,7 @@ class ConfirmFileTransfer extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->markdown('emails.confirmtransfer')
+            ->to(config('mapminer.developer_email'));
     }
 }

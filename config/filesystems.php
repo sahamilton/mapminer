@@ -73,7 +73,7 @@ return [
             'host' => 'dev.tbmapminer.com',
             'username' => 'forge',
             // Settings for SSH key based authentication...
-            //'privateKey' => '/home/forge/.ssh/id_rsa',
+            'privateKey' => '/home/forge/.ssh/id_rsa',
             'visibility' => 'public',
             'permPublic' => 0766, /// <- this one did the trick
 

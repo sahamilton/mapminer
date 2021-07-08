@@ -36,5 +36,6 @@ class TransferFileJob implements ShouldQueue
     {
         
         \Storage::disk('sftp')->put($this->path, fopen($this->file, 'r+'));
+        // mail confrmation file has been transferred
     }
 }
