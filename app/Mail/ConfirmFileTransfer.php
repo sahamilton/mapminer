@@ -10,15 +10,17 @@ use Illuminate\Queue\SerializesModels;
 class ConfirmFileTransfer extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $file;
+    public $path; 
     /**
      * Create a new message instance.
      * 
      * @return void
      */
-    public function __construct($filename)
+    public function __construct($file, $path)
     {
-        $this->backup = $filename;
+        $this->file = $file;
+        $this->path = $path;
     }
 
     /**

@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Mail\ConfirmFileTransfer;
+
 
 class TransferFileJob implements ShouldQueue
 {
@@ -36,6 +38,6 @@ class TransferFileJob implements ShouldQueue
     {
         
         \Storage::disk('sftp')->put($this->path, fopen($this->file, 'r+'));
-        // mail confrmation file has been transferred
+        \Mail::queue(new ConfirmFileTransfer($this->file, $this->path));
     }
 }
