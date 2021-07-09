@@ -74,7 +74,7 @@ return [
             'username' => 'forge',
             // Settings for SSH key based authentication...
             'privateKey' => env('sftp_key'),
-            //'password' => env('sftp_key_pwd', ''),
+            'password' => env('sftp_key_pwd', ''),
             'visibility' => 'public',
             'permPublic' => 0766, /// <- this one did the trick
 
