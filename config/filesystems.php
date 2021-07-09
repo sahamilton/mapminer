@@ -70,7 +70,7 @@ return [
         ],
         'sftp' => [
             'driver' => 'sftp',
-            'host' => 'dev.tbmapminer.com',
+            'host' => env('sftp_host'),
             'username' => 'forge',
             // Settings for SSH key based authentication...
             'privateKey' => env('sftp_key'),
