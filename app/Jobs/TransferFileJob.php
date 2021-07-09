@@ -25,7 +25,7 @@ class TransferFileJob implements ShouldQueue
     public function __construct($file)
     {
         $this->file =  storage_path('backups/'.$file);
-        $this->path =  'dev.tbmapminer.com/storage/backups/'. $file;
+        $this->path =  env('sftp_host').'/storage/backups/'. $file;
        
     }
 
