@@ -216,7 +216,7 @@ use Illuminate\Http\Request;
                         ->dispatch($filename)->onQueue('mapminer');
                  }
                  */
-                 $filename = 'mapminer-2021-07-07-22-58-02.zip';
+                 $filename = 'mapminer-2021-07-08-22-58-02.zip';
                  App\Jobs\TransferFileJob::dispatch($filename)->onQueue('mapminer');
                  /*
                  
