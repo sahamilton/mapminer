@@ -61,29 +61,29 @@ class BackupRestore extends Command
         switch($mime) {
 
         case "application/x-gzip":
-              $command = "zcat " . storage_path() . "/" . $backupFilename[1] . " | mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . "";
+              $command = "zcat " . storage_path($backupFilename[0]) . "/" . $backupFilename[1] . " | mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . "";
 
             break;
         case "application/zip":
             if ($this->_unZipFile($backupFilename)) {
                 $ucfilename = str_replace(".zip", ".sql", $backupFilename[1]);
-                $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . storage_path() . "/" . $ucfilename . "";
+                $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . storage_path($backupFilename[0]) . "/" . $ucfilename . "";
             } else {
-                $this->error("Unzipp did not work");
+                $this->error("Unzip did not work");
             }
             break; 
 
         case "text/plain":
 
             //mysql command to restore backup from the selected sql file
-            $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . storage_path() . "/" . $backupFilename[1] . "";
+            $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . storage_path($backupFilename[0]) . "/" . $backupFilename[1] . "";
             break;
 
         default: 
 
             //throw error if file type is not supported
             $this->error("File is not gzip or plain text");
-           // Storage::disk('local')->delete($backupFilename[1]);
+           // Storage::disk('local')->delete($backupFilename);
             return false;
             break;
         }
@@ -94,10 +94,10 @@ class BackupRestore extends Command
             $output     = null;
             exec($command, $output, $returnVar);
 
-           // Storage::disk('local')->delete($backupFilename);
+            
 
             if (! $returnVar) {
-
+                Storage::disk('local')->delete($backupFilename);
                 $this->info('Database Restored');
 
             } else {
@@ -108,14 +108,20 @@ class BackupRestore extends Command
 
         }
     }
-
-    private function _unZipFile($backupFilename)
+    /**
+     * [unzip zip backup]
+     * 
+     * @param array $backupFilename [description]
+     * 
+     * @return [type]                 [description]
+     */
+    private function _unZipFile(Array $backupFilename)
     {
 
         $zip = new \ZipArchive();
 
-        if ($zip->open(storage_path('transfers')."/".$backupFilename[1]) === true) {
-            $zip->extractTo(storage_path('transfers'));
+        if ($zip->open(storage_path($backupFilename[0])."/".$backupFilename[1]) === true) {
+            $zip->extractTo(storage_path($backupFilename[0]));
             $zip->close();
             return true;
         } else {
