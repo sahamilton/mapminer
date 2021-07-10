@@ -55,7 +55,7 @@ class BackupDatabase extends Command
             ZipBackUp::withChain(
                 [
                     new UploadToDropbox($this->filename),
-                    new TransferFileJob($this->filename),
+                    new TransferFileJob($this->filename.'.zip'),
                     
                 ]
             )
