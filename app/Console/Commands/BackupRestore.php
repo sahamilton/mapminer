@@ -96,7 +96,7 @@ class BackupRestore extends Command
 
            // Storage::disk('local')->delete($backupFilename);
 
-            if (!$returnVar) {
+            if (! $returnVar) {
 
                 $this->info('Database Restored');
 
@@ -112,7 +112,7 @@ class BackupRestore extends Command
     private function _unZipFile($backupFilename)
     {
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
 
         if ($zip->open(storage_path('transfers')."/".$backupFilename[1]) === true) {
             $zip->extractTo(storage_path('transfers'));
