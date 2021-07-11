@@ -7,6 +7,9 @@ Use Storage;
 
 class BackupRestore extends Command
 {
+    
+
+    
     /**
      * The name and signature of the console command.
      *
@@ -29,72 +32,22 @@ class BackupRestore extends Command
     public function __construct()
     {
         parent::__construct();
+       
     }
 
     public function handle()
     {
-        //get all files in s3 storage backups directory
-        $files = $files =  \Storage::disk('local')->files('transfers');
-        $i = 0;
-        foreach ($files as $file) {
-            $fileArray[] =['id'=>$i, 'file'=> $file];
-            $i++;
-        }
+      
+        //get lastest zip file in transfer directory
+        $backupFilename = $this->_getLatestRestorableFile();
         
-        $headers = ['id', 'File Name'];
-        //output table of file to console
-        $this->table($headers, $fileArray);
-        //ask console user for input
-        $backupId = $this->ask('Which file would you like to restore?');
-        $backupFilename = $fileArray[$backupId];
-        
-        $getBackupFile  = Storage::disk('local')->get($backupFilename['file']);
-
-        $backupFilename  = explode("/", $backupFilename['file']);
-       
-        Storage::disk('local')->put($backupFilename[1], $getBackupFile);
-        //get file mime
-        $mime = Storage::mimeType($backupFilename[1]);
-        switch($mime) {
-
-        case "application/x-gzip":
-              $command = "zcat " . storage_path($backupFilename[0]) . "/" . $backupFilename[1] . " | mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . "";
-
-            break;
-
-        case "application/zip":
-            if ($this->_unZipFile($backupFilename)) {
-                // create sql filename
-                $ucfilename = str_replace(".zip", ".sql", $backupFilename[1]);
-                $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . storage_path($backupFilename[0]) . "/" . $ucfilename . "";
-            } else {
-                $this->error("Unzip did not work");
-                return false;
+        if ($this->confirm("Are you sure you want to restore " . env('DB_DATABSE') . " from ".$backupFilename."? [y|N]")) {
+            if (! $command = $this->_createRestoreCommand($backupFilename)) {
+                $this->error('Unable to generate restore command');
             }
-            break; 
-
-        case "text/plain":
-
-            //mysql command to restore backup from the selected sql file
-            $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . storage_path($backupFilename[0]) . "/" . $backupFilename[1] . "";
-            break;
-
-        default: 
-
-            //throw error if file type is not supported
-            $this->error("File is not gzip or plain text");
-            return false;
-            break;
-        }
-
-        if ($this->confirm("Are you sure you want to restore the database? [y|N]")) {
-
             $returnVar  = null;
             $output     = null;
             exec($command, $output, $returnVar);
-
-            
-
             if (! $returnVar) {
                 Storage::disk('local')->delete($backupFilename);
                 $this->info('Database Restored');
@@ -106,6 +59,8 @@ class BackupRestore extends Command
             }
 
         }
+        
+        
     }
     /**
      * [unzip zip backup]
@@ -114,18 +69,81 @@ class BackupRestore extends Command
      * 
      * @return [type]                 [description]
      */
-    private function _unZipFile(Array $backupFilename)
+    private function _unZipFile($backupFilename)
     {
-
+        
         $zip = new \ZipArchive();
 
-        if ($zip->open(storage_path($backupFilename[0])."/".$backupFilename[1]) === true) {
-            $zip->extractTo(storage_path($backupFilename[0]));
+        if ($zip->open($backupFilename->getRealPath()) === true) {
+            $zip->extractTo($backupFilename->getPath());
             $zip->close();
             return true;
         } else {
             return false;
         }
 
+    }
+    /**
+     * [_createRestoreCommand description]
+     * 
+     * @param [type] $backupFilename [description]
+     * 
+     * @return [type]                 [description]
+     */
+    private function _createRestoreCommand($backupFilename)
+    {
+       
+        switch($backupFilename->getExtension()) {
+
+        case "gzip":
+              $command = "zcat " . storage_path($backupFilename[0]) . "/" . $backupFilename[1] . " | mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . "";
+
+            break;
+
+        case "zip":
+            if ($this->_unZipFile($backupFilename)) {
+                // create sql filename
+                $ucfilename = str_replace(".zip", ".sql", $backupFilename->getRealPath());
+                $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " .  $ucfilename . "";
+            } else {
+                $this->error("Unzip did not work");
+                return false;
+            }
+            break; 
+
+        case "sql":
+
+            //mysql command to restore backup from the selected sql file
+            $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . $backupFilename->getRealPath()  . "";
+            break;
+
+        default: 
+
+            //throw error if file type is not supported
+            $this->error("File is not gzip or plain text");
+            return false;
+            break;
+        }
+        return $command;
+    }
+    /**
+     * [_getRestorableFiles description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getLatestRestorableFile()
+    {
+        return collect(\File::allFiles(storage_path('transfers')))
+            ->filter(
+                function ($file) {
+                    return in_array($file->getExtension(), ['zip', 'sql']);
+                }
+            )
+            ->sortByDesc(
+                function ($file) {
+                    return $file->getCTime();
+                }
+            )
+            ->first();
     }
 }
