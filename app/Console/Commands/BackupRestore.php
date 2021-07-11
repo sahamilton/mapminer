@@ -41,7 +41,7 @@ class BackupRestore extends Command
         //get lastest zip file in transfer directory
         $backupFilename = $this->_getLatestRestorableFile();
         
-        if ($this->confirm("Are you sure you want to restore " . env('DB_DATABSE') . " from ".$backupFilename."? [y|N]")) {
+        if ($this->confirm("Are you sure you want to restore " . env('DB_DATABASE') . " from ".$backupFilename->getFilename()."? [y|N]")) {
             if (! $command = $this->_createRestoreCommand($backupFilename)) {
                 $this->error('Unable to generate restore command');
             }
