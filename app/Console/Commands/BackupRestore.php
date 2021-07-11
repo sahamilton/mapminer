@@ -34,26 +34,23 @@ class BackupRestore extends Command
     public function handle()
     {
         //get all files in s3 storage backups directory
-        $files = Storage::files('transfers');
-
+        $files = $files =  \Storage::disk('local')->files('transfers');
         $i = 0;
         foreach ($files as $file) {
-
-            $filename[$i]['file'] = $file;
+            $fileArray[] =['id'=>$i, 'file'=> $file];
             $i++;
-
         }
-
-        $headers = ['File Name'];
+        
+        $headers = ['id', 'File Name'];
         //output table of file to console
-        $this->table($headers, $filename);
+        $this->table($headers, $fileArray);
         //ask console user for input
-        $backupFilename = $this->ask('Which file would you like to restore?');
+        $backupId = $this->ask('Which file would you like to restore?');
+        $backupFilename = $fileArray[$backupId];
+        
+        $getBackupFile  = Storage::disk('local')->get($backupFilename['file']);
 
-
-        $getBackupFile  = Storage::disk('local')->get($backupFilename);
-
-        $backupFilename  = explode("/", $backupFilename);
+        $backupFilename  = explode("/", $backupFilename['file']);
        
         Storage::disk('local')->put($backupFilename[1], $getBackupFile);
         //get file mime
@@ -64,12 +61,15 @@ class BackupRestore extends Command
               $command = "zcat " . storage_path($backupFilename[0]) . "/" . $backupFilename[1] . " | mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . "";
 
             break;
+
         case "application/zip":
             if ($this->_unZipFile($backupFilename)) {
+                // create sql filename
                 $ucfilename = str_replace(".zip", ".sql", $backupFilename[1]);
                 $command = "mysql --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . " < " . storage_path($backupFilename[0]) . "/" . $ucfilename . "";
             } else {
                 $this->error("Unzip did not work");
+                return false;
             }
             break; 
 
@@ -83,7 +83,6 @@ class BackupRestore extends Command
 
             //throw error if file type is not supported
             $this->error("File is not gzip or plain text");
-           // Storage::disk('local')->delete($backupFilename);
             return false;
             break;
         }
