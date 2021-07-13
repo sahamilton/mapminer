@@ -110,7 +110,8 @@ class LocationPostImportController extends Controller
           }
         });*/
 
-        $m = $this->_getIdsFromArray($data['add']);
+        /*$m = $this->_getIdsFromArray($data['add']);
+
         $this->import->whereIn('id', $m)
             ->chunk(
                 100, function ($inserts) {
@@ -121,7 +122,7 @@ class LocationPostImportController extends Controller
                         }
                     );
                 }
-            );
+            );*/
 
         return $data;
     }

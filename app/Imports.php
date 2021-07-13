@@ -85,7 +85,7 @@ class Imports extends Model
     public function import($request=null)
     {
         // set filename
-       
+        
 
         if (request()->filled('file')) {
 
@@ -211,7 +211,9 @@ class Imports extends Model
     {
         if ($request && request()->filled('additionaldata')) {
             foreach (request('additionaldata') as $key=>$data) {
-                $this->_executeQuery("update ".$this->temptable." set " . $key . " = " . $data . ";");
+                $query = "update ".$this->temptable." set " . $key . " = " . $data . ";";
+
+                $this->_executeQuery($query);
             }
         }
         return true;
@@ -295,8 +297,26 @@ class Imports extends Model
      */
     private function _copyTempToBaseTable()
     {
-        
-        $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id,position";
+        /*
+        $contacts = \DB::table($this->temptable)->get()->map(
+            function ($item) {
+                return [
+                    'address_id'=>$item->address_id,
+                    'fullname'=>$item->fullname,
+                    'firstname'=>$item->firstname,
+                    'lastname'=>$item->lastname,
+                    'title'=>$item->title,
+                    'email'=>$item->email,
+                    'contactphone'=>$item->contactphone,
+                    'primary'=>1,
+                    'created_at'=>now(),
+                    'user_id'=>auth()->user()->id,
+                  ];
+            }
+        );
+        */
+  
+        $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id,position, company_id";
         if ($this->table !== 'usersimport') {
             $skip = ["branch_id"];
             $this->fields = implode(",", array_diff(explode(",", $this->fields), $this->contactFields, $skip));
@@ -319,7 +339,7 @@ class Imports extends Model
         
 
         $query ="update " . $this->temptable. ",". $this->table . " set " . $this->temptable.".address_id = ".$this->table.".id where ".$this->table.".import_ref = ".$this->temptable.".id and ". $this->table . ".lead_source_id = '".$leadsource_id."'";
-    
+       
         return $this->_executeQuery($query);
     }
     /**
@@ -330,8 +350,6 @@ class Imports extends Model
     private function _copyContactsToContactsTable()
     {
         
-       
-
         $contacts = \DB::table($this->temptable)->get()->map(
             function ($item) {
                 return [
@@ -343,10 +361,13 @@ class Imports extends Model
                     'email'=>$item->email,
                     'contactphone'=>$item->contactphone,
                     'primary'=>1,
+                    'created_at'=>now(),
+                    'user_id'=>auth()->user()->id,
                   ];
             }
         );
-        return Contact::insert($contacts->toArray());
+
+        return Contact::insertOrIgnore($contacts->toArray());
 
 
 
@@ -364,9 +385,7 @@ class Imports extends Model
     {
         
         $insert = \DB::table('addresses_import')
-            ->get();
-            dd($insert);
-           /* ->map(
+            ->get()->map(
                 function ($item) {
                        return [
                             'branch_id'=>$item->branch_id,
@@ -374,8 +393,8 @@ class Imports extends Model
                         ];
                 }
             );
-            dd($insert);*/
-        return AddressBranch::insert($insert->toArray());
+        
+        return AddressBranch::insertOrIgnore($insert->toArray());
     }
     /**
      * [_nullImportRefField description]
