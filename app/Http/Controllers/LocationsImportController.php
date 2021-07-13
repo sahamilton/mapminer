@@ -31,7 +31,7 @@ class LocationsImportController extends ImportController
     {
         
         $requiredFields = $this->import->requiredFields;
-       // $branches = Branch::orderBy('id')->get();
+        
         $companies = $this->company->orderBy('companyname')->pluck('companyname', 'id');
         $servicelines = Serviceline::all();
         $leadsources = LeadSource::active()->orderBy('source')->get();
@@ -77,10 +77,13 @@ class LocationsImportController extends ImportController
             $skip = ['id','created_at','updated_at','address_id','location_id','user_id'];
             $columns = array_merge($columns, $this->location->getTableColumns('contacts', $skip));
         }
+       
         if (isset($data['branch'])) {
             $data['branch_ids'] = implode(',', $data['branch']);
         }
+        $columns[] = (object) ['Field'=>'branch_id','Type'=>'varchar(20)'];
        
+
         return response()->view(
             'imports.mapfields', compact(
                 'columns',

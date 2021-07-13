@@ -1,11 +1,7 @@
 <div>
     <h2>Leads by Lead Source</h2>
     <p>
-        @if ($branch_id =='All')
-           For All Branches
-        @else
-            For Branch {{$branch->branchname}}
-        @endif
+        
     </p>
       
 
@@ -15,7 +11,7 @@
         <div class="spinner-border"></div>
     </div>
     <div class="row mb-4  form-inline">
-        @include('livewire.partials._branchselector')
+        
         @include('livewire.partials._search', ['placeholder'=>'Search Leadsource'])
     </div>
    

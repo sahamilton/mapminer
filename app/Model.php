@@ -50,6 +50,7 @@ class Model extends \Eloquent
         if ($skip) {
             $query = $query . " WHERE Field NOT IN ('". implode("','", $skip)."')";
         }
+       
         return \DB::select(\DB::raw($query));
     }
     /**

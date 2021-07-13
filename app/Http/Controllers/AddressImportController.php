@@ -26,7 +26,9 @@ class AddressImportController extends ImportController
             'lng',
             'position',
             'lead_source_id',
-            'created_at'];
+            'created_at',
+            'branch_id'
+        ];
 
 
     // $extrafields = ['leads']['description'];
@@ -66,18 +68,19 @@ class AddressImportController extends ImportController
     public function getFile(Request $request, $id = null, $type = null)
     {
 
-        $sources= $this->leadsources->all()->pluck('source', 'id');
-        if ($sources->count() == 0) {
+        $sources = $this->leadsources->all()->pluck('source', 'id');
+
+        if ($leadsource->count() == 0) {
             return redirect()->route('leadsource.index')->with('error', 'You must create a lead source first');
         }
         if ($id) {
             $leadsource = $this->leadsources->find($id);
         }
         $requiredFields = $this->address->requiredfields;
-        if ($type=='assigned') {
+        if ($type == 'assigned') {
             $requiredFields[] = 'employeee_number';
         }
-       
+        dd($requiredFields);
         return response()->view('leads.import', compact('sources', 'leadsource', 'requiredFields', 'type'));
     }
 
@@ -94,7 +97,7 @@ class AddressImportController extends ImportController
 
         $data = $this->uploadfile(request()->file('upload'));
         $title="Map the leads import file fields";
-         $requiredFields = $this->import->requiredFields;
+        $requiredFields = $this->import->requiredFields;
 
         $data['type']=request('type');
 
@@ -123,7 +126,7 @@ class AddressImportController extends ImportController
      */
     public function mapfields(Request $request)
     {
-
+       
         $data = $this->getData($request);
         $this->validateInput($request);
         $this->import->setFields($data);
@@ -141,8 +144,7 @@ class AddressImportController extends ImportController
      * @return [type]           [description]
      */
     private function _postimport(Request $request)
-    {
-        
+
         /*
         // get same, added & deleted based on spatial
         $data = $this->getAddEditDeleteOnSpatial()
@@ -153,10 +155,13 @@ class AddressImportController extends ImportController
         $this->copyAddressIdtoImport();
 
         $this->copyLeads();
-
-        $this->copyLeadContacts();
+        */
+        if ($request()->filled('contacts')) {
+            $this->copyLeadContacts();
+        }
+            
         //$this->updateLeadPivot();
-        $this->setAddressImportIdToNull();
+        //$this->setAddressImportIdToNull();
 
         
             

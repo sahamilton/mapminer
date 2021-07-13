@@ -26,7 +26,9 @@ class CompanyFormRequest extends FormRequest
         return [
          'companyname' => 'required',
          'serviceline'=>'required',
-         'customer_id'=>Rule::unique('companies', 'customer_id')->ignore($this->company),
+         'customer_id'=> ['nullable',
+            Rule::unique('companies', 'customer_id')->ignore($this->company)
+            ]
         ];
 
     }

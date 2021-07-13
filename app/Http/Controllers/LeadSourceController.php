@@ -514,7 +514,6 @@ class LeadSourceController extends Controller
     {
         
         $companies = $this->company
-            ->has('locations')
             ->withCount('locations')
             ->orderBy('companyname')
             ->get();

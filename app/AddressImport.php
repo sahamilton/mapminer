@@ -13,8 +13,9 @@ class AddressImport extends Imports
             'state',
             'zip',
             'lat',
-            'lng', ];
+            'lng',
+            'branch_id' ];
 
-    public $temptable = 'leadimport';
+    public $temptable = 'address_import';
     public $dontCreateTemp = true;
 }

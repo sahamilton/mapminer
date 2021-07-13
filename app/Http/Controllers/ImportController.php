@@ -35,9 +35,9 @@ class ImportController extends BaseController
     {
         $file = $file->store('uploads');
         $data['file'] = $file;
-        $data['linkfile'] = asset(\Storage::url($file));
+        $data['linkfile'] = asset(\Storage::disk('local')->url("uploads/".$file));
 
-        $data['filename'] = storage_path().'/app/'.$file;
+        $data['filename'] = storage_path("/").$file;
 
         return $data;
     }
@@ -51,6 +51,7 @@ class ImportController extends BaseController
      */
     protected function getFileFields($data)
     {
+       
         $content = fopen($data['filename'], 'r');
         $row = 1;
         for ($i = 0; $i < 10; $i++) {

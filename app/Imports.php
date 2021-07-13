@@ -85,8 +85,8 @@ class Imports extends Model
     public function import($request=null)
     {
         // set filename
-      
-        
+       
+
         if (request()->filled('file')) {
 
             $this->importfilename = request('file');
@@ -98,7 +98,8 @@ class Imports extends Model
         
         if (! $this->dontCreateTemp) {
            // $this->_createTemporaryImportTable();
-        }
+        } 
+
         $this->_truncateTempTable();
         $this->_importCSV();
         
@@ -106,19 +107,27 @@ class Imports extends Model
         $this->_addCreateAtField();
         $this->_createPositon();
         $this->_updateAdditionalFields($request);
-        if (! $this->dontCreateTemp) {
+        //if (! $this->dontCreateTemp) {
             
-            $this->_copyTempToBaseTable();
-            if (request()->filled('contacts')) {
-                $this->_copyAddressIdBackToImportTable(request('lead_source_id'));
-                $this->_copyContactsToContactsTable();
+        $this->_copyTempToBaseTable();
+        $this->_copyAddressIdBackToImportTable(request('lead_source_id'));
+        if (request()->filled('contacts')) {
+                
+            
+            $this->_copyContactsToContactsTable();
 
-            }
+        }
+        if (request()->filled('branch_id')) {
+                
+            
+            $this->_assignLeadstoBranches();
+
+        }
             
             //$this->_nullImportRefField();
 
             //$this->_truncateTempTable();
-        }
+        //}
         
 
         //
@@ -143,7 +152,7 @@ class Imports extends Model
      */
     private function _importCSV()
     {
-        $filename =  str_replace("\\", "/", storage_path('app/'. $this->importfilename));
+        $filename =  str_replace("\\", "/", storage_path('/'. $this->importfilename));
  
         $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
 
@@ -288,14 +297,14 @@ class Imports extends Model
     {
         
         $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id,position";
-        if (! $this->table = 'usersimport') {
-            $this->fields = implode(",", array_diff(explode(",", $this->fields), $this->contactFields));
+        if ($this->table !== 'usersimport') {
+            $skip = ["branch_id"];
+            $this->fields = implode(",", array_diff(explode(",", $this->fields), $this->contactFields, $skip));
         }
         
-       
         // Copy addresses over to base table
         $query ="INSERT IGNORE INTO `".$this->table."` (import_ref,".$this->fields.") SELECT id,".$this->fields." FROM `".$this->temptable."`";
-    
+        
         return $this->_executeQuery($query);
     }
     /**
@@ -307,9 +316,10 @@ class Imports extends Model
      */
     private function _copyAddressIdBackToImportTable($import)
     {
+        
         //update addresses_import,addresses set addresses_import.addressable_id = addresses.id where addresses.import_ref = addresses_import.id
         $query ="update " . $this->temptable. ",". $this->table . " set " . $this->temptable.".address_id = addresses.id where addresses.import_ref = ".$this->temptable.".id and ". $this->table . ".lead_source_id = '".$import."'";
-
+    
         return $this->_executeQuery($query);
     }
     /**
@@ -319,9 +329,53 @@ class Imports extends Model
      */
     private function _copyContactsToContactsTable()
     {
-        $query ="INSERT IGNORE INTO `contacts` (".implode(",", $this->contactFields).") 
-        SELECT ".implode(",", $this->contactFields)." FROM `".$this->temptable."`";
-        return $this->_executeQuery($query);
+        
+       
+
+        $contacts = \DB::table('addresses_import')->get()->map(
+            function ($item) {
+                return [
+                    'address_id'=>$item->address_id,
+                    'fullname'=>$item->fullname,
+                    'firstname'=>$item->firstname,
+                    'lastname'=>$item->lastname,
+                    'title'=>$item->title,
+                    'email'=>$item->email,
+                    'contactphone'=>$item->contactphone,
+                    'primary'=>1,
+                  ];
+            }
+        );
+        return Contact::insert($contacts->toArray());
+
+
+
+       /* $query ="INSERT IGNORE INTO `contacts` (address_id,".implode(",", $this->contactFields).", primary, created_at) 
+        SELECT address_id, ".implode(",", $this->contactFields).",1,'".now()->format('Y-m-d H:i:s') . "' FROM `".$this->temptable."`";
+        
+        return $this->_executeQuery($query);*/
+    }
+    /**
+     * [_assignLeadstoBranches description]
+     * 
+     * @return [type] [description]
+     */
+    private function _assignLeadstoBranches()
+    {
+        
+        $insert = \DB::table('addresses_import')
+            ->get();
+            dd($insert);
+           /* ->map(
+                function ($item) {
+                       return [
+                            'branch_id'=>$item->branch_id,
+                            'address_id'=>$item->address_id,
+                        ];
+                }
+            );
+            dd($insert);*/
+        return AddressBranch::insert($insert->toArray());
     }
     /**
      * [_nullImportRefField description]
