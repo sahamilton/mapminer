@@ -104,7 +104,7 @@ class Imports extends Model
         $this->_importCSV();
         
         $this->_addLeadSourceRef($request);
-        $this->_addCreateAtField();
+        $this->_addCreatedAtField();
         $this->_createPositon();
         $this->_updateAdditionalFields($request);
         //if (! $this->dontCreateTemp) {
@@ -180,7 +180,7 @@ class Imports extends Model
      *
      * @return [type] [description]
      */
-    private function _addCreateAtField()
+    private function _addCreatedAtField()
     {
         // Import from the CSV file
 
@@ -314,11 +314,11 @@ class Imports extends Model
      * 
      * @return [type]         [description]
      */
-    private function _copyAddressIdBackToImportTable($import)
+    private function _copyAddressIdBackToImportTable($leadsource_id)
     {
         
-        //update addresses_import,addresses set addresses_import.addressable_id = addresses.id where addresses.import_ref = addresses_import.id
-        $query ="update " . $this->temptable. ",". $this->table . " set " . $this->temptable.".address_id = addresses.id where addresses.import_ref = ".$this->temptable.".id and ". $this->table . ".lead_source_id = '".$import."'";
+
+        $query ="update " . $this->temptable. ",". $this->table . " set " . $this->temptable.".address_id = ".$this->table.".id where ".$this->table.".import_ref = ".$this->temptable.".id and ". $this->table . ".lead_source_id = '".$leadsource_id."'";
     
         return $this->_executeQuery($query);
     }
@@ -332,7 +332,7 @@ class Imports extends Model
         
        
 
-        $contacts = \DB::table('addresses_import')->get()->map(
+        $contacts = \DB::table($this->temptable)->get()->map(
             function ($item) {
                 return [
                     'address_id'=>$item->address_id,
