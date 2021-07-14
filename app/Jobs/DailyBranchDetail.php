@@ -70,7 +70,7 @@ class DailyBranchDetail implements ShouldQueue
     {
 
         
-        Excel::store(new DailyBranch($this->period, $this->branches), $this->file, 'public');
+        Excel::store(new DailyBranch($this->period, $this->branches),  $this->file, 'reports');
         
         Mail::to([$this->user->getFormattedEmail()])
                         ->send(new SendReport($this->file, $this->period, $this->report, $this->user));
@@ -89,7 +89,7 @@ class DailyBranchDetail implements ShouldQueue
 
     private function _makeFileName()
     {
-        return '/public/reports/'.
+        return 
             strtolower(
                 Str::slug(
                     $this->user->person->fullName()." ".

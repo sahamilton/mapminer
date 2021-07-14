@@ -45,16 +45,16 @@ class BranchOpportunities implements ShouldQueue
             ->where('job', 'BranchOpportunities')
             ->firstOrFail();
         
-        $this->file = "public/reports/". $this->report->filename.$this->period['to']->timestamp. ".xlsx";
+        $this->file =  $this->report->filename.$this->period['to']->timestamp. ".xlsx";
 
         $report = Report::with('distribution')
             ->where('job', 'BranchStats')
             ->firstOrFail();
         
         // create the file
-        $this->file = '/public/reports/'.$this->report->filename. Carbon::now()->timestamp.'.xlsx';
+        $this->file = $this->report->filename. Carbon::now()->timestamp.'.xlsx';
        
-        (new BranchOpportunitiesExport($this->period))->store($this->file)->chain(
+        (new BranchOpportunitiesExport($this->period))->store($this->file, 'reports')->chain(
             [
                 new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)
 

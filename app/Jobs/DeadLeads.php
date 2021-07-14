@@ -44,13 +44,14 @@ class DeadLeads implements ShouldQueue
             ->firstOrFail();
         
         // create the file
-        $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
+        $this->file = $report->filename. Carbon::now()->timestamp.'.xlsx';
        
-        (new DeadLeadsExport($this->period, $this->branches))->store($this->file)->chain(
-            [
-                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
+        (new DeadLeadsExport($this->period, $this->branches))->store($this->file, 'reports')
+            ->chain(
+                [
+                    new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 
-            ]
-        );
+                ]
+            );
     }
 }

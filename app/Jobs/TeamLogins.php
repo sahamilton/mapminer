@@ -37,7 +37,7 @@ class TeamLogins implements ShouldQueue
      */
     public function handle()
     {
-        $file = '/public/reports/teamlogins'. $this->period['to']->timestamp. ".xlsx";
+        $file = '/teamlogins'. $this->period['to']->timestamp. ".xlsx";
 
         
         $class= str_replace("App\Jobs\\", "", get_class($this));

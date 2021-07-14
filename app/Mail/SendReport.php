@@ -31,6 +31,7 @@ class SendReport extends Mailable implements ShouldQueue
         $this->period = $period;
         $this->report = $report;
         $this->user = $user;
+
     }
 
     
@@ -47,7 +48,7 @@ class SendReport extends Mailable implements ShouldQueue
             ->markdown('emails.reportsent')
             ->subject($this->report->report)
             ->attach(
-                storage_path('app/'.$this->file, ['mime' => 'application/xlsx'])
+                $this->file, ['mime' => 'application/xlsx']
             );
             
     }

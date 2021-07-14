@@ -43,8 +43,8 @@ class AccountActivities implements ShouldQueue
     {
         $company = $this->companies;
         $companyname = str_replace(' ', '_', $company->companyname);
-        $file = '/public/reports/'.$company->companyname.'_activityreport_'.Carbon::now()->timestamp.'.xlsx';
-        Excel::store(new AccountActivitiesExport($company, $this->period), $file, 'public');
+        $this->file = $company->companyname.'_activityreport_'.Carbon::now()->timestamp.'.xlsx';
+        Excel::store(new AccountActivitiesExport($company, $this->period), $file, 'reports');
         $company->load('managedBy', 'managedBy.userdetails');
 
         //$distribution = ['athompson4@trueblue.com'=>'Amy Thompson'];
