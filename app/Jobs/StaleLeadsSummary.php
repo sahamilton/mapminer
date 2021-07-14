@@ -31,7 +31,7 @@ class StaleLeadsSummary implements ShouldQueue
      */
     public function handle()
     {
-        Excel::store(new StaleLeadsSummaryExport($this->branches),  $this->file, 'public');
+        Excel::store(new StaleLeadsSummaryExport($this->branches),  $this->file, 'reports');
         
     }
 }

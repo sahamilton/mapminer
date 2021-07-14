@@ -43,7 +43,7 @@ class Top50WeeklyReport implements ShouldQueue
         // create the file
         $file = '/Top25wkrpt'.$this->period['to']->timestamp.'.xlsx';
 
-        Excel::store(new OpenTop25BranchOpportunitiesExport($this->period), $file, 'public');
+        Excel::store(new OpenTop25BranchOpportunitiesExport($this->period), $file, 'reports');
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
