@@ -179,9 +179,9 @@ use Illuminate\Http\Request;
                 //$companies = App\Company::whereIn('id', [532])->get();
                 //$opportunity = App\Opportunity::whereHas('branch')->whereHas('location')->latest()->first();
 
-                $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay(), 
-                    'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay()];
-                /*$branches =  [ 0 => "8032",
+                $period =  ['from'=>\Carbon\Carbon::now()->subDay()->startOfDay(), 
+                    'to' => \Carbon\Carbon::now()->subDay()->endOfDay()];
+                $branches =  [ 0 => "8032",
                               1 => "2977",
                               2 => "2986",
                               3 => "1415",
@@ -190,7 +190,7 @@ use Illuminate\Http\Request;
                               6 => "1179",
                               7 => "7209",
                               8 => "1182"];
-                */
+                
                
                
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
@@ -202,7 +202,7 @@ use Illuminate\Http\Request;
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
                 //App\Jobs\BranchLogins::dispatch();
-                //App\Jobs\DailyBranch::dispatch();
+                App\Jobs\DailyBranch::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);
@@ -215,10 +215,10 @@ use Illuminate\Http\Request;
                  App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
                         ->dispatch($filename)->onQueue('mapminer');
                  }
-                 */
+                 
                  $filename = 'mapminer-2021-07-08-22-58-02.zip';
                  App\Jobs\TransferFileJob::dispatch($filename)->onQueue('mapminer');
-                 /*
+                 
                  
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
