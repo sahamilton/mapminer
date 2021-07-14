@@ -36,7 +36,7 @@ class Organization implements ShouldQueue
     {
         $file = '/public/reports/organization'.now()->timestamp.'.xlsx';
 
-        Excel::store(new OrganizationExport($this->roles, $this->manager), $file);
+        Excel::store(new OrganizationExport($this->roles, $this->manager), $file, 'public');
         $class = str_replace("App\Jobs\\", '', get_class($this));
         $report = Report::with('distribution')
             ->where('job', $class)

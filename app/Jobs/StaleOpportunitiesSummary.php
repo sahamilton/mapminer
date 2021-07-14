@@ -31,7 +31,7 @@ class StaleOpportunitiesSummary implements ShouldQueue
      */
     public function handle()
     {
-        Excel::store(new StaleOpportunitiesSummaryExport($this->branches),  '/public/'.$this->file);
+        Excel::store(new StaleOpportunitiesSummaryExport($this->branches),  $this->file,, 'public');
         
     }
 }

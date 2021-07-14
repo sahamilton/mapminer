@@ -61,7 +61,7 @@ class ReportsController extends Controller {
 
     public function review($filename = null)
     {
-        $files = $files = \Storage::allFiles('public/reports');
+        $files = $files = \Storage::disk('public')->allFiles('reports');
         
         if ($filename) {
             $files = preg_grep('/'.$filename.'/', $files);

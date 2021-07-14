@@ -44,7 +44,7 @@ class AccountOpportunities implements ShouldQueue
     {
         $companyname = str_replace(" ", "_", $this->company->companyname);
         $file = "/public/reports/".$this->company->companyname."_opportunityreport_". Carbon::now()->timestamp. ".xlsx";
-        Excel::store(new AccountOpportunitiesExport($this->company, $this->period), $file);
+        Excel::store(new AccountOpportunitiesExport($this->company, $this->period), $file, 'public');
         $this->company->load('managedBy');
         $manageremail = $this->company->managedBy->userdetails()->first()->email;
         // get disty list

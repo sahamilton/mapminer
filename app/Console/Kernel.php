@@ -94,7 +94,8 @@ class Kernel extends ConsoleKernel
             
             // RVP Daily Branch Report
             //
-            $period = ['from'=>now()->subDay()->startOfDay(), 'to'=>now()->subDay()->endOfDay()];            $schedule->job(new DailyBranch($period))
+            $period = ['from'=>now()->subDay()->startOfDay(), 'to'=>now()->subDay()->endOfDay()];            
+            $schedule->job(new DailyBranch($period))
                 ->daily()->at('02:12');
             // 
             

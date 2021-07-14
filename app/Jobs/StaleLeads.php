@@ -40,6 +40,6 @@ class StaleLeads implements ShouldQueue
      */
     public function handle()
     {
-        Excel::store(new StaleLeadsExport($this->leads, $this->manager), '/public/'.$this->file);
+        Excel::store(new StaleLeadsExport($this->leads, $this->manager), $this->file, 'public');
     }
 }
