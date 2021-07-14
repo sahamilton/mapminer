@@ -70,7 +70,7 @@ class DailyBranchDetail implements ShouldQueue
     {
 
         
-        Excel::store(new DailyBranch($this->period, $this->branches), $this->file, 'local');
+        Excel::store(new DailyBranch($this->period, $this->branches), $this->file, 'public');
         
         Mail::to([$this->user->getFormattedEmail()])
                         ->send(new SendReport($this->file, $this->period, $this->report, $this->user));
