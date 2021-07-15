@@ -179,8 +179,8 @@ use Illuminate\Http\Request;
                 //$companies = App\Company::whereIn('id', [532])->get();
                 //$opportunity = App\Opportunity::whereHas('branch')->whereHas('location')->latest()->first();
 
-                $period =  ['from'=>\Carbon\Carbon::now()->subDay()->startOfDay(), 
-                    'to' => \Carbon\Carbon::now()->subDay()->endOfDay()];
+                $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay(), 
+                    'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay()];
                 $branches =  [ 0 => "8032",
                               1 => "2977",
                               2 => "2986",
@@ -191,14 +191,14 @@ use Illuminate\Http\Request;
                               7 => "7209",
                               8 => "1182"];
                 
-                App\Jobs\ActivityOpportunity::dispatch($period, $branches);
+                //App\Jobs\ActivityOpportunity::dispatch($period, $branches);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 
                 //App\Jobs\BranchActivitiesDetail::dispatch($period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
-                //App\Jobs\BranchStats::dispatch($period);
+                App\Jobs\BranchStats::dispatch($period);
 
                 //App\Jobs\DailyBranch::dispatch($period);
                 //
