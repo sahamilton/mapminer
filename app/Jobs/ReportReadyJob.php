@@ -29,9 +29,9 @@ class ReportReadyJob implements ShouldQueue
         $this->distribution = $distribution;
         $this->period = $period;
         //expect the raw filename
-        $this->file = Storage::disk('reports')->path($file);
+        $this->file = $file;
         $this->report = $report;
-
+    
 
     }
     

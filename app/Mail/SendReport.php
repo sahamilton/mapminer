@@ -27,7 +27,7 @@ class SendReport extends Mailable implements ShouldQueue
      */
     public function __construct(String $file, Array $period, Report $report, User $user)
     {
-        $this->file =   $file;
+        $this->file =   \Storage::disk('reports')->path($file);
         $this->period = $period;
         $this->report = $report;
         $this->user = $user;

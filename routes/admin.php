@@ -191,50 +191,29 @@ use Illuminate\Http\Request;
                               7 => "7209",
                               8 => "1182"];
                 
-               
-               
-                //App\Jobs\BranchActivitiesDetail::dispatch($period);
-                //App\Jobs\WeeklySummary::dispatch($period);
-                ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
-                //App\Jobs\AccountActivities::dispatch($companies, $period);
                 App\Jobs\ActivityOpportunity::dispatch($period, $branches);
+                //App\Jobs\AccountActivities::dispatch($companies, $period);
+                
+                //App\Jobs\BranchActivitiesDetail::dispatch($period);
+                //App\Jobs\BranchCampaign::dispatch();
+                //App\Jobs\BranchLogins::dispatch($period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
+                //App\Jobs\BranchStats::dispatch($period);
+
+                //App\Jobs\DailyBranch::dispatch($period);
+                //
+                //App\Jobs\WeeklyActivityReminder::dispatch($period);
+                //App\Jobs\WeeklySummary::dispatch($period);
+                //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
+                ////App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
+                
+                //App\Jobs\RebuildPeople::dispatch();
+
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
-                // App\Jobs\Top50WeeklyReport::dispatch();
-                //App\Jobs\BranchLogins::dispatch();
-                //App\Jobs\DailyBranch::dispatch($period);
-                //App\Jobs\AccountActivities::dispatch($company, $period);
-                //App\Jobs\BranchCampaign::dispatch();
-                //App\Jobs\BranchOpportunities::dispatch($period);
-                //App\Jobs\RebuildPeople::dispatch();
-                //App\Jobs\BranchLogins::dispatch($period);
-                 /*$filesInFolder = \File::files(storage_path('backups'));
-                 foreach ($filesInFolder as $file){
-                 if(pathinfo($file)['extension'] == 'sql'){
-                 $filename = pathinfo($file)['filename'];
-                 App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
-                        ->dispatch($filename)->onQueue('mapminer');
-                 }
-                 
-                 $filename = 'mapminer-2021-07-08-22-58-02.zip';
-                 App\Jobs\TransferFileJob::dispatch($filename)->onQueue('mapminer');
-                 
-                 
-                 $period['from'] = now();
-                 $period['to'] = now()->addWeek();
-                 
-                App\Jobs\WeeklyActivityReminder::dispatch($period);
-                */
-                 //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
-                 //$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                // $period['to'] = \Carbon\Carbon::now();
-                //App\Jobs\BranchStats::dispatch($period);
-                //App\Jobs\ActivityOpportunity::dispatch($period);
-                //App\Jobs\ActivityOpportunityReport::dispatch();
                 
-                //App\Jobs\ZipBackup::dispatch('MMProd20190123');
-                //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
-                //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
+                //App\Jobs\Top50WeeklyReport::dispatch();
+                
                 
             }
         );
