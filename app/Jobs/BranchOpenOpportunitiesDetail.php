@@ -36,9 +36,9 @@ class BranchOpenOpportunitiesDetail implements ShouldQueue
         if (! $this->report = $this->_getReport()) {
             dd('No Distribution for this report');
         } 
-        $this->file = '/public/reports/'.$this->report->filename.'_'. $this->period['to']->timestamp. ".xlsx";
+        $this->file = $this->report->filename.'_'. $this->period['to']->timestamp. ".xlsx";
         (new BranchOpenOpportunitiesDetailExport($this->period))
-            ->store($this->file)
+            ->store($this->file, 'reports')
             ->chain(
                 [
                     new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)

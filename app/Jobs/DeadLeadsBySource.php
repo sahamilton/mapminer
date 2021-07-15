@@ -36,8 +36,8 @@ class DeadLeadsBySource implements ShouldQueue
     {
         // create the file
 
-        $file = '/public/reports/deadleadsbysourcerpt'.Carbon::now()->timestamp.'.xlsx';
-        Excel::store(new DeadLeadsExport($this->period, $this->branches), $file, 'public');
+        $file = '/deadleadsbysourcerpt'.Carbon::now()->timestamp.'.xlsx';
+        Excel::store(new DeadLeadsExport($this->period, $this->branches), $file, 'reports');
         $class = str_replace("App\Jobs\\", '', get_class($this));
         $report = Report::with('distribution', 'distribution.person', 'distribution.person.userdetails')
             ->where('job', $class)

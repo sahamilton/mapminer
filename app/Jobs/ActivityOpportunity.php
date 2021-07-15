@@ -54,9 +54,9 @@ class ActivityOpportunity implements ShouldQueue
         
 
 
-        $this->file = '/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
-       
-        (new ActivityOpportunityExport($this->period, $this->branches))->store($this->file, 'public')
+        $this->file = $report->filename. Carbon::now()->timestamp.'.xlsx';
+   
+        (new ActivityOpportunityExport($this->period, $this->branches))->store($this->file, 'reports')
             ->chain(
                 [
                     new ReportReadyJob($report->distribution, $this->period, $this->file, $report)

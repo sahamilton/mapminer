@@ -49,9 +49,9 @@ class OpenOpportunitiesWithProposals implements ShouldQueue
             ->firstOrFail();
         
         // create the file
-        $this->file = '/public/reports/openopportunitieswithproposals'. Carbon::now()->timestamp.'.xlsx';
+        $this->file = '/openopportunitieswithproposals'. Carbon::now()->timestamp.'.xlsx';
         
-        (new OpenOpportunitiesWithProposalsExport($this->period, $this->branches))->store($this->file)->chain(
+        (new OpenOpportunitiesWithProposalsExport($this->period, $this->branches))->store($this->file, 'reports')->chain(
             [
                 new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 

@@ -48,9 +48,9 @@ class BranchActivitiesDetail implements ShouldQueue
         if (! $this->report = $this->_getReport()) {
             dd('No Distribution for this report');
         } 
-        $this->file = '/public/reports/branchactivitiesdetail'. $this->period['to']->timestamp. ".xlsx";
+        $this->file = '/branchactivitiesdetail'. $this->period['to']->timestamp. ".xlsx";
         (new BranchActivitiesDetailExport($this->period))
-            ->store($this->file)
+            ->store($this->file, 'reports')
             ->chain(
                 [
                     new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)

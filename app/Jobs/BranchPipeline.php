@@ -39,9 +39,9 @@ class BranchPipeline implements ShouldQueue
      */
     public function handle()
     {
-        $file = '/public/reports/branchpipeline.xlsx';
+        $file = '/branchpipeline.xlsx';
 
-        Excel::store(new BranchPipelineExport($this->period, $this->branches), $file, 'public');
+        Excel::store(new BranchPipelineExport($this->period, $this->branches), $file, 'reports');
 
         $class = str_replace("App\Jobs\\", '', get_class($this));
         $report = Report::with('distribution')

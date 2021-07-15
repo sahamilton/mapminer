@@ -43,7 +43,7 @@ class BranchLogins implements ShouldQueue
      */
     public function handle()
     {
-        $this->file = '/public/reports/branchlogins'. $this->period['to']->timestamp. ".xlsx";
+        $this->file = '/branchlogins'. $this->period['to']->timestamp. ".xlsx";
 
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $this->report = Report::with('distribution')
@@ -51,7 +51,7 @@ class BranchLogins implements ShouldQueue
             ->firstOrFail();
     
         (new BranchLoginsExport($this->period, $this->branches))
-            ->store($this->file)
+            ->store($this->file, 'reports')
             ->chain(
                 [
                     new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)
