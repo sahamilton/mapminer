@@ -20,22 +20,26 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class BranchStats implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $period;
-    public $report;
-    public $file;
     public $distribution;
+    public $file;
+    public $manager;
+    public $period;
+    public $person;
+    public $report; 
+    public $user;
 
-    public $timeout = 1200;
 
     /**
      * [__construct description]
      * @param Array $period [description]
      */
-    public function __construct(Array $period)
+    public function __construct(Array $period= null, $distribution, $manager)
     {
-        $this->period = $period;
         
-
+        $this->period = $period;
+        $this->report = Report::where('job', class_basename($this))->firstOrFail();
+        $this->manager = $manager;   
+        $this->distribution = $distribution;
     }
 
     /**
@@ -46,19 +50,42 @@ class BranchStats implements ShouldQueue
     public function handle()
     {
         
-        $report = Report::with('distribution')
-            ->where('job', 'BranchStats')
-            ->firstOrFail();
-        
-        // create the file
-        $this->file = $report->filename. Carbon::now()->timestamp.'.xlsx';
-       
-        (new BranchStatsExport($this->period))->store($this->file, 'report')->chain(
-            [
-                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 
-            ]
-        );
-        
+        foreach ($this->distribution as $recipient) {
+            $this->user = $recipient;
+            $this->file = $this->_makeFileName();
+            $branches = $this->_getReportBranches($recipient); 
+            (new BranchStatsExport($this->period, $branches))
+                ->store($this->file, 'reports')
+                ->chain(
+                    [
+                        new ReportReadyJob($distribution, $this->period, $this->file, $this->report)
+
+                    ]
+                );
+        }
+    }
+
+    private function _makeFileName()
+    {
+        return 
+            strtolower(
+                Str::slug(
+                    $this->user->person->fullName()." ".
+                    $this->report->filename ." ". 
+                    $this->period['from']->format('Y_m_d'), 
+                    '_'
+                )
+            ). ".xlsx";
+    }
+
+    private function _getReportBranches($recipient)
+    {
+        if ($this->manager) {
+
+            $person = $this->person->findOrFail($manager);
+            return $person->getMyBranches();
+        }
+        return $recipient->person->getMyBranches();
     }
 }

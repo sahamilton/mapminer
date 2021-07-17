@@ -10,6 +10,7 @@ use App\Role;
 use App\Company;
 use App\Person;
 use App\SalesOrg;
+use App\User;
 use Illuminate\Support\Str;
 use App\Http\Requests\ReportFormRequest;
 use App\Http\Requests\RunReportFormRequest;
@@ -186,7 +187,7 @@ class ReportsController extends Controller {
     public function addRecipient(AddRecipientReportRequest $request, Report $report)
     {
         
-        if (! $user = \App\User::where('email', request('email'))->where('confirmed', 1)->first()) {
+        if (! $user = User::where('email', request('email'))->where('confirmed', 1)->first()) {
             return redirect()->back()->withError('Not a valid Mapminer user');
         }
        
@@ -231,9 +232,9 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, RunReportFormRequest $request)
     {
-     
+       
         
-        if (request()->has('fromdate')) {
+        /*if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
                 $period['to'] = Carbon::parse(request('todate'))->endOfDay();
             
@@ -243,20 +244,20 @@ class ReportsController extends Controller {
         } else {
             $period = [];
         }
+
         if (! $report->export) {
             $job = "\App\Jobs\\". $report->job;
+
             $job::dispatch($period);
   
         } elseif ($data = $this->_getMyBranches($request)) {
-      
+            
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
-            
-            
-            
+           
             $export = "\App\Exports\\". $report->export;
-        
+            dd(259, $report);
             switch ($report->object) {
             case 'Company':
 
@@ -280,7 +281,7 @@ class ReportsController extends Controller {
                 break;
 
             default:
-    
+                // we want to queue and send this to the auth user
                 return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
                 break;
 
@@ -289,7 +290,15 @@ class ReportsController extends Controller {
           
         } else {
             return redirect()->route('welcome');
-        }
+        }*/
+        $manager = request('manager');
+        $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+        $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+        $job = "\App\Jobs\\". $report->job; 
+        $distribution = User::with('person')->where('id', auth()->user()->id)->get();
+        $job::dispatch($period, $distribution, $manager);
+        return redirect()->back()->withSuccess('Your job has been dispatched. Check your email in a few minutes time');
+       
 
     }
 
@@ -303,29 +312,33 @@ class ReportsController extends Controller {
      */
     public function send(Report $report, Request $request)
     {
-        
-        if ($data = $this->_getMyBranches($request)) {
+        $report->load('distribution');
+        if ($report->distribution->count() >0) {
+            if ($data = $this->_getMyBranches($request)) {
 
-            $manager = $data['manager'];
+                $manager = $data['manager'];
 
-            $myBranches = $data['branches'];
-            $team = $data['team'];
-            $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
-            $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-            $job = "\App\Jobs\\". $report->job; 
-            
-            if (request()->has('company')) {
-                $company = $this->company->findOrFail(request('company'));
-                dispatch(new $job($company, $period, $myBranches, $report));
-            } elseif ($report->mail == 1) {
+                $myBranches = $data['branches'];
+                $team = $data['team'];
+                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+                $job = "\App\Jobs\\". $report->job; 
                 
-                dispatch(new $job($period, $manager));
-            } else {    
-                dispatch(new $job($period, $myBranches, $report));
-            }   
-            return redirect()->back();
+                if (request()->has('company')) {
+                    $company = $this->company->findOrFail(request('company'));
+                    dispatch(new $job($company, $period, $myBranches, $report));
+                } elseif ($report->mail == 1) {
+                    
+                    dispatch(new $job($period, $manager));
+                } else {    
+                    dispatch(new $job($period, $distribution));
+                }   
+                return redirect()->back();
+            } else {
+                
+                return redirect()->route('welcome');
+            }
         } else {
-            
             return redirect()->route('welcome');
         }
 

@@ -53,7 +53,13 @@ return [
             'engine' => null,
             'options'    => [PDO::MYSQL_ATTR_LOCAL_INFILE=>true],
         ],
-
+            'redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'retry_after' => 90,
+            'block_for' => 5,
+        ],
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

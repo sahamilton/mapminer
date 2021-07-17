@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 
-class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
+class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize, ShouldQueue
 {
     use Exportable;
     
@@ -48,19 +48,19 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
      * @param Array $period   [description]
      * @param array $branches [description]
      */
-    public function __construct(Array $period, array $branches)
+    public function __construct(Array $period, Array $branches)
     {
        
         $this->period = $period;
         $this->branches = $branches;
-        
+        $this->allFields = $this->_getAllFields();
        
        
     }
         
     public function headings(): array
     {
-        $this->allFields = $this->_getAllFields();
+        
 
         return [
             [' '],

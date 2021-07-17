@@ -60,8 +60,9 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => 'mapminer',
-            'retry_after' => 600,
+            'queue' => 'default',
+            'retry_after' => 90,
+            'block_for' => 5,
         ],
 
     ],

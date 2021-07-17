@@ -15,6 +15,7 @@ class SendReportJob implements ShouldQueue
     public $report;
     public $period;
     public $file;
+    public $distribution;
 
     /**
      * [__construct description]
@@ -23,11 +24,13 @@ class SendReportJob implements ShouldQueue
      * @param Array  $period [description]
      * @param [type] $file   [description]
      */
-    public function __construct(Report $report, Array $period, $file=null )
+    public function __construct(Report $report, Array $period, $file=null, $distribution = null)
     {
         $this->report = $report;
         $this->period = $period;
         $this->file = $file;
+        $this->distribution;
+        
     }
 
     /**
@@ -37,10 +40,10 @@ class SendReportJob implements ShouldQueue
      */
     public function handle()
     {
-        $distribution = $this->report->getDistribution();
+        
         
         Mail::from(config('mail.from'))
-            ->to($distribution)
+            ->to($this->distribution)
             ->send(new BranchStatsReport($file, $this->period));
     }
 }
