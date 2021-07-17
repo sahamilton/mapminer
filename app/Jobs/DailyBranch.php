@@ -3,11 +3,13 @@
 namespace App\Jobs;
 
 use Mail;
-use App\Mail\SendReport;
 use App\Report;
+use App\Person;
+
 use App\Exports\DailyBranchExport;
-use \ErrorException;
+
 use Illuminate\Support\Str;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -59,7 +61,7 @@ class DailyBranch implements ShouldQueue
            
             $branches = $this->_getReportBranches($recipient); 
             (new DailyBranchExport($this->period, $branches))
-                ->queue($this->file, 'reports')
+                ->store($this->file, 'reports')
                 ->chain(
                     [
                         new ReportReadyJob($recipient, $this->period, $this->file, $this->report)
@@ -87,8 +89,8 @@ class DailyBranch implements ShouldQueue
     private function _getReportBranches($recipient)
     {
         if ($this->manager) {
-
-            $person = $this->person->findOrFail($manager);
+            //dd($this->manager);
+            $person = Person::findOrFail($this->manager);
             return $person->getMyBranches();
         }
         return $recipient->person->getMyBranches();

@@ -233,73 +233,21 @@ class ReportsController extends Controller {
     public function run(Report $report, RunReportFormRequest $request)
     {
        
-        
-        /*if (request()->has('fromdate')) {
-                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
-                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-            
-        } elseif (session()->has('period')) {
-            $period=session('period');
-        
-        } else {
-            $period = [];
-        }
+        $distribution = User::with('person')->where('id', auth()->user()->id)->get();
+        $this->_dispatchJob($report, $request, $distribution);
+        return redirect()->back()->withSuccess('Your job has been dispatched. Check your email in a few minutes time');
+       
 
-        if (! $report->export) {
-            $job = "\App\Jobs\\". $report->job;
+    }
 
-            $job::dispatch($period);
-  
-        } elseif ($data = $this->_getMyBranches($request)) {
-            
-            $manager = $data['manager'];
-            $myBranches = $data['branches'];
-            $team = $data['team'];
-           
-            $export = "\App\Exports\\". $report->export;
-            dd(259, $report);
-            switch ($report->object) {
-            case 'Company':
-
-                $company = $this->company->findOrFail(request('company'));
-                return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
-                break;
-
-            case 'Role':
-               
-                return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
-                break;
-
-            case 'User':
-                
-                return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
-                break;
-
-            case 'Campaign':
-
-                return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
-                break;
-
-            default:
-                // we want to queue and send this to the auth user
-                return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
-                break;
-
-            } 
-            
-          
-        } else {
-            return redirect()->route('welcome');
-        }*/
+    private function _dispatchJob(Report $report, Request $request, \Illuminate\Database\Eloquent\Collection $distribution)
+    {
         $manager = request('manager');
         $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
         $period['to'] = Carbon::parse(request('todate'))->endOfDay();
         $job = "\App\Jobs\\". $report->job; 
         $distribution = User::with('person')->where('id', auth()->user()->id)->get();
-        $job::dispatch($period, $distribution, $manager);
-        return redirect()->back()->withSuccess('Your job has been dispatched. Check your email in a few minutes time');
-       
-
+        return $job::dispatch($period, $distribution, $manager);
     }
 
     /**
@@ -313,35 +261,8 @@ class ReportsController extends Controller {
     public function send(Report $report, Request $request)
     {
         $report->load('distribution');
-        if ($report->distribution->count() >0) {
-            if ($data = $this->_getMyBranches($request)) {
-
-                $manager = $data['manager'];
-
-                $myBranches = $data['branches'];
-                $team = $data['team'];
-                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
-                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-                $job = "\App\Jobs\\". $report->job; 
-                
-                if (request()->has('company')) {
-                    $company = $this->company->findOrFail(request('company'));
-                    dispatch(new $job($company, $period, $myBranches, $report));
-                } elseif ($report->mail == 1) {
-                    
-                    dispatch(new $job($period, $manager));
-                } else {    
-                    dispatch(new $job($period, $distribution));
-                }   
-                return redirect()->back();
-            } else {
-                
-                return redirect()->route('welcome');
-            }
-        } else {
-            return redirect()->route('welcome');
-        }
-
+        $this->_dispatchJob($report, $request, $report->distribution);
+        return redirect()->back()->withSuccess('Your job has been dispatched. Reports are being sent to the distribution list.');
     }
     /**
      * [_getObject description]

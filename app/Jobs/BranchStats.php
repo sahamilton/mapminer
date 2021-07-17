@@ -3,15 +3,13 @@
 namespace App\Jobs;
 
 use Mail;
-use Excel;
-use App\Branch;
-use Carbon\Carbon;
 use App\Report;
-use App\Mail\BranchStatsReport;
+use App\Person;
 use App\Exports\BranchStatsExport;
-use App\JObs\SendBranchStatsReportJob;
-use Illuminate\Bus\Queueable;
 
+use Illuminate\Support\Str;
+
+use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
