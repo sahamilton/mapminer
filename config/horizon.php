@@ -189,6 +189,12 @@ return [
                 'maxProcesses' => 10,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
+                'connection' => 'redis',
+                'queue' => ['default', 'mapminer'],
+                'balance' => 'simple',
+                'processes' => 10,
+                'tries' => 1,
+                'timeout' => 60 * 60 // <<<<<<<< THIS - timeout in seconds
             ],
         ],
         'dev' => [
