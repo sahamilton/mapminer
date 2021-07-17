@@ -193,7 +193,7 @@ return [
                 'queue' => ['default', 'mapminer'],
                 'balance' => 'simple',
                 'processes' => 10,
-                'tries' => 1,
+                'tries' => 3,
                 'timeout' => 60 * 60 // <<<<<<<< THIS - timeout in seconds
             ],
         ],
