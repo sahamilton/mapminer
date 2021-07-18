@@ -1,5 +1,6 @@
 <?php
-namespace App\Exports;
+
+namespace App\Exports\Reports\Branch;
 
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,48 +12,47 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-
-class BranchOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting,ShouldAutoSize
+class StaleOpportunitiesSummaryExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
     use Exportable;
     public $period;
     public $branches;
+
+
     public $fields = [
         'branchname'=>'Branch',
-        'id'=>'ID',
         'state'=>'State',
         'country'=>'Country',
         'manager'=>'Manager',
-        'reportsto'=>"Reports To",
-        'open'=>'# All Open Opportunities Count',
-        'openvalue'=>'Sum All Open Opportunities Value',
+        'reportsto'=>'Reports To',
+        'stale'=>'# Stale Opportunities'
         
-
-    ];
-    /** 
+        
+    ]; 
+    /**
      * [__construct description]
      * 
-     * @param Array      $period   [description]
-     * @param Array|null $branches [description]
+     * @param array      $period   [description]
+     * @param array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches = null)
+    public function __construct(array $period, array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
         
     }
+
     public function headings(): array
     {
         return [
             [' '],
-            ['Branch Open Opportunities'],
+            ['Stale Opportunities report'],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
             [' ' ],
             $this->fields
         ];
     }
-    
-    
+
     public function map($branch): array
     {
         
@@ -63,11 +63,9 @@ class BranchOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadings,
                 break;
 
             case 'reportsto':
-                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
-                    $detail[] =  $branch->manager->first()->reportsTo->fullName();
-                } else {
-                    $detail[] = 'No direct reporting manager';
-                }
+                $detail[] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->fullName() :'';
+                break;
+
             default:
                 $detail[]=$branch->$key;
                 break;
@@ -81,26 +79,33 @@ class BranchOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadings,
 
     public function columnFormats(): array
     {
-        return [
-            'H' => NumberFormat::FORMAT_CURRENCY_USD,
-        ];
+        return [];
     }
-    /**
-     * View
-     * 
-     * @return \Illuminate\Support\Collection
-     */
+
     public function query()
     {
-        
-        return Branch::branchOpenOpportunities($this->period)
-            ->with('manager.reportsTo')
-            ->when(
-                $this->branches, function ($q) {
-                    $q->whereIn('id', $this->branches);
+        return Branch::withCount(
+            [
+                'opportunities as stale'=>function ($q) {
+                    $q->whereDoesntHave(
+                        'relatedActivities', function ($q) {
+                            $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                        }   
+                    );
                 }
-            );
-
-
+            ]
+        )->with('manager.reportsTo')
+        ->when(
+            $this->branches, function ($q) {
+                $q->whereIn('id', $this->branches);
+            }
+        );
     }
+    /**
+    * @return \Illuminate\Support\Collection
+    public function view(): View
+    {
+        $branches = Branch::withCount('staleOpportunities')->whereIn('id', $this->branches)->get();
+        return view('opportunities.stale', compact('branches'));
+    }*/
 }

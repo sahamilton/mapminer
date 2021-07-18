@@ -1,5 +1,5 @@
 <?php
-namespace App\Exports;
+namespace App\Exports\Reports\BranchLead;
 
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -70,9 +70,11 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
         foreach ($this->fields as $key=>$field) {
                 
             switch($key) {
-            case 'branchname':
+           
+           case 'branchname':
                 $detail[] = $branch->branchname;
                 break;
+           
             case 'manager':
                 $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
                 break;
@@ -83,13 +85,15 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
                 } else {
                     $detail[] = 'No direct reporting manager';
                 }
-
+                break;
             case 'logins':
                 $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->usage_count : '';
                 break;
+            
             case 'avg':
                 $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->usage_count / $this->diff: '';
                 break;
+            
             default:
                 $detail[] = $branch->$key;
                 break;

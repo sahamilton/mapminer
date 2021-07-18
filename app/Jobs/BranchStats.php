@@ -27,10 +27,6 @@ class BranchStats implements ShouldQueue
     public $user;
 
 
-    /**
-     * [__construct description]
-     * @param Array $period [description]
-     */
     public function __construct(Array $period= null, $distribution, $manager)
     {
         
@@ -38,6 +34,7 @@ class BranchStats implements ShouldQueue
         $this->report = Report::where('job', class_basename($this))->firstOrFail();
         $this->manager = $manager;   
         $this->distribution = $distribution;
+
     }
 
     /**
@@ -57,8 +54,12 @@ class BranchStats implements ShouldQueue
                 ->store($this->file, 'reports')
                 ->chain(
                     [
-                        new ReportReadyJob($recipient, $this->period, $this->file, $this->report)
-
+                        new ReportReadyJob(
+                            $recipient, 
+                            $this->period, 
+                            $this->file, 
+                            $this->report
+                        )
                     ]
                 );
         }
@@ -81,8 +82,8 @@ class BranchStats implements ShouldQueue
     {
         if ($this->manager) {
 
-            $person = $this->person->findOrFail($manager);
-            return $person->getMyBranches();
+            return Person::findOrFail($this->manager)->getMyBranches();
+            
         }
         return $recipient->person->getMyBranches();
     }

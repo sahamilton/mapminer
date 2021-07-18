@@ -3,27 +3,39 @@
 namespace App\Jobs;
 
 use Mail;
-use Excel;
+use App\Person;
 use App\Report;
+use App\Exports\BranchOpenOpportunitiesDetailExport;
+
+use Illuminate\Support\Str;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
+
 class BranchOpenOpportunitiesDetail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * [__construct description]
-     * 
-     * @param array $period [description]
-     */
-    public function __construct(array $period)
-    {
-        $this->period = $period;
     
+    public $distribution;
+    public $file;
+    public $manager;
+    public $period;
+    public $person;
+    public $report; 
+    public $user;
+    
+    public function __construct(Array $period= null, $distribution, $manager)
+    {
+     
+        $this->period = $period;
+        $this->report = Report::where('job', class_basename($this))->firstOrFail();
+        $this->manager = $manager;   
+        $this->distribution = $distribution;
+
     }
 
     /**
@@ -33,29 +45,48 @@ class BranchOpenOpportunitiesDetail implements ShouldQueue
      */
     public function handle()
     {
-        if (! $this->report = $this->_getReport()) {
-            dd('No Distribution for this report');
-        } 
-        $this->file = $this->report->filename.'_'. $this->period['to']->timestamp. ".xlsx";
-        (new BranchOpenOpportunitiesDetailExport($this->period))
-            ->store($this->file, 'reports')
-            ->chain(
-                [
-                    new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)
-
-                ]
-            );  
-
+   
+        foreach ($this->distribution as $recipient) {
+            $this->user = $recipient;
+            $this->file = $this->_makeFileName();
+            $branches = $this->_getReportBranches($recipient); 
+            (new BranchOpenOpportunitiesDetailExport($this->period, $branches))
+                ->store($this->file, 'reports')
+                ->chain(
+                    [
+                        new ReportReadyJob(
+                            $recipient, 
+                            $this->period, 
+                            $this->file, 
+                            $this->report
+                        )
+                    ]
+                );
+            
+        }
     }
 
-    private function _getReport()
+    private function _makeFileName()
     {
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        return Report::whereHas('distribution')
-            ->with('distribution')
-            ->where('job', $class)
-            ->first();
+        return 
+            strtolower(
+                Str::slug(
+                    $this->user->person->fullName()." ".
+                    $this->report->filename ." ". 
+                    $this->period['from']->format('Y_m_d'), 
+                    '_'
+                )
+            ). ".xlsx";
     }
-       
-    
+
+    private function _getReportBranches($recipient)
+    {
+        if ($this->manager) {
+            
+            return Person::findOrFail($this->manager)->getMyBranches();
+           
+        }
+        return $recipient->person->getMyBranches();
+    }
+        
 }

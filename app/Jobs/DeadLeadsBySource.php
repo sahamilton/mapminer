@@ -2,29 +2,39 @@
 
 namespace App\Jobs;
 
-use App\Branches;
-use App\Exports\DeadLeadsExport;
-use App\Mail\DeadLeadsReport;
+use Mail;
+use App\Report;
+use App\Person;
+use App\Exports\DeadLeadsBySourceExport;
+
+use Illuminate\Support\Str;
+
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class DeadLeadsBySource implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public $branches;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct(array $branches = null)
+   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    
+    public $distribution;
+    public $file;
+    public $manager;
+    public $period;
+    public $person;
+    public $report; 
+    public $user;
+    
+    public function __construct(Array $period= null, $distribution, $manager)
     {
-        $this->branches = $branches;
+     
+        $this->period = $period;
+        $this->report = Report::where('job', class_basename($this))->firstOrFail();
+        $this->manager = $manager;   
+        $this->distribution = $distribution;
+
     }
 
     /**
@@ -34,18 +44,47 @@ class DeadLeadsBySource implements ShouldQueue
      */
     public function handle()
     {
-        // create the file
+        
+        foreach ($this->distribution as $recipient) {
+            $this->user = $recipient;
+            $this->file = $this->_makeFileName();
+            $branches = $this->_getReportBranches($recipient); 
+            (new DeadLeadsBySourceExport($this->period, $branches))
+                ->store($this->file, 'reports')
+                ->chain(
+                    [
+                        new ReportReadyJob(
+                            $recipient, 
+                            $this->period, 
+                            $this->file, 
+                            $this->report
+                        )
+                    ]
+                );
+            
+        }
+    }
 
-        $file = '/deadleadsbysourcerpt'.Carbon::now()->timestamp.'.xlsx';
-        Excel::store(new DeadLeadsExport($this->period, $this->branches), $file, 'reports');
-        $class = str_replace("App\Jobs\\", '', get_class($this));
-        $report = Report::with('distribution', 'distribution.person', 'distribution.person.userdetails')
-            ->where('job', $class)
-            ->firstOrFail();
+    private function _makeFileName()
+    {
+        return 
+            strtolower(
+                Str::slug(
+                    $this->user->person->fullName()." ".
+                    $this->report->filename ." ". 
+                    $this->period['from']->format('Y_m_d'), 
+                    '_'
+                )
+            ). ".xlsx";
+    }
 
-        $distribution = $report->getDistribution();
+    private function _getReportBranches($recipient)
+    {
+        if ($this->manager) {
 
-        Mail::to($distribution)
-            ->send(new DeadLeadsReport($file));
+            return Person::findOrFail($this->manager)->getMyBranches();
+          
+        }
+        return $recipient->person->getMyBranches();
     }
 }

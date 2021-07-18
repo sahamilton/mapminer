@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Reports\Branch;
 
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -97,23 +97,37 @@ class DeadLeadsExport implements FromQuery, ShouldQueue, WithHeadings,WithMappin
      */
     public function query()
     {
-        return Branch::with('manager.reportsTo')
-            ->deadeadLeadsBySource($this->branches, $this->period);
+        return Branch::with(
+            [
+                'manager.userdetails'=>function ($q) {
+                    $q->totalLogins($this->period);
+                }
+            ]
+        )
+        ->when(
+            isset($this->branches), function ($q) {
+                $q->whereIn('branches.id', $this->branches);
+            }
+        )->deadLeads($this->period);
     }
-
     /**
      * [view description].
      *
      * @return [type] [description]
-     
+    
     public function view(): View
     {
-        $branches = Branch::deadLeadsBySource(
-            $this->branches, $this->period
-        );
+        if ($this->branches) {
+            $branch = Branch::whereIn('id', $this->branches);
+        } else {
+            $branch = new Branch;
+        }
+
+        $branches = $branch->deadLeads($this->period)
+            ->with('manager')->get();
 
         $period = $this->period;
 
-        return view('reports.deadleadsbysource', compact('branches', 'period'));
-    }*/
+        return view('reports.deadleads', compact('branches', 'period'));
+    } */
 }

@@ -865,6 +865,7 @@ class Branch extends Model implements HasPresenter
     public function scopeDeadLeadsBySource($query, $branches, $period)
     {
         $branch = implode("','", $branches);
+ 
         $query = "select branches.branchname, leadsources.source, count(address_branch.address_id) as deadleads
                 from leadsources, branches, addresses, address_branch
                 left join opportunities on address_branch.id = opportunities.address_branch_id
@@ -1353,7 +1354,7 @@ class Branch extends Model implements HasPresenter
                                 $q->whereDoesntHave(
                                     'activities',function ($q) {
                                         $q->where('completed', 1)
-                                        ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
+                                            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
                                     }
                                 )
                                 ->where('address_branch.created_at', '<=', $this->period['to']);
@@ -1851,7 +1852,7 @@ class Branch extends Model implements HasPresenter
                     ->wherehas(
                         'activities',function ($q) {
                             $q->where('completed', 1)
-                            ->whereBetween('activity_date',[$this->period['from'], $this->period['to']]);
+                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
                         }
                     )->where('address_branch.created_at', '<=', $this->period['to']);
 
@@ -1861,18 +1862,18 @@ class Branch extends Model implements HasPresenter
                     $q->whereBetween(
                         'activity_date', [$this->period['from'],$this->period['to']]
                     )
-                    ->where('completed', 1)
-                    ->whereHas(
-                        'relatesToAddress', function ($q1) {
-                            $q1->whereHas(
-                                'campaigns', function ($q) {
-                                    $q->where('campaign_id', $this->campaign->id);
-                                }
-                            );
-                        }
+                        ->where('completed', 1)
+                        ->whereHas(
+                            'relatesToAddress', function ($q1) {
+                                $q1->whereHas(
+                                    'campaigns', function ($q) {
+                                        $q->where('campaign_id', $this->campaign->id);
+                                    }
+                                );
+                            }
 
-                    );
-                },
+                        );
+                    },
                 'opportunities as new_opportunities'=>function ($q) {
                     $q->whereBetween(
                         'opportunities.created_at', [$this->period['from'],$this->period['to']]

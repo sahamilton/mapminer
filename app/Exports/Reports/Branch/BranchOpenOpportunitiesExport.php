@@ -1,5 +1,5 @@
 <?php
-namespace App\Exports;
+namespace App\Exports\Reports\Branch;
 
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,52 +12,41 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 
-class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
+class BranchOpenOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting,ShouldAutoSize
 {
     use Exportable;
     public $period;
     public $branches;
-    /*
-    <th><b>Branch</b></th>
-            <th><b>Branch Name</b></th>
-            <th><b>Sales Meetings</b></th>
-            <th><b>Opportunities Won</b></th>
-            <th><b>Sum of Value</b></th> 
-
-     */
     public $fields = [
         'branchname'=>'Branch',
+        'id'=>'ID',
         'state'=>'State',
         'country'=>'Country',
         'manager'=>'Manager',
-        'reportsto'=>'Reports To',
-        'salesappts'=>'# Completed Sales Appts',
-        'won'=>'# Opportunities Won',
-        'wonvalue'=>'Sum of Won Value'
         
+        'open'=>'# All Open Opportunities Count',
+        'openvalue'=>'Sum All Open Opportunities Value',
+        'daysopen'=>'Days Open',
         
+
     ];
-
-
-    /**
+    /** 
      * [__construct description]
      * 
-     * @param array      $period   [description]
-     * @param array|null $branches [description]
-     * 
+     * @param Array      $period   [description]
+     * @param Array|null $branches [description]
      */
-    public function __construct(array $period, array $branches=null)
+    public function __construct(Array $period, Array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
         
     }
-
     public function headings(): array
     {
         return [
             [' '],
-            ['TAHA report'],
+            ['Branch Open Opportunities'],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
             [' ' ],
             $this->fields
@@ -67,17 +56,23 @@ class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings,
     
     public function map($branch): array
     {
-        
+        dd($branch);
         foreach ($this->fields as $key=>$field) {
             switch($key) {
             case 'manager':
-                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'No Branch Manager';
                 break;
-
-            case 'reportsto':
-                $detail[] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->fullName() :'';
+            
+             case 'reportsto':
+                if ($branch->manager->count() && ! is_null($branch->manager->first()->reportsTo)) {
+                    $detail[] =   $branch->manager->first()->reportsTo->fullName();
+                } else {
+                    $detail[] = 'No direct reporting manager';
+                }
                 break;
+            case 'daysopen':
 
+                break;
             default:
                 $detail[]=$branch->$key;
                 break;
@@ -95,19 +90,22 @@ class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings,
             'H' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
-
-
-
+    /**
+     * View
+     * 
+     * @return \Illuminate\Support\Collection
+     */
     public function query()
     {
-        return Branch::summaryStats($this->period)
+        
+        return Branch::branchOpenOpportunities($this->period)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {
                     $q->whereIn('id', $this->branches);
                 }
             );
-    }
 
-    
+
+    }
 }

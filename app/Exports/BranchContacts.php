@@ -36,7 +36,7 @@ class BranchContacts implements FromQuery, WithMapping, WithHeadings
     {
         return [
             [' '],
-            [str_replace(",", " ",$this->branch->branchname) . ' Contacts'],
+            [str_replace(",", " ", $this->branch->branchname) . ' Contacts'],
             ['Exported ', now()->format('Y-m-d') ],
             [' Filtered', $this->filter ],
             [' '],

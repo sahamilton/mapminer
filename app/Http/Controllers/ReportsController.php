@@ -245,9 +245,15 @@ class ReportsController extends Controller {
         $manager = request('manager');
         $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
         $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-        $job = "\App\Jobs\\". $report->job; 
         $distribution = User::with('person')->where('id', auth()->user()->id)->get();
-        return $job::dispatch($period, $distribution, $manager);
+       
+        switch($report->object) {
+        case 'Branch':
+            return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager);
+            break;
+
+        }
+        
     }
 
     /**

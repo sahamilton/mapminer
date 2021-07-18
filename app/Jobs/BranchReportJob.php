@@ -5,7 +5,7 @@ namespace App\Jobs;
 use Mail;
 use App\Report;
 use App\Person;
-use App\Exports\BranchLoginsExport;
+use App\Exports\ActivityOpportunityExport;
 
 use Illuminate\Support\Str;
 
@@ -16,7 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 
-class BranchLogins implements ShouldQueue
+class BranchReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
@@ -28,11 +28,14 @@ class BranchLogins implements ShouldQueue
     public $report; 
     public $user;
     
-    public function __construct(Array $period= null, $distribution, $manager)
-    {
+    public function __construct(
+        Report $report, 
+        Array $period= null, 
+        $distribution, $manager
+    ) {
      
         $this->period = $period;
-        $this->report = Report::where('job', class_basename($this))->firstOrFail();
+        $this->report = $report;
         $this->manager = $manager;   
         $this->distribution = $distribution;
 
@@ -45,12 +48,13 @@ class BranchLogins implements ShouldQueue
      */
     public function handle()
     {
-        
+   
         foreach ($this->distribution as $recipient) {
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
-            $branches = $this->_getReportBranches($recipient); 
-            (new BranchLoginsExport($this->period, $branches))
+            $branches = $this->_getReportBranches($recipient);
+            $export = '\App\Exports\Reports\Branch\\' . $this->report->export;
+            (new $export($this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
@@ -87,4 +91,5 @@ class BranchLogins implements ShouldQueue
         }
         return $recipient->person->getMyBranches();
     }
+        
 }

@@ -24,15 +24,16 @@ class ReportReadyJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($distribution, $period, $file, Report $report)
-    {
+    public function __construct(
+        User $distribution, 
+        array $period, 
+        string $file, 
+        Report $report
+    ) {
         $this->distribution = $distribution;
         $this->period = $period;
-        //expect the raw filename
         $this->file = $file;
         $this->report = $report;
-    
-
     }
     
     /**
@@ -44,6 +45,7 @@ class ReportReadyJob implements ShouldQueue
     {
         if (! $this->distribution->count() && auth()->user()->id) {
             $this->distribution = User::findOrFail(auth()->user()->id);
+            Mail::to([$this->distribution->getFormattedEmail()])->send($email);
         } 
         if (is_a($this->distribution, 'App\User')) {
 

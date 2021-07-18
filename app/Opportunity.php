@@ -260,6 +260,11 @@ class Opportunity extends Model
             ->groupBy(['opportunities.branch_id','yearweek'])
             ->orderBy('yearweek', 'asc');
     } 
+    /**
+     * [relatedActivities description]
+     * 
+     * @return [type] [description]
+     */
     public function relatedActivities()
     {
         return $this->hasMany(Activity::class, ['address_id', 'branch_id'], ['address_id', 'branch_id']);
@@ -344,12 +349,17 @@ class Opportunity extends Model
 
 
     }
-    public function scopeStaleOpportunities($query)
+    public function scopeStaleOpportunities($query, $period= null)
     {
+        if (! $period) {
+            $period = ['from' => now()->subMonth(2)->startOfDay(),
+                    'to'=> now()->subMonth(2)->startOfDay()];
+        }
         return $query->where('closed', 0)
-            ->whereHas(
-                'activities', function ($q) {
-                     $q->whereDoesntHave('currentlyActive');
+            ->whereDoesntHave(
+                'relatedActivities', function ($q) use ($period) { 
+                    $q->whereBetween('activity_date', [$period['from'], $period['to']])
+                        ->where('completed', 1);
                 }
             );
     }

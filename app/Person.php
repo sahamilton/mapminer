@@ -169,6 +169,21 @@ class Person extends NodeModel implements Auditable
         ->orderBy('firstname')
         ->get();
     }
+    private function _getAllBranches(Array $servicelines=null) :array
+    {   
+        return Branch::when(
+            $servicelines, function ($q) {
+                $q->whereHas(
+                    'servicelines', function ($q) {
+                            $q->whereIn('servicelines.id', $servicelines);
+                    }
+                );
+              
+            }
+        )->orderBy('id')
+        ->pluck('id')
+        ->toArray();
+    }
     /**
      * GetMyBranches finds branch managers in reporting
      * strucuture and returns their branches as array]
@@ -177,9 +192,11 @@ class Person extends NodeModel implements Auditable
      * 
      * @return [type]                   [description]
      */
-    public function getMyBranches(Array $servicelines=null)
+    public function getMyBranches(Array $servicelines=null) :array
     {
-                
+        if ($this->userdetails->hasRole(['admin', 'sales_ops'])) {
+            return $this->_getAllBranches($servicelines);
+        }        
         $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
        
         $branches = $branchMgrs->with('branchesServiced')
@@ -338,7 +355,8 @@ class Person extends NodeModel implements Auditable
     private function _getPersonFromAuth()
     {
         
-        return User::with('roles', 'person', 'serviceline')->findOrFail(auth()->user()->id);
+        return User::with('roles', 'person', 'serviceline')
+            ->findOrFail(auth()->user()->id);
     }
     /**
      * [_getBranchesInServicelines description]

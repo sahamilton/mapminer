@@ -1,5 +1,5 @@
 <?php
-namespace App\Exports;
+namespace App\Exports\Reports\Branch;
 
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -76,6 +76,7 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     public function map($branch): array
     { 
         $n=0;
+
         foreach ($branch->opportunities as $item) {
             
             foreach ($this->fields as $key=>$field) {
@@ -87,20 +88,17 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
                     $line[$n][] = $branch->$key;
                     break;
                 case 'manager':
-                    if (! is_null($branch->manager)) {
-                        $line[$n][] = $branch->manager->first()->fullName(); 
-                    } else {
-                        $line[$n][] = 'No manager'; 
-                    }
+                     $line[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'No Branch Manager';
                     break;
+                
                 case 'reportsto':
-                    if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
-                        $line[$n][] =  $branch->manager->first()->reportsTo->fullName();
+                    if ($branch->manager->count() && ! is_null($branch->manager->first()->reportsTo)) {
+                         $line[$n][] =   $branch->manager->first()->reportsTo->fullName();
                     } else {
-                        $line[$n][] = 'No direct reporting manager';
+                         $line[$n][] = 'No direct reporting manager';
                     }
-                            
                     break;
+
                 case 'businessname':
                     $line[$n][] = $item->address->address->businessname;
                     break;
