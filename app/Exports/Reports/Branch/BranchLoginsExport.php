@@ -1,5 +1,5 @@
 <?php
-namespace App\Exports\Reports\BranchLead;
+namespace App\Exports\Reports\Branch;
 
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
