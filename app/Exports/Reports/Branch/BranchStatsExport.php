@@ -2,6 +2,7 @@
 namespace App\Exports\Reports\Branch;
 
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -18,6 +19,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public $period;
     public $branches;
+    public $report;
 
     public $fields = [
         'branchname'=>'Branch',
@@ -39,18 +41,20 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     ];
 
     
-    public function __construct(array $period, array $branches = null)
+    public function __construct(Report $report, array $period, array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
+        $this->report = $report;
     }
 
     public function headings(): array
     {
         return [
             [' '],
-            ['Branch Stats'],
+            [$this->report->report],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [$this->report->description],
             [' ' ],
             $this->fields
         ];

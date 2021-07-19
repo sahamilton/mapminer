@@ -3,6 +3,7 @@
 namespace App\Exports\Reports\Branch;
 
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -18,6 +19,7 @@ class DeadLeadsExport implements FromQuery, ShouldQueue, WithHeadings,WithMappin
 
     public $branches;
     public $period;
+    public $report;
     public $fields = [
         'branchname'=>'Branch',
         'state'=>'State',
@@ -32,10 +34,11 @@ class DeadLeadsExport implements FromQuery, ShouldQueue, WithHeadings,WithMappin
      * @param array      $period   [description]
      * @param array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches = null)
+    public function __construct(Report $report, Array $period, Array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
+        $this->report = $report;
     }
     /**
      * [headings description]
@@ -45,11 +48,12 @@ class DeadLeadsExport implements FromQuery, ShouldQueue, WithHeadings,WithMappin
     public function headings(): array
     {
         return [
-           [' '],
-           ['Dead Leads Count by Branch'],
-           ['for the period from '. $this->period['from']->format('M jS, Y'). ' to ' . $this->period['to']->format('M jS, Y')],
-           [' '],
-           $this->fields,
+            [' '],
+            [$this->report->report],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [$this->report->description],
+            [' ' ],
+            $this->fields
         ];
   
     }

@@ -54,7 +54,7 @@ class BranchReportJob implements ShouldQueue
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient);
             $export = '\App\Exports\Reports\Branch\\' . $this->report->export;
-            (new $export($this->period, $branches))
+            (new $export($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [

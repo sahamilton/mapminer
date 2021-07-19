@@ -1,6 +1,7 @@
 <?php
 namespace App\Exports\Reports\Branch;
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -16,6 +17,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
 
     public $period;
     public $branches;
+    public $report;
 
     public $fields = [
         'branchname' => 'Branch',
@@ -32,20 +34,24 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     ];
 
     
-    public function __construct(array $period, array $branches=null)
+    public function __construct(Report $report, Array $period, Array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
+        $this->report = $report;
 
     }
 
     public function headings(): array
     {
-        return [[' '],
-            ['Open Opportunities with Proposals'],
-            [' created in the period from', $this->period['from']->format('Y-m-d'), 'to', $this->period['to']->format('Y-m-d')],
+        return [
             [' '],
-            $this->fields];
+            [$this->report->report],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [$this->report->description],
+            [' ' ],
+            $this->fields
+        ];
     }
     
     

@@ -2,6 +2,7 @@
 namespace App\Exports\Reports\Branch;
 
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -17,16 +18,15 @@ class BranchOpenOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadi
     use Exportable;
     public $period;
     public $branches;
+    public $report;
     public $fields = [
         'branchname'=>'Branch',
-        'id'=>'ID',
         'state'=>'State',
         'country'=>'Country',
         'manager'=>'Manager',
         
         'open'=>'# All Open Opportunities Count',
         'openvalue'=>'Sum All Open Opportunities Value',
-        'daysopen'=>'Days Open',
         
 
     ];
@@ -36,19 +36,20 @@ class BranchOpenOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadi
      * @param Array      $period   [description]
      * @param Array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches = null)
+    public function __construct(Report $report, Array $period, Array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
+        $this->report = $report;
         
     }
     public function headings(): array
     {
         return [
             [' '],
-            ['Branch Open Opportunities'],
+            [$this->report->report],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
-            [' ' ],
+            [$this->report->description],
             $this->fields
         ];
     }
@@ -56,7 +57,7 @@ class BranchOpenOpportunitiesExport implements FromQuery, ShouldQueue, WithHeadi
     
     public function map($branch): array
     {
-        dd($branch);
+   
         foreach ($this->fields as $key=>$field) {
             switch($key) {
             case 'manager':

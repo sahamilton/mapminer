@@ -2,6 +2,7 @@
 namespace App\Exports\Reports\Branch;
 
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -12,13 +13,14 @@ use App\ActivityType;
 use Carbon\Carbon;
 use App\Person;
 
-class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadings,WithMapping,ShouldAutoSize
+class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadings,WithMapping, ShouldAutoSize
 {
     use Exportable;
 
     
     public $period;
     public $branches;
+    public $report;
     public $types;
     public $fields = [
         'branchname'=>'Branch',
@@ -36,12 +38,12 @@ class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadin
      * @param Array      $period   [description]
      * @param Array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches=null)
+    public function __construct(Report $report, Array $period, Array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
         $this->types = ActivityType::pluck('activity', 'id')->toArray();
-
+        $this->report = $report;
     }
     /**
      * [headings description]
@@ -51,11 +53,11 @@ class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadin
     public function headings(): array
     {
         return [
-           [' '],
-           ['Branch Activities Detail'],
-           ['for '. $this->period['to']->format('M jS, Y')],
-           [' '],
-           $this->fields,
+            [' '],
+            [$this->report->report],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [$this->report->description],
+            $this->fields
         ];
   
     }

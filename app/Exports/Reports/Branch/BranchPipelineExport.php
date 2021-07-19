@@ -4,6 +4,7 @@ namespace App\Exports\Reports\Branch;
 
 use Carbon\Carbon;
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -20,6 +21,7 @@ class BranchPipelineExport implements FromQuery, ShouldQueue, WithHeadings, With
     public $period;
     public $branches;
     public $pers;
+    public $report;
    
     public $fields = [
         'branchname'=>'Branch',
@@ -35,7 +37,7 @@ class BranchPipelineExport implements FromQuery, ShouldQueue, WithHeadings, With
      * 
      * @param Array $period [description]
      */
-    public function __construct(array $period = null, array $branches=null)
+    public function __construct(Report $report, array $period = null, array $branches=null)
     {
         $this->branches = $branches;
         if (! $period) {
@@ -44,15 +46,16 @@ class BranchPipelineExport implements FromQuery, ShouldQueue, WithHeadings, With
         }
         $this->period = $period; 
         $this->pers = $this->_createPeriods();
-        
+        $this->report = $report;
        
     }
     public function headings(): array
     {
         return [
             [' '],
-            ['Branch Opportunity Pipeline'],
+            [$this->report->report],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [ $this->report->description],
             [' ' ],
             array_merge($this->fields, $this->pers)
         ];

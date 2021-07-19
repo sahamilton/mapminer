@@ -2,6 +2,7 @@
 namespace App\Exports\Reports\Branch;
 
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -19,6 +20,7 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
     public $period;
     public $diff;
     public $branches;
+    public $report;
     public $fields = [
         'branchname'=>'Branch',
         'state'=>'State',
@@ -35,12 +37,12 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
      * @param Array      $period   [description]
      * @param Array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches=null)
+    public function __construct(Report $report, Array $period, Array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
         $this->diff = $this->period['from']->diff($this->period['to'])->days +1;
-
+        $this->report = $report;
     }
     /**
      * [headings description]
@@ -50,11 +52,12 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
     public function headings(): array
     {
         return [
-           [' '],
-           ['Branch Logins'],
-           ['for the period from '. $this->period['from']->format('M jS, Y'). ' to ' . $this->period['to']->format('M jS, Y')],
-           [' '],
-           $this->fields,
+            [' '],
+            [$this->report->report],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [$this->report->description],
+            [' '],
+            $this->fields
         ];
   
     }

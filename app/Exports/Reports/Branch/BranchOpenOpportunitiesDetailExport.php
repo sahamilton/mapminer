@@ -2,6 +2,7 @@
 namespace App\Exports\Reports\Branch;
 
 use App\Branch;
+use App\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -20,6 +21,7 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     
     public $period;
     public $branches;
+    public $report;
     public $fields = [
         'branchname'=>'Branch',
         'state'=>'State',
@@ -44,10 +46,11 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
      * @param Array      $period   [description]
      * @param Array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches=null)
+    public function __construct(Report $report, Array $period, Array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
+        $this->report = $report;
 
     }
     /**
@@ -59,9 +62,9 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     {
         return [
            [' '],
-           ['Branch Open Opportunities Detail'],
+           [$report->report],
            ['for the period from '. $this->period['from']->format('M jS, Y'). ' to ' . $this->period['to']->format('M jS, Y')],
-           [' '],
+           [$report->description],
            $this->fields,
         ];
   

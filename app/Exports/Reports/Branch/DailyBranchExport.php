@@ -2,6 +2,7 @@
 namespace App\Exports\Reports\Branch;
 
 use App\Branch;
+use App\Report;
 use App\Person;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -19,6 +20,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     
     public $period;
     public $branches;
+    public $report;
     public $person;
     public $fields = [
         'branchname'=>'Branch',
@@ -48,11 +50,12 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
      * @param Array $period   [description]
      * @param array $branches [description]
      */
-    public function __construct(Array $period, Array $branches)
+    public function __construct(Report $report, Array $period, Array $branches)
     {
        
         $this->period = $period;
         $this->branches = $branches;
+        $this->report = $report;
         $this->allFields = $this->_getAllFields();
        
        
@@ -64,8 +67,9 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
 
         return [
             [' '],
-            ['Branch Stats'],
+            [$this->report->report],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [$this->report->description],
             [' ' ],
             $this->allFields
         ];
