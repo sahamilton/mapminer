@@ -62,7 +62,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         foreach ($this->fields as $key=>$field) {
             switch($key) {
             case 'manager':
-                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'No Branch Manager';
                 break;
 
             case 'reportsto':
@@ -71,6 +71,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
                 } else {
                         $detail[] = 'No direct reporting manager';
                 }
+                break;
             default:
                 $detail[]=$branch->$key;
                 break;
