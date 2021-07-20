@@ -8,12 +8,13 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class UsersExport implements FromView
 {
+    public $interval;
     /**
      * [__construct description].
      *
      * @param [type] $interval [description]
      */
-    public function __construct($interval)
+    public function __construct($interval=null)
     {
         $this->interval = $interval;
     }
@@ -25,7 +26,20 @@ class UsersExport implements FromView
      */
     public function view(): View
     {
-        $users = User::lastLogin($this->interval)->with('person', 'roles', 'serviceline')->get();
+        $users = User::when(
+            $this->interval, function ($q) {
+                $q->lastLogin($this->interval);
+            }
+        )->with(
+            [
+                'person'=>function ($q) {
+                    $q->withTrashed();
+                }
+            ]
+        )
+        ->with('roles', 'serviceline')
+        ->withTrashed()
+        ->get();
 
         return view('admin.users.export', compact('users'));
     }

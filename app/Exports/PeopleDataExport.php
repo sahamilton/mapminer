@@ -15,7 +15,7 @@ class PeopleDataExport implements FromQuery, ShouldQueue, WithHeadings,WithMappi
 {
    
     use Exportable;
-    public $people;
+    public $person;
     public $statuses =[
         0=>'Open', 
         1 =>'Closed Won', 
@@ -56,9 +56,9 @@ class PeopleDataExport implements FromQuery, ShouldQueue, WithHeadings,WithMappi
             'contactcomments' =>'Contact Comments'
         ];
 
-    public function __construct(array $people)
+    public function __construct(Person $person)
     {
-        $this->people = $people;
+        $this->person = $person;
     }
     /**
      * [headings description]
@@ -69,9 +69,9 @@ class PeopleDataExport implements FromQuery, ShouldQueue, WithHeadings,WithMappi
     {
         return [
            [' '],
-           ['Branch managers Export'],
+           ['Branch Managers Export'],
            
-           [' '],
+           [$this->person->fullName()],
            $this->fields,
         ];
   
@@ -148,7 +148,7 @@ class PeopleDataExport implements FromQuery, ShouldQueue, WithHeadings,WithMappi
             ->join('addresses', 'addresses.user_id', '=', 'persons.user_id')
             ->leftJoin('opportunities',  'addresses.id', '=', 'opportunities.address_id')
             ->leftJoin('contacts',  'addresses.id', '=', 'contacts.address_id')
-            ->whereIn('persons.id', $this->people)
+            ->where('persons.id', $this->person->id)
             ->orderBy('sr');
             
     }

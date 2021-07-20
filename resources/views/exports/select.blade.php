@@ -12,8 +12,8 @@
               <label class="col-md-4 control-label">Select Manager:</label>
               <div class="input-group input-group-lg">
                 <select class="form-control" 
-                      multiple
-                      name="people[]"  
+                     
+                      name="person"  
                       >
                       @foreach ($people as $person)
 

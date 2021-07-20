@@ -34,8 +34,8 @@ class ExportController extends Controller
      */
     public function store(Request $request)
     {
-        
-        return (new PeopleDataExport(request('people')))->download('branchdata.csv');
+        $person = Person::findOrFail(request('person'));
+        return (new PeopleDataExport($person))->download($person->fullName() . ' data.csv');
     }
 
     
