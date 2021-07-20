@@ -25,7 +25,6 @@ class ReportFormRequest extends FormRequest
     {
         return [
             'title'=>'required,unique:reports,title',
-            'job'=>'unique:reports,job',
             'export'=>'unique:reports,export',
         ];
     }

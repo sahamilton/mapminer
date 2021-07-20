@@ -61,7 +61,7 @@
         type="text" 
         class="form-control" 
         name='job' 
-        required
+       
         job="job" 
         value="{{ old('job', isset($report) ? $report->job :'' ) }}" 
         placeholder="job">

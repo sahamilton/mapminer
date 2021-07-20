@@ -84,6 +84,7 @@ class Stats extends Model
 
     private function metrics(array $period) : array
     {
+        
         return [
                 'logins' => Track::whereBetween('lastactivity', [$period['from'], $period['to']])
                     ->when(
@@ -118,18 +119,24 @@ class Stats extends Model
                         }
                     )
                     ->count(),
-                'active_branches' => Branch::wherehas(
+                'active_branches' => Branch::when(
+                    $this->branches, function ($q) {
+                        $q->whereIn('id', $this->branches);
+                    }
+                )->wherehas(
                     'activities', function ($q) use ($period) {
                         $q->whereBetween('activity_date',  [$period['from'], $period['to']]);
                     }
-                )
-                ->count(),
-                'inactive_branches' => Branch::whereDoesntHave(
+                )->count(),
+                'inactive_branches' => Branch::when(
+                    $this->branches, function ($q) {
+                        $q->whereIn('id', $this->branches);
+                    }
+                )->whereDoesntHave(
                     'activities', function ($q) use ($period) {
                         $q->whereBetween('activity_date',  [$period['from'], $period['to']]);
                     }
-                )
-                ->count(),
+                )->count(),
                 'activities' => Activity::completed()->whereBetween('activity_date', [$period['from'], $period['to']])
                     ->when(
                         $this->branches, function ($q) {

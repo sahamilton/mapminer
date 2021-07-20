@@ -1,36 +1,108 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Reports\Branch;
+
 use App\Branch;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use App\Report;
 
-class StaleLeadsSummaryExport implements FromView
-{   
-    
-    public $branches;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+
+class StaleLeadsSummaryExport 
+class Top50WeekReportExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
+{
+    use Exportable;
     public $period;
+    public $branches;
+    public $report;
 
-    /**
-     * [__construct description]
-     * 
-     * @param Array|null $branch [description]
-     */
-    public function __construct(array $period, Array $branches)
-    {
-       
-        $this->branches = $branches;
-        $this->period = $period;
-       
+    public $fields = [
+        'branchname'=>'Branch',
+        'state'=>'State',
+        'country'=>'Country',
+        'manager'=>'Manager',
+        'reportsto'=>'Reports To',
+        'leads_count'=>"Total Leads",
+        'inactive'=>'# Inactive Leads',
         
+    ];
+    public function __construct(Report $report, array $period, array $branches = null)
+    {
+        $this->period = $period;
+        $this->branches = $branches;
+        $this->report = $report;
+
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function view(): View
+    public function headings(): array
     {
-        $branches = Branch::withCount('staleLeads')->whereIn('id', $this->branches)->get();
-        return view('leads.stale', compact('branches'));
+        return [
+            [' '],
+            [$this->report->report],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [$this->report->description],
+            $this->fields
+        ];
+    }
+
+    public function map($branch): array
+    {
+        
+        foreach ($this->fields as $key=>$field) {
+            switch($key) {
+            case 'manager':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'No branch manager';
+                break;
+
+            case 'reportsto':
+                $detail[] = $branch->manager->count() && isset($branch->manager->first()->reportsTo) ? $branch->manager->first()->reportsTo->fullName() : 'No Direct manager';
+                break;
+
+            default:
+                $detail[]=$branch->$key;
+                break;
+
+            }
+            
+        }
+        return $detail;
+       
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+           
+        ];
+    }
+    public function query()
+    {
+        return Branch::with('manager.reportsTo')
+            ->when(
+                $this->branches, function ($q) {
+                    $q->whereIn('id', $this->branches);
+                }
+            )
+            ->withCount('leads')
+            ->withCount(
+                [
+                    'leads as inactive'=>function ($q) use ($period) {
+                        $q->whereDoesntHave(
+                            'activities', function ($q) use ($period) {
+                                $q->whereBetween('activity_date', [$period['from'], $period['to']]);
+                            }
+                        );
+                    }
+                ]
+            );
+
+            
+       
     }
 }
