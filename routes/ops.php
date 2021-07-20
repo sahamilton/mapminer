@@ -13,42 +13,41 @@ use Illuminate\Http\Request;
         //     AccountTypes
         Route::resource('accounttype', 'AccounttypesController');
         //   Address
-        Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
+        Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'Imports\AddressImportController@getfile']);
         
         //     Branches
-        Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
-        Route::post('branches/change', ['as'=>'branches.change', 'uses'=>'BranchesImportController@update']);
-        Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'BranchesImportController@import']);
+        Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'Imports\BranchesImportController@getFile']);
+        Route::post('branches/change', ['as'=>'branches.change', 'uses'=>'Imports\BranchesImportController@update']);
+        Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'Imports\BranchesImportController@import']);
         Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
         Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
         Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
-        Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
         Route::get('branch/{branch}/reassign', ['as'=>'branchReassign','uses'=>'BranchesController@reassignBranch']);
         Route::post('branch/{branch}/reassign', ['as'=>'branch.reassign','uses'=>'BranchesController@reassign']);
         Route::resource('branches', 'BranchesController', ['except'=>['index', 'show']]);
         
         //     Companies
-        Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
-        Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);
-        Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesExportController@index']);
-        Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesExportController@export']);
+        Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'Imports\CompaniesImportController@getFile']);
+        Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'Imports\CompaniesImportController@import']);
+        Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'Exports\CompaniesExportController@index']);
+        Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'Exports\CompaniesExportController@export']);
         
         Route::get('companies/download', ['as'=>'allcompanies.export', 'uses'=>'CompaniesController@exportAccounts']);
         
         Route::get('company/{companyId}/export', ['as'=>'company.export', 'uses'=>'WatchController@companyexport']);
         
         //   Order Import
-        Route::get('orderimport/flush', ['as'=>'orderimport.flush', 'uses'=>'OrderImportController@flush']);
-        Route::get('orderimport/finalize', ['as'=>'orderimport.finalize', 'uses'=>'OrderImportController@finalize']);
+        Route::get('orderimport/flush', ['as'=>'orderimport.flush', 'uses'=>'Imports\OrderImportController@flush']);
+        Route::get('orderimport/finalize', ['as'=>'orderimport.finalize', 'uses'=>'Imports\OrderImportController@finalize']);
         
-        Route::resource('orderimport', 'CompaniesImportController');
+        Route::resource('orderimport', 'Imports\CompaniesImportController');
         
         //Route::post('company/filter', ['as'=>'company.filter', 'uses'=>'CompaniesController@filter']);
         Route::resource('company', 'CompaniesController', ['except' => ['index', 'show']]);
         //   Customers
         
-        Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'CompaniesExportController@export']);
-        Route::post('/importcustomers/mapfields', ['as'=>'companies.mapfields', 'uses'=>'CompaniesImportController@mapfields']);
+        Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'Exports\CompaniesExportController@export']);
+        Route::post('/importcustomers/mapfields', ['as'=>'companies.mapfields', 'uses'=>'Imports\CompaniesImportController@mapfields']);
         Route::resource('customers', 'CustomerController');
             //   Documents
         Route::resource('documents', 'DocumentsController');
@@ -70,34 +69,34 @@ use Illuminate\Http\Request;
         Route::resource('feedback_comment', 'FeedbackCommentsController');
         //   Imports
     
-        Route::get('branch/teams', ['as'=>'branch_team.importfile', 'uses'=>'BranchTeamImportController@getFile']);
-        Route::post('branch/teams', ['as'=>'branches.teamimport', 'uses'=>'BranchTeamImportController@import']);
-        Route::get('imports', ['as'=>'imports.index', 'uses'=>'ImportController@index']);
-        Route::post('/importleads/mapfields', ['as'=>'leads.mapfields', 'uses'=>'LeadImportController@mapfields']);
-        Route::post('/importlocations/mapfields', ['as'=>'locations.mapfields', 'uses'=>'LocationsImportController@mapfields']);
-        Route::post('/importprojects/mapfields', ['as'=>'projects.mapfields', 'uses'=>'ProjectsImportController@mapfields']);
-        Route::post('/importprojectcompany/mapfields', ['as'=>'projectcompany.mapfields', 'uses'=>'ProjectsCompanyImportController@mapfields']);
-        Route::post('/importbranches/mapfields', ['as'=>'branches.mapfields', 'uses'=>'BranchesImportController@mapfields']);
-        Route::post('/importbranchteams/mapfields', ['as'=>'branchteam.mapfields', 'uses'=>'BranchTeamImportController@mapfields']);
+        Route::get('branch/teams', ['as'=>'branch_team.importfile', 'uses'=>'Imports\BranchTeamImportController@getFile']);
+        Route::post('branch/teams', ['as'=>'branches.teamimport', 'uses'=>'Imports\BranchTeamImportController@import']);
+        Route::get('imports', ['as'=>'imports.index', 'uses'=>'Imports\ImportController@index']);
+        Route::post('/importleads/mapfields', ['as'=>'leads.mapfields', 'uses'=>'Imports\LeadImportController@mapfields']);
+        Route::post('/importlocations/mapfields', ['as'=>'locations.mapfields', 'uses'=>'Imports\LocationsImportController@mapfields']);
+        Route::post('/importprojects/mapfields', ['as'=>'projects.mapfields', 'uses'=>'Imports\ProjectsImportController@mapfields']);
+        Route::post('/importprojectcompany/mapfields', ['as'=>'projectcompany.mapfields', 'uses'=>'Imports\ProjectsCompanyImportController@mapfields']);
+        Route::post('/importbranches/mapfields', ['as'=>'branches.mapfields', 'uses'=>'Imports\BranchesImportController@mapfields']);
+        Route::post('/importbranchteams/mapfields', ['as'=>'branchteam.mapfields', 'uses'=>'Imports\BranchTeamImportController@mapfields']);
 
         //     Locations
-        Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
-        Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
+        Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'Imports\LocationsImportController@getfile']);
+        Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'Imports\LocationsImportController@import']);
        
         //   LocationsPostImport
 
-        Route::post('locations/adddelete', ['as'=>'locations.adddelete', 'uses'=>'LocationPostImportController@adddelete']);
-        Route::resource('locations/postprocess', 'LocationPostImportController');
+        Route::post('locations/adddelete', ['as'=>'locations.adddelete', 'uses'=>'Imports\LocationPostImportController@adddelete']);
+        Route::resource('locations/postprocess', 'Imports\LocationPostImportController');
 
         Route::get('api/geocode', ['as'=>'api.geocode', 'uses'=>'LocationsController@bulkGeoCodeLocations']);
         Route::get('locations/{companyID}/create', ['as'=>'company.location.create', 'uses'=>'LocationsController@create']);
         Route::resource('locations', 'LocationsController', ['except'=>['show']]);
 
         //   Projects
-        Route::get('projects/import', ['as'=>'projects.importfile', 'uses'=>'ProjectsImportController@getFile']);
-        Route::get('projects/importcompany', ['as'=>'project_company.importfile', 'uses'=>'ProjectsCompanyImportController@getFile']);
-        Route::post('projects/import', ['as'=>'projects.bulkimport', 'uses'=>'ProjectsImportController@import']);
-        Route::post('projects/importcompany', ['as'=>'projects.companyimport', 'uses'=>'ProjectsCompanyImportController@import']);
+        Route::get('projects/import', ['as'=>'projects.importfile', 'uses'=>'Imports\ProjectsImportController@getFile']);
+        Route::get('projects/importcompany', ['as'=>'project_company.importfile', 'uses'=>'Imports\ProjectsCompanyImportController@getFile']);
+        Route::post('projects/import', ['as'=>'projects.bulkimport', 'uses'=>'Imports\ProjectsImportController@import']);
+        Route::post('projects/importcompany', ['as'=>'projects.companyimport', 'uses'=>'Imports\ProjectsCompanyImportController@import']);
 
         Route::get('projects/export', ['as'=>'projects.exportowned', 'uses'=>'ProjectsController@exportowned']);
         Route::get('projects/status', ['as'=>'projects.status', 'uses'=>'ProjectsController@statuses']);
@@ -113,13 +112,13 @@ use Illuminate\Http\Request;
         Route::resource('projectsource', 'ProjectSourceController');
 
         // Export Persons data
-        Route::post('exports/store', ['as'=>'export.store', 'uses'=>'ExportController@store']);
+        Route::post('exports/store', ['as'=>'export.store', 'uses'=>'Exports\ExportController@store']);
 
         //Leads Import       
-        Route::get('leads/import/{id?}', ['as'=>'prospects.importfile', 'uses'=>'LeadImportController@getFile']);
-        Route::get('leads/import/assigned/{id?}', ['as'=>'assigned_prospects.importfile', 'uses'=>'LeadAssignedImportController@getFile']);
+        Route::get('leads/import/{id?}', ['as'=>'prospects.importfile', 'uses'=>'Imports\LeadImportController@getFile']);
+        Route::get('leads/import/assigned/{id?}', ['as'=>'assigned_prospects.importfile', 'uses'=>'Imports\LeadAssignedImportController@getFile']);
         
-        Route::post('leads/import', ['as'=>'leads.import', 'uses'=>'LeadImportController@import']);
+        Route::post('leads/import', ['as'=>'leads.import', 'uses'=>'Imports\LeadImportController@import']);
         Route::get('leadsource/{leadsource}/addcompany', ['as'=>'leadsource.addcompany', 'uses'=>'LeadSourceController@selectCompaniesToAdd']);
         Route::post('leadsource/{leadsource}/addcompanylocations', ['as'=>'leadsource.addcompanylocations', 'uses'=>'LeadSourceController@addCompanyLocationsToLeadSource']);
         Route::get('leadsource/{leadsource}/results', ['as'=>'leadsource.results', 'uses'=>'LeadSourceController@leadSourceBranchResults']);
@@ -142,13 +141,13 @@ use Illuminate\Http\Request;
         
         
         //Route::get('webleads/{lead}', ['as'=>'webleads.show', 'uses'=>'WebLeadsController@show']);
-        //Route::resource('webleads', 'WebLeadsImportController');
+        //Route::resource('webleads', 'Imports\WebLeadsImportController');
         
         
         Route::get('leadsource/{leadsource}/export', ['as'=>'leadsource.export', 'uses'=>'LeadSourceController@export']);
         
-        Route::post('/webleads/import/form', ['as'=>'leads.webleadsinsert', 'uses'=>'WebleadsImportController@getLeadFormData']);
-        Route::post('/webleads/import/create', ['as'=>'webleads.import.store', 'uses'=>'WebleadsImportController@store']);
+        Route::post('/webleads/import/form', ['as'=>'leads.webleadsinsert', 'uses'=>'Imports\WebLeadsImportController@getLeadFormData']);
+        Route::post('/webleads/import/create', ['as'=>'webleads.import.store', 'uses'=>'Imports\WebLeadsImportController@store']);
         Route::post('lead/search', ['as'=>'leads.search', 'uses'=>'LeadsController@search']);
         Route::get('lead/search', ['as'=>'leads.search', 'uses'=>'LeadsController@searchAddress']);
         Route::get('address/{address}/assign', ['as'=>'leads.assignlead', 'uses'=>'LeadsAssignController@show']);
@@ -164,7 +163,7 @@ use Illuminate\Http\Request;
         Route::resource('salesnotes', 'SalesNotesController')->except(['show']);
         //   OrderImports
         
-        Route::resource('orderimport', 'OrderImportController');
+        Route::resource('orderimport', 'Imports\OrderImportController');
         //   Prospect Source / LeadSource
         
         Route::get('leadsource/{leadsource}/announce', ['as'=>'leadsource.announce', 'uses'=>'LeadsEmailController@announceLeads']);
@@ -172,7 +171,7 @@ use Illuminate\Http\Request;
         Route::get('leadsource/{leadsource}/assign', ['as'=>'leadsource.assign', 'uses'=>'LeadsAssignController@assignLeads']);
         Route::get('leadsource/{leadsource}/branch', ['as'=>'leadsource.branches', 'uses'=>'LeadSourceController@branches']);
         Route::get('leadsource/{leadsource}/unassigned', ['as'=>'leadsource.unassigned', 'uses'=>'LeadSourceController@unassigned']);
-        Route::get('leadsource/{leadsource}/addleads', ['as'=>'leadsource.addleads', 'uses'=>'LeadSourceImportController@getFile']);
+        Route::get('leadsource/{leadsource}/addleads', ['as'=>'leadsource.addleads', 'uses'=>'Imports\LeadSourceImportController@getFile']);
         
         Route::get('leadsource/{leadsource}/state/{state}', ['as'=>'leadsource.unassigned.state', 'uses'=>'LeadSourceController@unassignedstate']);
         Route::get('leadsource/flush', ['as'=>'leadsource.flush', 'uses'=>'LeadSourceController@flushManagerLeads']);
@@ -184,8 +183,8 @@ use Illuminate\Http\Request;
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
         // Persons Data
-        Route::get('persondata', ['as'=>'persons.data.export', 'uses'=>'ExportController@index']);
-        Route::post('persondata/export', ['as'=>'exports.store', 'uses'=>'ExportController@store']);
+        Route::get('persondata', ['as'=>'persons.data.export', 'uses'=>'Exports\ExportController@index']);
+        Route::post('persondata/export', ['as'=>'exports.store', 'uses'=>'Exports\ExportController@store']);
         
         //   Sales Activity / Campaigns
 

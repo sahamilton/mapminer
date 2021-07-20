@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Imports;
 
 use App\Http\Requests\ImportFormRequest;
 use App\Imports;
 use App\Model;
 use App\Project;
+use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 
 class ImportController extends BaseController
@@ -20,7 +21,7 @@ class ImportController extends BaseController
     public function index()
     {
         $imports = ['branches','branch_team','companies','locations','users'];
-        $exports = ['allcompanies','branches','branches_team','companies','nomanager','person','projects','vertical','watch', 'persons_data', 'users'];
+        $exports = ['allcompanies','branches','companies','person','projects','vertical','watch', 'persons_data', 'users'];
         return response()->view('imports.index', compact('imports', 'exports'));
     }
 

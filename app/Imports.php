@@ -97,12 +97,11 @@ class Imports extends Model
         
         
         if (! $this->dontCreateTemp) {
-           // $this->_createTemporaryImportTable();
+            $this->_createTemporaryImportTable();
         } 
 
         $this->_truncateTempTable();
         $this->_importCSV();
-        
         $this->_addLeadSourceRef($request);
         $this->_addCreatedAtField();
         $this->_createPositon();
@@ -368,13 +367,6 @@ class Imports extends Model
         );
 
         return Contact::insertOrIgnore($contacts->toArray());
-
-
-
-       /* $query ="INSERT IGNORE INTO `contacts` (address_id,".implode(",", $this->contactFields).", primary, created_at) 
-        SELECT address_id, ".implode(",", $this->contactFields).",1,'".now()->format('Y-m-d H:i:s') . "' FROM `".$this->temptable."`";
-        
-        return $this->_executeQuery($query);*/
     }
     /**
      * [_assignLeadstoBranches description]

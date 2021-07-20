@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class BranchTeamExport implements FromView
 {
-    public $roles;
+    
     public $branch;
 
     /**
@@ -20,7 +20,7 @@ class BranchTeamExport implements FromView
     public function __construct(array $branch = null)
     {
         $this->branch = $branch;
-        $this->roles = Role::pluck('name', 'id')->toArray();
+        
     }
 
     /**
@@ -30,13 +30,13 @@ class BranchTeamExport implements FromView
      */
     public function view(): View
     {
-        $result = Branch::with('relatedPeople', 'relatedPeople.userdetails');
-        if ($this->branch) {
-            $result->whereIn('id', $this->branch);
-        }
-        $result->get();
-        $roles = $this->roles;
-
-        return view('branches.exportteam', compact('result', 'roles'));
+        $result = Branch::with('manager.reportsTo.userdetails.roles')
+            ->when(
+                $this->branch, function ($q) {
+                        $q->whereIn('id', $this->branch);
+                }
+            )->get();
+        
+        return view('branches.exportteam', compact('result'));
     }
 }

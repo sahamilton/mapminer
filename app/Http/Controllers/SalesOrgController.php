@@ -178,28 +178,7 @@ class SalesOrgController extends BaseController
         $title="Users with no manager";
         return response()->view('admin.users.nomanager', compact('people', 'title'));
     }
-    /**
-     * [noManagerExport description]
-     * 
-     * @return [type] [description]
-     */
-    public function noManagerExport()
-    {
-        
-
-        Excel::download(
-            'NoManagers'.time(), function ($excel) {
-                $excel->sheet(
-                    'No Managers', function ($sheet) {
-                        $people = $this->person->whereNull('reports_to')
-                            ->with('userdetails', 'userdetails.roles')
-                            ->get();
-                        $sheet->loadView('admin.users.nmexport', compact('people'));
-                    }
-                );
-            }
-        )->download('csv');
-    }
+    
 
     /**
      * [_loadSalesOrgRelations description]

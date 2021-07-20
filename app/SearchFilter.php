@@ -133,7 +133,7 @@ class SearchFilter extends NodeModel
      */
     public function leads()
     {
-        return $this->belongsToMany(Address::class, 'lead_searchfilter', 'searchfilter_id');
+        return $this->hasMany(Address::class, 'vertical', 'id');
     }
 
     /**

@@ -25,12 +25,12 @@ class BranchExport implements FromView
      */
     public function view(): View
     {
-        $result = Branch::with('address', 'manager');
-        if ($this->branch) {
-            $result->whereIn('id', $this->branch);
-
-        }
-        $result->get();
+        $result = Branch::with('manager.reportsTo', 'servicelines')
+            ->when(
+                $this->branch, function ($q) {
+                    $q->whereIn('id', $this->branch);
+                }
+            )->get();
         return view('branches.export', compact('result'));
     }
 }

@@ -4,28 +4,45 @@
 		<tr>
 
 			<td>Branch Number</td>
-
 			<td>Branch Name</td>
-			<td>Team Members</td>
-			<td>Employee Id</td>
-			<td>Role Id</td>
+			<td>City</td>
+			<td>State</td>
+			<td>Country</td>
+			<td>Manager</td>
+			<td>Reports To</td>
 			<td>Role</td>
+	
 			
 		</tr>
 		@foreach($result as $branch)
+			
 			<tr>  
 
 				<td>{{$branch->id}}</td>
 				<td>{{$branch->branchname}}</td>
-				@foreach($branch->relatedPeople as $team)
-					<td>{{$team->postName()}}</td>
-					<td>{{$team->userdetails->employee_id}}</td>
-					<td>{{$team->pivot->role_id}}</td>
-					@if(isset($roles[$team->pivot->role_id]))
-					<td>{{$roles[$team->pivot->role_id]}}</td>
-					@endif
-				@endforeach
-		
+				<td>{{$branch->city}}</td>
+				<td>{{$branch->state}}</td>
+				<td>{{$branch->country}}</td>
+				<td>
+					@foreach($branch->manager as $person)
+	    				{{$person->fullName()}}<br /> 
+					@endforeach
+				</td>
+				<td>
+					
+					@foreach($branch->manager as $manager)
+						{{$manager->reportsTo ? $manager->reportsTo->fullName() : 'No Reporting manager'}}<br />
+						
+					@endforeach
+	
+				</td>
+				<td>
+					@foreach($branch->manager as $manager)
+						{{$manager->reportsTo ? implode(",",$manager->reportsTo->userdetails->roles->pluck('display_name')->toArray()) : ''}}<br />
+						
+					@endforeach
+				</td>
+				
 				
 
 			</tr>

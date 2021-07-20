@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Imports;
 
 use App\Branch;
 use App\BranchTeamImport;

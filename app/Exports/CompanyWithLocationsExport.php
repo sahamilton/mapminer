@@ -20,7 +20,7 @@ class CompanyWithLocationsExport implements FromView
      */
     public function view(): View
     {
-        $company = $this->company->load('locations');
+        $company = $this->company->load('locations.assignedToBranch');
 
         return view('locations.exportlocations', compact('company'));
     }

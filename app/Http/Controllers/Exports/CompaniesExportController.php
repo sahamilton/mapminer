@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Exports;
 
 use Illuminate\Http\Request;
 use App\Company;
 use App\Address;
 use \Excel;
+use App\Http\Controllers\BaseController;
 use App\Exports\CompanyWithLocationsExport;
+
 class CompaniesExportController extends BaseController
 {
     public $company;
@@ -43,6 +45,6 @@ class CompaniesExportController extends BaseController
     {
        
         $company = $this->company->findOrFail(request('company'));
-        return Excel::download(new CompanyWithLocationsExport($company), 'Companies.csv');
+        return Excel::download(new CompanyWithLocationsExport($company), $company->companyname . ' locations.csv');
     }
 }

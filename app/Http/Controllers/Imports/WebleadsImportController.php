@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Imports;
 
 use App\Address;
 use App\Branch;
@@ -10,6 +10,7 @@ use App\LeadSource;
 use App\MapFields;
 use App\Person;
 use App\WebLeadImport;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class WebleadsImportController extends Controller

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Imports;
 
 use App\Person;
 use App\User;
 use App\UserImport;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class UserImportCleanseController extends Controller

@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Imports;
 
 use Illuminate\Http\Request;
-use App\Branch;
+
 use App\Address;
 use App\LeadImport;
 use App\LeadSource;
 
 use App\Http\Requests\LeadImportFormRequest;
 
-class AddressImportController extends ImportController
+class LeadImportController extends ImportController
 {
     public $lead;
     public $leadsources;
     public $import;
-    public $importtable = 'addressimports';
+    
     public $addressfields =[
             'businessname',
             'address',
@@ -26,16 +26,14 @@ class AddressImportController extends ImportController
             'lng',
             'position',
             'lead_source_id',
-            'created_at',
-            'branch_id'
-        ];
+            'created_at'];
 
 
-    // $extrafields = ['leads']['description'];
+    public $leadfields =[ 'description'];
 
 
-    public $contactfields =[
-                'address_id',
+    public $leadcontactfields =[
+                'lead_id',
                 'firstname',
                 'lastname',
                 'title',
@@ -52,49 +50,45 @@ class AddressImportController extends ImportController
      */
     public function __construct(Address $address, LeadSource $leadsource, LeadImport $import)
     {
-        $this->address = $address;
+        $this->lead = $address;
         $this->import = $import;
         $this->leadsources = $leadsource;
     }
     /**
      * [getFile description]
      * 
-     * @param  Request $request [description]
+     * @param Request         $request    [description]
+     * @param LeadSource|null $leadsource [description]
+     * @param [type]          $type       [description]
      * 
-     * @param  [type]  $id      [description]
-     * @param  [type]  $type    [description]
-     * @return [type]           [description]
+     * @return [type]                      [description]
      */
-    public function getFile(Request $request, $id = null, $type = null)
+    public function getFile(Request $request, LeadSource $leadsource=null,$type=null) 
     {
 
-        $sources = $this->leadsources->all()->pluck('source', 'id');
-
-        if ($leadsource->count() == 0) {
+        $sources= $this->leadsources->all()->pluck('source', 'id');
+        if ($sources->count() == 0) {
             return redirect()->route('leadsource.index')->with('error', 'You must create a lead source first');
         }
-        if ($id) {
-            $leadsource = $this->leadsources->find($id);
-        }
-        $requiredFields = $this->address->requiredfields;
-        if ($type == 'assigned') {
+        
+        $requiredFields = $this->lead->requiredfields;
+        if ($type=='assigned') {
             $requiredFields[] = 'employeee_number';
         }
-        dd($requiredFields);
+       
         return response()->view('leads.import', compact('sources', 'leadsource', 'requiredFields', 'type'));
     }
 
     /**
      * [import description]
      * 
-     * @param LeadImportFormRequest $request [description]
+     * @param Request $request [description]
      * 
-     * @return [type]                         [description]
+     * @return [type]           [description]
      */
-    public function import(LeadImportFormRequest $request)
+    public function import(Request $request)
     {
-  
-
+        
         $data = $this->uploadfile(request()->file('upload'));
         $title="Map the leads import file fields";
         $requiredFields = $this->import->requiredFields;
@@ -102,10 +96,10 @@ class AddressImportController extends ImportController
         $data['type']=request('type');
 
         if ($data['type']== 'assigned') {
-            $data['table']='leadimport';
+            $data['table']='addresses_import';
             $requiredFields[]='employee_id';
         } else {
-            $data['table']='leadimport';
+            $data['table']='addresses_import';
         }
 
         $data['additionaldata'] = request('additionaldata');
@@ -124,74 +118,52 @@ class AddressImportController extends ImportController
      * 
      * @return [type]           [description]
      */
-    public function mapfields(Request $request)
+    public function mapfields(Request $request) 
     {
        
         $data = $this->getData($request);
+
         $this->validateInput($request);
         $this->import->setFields($data);
+       
         if ($this->import->import()) {
-            $this->_postimport($request);
-        
+            $this->_postimport();
+
             return redirect()->route('leadsource.index')->with('success', 'Leads imported');
         }
     }
     /**
-     * [_postimport description]
+     * [postimport description]
      * 
-     * @param Request $request [description]
-     * 
-     * @return [type]           [description]
+     * @return [type] [description]
      */
-    private function _postimport(Request $request)
-
-        /*
-        // get same, added & deleted based on spatial
-        $data = $this->getAddEditDeleteOnSpatial()
-
-
-        $this->copyAddresses();
-
-        $this->copyAddressIdtoImport();
-
-        $this->copyLeads();
-        */
-        if ($request()->filled('contacts')) {
-            $this->copyLeadContacts();
-        }
-            
-        //$this->updateLeadPivot();
-        //$this->setAddressImportIdToNull();
-
+    private function _postimport()
+    {
         
-            
+        $this->_copyAddresses();
 
+        $this->_copyAddressIdtoImport();
 
-        $this->truncateTable();
-        */
-       
-       /*select addresses.id, addresses.businessname,addresses.city, addresses_import.id,addresses.businessname, addresses.city, ST_Distance_Sphere(addresses.position,addresses_import.position) as distance from addresses_import,addresses
-where addresses.company_id = addresses_import.company_id
-and ST_Distance_Sphere(addresses.position,addresses_import.position) < 100
+        $this->_copyLeads();
 
-SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,addresses.zip FROM `addresses` left join addresses_import on ST_Distance_Sphere(addresses.position,addresses_import.position) < 100 where addresses.company_id = 275 and addresses_import.id is null*/
+        $this->_copyLeadContacts();
+        
+        $this->_setAddressImportIdToNull();
 
+        $this->_validateStateCodes();
 
+        $this->_truncateTable();
 
         // set import_id to null in addresses table
         return true;
     }
-   /*
-    private function addAssignedPID() {
-        $query ="UPDATE leadimport dest, (SELECT leadimport.id as id, persons.id as pid from persons,leadimport,users where REPLACE(leadimport.employee_id, '\r', '')=users.employee_id and persons.user_id = users.id) src set dest.pid = src.pid where dest.id = src.id";
-        if (\DB::select(\DB::raw($query))) {
-           
-            return true;
-        }
-    }
-    */
-
-    private function copyAddresses()
+  
+    /**
+     * [_copyAddresses description]
+     * 
+     * @return [type] [description]
+     */
+    private function _copyAddresses()
     {
              $query = "insert ignore into addresses (" . implode(",", $this->addressfields) .",lead_import_id) select t.". implode(",t.", $this->addressfields). ",t.id as lead_import_id FROM `leadimport` t";
         
@@ -199,8 +171,12 @@ SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,add
             return true;
         }
     }
-
-    private function copyAddressIdtoImport()
+    /**
+     * [_copyAddressIdtoImport description]
+     * 
+     * @return [type] [description]
+     */
+    private function _copyAddressIdtoImport()
     {
         $query ="update leadimport,addresses set leadimport.address_id = addresses.id where leadimpport.id = addresses.import_id";
 
@@ -208,11 +184,12 @@ SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,add
               return true;
         }
     }
-    /*
-    Copy incremntal data depending on type
-
-    */
-    private function copyLeads()
+    /**
+     * [_copyLeads Copy incremntal data depending on type]
+     * 
+     * @return [type] [description]
+     */
+    private function _copyLeads()
     {
         if (count($this->leadfields)>0) {
              $query = "insert ignore into leads (" . implode(",", $this->leadfields) .",address_id) select t.". implode(",t.", $this->leadfields). ",t.address_id as address_id FROM `leadimport` t";
@@ -223,8 +200,12 @@ SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,add
             }
         }
     }
-
-    private function copyLeadContacts()
+    /**
+     * [_copyLeadContacts description]
+     * 
+     * @return [type] [description]
+     */
+    private function _copyLeadContacts()
     {
         $query = "insert ignore into contacts 
         (address_id,firstname,lastname,title,email,phone,created_at)
@@ -235,26 +216,37 @@ SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,add
             return true;
         }
     }
-   /*
-   private function updateLeadPivot() {
-        $query ="insert ignore into lead_person_status (related_id,person_id,status_id,type)
-                SELECT distinct leads.id, leadimport.pid ,'2','prospect'  from leads,leadimport
-                where MD5(lower(replace(concat(`leads`.`companyname`,`leads`.`businessname`,`leads`.`address`,`leads`.`city`,`leads`.`state`,`leads`.`zip`),' ',''))) = MD5(lower(replace(concat(`leadimport`.`companyname`,`leadimport`.`businessname`,`leadimport`.`address`,`leadimport`.`city`,`leadimport`.`state`,`leadimport`.`zip`),' ','')))
-                and leads.lead_source_id = leadimport.lead_source_id;";
-       if (\DB::select(\DB::raw($query))) {
-           
+    /**
+     * [_validateStateCodes description]
+     * 
+     * @return [type] [description]
+     */
+    private function _validateStateCodes()
+    {
+
+        
+        $query = "update leadimport, states set leadimport.state = states.statecode where leadimport.state = states.fullstate";
+       
+        if (\DB::select(\DB::raw($query))) {
             return true;
         }
-   }
-   */
-
-    private function setAddressImportIdToNull()
+    }
+    /**
+     * [SetAddressImportIdToNull description]
+     *
+     * @return [type] [description]
+     */
+    private function _setAddressImportIdToNull()
     {
         $query= "update addresses set import_id = null";
         return \DB::statement($query);
     }
-
-    private function truncateTable()
+    /**
+     * [_truncateTable description]
+     * 
+     * @return [type] [description]
+     */
+    private function _truncateTable()
     {
 
         return \DB::statement("TRUNCATE TABLE `leadimport`");

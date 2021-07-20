@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Imports;
 
 use Illuminate\Http\Request;
 use App\Company;
@@ -48,7 +48,7 @@ class LocationsImportController extends ImportController
     public function import(Request $request) 
     {
         $data = request()->except('_token');
-   
+        
         $title="Map the locations import file fields";
         $data = array_merge($data, $this->uploadfile(request()->file('upload')));
         $data['additionaldata'] = null;
@@ -120,14 +120,10 @@ class LocationsImportController extends ImportController
         }
         if ($fileimport = $this->import->import($request)) {
             
-            if (request()->has('company')) {
+            if (request()->has('company') or request('type') == 'location') {
                 return redirect()->route('postprocess.index');
                 /// copy from import table to addresses
                 /// return to company view
-            }
-            if (request('type') == 'location' && ! request()->has('company')) {
-              
-                return redirect()->route('postprocess.index');
             }
 
             return redirect()->route('leadsource.show', request('lead_source_id'))->with('success', 'Locations imported');

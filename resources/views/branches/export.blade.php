@@ -9,10 +9,14 @@
 			<td>city</td>
 			<td>state</td>
 			<td>zip</td>
+			<td>Country</td>
 			<td>phone</td>
 			<td>lat</td>
 			<td>lng</td>
+			<td>Service Lines</td>
 			<td>Manager</td>
+			<td>Reports To</td>
+			<td>Role</td>
 			
 		</tr>
 		@foreach($result as $branch)
@@ -25,14 +29,35 @@
 				<td>{{$branch->city}}</td>
 				<td>{{$branch->state}}</td>
 				<td>{{$branch->zip}}</td>
+				<td>{{$branch->country}}
 				<td>{{$branch->phone}}</td>
 				<td>{{$branch->lat}}</td>
 				<td>{{$branch->lng}}</td>
-				<td>@foreach($branch->manager as $manager)
-				{{$manager->fullName()}} ( pid= {{$manager->id}},uid = {{$manager->user_id}} )
-				@if( ! $loop->last) | @endif
-				@endforeach
-			</td>
+				<td>
+					{{implode(",",$branch->servicelines->pluck('ServiceLine')->toArray())}}
+				</td>
+				<td>
+					@foreach($branch->manager as $manager)
+						{{$manager->fullName()}} ( pid= {{$manager->id}},uid = {{$manager->user_id}} )
+						@if( ! $loop->last) | @endif
+					@endforeach
+				</td>
+				<td>
+					
+					@foreach($branch->manager as $manager)
+						{{$manager->reportsTo ? $manager->reportsTo->fullName() : 'No Reporting manager'}}
+						@if( ! $loop->last) | @endif
+						
+					@endforeach
+	
+				</td>
+				<td>
+					@foreach($branch->manager as $manager)
+						{{$manager->reportsTo ? implode(",",$manager->reportsTo->userdetails->roles->pluck('display_name')->toArray()) : ''}}
+						@if( ! $loop->last) | @endif
+						
+					@endforeach
+				</td>
 				
 				
 

@@ -55,35 +55,35 @@ use Illuminate\Http\Request;
         //   User Management
 
         Route::get('cleanse', ['as'=>'users.cleanse', 'uses'=>'Admin\AdminUsersController@cleanse']);
-        Route::get('users/import', ['as'=>'users.importfile', 'uses'=>'UsersImportController@getFile']);
-        Route::get('usersimport', ['as'=>'usersimport.index', 'uses'=>'UsersImportController@index']);
+        Route::get('users/import', ['as'=>'users.importfile', 'uses'=>'Imports\UsersImportController@getFile']);
+        Route::get('usersimport', ['as'=>'usersimport.index', 'uses'=>'Imports\UsersImportController@index']);
 
-        Route::post('users/bulkimport', ['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
-        Route::post('users/import', ['as'=>'users.mapfields', 'uses'=>'UsersImportController@mapfields']);
+        Route::post('users/bulkimport', ['as'=>'admin.users.bulkimport', 'uses'=>'Imports\UsersImportController@import']);
+        Route::post('users/import', ['as'=>'users.mapfields', 'uses'=>'Imports\UsersImportController@mapfields']);
         Route::get('users/deleted', ['as'=>'deleted.users', 'uses'=>'Admin\AdminUsersController@deleted']);
         Route::get('users/{id}/restore', ['as'=>'users.restore', 'uses'=>'Admin\AdminUsersController@restore']);
 
         Route::delete('users/{id}/purge', ['as'=>'users.permdestroy', 'uses'=>'Admin\AdminUsersController@permdeleted']);
 
-        Route::post('user/usererrors', ['as'=>'fixusercreateerrors', 'uses'=>'UsersImportController@fixUserErrors']);
-        Route::post('user/importcleanse/delete', ['as'=>'user.importdelete', 'uses'=>'UserImportCleanseController@bulkdestroy']);
-        Route::post('user/importcleanse/insert', ['as'=>'user.importinsert', 'uses'=>'UserImportCleanseController@createNewUsers']);
-        Route::get('user/importfinal', ['as'=>'user.importfinal', 'uses'=>'UserImportCleanseController@importAllUsers']);
-        Route::get('user/importflush', ['as'=>'importcleanse.flush', 'uses'=>'UserImportCleanseController@flush']);
+        Route::post('user/usererrors', ['as'=>'fixusercreateerrors', 'uses'=>'Imports\UsersImportController@fixUserErrors']);
+        Route::post('user/importcleanse/delete', ['as'=>'user.importdelete', 'uses'=>'Imports\UserImportCleanseController@bulkdestroy']);
+        Route::post('user/importcleanse/insert', ['as'=>'user.importinsert', 'uses'=>'Imports\UserImportCleanseController@createNewUsers']);
+        Route::get('user/importfinal', ['as'=>'user.importfinal', 'uses'=>'Imports\UserImportCleanseController@importAllUsers']);
+        Route::get('user/importflush', ['as'=>'importcleanse.flush', 'uses'=>'Imports\UserImportCleanseController@flush']);
 
         Route::get('user/bulkdelete', ['as'=>'bulkdelete', 'uses'=>'Admin\AdminUsersController@bulkdelete']);
         Route::post('user/bulkdelete', ['as'=>'users.bulkdelete', 'uses'=>'Admin\AdminUsersController@confirmDelete']);
         Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
-        Route::resource('user/importcleanse', 'UsersImportController');
+        Route::resource('user/importcleanse', 'Imports\UsersImportController');
 
 
 
-        Route::get('users/newusers', ['as'=>'import.newusers', 'uses'=>'UsersImportController@newUsers']);
-        Route::post('users/createnewusers', ['as'=>'import.createnewusers', 'uses'=>'UsersImportController@createNewUsers']);
+        Route::get('users/newusers', ['as'=>'import.newusers', 'uses'=>'Imports\UsersImportController@newUsers']);
+        Route::post('users/createnewusers', ['as'=>'import.createnewusers', 'uses'=>'Imports\UsersImportController@createNewUsers']);
 
         Route::get('users/serviceline/{serviceline}', ['as'=>'serviceline.user', 'uses'=>'Admin\AdminUsersController@index']);
         Route::get('users/nomanager', ['as'=>'nomanager', 'uses'=>'SalesOrgController@noManager']);
-        Route::get('users/nomanager/export', ['as'=>'nomanager.export', 'uses'=>'SalesOrgController@noManagerExport']);
+       
         Route::get('users/export', ['as'=>'users.export', 'uses'=>'UsersController@export']);
         Route::resource('users', 'Admin\AdminUsersController');
 

@@ -5,8 +5,9 @@
 			<td>firstname</td>
 			<td>lastname</td>
 			<td>Full Name</td>
-		
+			<td>Roles</td>
 			<td>Employee Number</td>
+			<td>Last Login</td>
 			<td>Reports To</td>
 			<td>Manager id</td>
 			<td>User Id</td>
@@ -23,8 +24,9 @@
 			<td>{{$person->firstname}}</td>
 			<td>{{$person->lastname}}</td>
 			<td>{{$person->firstname }} {{$person->lastname}}</td>
-			
+			<td>{{implode (" | ", $person->userdetails->roles->pluck('display_name')->toArray())}}</td>
 			<td>{{$person->userdetails->employee_id}}</td>
+			<td>{{$person->userdetails->lastlogin ? $person->userdetails->lastlogin->format('Y-m-d') : ''}}</td>
 			
 			@if(isset($person->reportsTo->userdetails))
 				<td>{{$person->reportsTo->fullname()}}</td>
