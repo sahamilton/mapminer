@@ -90,7 +90,12 @@ class ReportsController extends Controller {
      */
     public function store(ReportFormRequest $request)
     {   
-
+        if (request()->filled('job') && ! $this->_checkValidJob(request('job'))) {
+            return redirect()->back()->withError('job does not exist');
+        }
+        if (request()->filled('export') && ! $this->_checkValidJob(request('export'))) {
+            return redirect()->back()->withError('export does not exist');
+        }
         $report = $this->report->create(request()->all());
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
@@ -159,7 +164,10 @@ class ReportsController extends Controller {
     {
 
         
-        if (! $this->_checkValidJob(request('job'))) {
+        if (request()->filled('job') && ! $this->_checkValidJob(request('job'))) {
+            return redirect()->back()->withError('job does not exist');
+        }
+        if (request()->filled('export') && ! $this->_checkValidJob(request('export'))) {
             return redirect()->back()->withError('job does not exist');
         }
         $report->update(request()->all());
@@ -375,7 +383,7 @@ class ReportsController extends Controller {
      */
     private function _checkValidJob($class)
     {
-        $check = ['Jobs','Exports'];
+        $check = ['Exports'];
         foreach ($check as $type) {
             if (! $this->_checkClassExists($class, $type)) {
                 return false;
@@ -401,8 +409,8 @@ class ReportsController extends Controller {
             break;
 
         case "Exports":
-            $dir = "\App\\Exports\\";
-            $class = $class.'Export';
+            $dir = "\App\\Exports\\Reports\\Branch\\";
+           
             break;
         }
         
