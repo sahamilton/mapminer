@@ -249,7 +249,7 @@ class MgrDashboardController extends DashboardController
     private function _displayDashboard()
     {
         $data = $this->_getDashBoardData();
-        
+
         if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team']['me']->directReports()->get();
@@ -278,20 +278,22 @@ class MgrDashboardController extends DashboardController
      */
     private function _myTeamsData($branchdata)
     {
-
+        $data['branches'] = $branchdata;
         $teamroles = [14,6,7,3,9];
         $data['me'] = $this->person->findOrFail($this->manager->id);
         // this might return branch managers with no branches!
         $data['team'] =  $this->person
             ->where(
                 function ($q) {
-                    $q->where('reports_to', $this->manager->id);
+                    $q->where('reports_to', $this->manager->id)
+                        ->orWhere('persons.id', $this->manager->id);
                 }
             )
+            ->summaryActivities($this->period)
             ->with('branchesServiced')
             ->withRoles($teamroles) 
             ->get();
-
+        
         if (! $data['team']->count()) {
             return false;
         }
@@ -316,12 +318,13 @@ class MgrDashboardController extends DashboardController
      */
     private function _getBranchManagerData(Person $team, Collection $branchdata, array $data)
     {
+        
         $data['branchteam'] = $team->descendantsAndSelf()
             ->withRoles([$this->branchManagerRole])
             ->has('branchesServiced')
             ->with('branchesServiced')
             ->get();
-
+            
         
         $branches = $data['branchteam']->map(
             function ($person) {
@@ -380,12 +383,16 @@ class MgrDashboardController extends DashboardController
     {
         
         $data['activities'] = $this->chart->getTeamActivityChart($data);
+
         $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
         $data['Top25chart'] = $this->chart->getTeamTop25Chart($data);
         $data['winratiochart'] = $this->chart->getWinRatioChart($data);
         $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
-        $data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
-        
+        //dd($this->chart->getTeamActivityByTypeChart($data));
+        $data['personactivitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
+        $data['activitytypechart'] = $this->chart->getBranchesActivityByTypeChart($data);
+        //dd($data['activitytypechart'], $data['']);
+        //$data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
         return $data;
     }
     
@@ -410,7 +417,7 @@ class MgrDashboardController extends DashboardController
             $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
          
         }
-     
+        
         return $string;
 
     }

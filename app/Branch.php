@@ -649,9 +649,13 @@ class Branch extends Model implements HasPresenter
     {
         
         return $query->with(
-            ['activities'=>function ($q) use ($campaigns) { 
-                $q->whereHas('campaigns', function ($q1) use($campaigns) { 
-                    $q1->whereIn('campaigns.id', $campaigns); });
+            [
+                'activities'=>function ($q) use ($campaigns) { 
+                    $q->whereHas(
+                        'campaigns', function ($q1) use ($campaigns) { 
+                            $q1->whereIn('campaigns.id', $campaigns); 
+                        }
+                    );
                 }
             ]
         );

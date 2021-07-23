@@ -18,6 +18,7 @@ class Chart extends Model
      
         $chart= array();
         foreach ($data['team'] as $team) {
+
             if (isset($data['data'][$team->id]['activities'])) {
                 $chart[$team->postName()]=$data['data'][$team->id]['activities'];
             } else {
@@ -36,35 +37,56 @@ class Chart extends Model
      */
     public function getTeamActivityByTypeChart(array $data)
     {
+    
         $full = ActivityType::all()->pluck('activity', 'color')->toArray();
        
-        $team = $data['team']->filter(
-            function ($person) use ($data) { 
-                return in_array($person->id, array_keys($data['data']));
-            }
-        );
-           
         // Initialize
-        $labels = $team->map(
-            function ($person) {
-                return ['pid'=>$person->id,'name'=>$person->postName()];
-            }
-        );
-        $activitydata = collect($data['data'])->pluck('activitiestype'); 
-        
-        $labels = implode("','", $labels->pluck('name')->toArray());
+        $labels = implode("','", $data['team']->pluck('manager')->toArray());
+               
         $chart['labels'] = $labels;
         foreach ($full as $color=>$activity) {
             $chart['data'][$activity]['color']=$color;
             $chart['data'][$activity]['labels']=$labels;
             $type = str_replace(" ", "_", strtolower($activity));
-            $chart['data'][$activity]['data'] = implode(",", $activitydata->pluck($type)->toArray());
+             $chart['data'][$activity]['data'] =  implode(",", $data['team']->pluck($type)->toArray());
         }
        
         return $chart;
         
     }
+    /**
+     * [getTeamActivityByTypeChart description]
+     * 
+     * @param array $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function getBranchesActivityByTypeChart(array $data)
+    {
 
+        $full = ActivityType::all()->pluck('activity', 'color')->toArray();
+        
+        
+        // Initialize
+        $labels = $data['branches']->map(
+            function ($branch) {
+                return ['id'=>$branch->id,'name'=>$branch->branchname];
+            }
+        );
+        $labels = implode("','", $labels->pluck('name')->toArray());
+        //$activitydata = collect($data['data'])->pluck('activitiestype');
+
+        $chart['labels'] = $labels;
+       
+        foreach ($full as $color=>$activity) {
+            $chart['data'][$activity]['color']=$color;
+            $chart['data'][$activity]['labels']=$labels;
+            $type = str_replace(" ", "_", strtolower($activity));
+            $chart['data'][$activity]['data'] = implode(",", $data['branches']->pluck($type)->toArray());;
+        }
+        return $chart;
+        
+    }
     private function _getActivityTypeColors()
     {
         $colors = ActivityType::select('activity','color')->get();

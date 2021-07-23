@@ -587,8 +587,8 @@ class Person extends NodeModel implements Auditable
     {
         $this->period = $period;
         
-        $query->leftJoin(
-            'actvities',
+        return $query->leftJoin(
+            'activities',
             function ($join) {
                 $join->on(
                     'activities.user',
@@ -616,7 +616,7 @@ class Person extends NodeModel implements Auditable
         ->selectRaw('COUNT(CASE when activitytype_id = 131  then 1 end) as site_visit')
         ->selectRaw('COUNT(CASE when activitytype_id = 14  then 1 end) as in_person')
         ->selectRaw('COUNT(*) as all_activities')
-        ->whereBetween('activities.activity_date', [$period['from'], $period['to']])
+        ->whereBetween('activities.activity_date', [$this->period['from'], $this->period['to']])
         ->whereCompleted(1);
     }
     /**
