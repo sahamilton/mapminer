@@ -127,7 +127,7 @@ class BranchDashboardController extends DashboardController
         
         $this->period = $this->activity->setPeriod($request);
     
-
+        
         return redirect()->back();
     }
     /**
@@ -189,7 +189,7 @@ class BranchDashboardController extends DashboardController
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-     
+       
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns'));
 
     }
@@ -216,25 +216,26 @@ class BranchDashboardController extends DashboardController
 
         }
         $data['charts'] = $this->_getCharts($data);
-        // this should move over to Calendar
-        //$data['calendar'] = $this->_getUpcomingCalendar($this->_getActivities());
-
-        
-        
+          ;
        
         return $data;
     }
     private function _getCharts($data)
     {
-        $charts['pipelinechart'] = $this->chart->getBranchChart($data, $field='active_value');
+        $charts['activitychart'] = $this->chart->getBranchActivityByDateTypeChart(
+            $this->_getActivityTypeChartData()
+        );
+        
+        $charts['pipelinechart'] = $this->_getPipeLine();
+
         $charts['Top25chart'] = $this->chart->getBranchChart($data, $field='top25_opportunities');
         //$charts['winratiochart'] = [];
         $charts['openleadschart'] = $this->chart->getBranchChart($data, $field='leads_count');
         $charts['newleadschart'] = $this->chart->getBranchChart($data, $field='newbranchleads');
         $charts['activeleadschart'] = $this->chart->getBranchChart($data, $field='active_leads');
-        $charts['activitytypechart'] = $this->chart->getBranchesActivityByTypeChart($data);
+        
         $charts['personactivitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
-        dd(237, $charts);
+        return $charts;
     }
     /**
      * [getBranches description]

@@ -113,6 +113,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _setPeriod()
     {
+        ray(session('period'));
         if (! $this->period && ! session('period')) {
             $this->period = $this->activity->getPeriod();
         } else {

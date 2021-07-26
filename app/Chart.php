@@ -164,9 +164,8 @@ class Chart extends Model
      * @param array $data [description]
      * 
      * @return [type]       [description]
-     
-    public function getBranchesActivityByTypeChart
-(Object $data)
+    */
+    public function getBranchActivityByDateTypeChart(Object $data)
     {
         $labels = $data->pluck('day')->unique()->toArray();
         sort($labels);
@@ -194,7 +193,7 @@ class Chart extends Model
         return $chart;
 
     }
-*/
+
     public function createColors($num)
     {
         $colors=[];

@@ -10,11 +10,11 @@ var barChart = new Chart(ctpipe,
   
     data:{
 
-      labels: [{!! $data['pipelinechart']['keys'] !!}],
+      labels: [{!! $data['charts']['pipelinechart']['keys'] !!}],
 
       datasets:[{
         label: 'Branch Pipeline',
-        data: [{!! $data['pipelinechart']['data'] !!}],
+        data: [{!! $data['charts']['pipelinechart']['data'] !!}],
         backgroundColor: 'red'
       }]
     },

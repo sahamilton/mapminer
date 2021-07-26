@@ -11,7 +11,7 @@
 	@foreach ($branch->manager as $manager)
 		<p><strong>Manager:</strong>{{$manager->fullName()}}</p>
 	@endforeach
-@if(isset($data['branches']))
+@if(isset($data['branches']) && $data['branches']->count() >1)
 	@include('branches.partials._branchdashboardselector')
 @endif
 @if($data['team'])
@@ -78,7 +78,8 @@
 	<div class="col-sm-6 float-right" style="margin-top:10px">
 		<div class="card-header">
 			<h4>Activities</h4>
-		</div>@if(count($data['activitychart']) >0)
+
+		</div>@if(count($data['charts']['activitychart']) >0)
 		<div class="card-body">
 				  <canvas id="ctb" width="450" height="400" ></canvas>
 				 

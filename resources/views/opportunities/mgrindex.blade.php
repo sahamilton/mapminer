@@ -6,7 +6,9 @@
   <p><a href="{{route('manager.dashboard', $data['me'])}}"><i class="fas fa-sync"></i> Refresh</a></p>
 
   @if($data['team']->count()>1)
-
+  @if(isset($data['branches']) && $data['branches']->count() >1)
+    @include('dashboards.partials._branchdashboardselector')
+  @endif
     @include('branches.partials._branchselector')
   @endif
   @include('branches.partials._periodselector')
