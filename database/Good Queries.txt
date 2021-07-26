@@ -1113,3 +1113,23 @@ where addresses.id = address_branch.address_id
 and addresses.lead_source_id = leadsources.id
 and state in ('AB','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT')
 and lat < 48
+
+/*****************************************************************
+Reconciling MM's dashboard
+/*****************************************************************
+SELECT 
+
+count(activities.id), concat_ws(' ',firstname, lastname) as manager, branch_id, activity
+from activities, persons, activity_type
+where activity_date between '2021-07-01' and '2021-07-31 23:59'
+and completed = 1
+and activitytype_id = activity_type.id
+and activities.user_id = persons.user_id
+and (persons.reports_to = 1931 or persons.id = 1931)
+group by manager, branch_id, activity
+
+select concat_ws(' ', firstname, lastname), branch_id
+from persons, branch_person
+where reports_to = 1931
+and persons.id = branch_person.person_id
+and role_id = 9

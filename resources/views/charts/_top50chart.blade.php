@@ -9,11 +9,11 @@ var barChart = new Chart(ctTop25,
   
     data:{
 
-      labels: [{!! $data['team']['Top25chart']['chart']['keys'] !!}],
+      labels: [{!! $data['team']['Top25chart']['keys'] !!}],
 
       datasets:[{
         label: 'Top 25 Open Opportunities',
-        data: [{!! $data['team']['Top25chart']['chart']['data'] !!}],
+        data: [{!! $data['team']['Top25chart']['data'] !!}],
         backgroundColor: 'red'
       }]
     },

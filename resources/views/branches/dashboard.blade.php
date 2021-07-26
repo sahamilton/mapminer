@@ -14,7 +14,7 @@
 @if(isset($data['branches']))
 	@include('branches.partials._branchdashboardselector')
 @endif
-@if($data['team']['team'])
+@if($data['team'])
 	@include('opportunities.partials._dashboardselect')
 @endif
 
@@ -36,14 +36,22 @@
 		<tbody>
 			<td class="text-center">
 				<a href="{{route('opportunity.index')}}">
-					{{$data['summary']->first()->open_opportunities }}</a></td>
-			<td class="text-center">{{$data['summary']->first()->top25_opportunities}}</td>
-			<td class="text-center">{{$data['summary']->first()->won_opportunities}}</td>
-			<td class="text-center">{{ $data['summary']->first()->lost_opportunities}}</td>
+					{{$data['teamdata']->first()['open_opportunities'] }}
+				</a>
+				</td>
+			<td class="text-center">{{$data['teamdata']->first()['top25_opportunities']}}
+			</td>
+			<td class="text-center">{{$data['teamdata']->first()['won_opportunities']}}
+			</td>
+			<td class="text-center">{{ $data['teamdata']->first()['lost_opportunities']}}
+			</td>
 			<td class="text-center">
-				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
+				<a href="{{route('branch.leads')}}">{{$data['teamdata']->first()['leads']}}
+				</a>
+			</td>
 			<td class="text-center">
-				<a href="{{route('activity.index')}}">{{$data['summary']->first()->activities_count}}</a></td>	
+				
+			</td>	
 		</tbody>
 	</table>
 </div>

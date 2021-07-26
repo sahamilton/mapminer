@@ -109,6 +109,8 @@ class Person extends NodeModel implements Auditable
             ->withPivot('role_id')
             ->orderBy('branchname');
     }
+
+
     /**
      * [scopeManagers description]
      * 
@@ -161,11 +163,16 @@ class Person extends NodeModel implements Auditable
                     $q->whereIn('role_id', $roles);
             }
         )
-        ->whereHas(
-            'userdetails.serviceline', function ($q) {
-                $q->whereIn('serviceline_id', array_keys($this->userdetails->currentServiceLineIds()));
+        ->when(
+            $servicelines, function ($q) {
+                $q->whereHas(
+                    'userdetails.serviceline', function ($q) {
+                        $q->whereIn('serviceline_id', array_keys($this->userdetails->currentServiceLineIds()));
+                    }
+                );
             }
-        )->orderBy('lastname')
+        )
+        ->orderBy('lastname')
         ->orderBy('firstname')
         ->get();
     }
@@ -1221,31 +1228,52 @@ class Person extends NodeModel implements Auditable
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryActivities($query, $period)
-    {
-        $this->period = $period;
 
-        $query
-            ->join(
-                'persons as reports', function ($join) {
-                    $join->on('reports.lft', '>=', 'persons.lft')
-                        ->on('reports.rgt', '<=', 'persons.rgt');
+    /**
+     * [scopeSummaryActivities description]
+     * 
+     * @param [type] $query  [description]
+     * @param array  $period [description]
+     * @param array  $fields 
+     *                       key is activity type id
+     *                       value is label for activi
+     *                        
+     * @return [type]         [description]
+    */
+    public function scopeSummaryActivities($query, Array $period, Array $fields = null)
+    {
+       
+        $this->period = $period;
+        if (isset($fields)) {
+            $this->activityFields = $fields;
+            foreach ($this->activityFields as $key=>$field) {
+                $label = str_replace(" ", "_", strtolower($field));
+                $query->withCount(
+                    [
+                        'activities as '.$label => function ($query) use ($key) {
+                            $query->whereBetween(
+                                'activity_date', [$this->period['from'],$this->period['to']]
+                            )->where('completed', 1)
+                                ->where('activitytype_id', $key);
+                        }
+                    ]
+                ); 
+            }
+        
+        }
+        $query->withCount(
+            [
+                'activities'=>function ($query) {
+                    $query->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )->where('completed', 1);
                 }
-            )
-            ->join('activities', 'reports.user_id', '=', 'activities.user_id')
-            ->where('completed', 1)
-            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-            ->selectRaw('concat_ws(" ", persons.firstname, persons.lastname) as manager')
-            ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
-            ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
-            ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
-            ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
-            ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
-            ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
-            ->selectRaw('COUNT(*) AS all_activities')
-            ->groupBy('manager');
+            ]
+        );
 
     }
+
+
     /**
      * [scopeSummaryOpportunities description]
      * 

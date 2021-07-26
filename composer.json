@@ -44,7 +44,8 @@
         "laravel/horizon": "^5.7",
         "league/flysystem-sftp": "~1.0",
         "owen-it/laravel-auditing": "^12.0",
-        "fico7489/laravel-pivot": "^3.0"
+        "fico7489/laravel-pivot": "^3.0",
+        "stechstudio/laravel-ssh-tunnel": "^3.1"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

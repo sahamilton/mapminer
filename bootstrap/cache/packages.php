@@ -219,6 +219,13 @@
       0 => 'Spatie\\UptimeMonitor\\UptimeMonitorServiceProvider',
     ),
   ),
+  'stechstudio/laravel-ssh-tunnel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'STS\\Tunneler\\TunnelerServiceProvider',
+    ),
+  ),
   'toin0u/geocoder-laravel' => 
   array (
     'providers' => 

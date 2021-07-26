@@ -1,6 +1,4 @@
 <script>
-
-
 var numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -11,9 +9,10 @@ var activityTypeChart = new Chart(ctp,
     resize:true,
     
     data:{
-      labels: ['{!!  $data['team']['personactivitytypechart']['labels'] !!}'],
+      
+      labels: [{!!  $data['charts']['personactivitytypechart']['labels'] !!}],
       datasets: [
-       @foreach ($data['team']['personactivitytypechart']['data'] as $key=>$value) 
+       @foreach ($data['charts']['personactivitytypechart']['data'] as $key=>$value) 
        
         {
           
@@ -51,7 +50,7 @@ var activityTypeChart = new Chart(ctp,
                   autoSkip:false,
                   beginAtZero: true ,  // minimum value will be 0.
             
-              callback: function(value) { return numberWithCommas(value); },
+                  callback: function(value) { return numberWithCommas(value); },
             }, 
             }],
         }, // scales

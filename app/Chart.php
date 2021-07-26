@@ -41,14 +41,13 @@ class Chart extends Model
         $full = ActivityType::all()->pluck('activity', 'color')->toArray();
        
         // Initialize
-        $labels = implode("','", $data['team']->pluck('manager')->toArray());
-               
-        $chart['labels'] = $labels;
+        
+        $chart['labels']= "'" . implode("','", $data['teamdata']->keys()->toArray()). "'";
         foreach ($full as $color=>$activity) {
             $chart['data'][$activity]['color']=$color;
-            $chart['data'][$activity]['labels']=$labels;
+            $chart['data'][$activity]['labels']=$chart['labels'];
             $type = str_replace(" ", "_", strtolower($activity));
-             $chart['data'][$activity]['data'] =  implode(",", $data['team']->pluck($type)->toArray());
+            $chart['data'][$activity]['data'] =  implode(",", $data['teamdata']->pluck($type)->toArray());
         }
        
         return $chart;
@@ -73,16 +72,15 @@ class Chart extends Model
                 return ['id'=>$branch->id,'name'=>$branch->branchname];
             }
         );
-        $labels = implode("','", $labels->pluck('name')->toArray());
-        //$activitydata = collect($data['data'])->pluck('activitiestype');
+        
 
-        $chart['labels'] = $labels;
-       
+        $chart['labels'] = "'" .  implode("','", $labels->pluck('name')->toArray())."'";
+        
         foreach ($full as $color=>$activity) {
             $chart['data'][$activity]['color']=$color;
-            $chart['data'][$activity]['labels']=$labels;
+            $chart['data'][$activity]['labels']=$chart['labels'];
             $type = str_replace(" ", "_", strtolower($activity));
-            $chart['data'][$activity]['data'] = implode(",", $data['branches']->pluck($type)->toArray());;
+            $chart['data'][$activity]['data'] = implode(",", $data['branches']->pluck($type)->toArray());
         }
         return $chart;
         
@@ -114,27 +112,17 @@ class Chart extends Model
         return $out;
 
     }
-    /**
-     * [getTeamPipelineChart description]
-     * 
-     * @param array $data [description]
-     * 
-     * @return [type]       [description]
-     */
-    public function getTeamPipelineChart(array $data)
+   
+    public function getBranchChart(array $data, $field)
     {
-      
-        $chart= array();
+        
+       
+        $chart['keys'] = "'" . implode("','", $data['branches']->pluck('branchname')->toArray())."'";
+        $chart['data'] = implode(",", $data['branches']->pluck($field, 'branchname')->toArray());
 
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id]['open'])) {
-                $chart[$team->postName()]=$data['data'][$team->id]['open'];
-            } else {
-                $chart[$team->postName()]=0;
-            }
-        }
-        return $this->_getChartData($chart);
+        return $chart;
     }
+
     /**
      * [getTeamTop25Chart description]
      * 
@@ -142,77 +130,18 @@ class Chart extends Model
      * 
      * @return [type]       [description]
      */
-    public function getTeamTop25Chart(array $data)
+    public function getTeamChart(array $data, $field)
     {
-      
-        $chart= array();
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id]['Top25'])) {
-                $chart[$team->postName()]=$data['data'][$team->id]['Top25'];
-            } else {
-                $chart[$team->postName()]=0;
-            }
-        }
-        return $this->_getChartData($chart);
+        
+        
+        $chart['data'] =  implode(",", $data['teamdata']->pluck($field)->toArray()); 
+        $chart['keys'] = "'" . implode("','", $data['teamdata']->keys()->toArray())."'";
+        
+        return $chart;
     }
-    /**
-     * [getWinRatioChart description]
-     * 
-     * @param array $data [description]
-     * 
-     * @return [type]       [description]
-     */
-    public function getWinRatioChart(array $data)
-    {
     
-        $chart= array();
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id])) {
-                $won = $data['data'][$team->id]['won'];
-                $lost = $data['data'][$team->id]['lost'];
-                $both = $won + $lost;
-                if($both > 0) {
-
-                    $chart[$team->postName()] 
-                        = ( $won / $both) * 100;
-                } else {
-                   $chart[$team->postName()] = 0; 
-                }
-            }
-            
-            /*if (isset($data['data'][$team->id]) 
-                && ($data['data'][$team->id]['won_opportunities'] + $data['data'][$team->id]['lost_opportunities'] > 0)
-            ) {
-                $chart[$team->postName()] 
-                    =  $data['data'][$team->id]->sum('won_opportunities')
-                        / ($data['data'][$team->id]['won_opportunities'] + $data['data'][$team->id]['lost_opportunities']) * 100;
-            } else {
-                
-            }*/
-        }
-       
-        return $this->_getChartData($chart);
-    }
-    /**
-     * [getOpenLeadsChart description]
-     * 
-     * @param array $data [description]
-     * 
-     * @return [type]       [description]
-     */
-    public function getOpenLeadsChart(array $data)
-    {
-        $chart= array();
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id]['leads'])) {
-                $chart[$team->postName()]=$data['data'][$team->id]['leads'];
-            } else {
-                  $chart[$team->postName()]=0;
-            }
-
-        }
-        return $this->_getChartData($chart);
-    }
+   
+   
 
     /**
      * [_getChartData description]
@@ -235,8 +164,9 @@ class Chart extends Model
      * @param array $data [description]
      * 
      * @return [type]       [description]
-     */
-    public function getBranchActivityByTypeChart(Object $data)
+     
+    public function getBranchesActivityByTypeChart
+(Object $data)
     {
         $labels = $data->pluck('day')->unique()->toArray();
         sort($labels);
@@ -260,11 +190,11 @@ class Chart extends Model
             $chart[$activity->activity]['data'] = implode(",", $res[$activity->activity]['data']);
             $chart[$activity->activity]['labels'] = $labelstring;
         }
-        ray($chart);
+
         return $chart;
 
     }
-
+*/
     public function createColors($num)
     {
         $colors=[];

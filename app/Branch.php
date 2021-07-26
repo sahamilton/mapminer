@@ -62,6 +62,7 @@ class Branch extends Model implements HasPresenter
     ];
     public $leadFields = [
             'leads',
+            'newbranchleads',
             'stale_leads',
             'active_leads',
 
@@ -1318,7 +1319,7 @@ class Branch extends Model implements HasPresenter
                 in_array('leads', $this->fields), function ($q) {
                     $q->withCount( 
                         [
-                            'leads'=>function ($query) {
+                            'leads as leads'=>function ($query) {
                                 $query->where('address_branch.created_at', '<=', $this->period['to'])
                                     ->where(
                                         function ($q) {
@@ -1402,7 +1403,7 @@ class Branch extends Model implements HasPresenter
     public function scopeSummaryStats($query,$period, $fields = null)
     {
         $this->period = $period;
-    
+  
         return $query->withCount(       
             [
                 'leads'=>function ($query) {

@@ -1,22 +1,21 @@
 <script>
 
-var barChart = new Chart(ctb, 
+var barChart = new Chart(ctactiveleads, 
 {
 
     type: 'bar',
 
     resize:true,
-	
+  
     data:{
 
-      labels: [{!! $data['team']['activities']['keys'] !!}],
+      labels: [{!! $data['charts']['activeleadschart']['keys'] !!}],
 
       datasets:[{
-      	label: 'Activities',
-        data: [{!! $data['team']['activities']['data'] !!}],
+        label: 'Active Leads',
+        data: [{!! $data['charts']['activeleadschart']['data'] !!}],
         backgroundColor: 'red'
       }]
-      
     },
     options: {
       scales: {
@@ -39,3 +38,4 @@ var barChart = new Chart(ctb,
 
 });
 </script>
+

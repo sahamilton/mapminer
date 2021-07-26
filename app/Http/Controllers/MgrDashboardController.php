@@ -225,20 +225,26 @@ class MgrDashboardController extends DashboardController
         
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
-
-        if (! $data['team'] = $this->_myTeamsData($data['branches'])) {
+        $data['me'] = $this->person->findOrFail($this->manager->id);
+        $data['team'] = $data['me']->getDescendantsAndSelf();
+       
+        if (! $data['teamdata'] = $this->_myTeamsData($data)) {
             
             return false;
 
         }
-     
-        // this should go away and incorporate in charts
-        $data['chart'] = $this->_getChartData($data['branches']);
-        //ray($data['chart']);
+        //$data['team']->pluck('sales_appointment')->toArray()); 
+
+               // this should go away and incorporate in charts
+        $data['charts'] = $this->_getCharts($data);
+
+        $data['charts']['bubble'] = $this->_getBubbleChartData($data['branches']);
+        /*
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
-       
+        */
+        
         return $data;
     }
     /**
@@ -252,7 +258,7 @@ class MgrDashboardController extends DashboardController
 
         if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
-            $managers = $data['team']['me']->directReports()->get();
+            $managers = $data['team'];
        
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
           
@@ -270,108 +276,45 @@ class MgrDashboardController extends DashboardController
     }
     
     /**
-     * [_myTeamsData description]
+     * [_myTeamsData return array of team & manager with stats
      * 
-     * @param Collection $branchdata [description]
+     * @param Collection $branchdata with branchname, id & stats
      * 
      * @return [type]                 [description]
      */
-    private function _myTeamsData($branchdata)
+    private function _myTeamsData($data)
     {
-        $data['branches'] = $branchdata;
-        $teamroles = [14,6,7,3,9];
-        $data['me'] = $this->person->findOrFail($this->manager->id);
-        // this might return branch managers with no branches!
-        $data['team'] =  $this->person
-            ->where(
-                function ($q) {
-                    $q->where('reports_to', $this->manager->id)
-                        ->orWhere('persons.id', $this->manager->id);
-                }
-            )
-            ->summaryActivities($this->period)
-            ->with('branchesServiced')
-            ->withRoles($teamroles) 
-            ->get();
+        $fields = array_merge($this->leadFields, $this->opportunityFields);
         
-        if (! $data['team']->count()) {
-            return false;
-        }
-        // get all branch managers
-        
-        foreach ($data['team'] as $team) {
-
-            $data = $this->_getBranchManagerData($team, $branchdata, $data);
-
-        }
-        
-        $data = $this->_getCharts($data);
-
-        return $data;
-    }
-    /**
-     * [_getBranchManagerData description]
-     * 
-     * @param  [type] $team [description]
-     * 
-     * @return [type]       [description]
-     */
-    private function _getBranchManagerData(Person $team, Collection $branchdata, array $data)
-    {
-        
-        $data['branchteam'] = $team->descendantsAndSelf()
-            ->withRoles([$this->branchManagerRole])
-            ->has('branchesServiced')
-            ->with('branchesServiced')
-            ->get();
+        //* gets the associated branch data (opportunities and leads)
+        foreach ($data['team'] as $report) {
             
-        
-        $branches = $data['branchteam']->map(
-            function ($person) {
-                return $person->branchesServiced->pluck('id');
+            $mgrBranches = $report->getMyBranches();
+
+            foreach ($fields as $field) {
+                $data['teamdata'][$report->fullName()][$field] = $data['branches']->whereIn('id', $mgrBranches)->sum($field);
+
             }
-        )->flatten();
-       
-        //$branches = $branches;
+        }
+        //* gets the associated people data (activities)
+        $this->reports = $data['me']->getDescendantsAndSelf()->pluck('user_id')->toArray();
 
-        $mybranchdata = $branchdata->filter(
-            function ($branch) use ($branches) {
-                return in_array($branch->id, $branches->toArray());
+        $data['activities'] = $this->getSummaryTeamData($this->period, $this->activityFields);
+        $directReports = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
+        foreach ($directReports as $report) {
+
+            foreach ($this->activityFields as $field) {
+               
+                $data['teamdata'][$report->fullName()][$field] = $data['activities']->where('lft', '>=', $report->lft)->where('rgt', '<=', $report->rgt)->sum($field);
             }
-        );
-
-        if ($data['branchteam']->count() > 0 ) {
-            $data['data'][$team->id]['leads'] = $mybranchdata->sum('leads_count');
-            $data['data'][$team->id]['activities'] = $mybranchdata->sum('activities_count');
-            $data['data'][$team->id]['activitiestype'] = $this->_getSummaryBranchActivitiesByType($mybranchdata);       
-            $data['data'][$team->id]['won'] = $mybranchdata->sum('won_opportunities');
-            $data['data'][$team->id]['lost'] = $mybranchdata->sum('lost_opportunities');
-            $data['data'][$team->id]['Top25'] = $mybranchdata->sum('top25_opportunities');
-            $data['data'][$team->id]['open'] = $mybranchdata->sum('open_opportunities');
-            
         }
-        return $data;
-    }
-    /**
-     * [_getSummaryBranchActivitiesByType description]
-     * 
-     * @param Collection $mybranchdata [description]
-     * 
-     * @return [type]                   [description]
-     */
-    private function _getSummaryBranchActivitiesByType(Collection $mybranchdata)
-    {
+
+        return collect($data['teamdata']);
         
-        $types =$mybranchdata->first()->activityFields;
-       
-        foreach ($types as $type) {
-            $type=str_replace(" ", "_", strtolower($type));
-            $data[$type] = $mybranchdata->sum($type);
-
-
-        }
-        return $data;
+        
     }
+    
+   
     /**
      * [_getCharts description]
      * 
@@ -380,25 +323,40 @@ class MgrDashboardController extends DashboardController
      * @return [type]       [description]
      */
     private function _getCharts(array $data) 
-    {
+    {   
         
-        $data['activities'] = $this->chart->getTeamActivityChart($data);
-
-        $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
-        $data['Top25chart'] = $this->chart->getTeamTop25Chart($data);
-        $data['winratiochart'] = $this->chart->getWinRatioChart($data);
-        $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
-        //dd($this->chart->getTeamActivityByTypeChart($data));
-        $data['personactivitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
-        $data['activitytypechart'] = $this->chart->getBranchesActivityByTypeChart($data);
-        //dd($data['activitytypechart'], $data['']);
-        //$data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
-        return $data;
+        if ($data['me']->depth >2) {
+            return $this->_getBranchCharts($data);
+        }
+        return $this->_getTeamCharts($data);
+        
     }
     
-
+    private function _getBranchCharts($data)
+    {
+        $charts['pipelinechart'] = $this->chart->getBranchChart($data, $field='active_value');
+        $charts['Top25chart'] = $this->chart->getBranchChart($data, $field='top25_opportunities');
+        //$charts['winratiochart'] = [];
+        $charts['openleadschart'] = $this->chart->getBranchChart($data, $field='leads_count');
+        $charts['newleadschart'] = $this->chart->getBranchChart($data, $field='newbranchleads');
+        $charts['activeleadschart'] = $this->chart->getBranchChart($data, $field='active_leads');
+        $charts['activitytypechart'] = $this->chart->getBranchesActivityByTypeChart($data);
+        $charts['personactivitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
+        return $charts;
+    }
     
-    
+    private function  _getTeamCharts($data)
+    {
+        
+        $charts['pipelinechart'] = $this->chart->getTeamChart($data, $field='active_value');
+        $charts['Top25chart'] = $this->chart->getTeamChart($data, $field='top25_opportunities');
+        $charts['openleadschart'] = $this->chart->getTeamChart($data, $field='leads_count');
+        $charts['newleadschart'] = $this->chart->getTeamChart($data, $field='newbranchleads');
+        $charts['personactivitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
+        //dd(345, $charts['personactivitytypechart']);
+        $charts['activeleadschart'] = $this->chart->getTeamChart($data, $field='active_leads');
+        return $charts;
+    }
      /**
       * [_getChartData description]
       * 
@@ -406,13 +364,13 @@ class MgrDashboardController extends DashboardController
       * 
       * @return [type]          [description]
       */
-    private function _getChartData($results) 
+    private function _getBubbleChartData($branches) 
     {
 
 
         $string = '';
 
-        foreach ($results as $branch) {
+        foreach ($branches as $branch) {
       
             $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
          

@@ -9,11 +9,11 @@ var barChart = new Chart(ctleads,
   
     data:{
 
-      labels: [{!! $data['team']['openleadschart']['chart']['keys'] !!}],
+      labels: [{!! $data['charts']['openleadschart']['keys'] !!}],
 
       datasets:[{
         label: 'Open Leads',
-        data: [{!! $data['team']['openleadschart']['chart']['data'] !!}],
+        data: [{!! $data['charts']['openleadschart']['data'] !!}],
         backgroundColor: 'red'
       }]
     },

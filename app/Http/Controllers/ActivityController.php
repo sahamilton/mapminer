@@ -173,7 +173,8 @@ class ActivityController extends Controller
       
         $data['summary'] = $this->activity->summaryData($weekCount);
         $activitytypes = $this->_getBranchActivititiesByType($branch);
-        $data['activitychart'] = $this->chart->getBranchActivityByTypeChart($activitytypes);
+        $data['activitychart'] = $this->chart->getBranchesActivityByTypeChart
+($activitytypes);
         return $data;
     }
     /**
