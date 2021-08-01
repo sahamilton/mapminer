@@ -194,6 +194,13 @@
       'Yaml' => 'PragmaRX\\Yaml\\Package\\Facade',
     ),
   ),
+  'protonemedia/laravel-form-components' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'ProtoneMedia\\LaravelFormComponents\\Support\\ServiceProvider',
+    ),
+  ),
   'spatie/laravel-fractal' => 
   array (
     'providers' => 

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class LocationPostImportController extends Controller
+class LocationPostImportController extends ImportController
 {
     public $company;
     public $import;

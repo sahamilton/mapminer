@@ -60,6 +60,12 @@ return [
             'url' => env('APP_URL').'/storage/reports',
             'visibility' => 'public',
         ],
+        'documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/documents'),
+            'url' => env('APP_URL').'/storage/documents',
+            'visibility' => 'public',
+        ],
         'avatars' => [
             'driver' => 'local',
             'root' => storage_path('app/public/avatars'),

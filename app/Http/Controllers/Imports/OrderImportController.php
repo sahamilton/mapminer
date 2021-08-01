@@ -6,7 +6,7 @@ use App\Address;
 use App\OrderImport;
 use Illuminate\Http\Request;
 
-class OrderImportController extends Controller
+class OrderImportController extends ImportController
 {
     public $import;
     public $address;

@@ -8,6 +8,7 @@ use App\Http\Requests\WebleadFormRequest;
 use App\LeadSource;
 use App\Mail\NotifyWebleadsAssignment;
 use App\Mail\NotifyWebleadsBranchAssignment;
+use App\Http\Controllers\Imports\ImportController;
 use App\Note;
 use App\Person;
 use Illuminate\Http\Request;

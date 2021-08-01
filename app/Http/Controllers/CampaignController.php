@@ -70,12 +70,12 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = $this->campaign
+       /* $campaigns = $this->campaign
             ->with('author', 'manager', 'companies', 'vertical')
             ->withCount('branches')
             ->get();
-        $calendar = [];
-        return response()->view('campaigns.index', compact('campaigns', 'calendar'));
+        $calendar = [];*/
+        return response()->view('campaigns.index');
     }
 
     

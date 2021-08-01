@@ -465,6 +465,11 @@ class Campaign extends Model
 
         
     }
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('title', 'like', '%$search%')
+            ->orWhere('description', 'like', '%$search%');
+    }
     public function scopeLocations($query) {
         $query->with(
             ['companies.locations'=>function ($q) {

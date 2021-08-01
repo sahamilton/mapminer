@@ -19,6 +19,7 @@ class LeadSourceTable extends Component
     public $search = null;
     public $stale = 6;
     public $branch_id = 'All';
+    public $type= 'All';
     //public $myBranches;
    
  
@@ -69,7 +70,11 @@ class LeadSourceTable extends Component
             [
                
                 'leadsources' => Leadsource::query()
-
+                    ->when(
+                        $this->type !='All', function ($q) {
+                            $q->whereType($this->type);
+                        }
+                    )
                     ->withCount(
                         [
                             'branchleads'=>function ($q) {
@@ -103,6 +108,10 @@ class LeadSourceTable extends Component
                     ->paginate($this->perPage),
 
                     'branch'=>Branch::find($this->branch_id),
+                    'types'=>LeadSource::selectRaw('distinct type as type')
+                        ->orderBy('type')
+                        ->pluck('type')
+                        ->toArray(),
                             
             ]
         );

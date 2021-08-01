@@ -133,7 +133,7 @@ class LeadSourceController extends Controller
     {
 
 
-        $leadsource = $leadsource->summary()->findOrFail($leadsource->id);
+        $leadsource = $leadsource->with('author')->summary()->findOrFail($leadsource->id);
      
         $teamStats=[];
         $team = $leadsource->salesteam($leadsource->id);
