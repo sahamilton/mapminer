@@ -95,7 +95,7 @@ class ContactsImportController extends ImportController
         foreach ($contacts as $contact) {
             $addresses[] = array_merge($contact, ['created_at'=>now()]);
         }
-        dd($addresses);
+        
         Address::insert($addresses);
         $this->_matchAddresses(); 
         return redirect()->route('contacts.postimport')->withSuccess("Created " . count($contacts). " new leads");
