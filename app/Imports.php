@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class Imports extends Model
 {
     public $table;
-    public $temptable;
+    public $tempTable;
     public $fields;
     public $importfilename;
     public $additionaldata;
@@ -37,9 +37,10 @@ class Imports extends Model
         $this->fields = implode(",", $data['fields']);  
         
         $this->table = $data['table'];
-
-        if (! $this->temptable) {
-            $this->temptable = $this->table . "_import";
+        
+        
+        if (! $this->tempTable && ! $this->dontCreateTemp) {
+            $this->tempTable = $this->table . "_import";
         }
 
             
@@ -85,7 +86,6 @@ class Imports extends Model
     public function import($request=null)
     {
         // set filename
-        
 
         if (request()->filled('file')) {
 
@@ -97,19 +97,31 @@ class Imports extends Model
         
         
         if (! $this->dontCreateTemp) {
+            $this->tempTable = $this->table;
+           
             $this->_createTemporaryImportTable();
         } 
-
+        
         $this->_truncateTempTable();
         $this->_importCSV();
-        $this->_addLeadSourceRef($request);
+        
+        if (request()->has('newleadsource') && ! request('lead_source_id')) {
+            
+            $leadsource_id = $this->createLeadSource(request()->all());
+            $this->_addLeadSourceRef($leadsource_id);
+        }
+        if (request()->has('lead_source_id')) {
+            $this->_addLeadSourceRef(request('lead_source_id'));
+        }
+        $this->_addUserId();
         $this->_addCreatedAtField();
         $this->_createPositon();
         $this->_updateAdditionalFields($request);
-        //if (! $this->dontCreateTemp) {
+        if (! $this->dontCreateTemp) {
             
-        $this->_copyTempToBaseTable();
-        $this->_copyAddressIdBackToImportTable(request('lead_source_id'));
+            $this->_copyTempToBaseTable();
+        }
+        //$this->_copyAddressIdBackToImportTable(request('lead_source_id'));
         if (request()->filled('contacts')) {
                 
             
@@ -123,13 +135,7 @@ class Imports extends Model
 
         }
             
-            //$this->_nullImportRefField();
-
-            //$this->_truncateTempTable();
-        //}
-        
-
-        //
+            
 
         return true;
     }
@@ -142,7 +148,7 @@ class Imports extends Model
      */
     private function truncateImportTable()
     {
-       return $this->_executeQuery("TRUNCATE TABLE ". $this->temptable); 
+       return $this->_executeQuery("TRUNCATE TABLE ". $this->tempTable); 
     }
     /**
      * [_import_csv description]
@@ -152,8 +158,8 @@ class Imports extends Model
     private function _importCSV()
     {
         $filename =  str_replace("\\", "/", storage_path('/'. $this->importfilename));
- 
-        $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
+        
+        $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->tempTable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
 
         try {
             return  \DB::connection()->getpdo()->exec($query);
@@ -168,10 +174,11 @@ class Imports extends Model
      *
      * @return [type] [<description>]
      */
-    private function _addLeadSourceRef($request)
+    private function _addLeadSourceRef($leadsource_id)
     {
+        $query = "update ".$this->tempTable." set lead_source_id='".$leadsource_id ."'";
         
-        return $this->_executeQuery("update ".$this->temptable." set lead_source_id='".request('lead_source_id')."'");
+        return $this->_executeQuery($query);
        
     }
     /**
@@ -185,7 +192,7 @@ class Imports extends Model
 
         // make sure we bring the created at field across
         $this->fields.=",created_at";
-        return $this->_executeQuery("update ".$this->temptable." set created_at ='". now()->toDateTimeString() . "'");
+        return $this->_executeQuery("update ".$this->tempTable." set created_at ='". now()->toDateTimeString() . "'");
     }
     /**
      * [_createPositon description]
@@ -194,10 +201,8 @@ class Imports extends Model
      */
     private function _createPositon()
     {
-        
-        $this->_executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
-    
-        // $this->_executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
+        return $this->_executeQuery("update ".$this->tempTable." set position = ST_GeomFromText(ST_AsText(POINT(lng, lat)), 4326)");
+
     }
     /**
      * [_updateAdditionalFields description]
@@ -210,7 +215,7 @@ class Imports extends Model
     {
         if ($request && request()->filled('additionaldata')) {
             foreach (request('additionaldata') as $key=>$data) {
-                $query = "update ".$this->temptable." set " . $key . " = " . $data . ";";
+                $query = "update ".$this->tempTable." set " . $key . " = " . $data . ";";
 
                 $this->_executeQuery($query);
             }
@@ -241,8 +246,9 @@ class Imports extends Model
     {
         
         //Create the temporary table
-        return $this->_executeQuery("TRUNCATE TABLE ". $this->temptable);
-        //$this->_executeQuery("CREATE TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
+       
+        return $this->_executeQuery("TRUNCATE TABLE ". $this->tempTable);
+        //$this->_executeQuery("CREATE TABLE ".$this->tempTable." AS SELECT * FROM ". $this->table." LIMIT 0");
         
         
 
@@ -269,13 +275,17 @@ class Imports extends Model
         $lead_import_id['source'] = $this->_createLeadSourceName($data);
         $leadsource = LeadSource::create($lead_import_id);
        
-        if ($data['serviceline']) {
+        if (isset($data['serviceline'])) {
             $leadsource->servicelines()->sync($data['serviceline']);
         }
         
         return $leadsource->id;
     }
-
+    private function _addUserId()
+    {
+        $query = "update ". $this->tempTable . " set user_id =" . auth()->user()->id;
+        return $this->_executeQuery($query); 
+    }
     private function _createLeadSourceName($data)
     {
         if (isset($data['company'])) {
@@ -297,7 +307,7 @@ class Imports extends Model
     private function _copyTempToBaseTable()
     {
         /*
-        $contacts = \DB::table($this->temptable)->get()->map(
+        $contacts = \DB::table($this->tempTable)->get()->map(
             function ($item) {
                 return [
                     'address_id'=>$item->address_id,
@@ -315,14 +325,14 @@ class Imports extends Model
         );
         */
   
-        $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id,position, company_id";
+        $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id, user_id, position";
         if ($this->table !== 'usersimport') {
             $skip = ["branch_id"];
             $this->fields = implode(",", array_diff(explode(",", $this->fields), $this->contactFields, $skip));
         }
-        
+       
         // Copy addresses over to base table
-        $query ="INSERT IGNORE INTO `".$this->table."` (import_ref,".$this->fields.") SELECT id,".$this->fields." FROM `".$this->temptable."`";
+        $query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT id,".$this->fields." FROM `".$this->tempTable."`";
         
         return $this->_executeQuery($query);
     }
@@ -337,7 +347,7 @@ class Imports extends Model
     {
         
 
-        $query ="update " . $this->temptable. ",". $this->table . " set " . $this->temptable.".address_id = ".$this->table.".id where ".$this->table.".import_ref = ".$this->temptable.".id and ". $this->table . ".lead_source_id = '".$leadsource_id."'";
+        $query ="update " . $this->tempTable. ",". $this->table . " set " . $this->tempTable.".address_id = ".$this->table.".id where ".$this->table.".import_ref = ".$this->tempTable.".id and ". $this->table . ".lead_source_id = '".$leadsource_id."'";
        
         return $this->_executeQuery($query);
     }
@@ -349,7 +359,7 @@ class Imports extends Model
     private function _copyContactsToContactsTable()
     {
         
-        $contacts = \DB::table($this->temptable)->get()->map(
+        $contacts = \DB::table($this->tempTable)->get()->map(
             function ($item) {
                 return [
                     'address_id'=>$item->address_id,
@@ -401,12 +411,13 @@ class Imports extends Model
     //
     private function _dropTempTable()
     {
-        //return $this->_executeQuery("DROP TABLE ".$this->temptable);
+        //return $this->_executeQuery("DROP TABLE ".$this->tempTable);
     }
 
     private function _truncateTempTable()
     {
-        return $this->_executeQuery("TRUNCATE TABLE ".$this->temptable);
+       
+        return $this->_executeQuery("TRUNCATE TABLE ".$this->tempTable);
     }
     /**
      * [_executeQuery description]

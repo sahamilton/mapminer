@@ -678,7 +678,7 @@ select
 select 
     a.id,
     b.id,
-    st_distance_sphere(a.position, b.position)  * 0.00062137119 dist 
+    st_distance_sphere(a.position, b.position, 25)  * 0.00062137119 as dist 
 from addresses a
 left join address_branch on a.id = address_branch.address_id
 inner join branches b
@@ -743,8 +743,8 @@ $data= User::from('User as u')
 select addresses.*
 FROM addresses
    INNER JOIN (SELECT 
-              addresses.id as id,
-               st_distance_sphere(a.position, b.position)  * 0.00062137119 dist,
+              a.id as id,
+               st_distance_sphere(a.position, b.position)  * 0.00062137119 as dist,
 
                FROM   addresses a, branches b, address_branch
                where addresses.id = address_branch.address_id
@@ -1133,3 +1133,53 @@ from persons, branch_person
 where reports_to = 1931
 and persons.id = branch_person.person_id
 and role_id = 9
+
+/********************************************************************
+/********* Find closest address to contact
+/********************************************************************
+update contacts_import t1
+join(
+select
+    a.id as contact, b.id as address_id
+FROM
+    contacts_import a
+
+INNER JOIN addresses b ON
+    b.id =(
+    SELECT
+        b1.id
+    FROM
+        addresses b1
+    WHERE
+        ST_DISTANCE_SPHERE(a.position, b1.position, 250) < 1
+        and a.company_id = b1.company_id 
+    ORDER BY
+        ST_DISTANCE_SPHERE(a.position, b1.position)
+    LIMIT 1
+)
+WHERE
+    a.company_id = b.company_id ) t2
+    set t1.address_id = t2.address_id
+    where t1.id = t2.contact
+ 
+
+ $contacts = App\ContactImport::query()
+->get();
+foreach ($contacts as $contact) {
+  
+  if ($location = App\Address::query()->where('company_id', $contact->company_id)->nearby($contact, .01, 1)->first()) {
+    
+    $contact->update(['address_id' =>$location->id]);
+    
+  }
+  
+}
+
+$contacts = App\ContactImport::query()
+  ->distinct('street', 'city', 'state', 'zip')
+  ->select('company_id', 'businessname', 'street', 'city', 'state', 'zip', 'position')
+  ->whereNotNull('company_id')
+  ->whereNull('address_id')
+->get()->toArray();
+App\Address::insert($contacts);
+App\Address:: whereNull('created_at')->update(['created_at'=>now()]);   

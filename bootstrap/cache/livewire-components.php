@@ -9,6 +9,7 @@
   'campaign-table' => 'App\\Http\\Livewire\\CampaignTable',
   'company-location-table' => 'App\\Http\\Livewire\\CompanyLocationTable',
   'company-table' => 'App\\Http\\Livewire\\CompanyTable',
+  'contacts-import' => 'App\\Http\\Livewire\\ContactsImport',
   'dashboard-table' => 'App\\Http\\Livewire\\DashboardTable',
   'documents-table' => 'App\\Http\\Livewire\\DocumentsTable',
   'feedback-table' => 'App\\Http\\Livewire\\FeedbackTable',

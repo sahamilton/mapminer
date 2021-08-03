@@ -35,7 +35,17 @@ use Illuminate\Http\Request;
         Route::get('companies/download', ['as'=>'allcompanies.export', 'uses'=>'CompaniesController@exportAccounts']);
         
         Route::get('company/{companyId}/export', ['as'=>'company.export', 'uses'=>'WatchController@companyexport']);
-        
+       
+        // Contacts
+        // 
+        Route::get('contacts/import', ['as'=>'contacts.importfile', 'uses'=>'Imports\ContactsImportController@getFile']);
+        Route::post('contacts/import', ['as'=>'contacts.import', 'uses'=>'Imports\ContactsImportController@import']);
+        Route::post('/contacts/mapfields', ['as'=>'contacts.mapfields', 'uses'=>'Imports\ContactsImportController@mapfields']);
+        Route::get('contacts/postimport', ['as'=>'contacts.postimport', 'uses'=>'Imports\ContactsImportController@postImport']);
+        Route::get('contacts/createcompany', ['as'=>'contacts.createcompany', 'uses'=>'Imports\ContactsImportController@createMissingCompanies']);
+        Route::get('contacts/createleads', ['as'=>'contacts.createleads', 'uses'=>'Imports\ContactsImportController@createLeads']);
+        Route::post('contacts/importcontacts', ['as'=>'contacts.importcontacts', 'uses'=>'Imports\ContactsImportController@importContacts']);
+
         //   Order Import
         Route::get('orderimport/flush', ['as'=>'orderimport.flush', 'uses'=>'Imports\OrderImportController@flush']);
         Route::get('orderimport/finalize', ['as'=>'orderimport.finalize', 'uses'=>'Imports\OrderImportController@finalize']);

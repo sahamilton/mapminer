@@ -76,7 +76,7 @@ use Illuminate\Http\Request;
         Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
         Route::resource('user/importcleanse', 'Imports\UsersImportController');
 
-
+        
 
         Route::get('users/newusers', ['as'=>'import.newusers', 'uses'=>'Imports\UsersImportController@newUsers']);
         Route::post('users/createnewusers', ['as'=>'import.createnewusers', 'uses'=>'Imports\UsersImportController@createNewUsers']);
