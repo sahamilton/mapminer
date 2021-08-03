@@ -105,18 +105,14 @@ class ContactsImportController extends ImportController
 
     public function importContacts()
     {
-        $contacts = $this->import->query()
-            ->select('fullname', 'firstname', 'lastname', 'email', 'title', 'contactphone', 'address_id')
-            ->whereNotNull('address_id')
-            ->get();
+        
 
-        ImportContactsJob::queue($contacts, auth()->user());
-        /*$contacts = $this->import->query()
+        ImportContactsJob::dispatch(auth()->user());
+        $contacts = $this->import->query()
             ->whereNotNull('address_id')
-            ->pluck('id')
-            ->toArray();
-        Contact::delete($contacts);*/
-        return redirect()->route('contacts.postimport')->withSuccess(count($contacts) . " contacts imported");
+            ->count();
+        //Contact::delete($contacts);*/
+        return redirect()->route('contacts.postimport')->withSuccess($contacts . " contacts imported");
     }
 
 

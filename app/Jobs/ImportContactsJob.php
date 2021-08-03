@@ -2,27 +2,30 @@
 
 namespace App\Jobs;
 
+use App\ContactImport;
 use App\Contact;
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Eloquent\Collection;
 
 class ImportContactsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $contacts;
+    
     public $user;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Collection $contacts, User $user)
+    public function __construct(User $user)
     {
-        $this->contacts = $contacts;
+       
         $this->user = $user;
     }
 
@@ -33,10 +36,17 @@ class ImportContactsJob implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->contacts as $contact) {
+        $contacts = ContactImport::query()
+            ->select('fullname', 'firstname', 'lastname', 'email', 'title', 'contactphone', 'address_id')
+            ->whereNotNull('address_id')
+            ->get()
+            ->toArray();
+        foreach ($contacts as $contact) {
+            
             $inserts[] = array_merge($contact, ['created_at'=>now(), 'user_id'=> $this->user->id]);
+           
         }
-
+       
         Contact::insert($inserts);
     }
 }
