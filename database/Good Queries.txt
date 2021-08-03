@@ -1182,4 +1182,4 @@ $contacts = App\ContactImport::query()
   ->whereNull('address_id')
 ->get()->toArray();
 App\Address::insert($contacts);
-App\Address:: whereNull('created_at')->update(['created_at'=>now()]);   
+App\Address::whereNull('created_at')->update(['created_at'=>now()]);   

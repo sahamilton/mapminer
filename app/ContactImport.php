@@ -21,6 +21,7 @@ class ContactImport extends Imports
                 'zip',
                 'lat',
                 'lng',
+                'company_id'
             ];
     public $fillable = [
             'address_id',
@@ -35,10 +36,12 @@ class ContactImport extends Imports
     {
         return $this->belongsTo(Address::class);
     }
+
     public function company() 
     {
         return $this->belongsTo(Company::class);
     }
+
     public function scopeSearch($query, $search)
     {
         return $query->where('firstname', 'like', "%{$search}%")

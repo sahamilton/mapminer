@@ -6,6 +6,7 @@
   'branch-locations-table' => 'App\\Http\\Livewire\\BranchLocationsTable',
   'branch-opportunity-table' => 'App\\Http\\Livewire\\BranchOpportunityTable',
   'branch-table' => 'App\\Http\\Livewire\\BranchTable',
+  'campaign-form' => 'App\\Http\\Livewire\\CampaignForm',
   'campaign-table' => 'App\\Http\\Livewire\\CampaignTable',
   'company-location-table' => 'App\\Http\\Livewire\\CompanyLocationTable',
   'company-table' => 'App\\Http\\Livewire\\CompanyTable',

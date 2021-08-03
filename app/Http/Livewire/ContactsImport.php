@@ -16,6 +16,7 @@ class ContactsImport extends Component
     public $search ='';
     public $status = 'All';
     public $company = 'All';
+    public $validate = false;
     public $paginationTheme = 'bootstrap';
 
 
@@ -45,40 +46,63 @@ class ContactsImport extends Component
         return view(
             'livewire.imports.contacts-import',
             [
-                'contacts'=>ContactImport::query()
-                    ->with('address.assignedToBranch')
-                    ->when(
-                        $this->status != 'All', function ($q) {
-                            $q->when(
-                                $this->status === 'matched', function ($q) {
-                                    $q->whereNotNull('address_id');
-                                }, function ($q) {
-                                    $q->whereNull('address_id');
-                                }
-                            );
-                        }
-                    )
-                    ->when(
-                        $this->company != 'All', function ($q) {
-                            $q->when(
-                                $this->company==='none', function ($q) {
-                                    $q->whereNull('company_id');
-                                }, function ($q) {
-                                     $q->where('company_id', $this->company);
-                                }
-                            );
-                        }
-                    ) 
-                    ->search($this->search)
-                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                'contacts'=>$this->_query()
                     ->paginate($this->perPage),
-
-                    'companies'=>ContactImport::join('companies', 'company_id', 'companies.id')
-                        ->select('companyname', 'company_id')
-                        ->pluck('companyname', 'company_id')
-                        ->toArray(),
-
+                'statuses' => ['All', 'matched', 'unmatched', 'assigned'],
+                'companies'=>ContactImport::join('companies', 'company_id', 'companies.id')
+                    ->select('companyname', 'company_id')
+                    ->orderBy('companyname')
+                    ->pluck('companyname', 'company_id')
+                    ->toArray(),
+                'count'=>$this->_query()
+                    ->distinct(['street', 'company_id', 'city', 'state'])->count(),
                 ]
         );
+    }
+
+    private function _query()
+    {
+        return ContactImport::query()
+            ->with('address.assignedToBranch', 'company')
+            ->when(
+                $this->status != 'All', function ($q) {
+                    $q->when(
+                        $this->status === 'assigned', function ($q) {
+                            $q->whereHas(
+                                'address', function ($q) {
+                                    $q->has('assignedToBranch');
+                                }
+                            );
+                        }
+                    )->when(
+                        $this->status === 'matched', function ($q) {
+                            $q->whereNotNull('address_id');
+                        }
+                    )->when(
+                        $this->status === 'unmatched', function ($q) {
+                            $q->whereNull('address_id');
+                        }
+                    );
+                }
+            )
+            ->when(
+                $this->validate, function ($q) {
+                    $q->whereDoesntHave('company');
+                }
+            )
+            ->when(
+                $this->company != 'All', function ($q) {
+                    $q->when(
+                        $this->company==='none', function ($q) {
+                            $q->whereNull('company_id');
+                        }, function ($q) {
+                             $q->where('company_id', $this->company);
+                        }
+                    );
+                }
+            ) 
+            ->search($this->search)
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
+
     }
 }

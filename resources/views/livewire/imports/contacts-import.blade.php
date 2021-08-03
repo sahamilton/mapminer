@@ -1,5 +1,7 @@
 <div>
-    <h4>{{ucwords($status)}} Contacts Import</h4>
+    <h2>{{ucwords($status)}} Contacts Import</h2>
+    <h4>{{$count}} Unique addresses</h4>
+    <p><a href="{{route('contacts.importfile')}}">Start a new contacts import</a></p>
     <div class="row mb-4 ">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
@@ -12,10 +14,9 @@
             <label for="status">Status&nbsp;</label>
             <select wire:model="status"  
                 class="form-control">>
-               
-                    <option value="All">All</option>
-                    <option value="matched">Matched</option>
-                    <option value="unmatched">Unmatched</option>
+                    @foreach ($statuses as $key)
+                    <option value={{$key}}>{{ucwords($key)}}</option>
+                    @endforeach
                 
             </select>
             <label for="Company">Company&nbsp;</label>
@@ -85,6 +86,11 @@
                     @include('includes._sort-icon', ['field' => 'title'])
                 </a>
             </th>
+            @if($status == 'assigned')
+                <th>
+                    Assigned To Branch
+                </th>
+            @endif
             
         </thead>
         <tbody>
@@ -104,7 +110,15 @@
                 <td>{{$contact->state}}</td>
                 <td>{{$contact->fullName()}}</td>
                 <td>{{$contact->title}}</td>
-
+                @if($status == 'assigned')
+                <td>
+                    
+                    @foreach ($contact->address->assignedToBranch as $branch)
+                        {{$branch->branchname}}
+                        {{! $loop->last ? ", " : ''}}
+                    @endforeach
+                </td>
+                @endif
             </tr>
             @endforeach
         </tbody>

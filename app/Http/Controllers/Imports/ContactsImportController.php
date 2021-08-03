@@ -85,6 +85,7 @@ class ContactsImportController extends ImportController
     public function createLeads()
     {
         $contacts = $this->import->query()
+            ->whereHas('company')
             ->distinct('street', 'city', 'state', 'zip')
             ->select('company_id', 'businessname', 'street', 'city', 'state', 'zip', 'position', 'user_id', 'lead_source_id')
             ->whereNotNull('company_id')
@@ -102,7 +103,7 @@ class ContactsImportController extends ImportController
 
 
     }
-
+    
     public function importContacts()
     {
         
@@ -110,9 +111,11 @@ class ContactsImportController extends ImportController
         ImportContactsJob::dispatch(auth()->user());
         $contacts = $this->import->query()
             ->whereNotNull('address_id')
-            ->count();
-        //Contact::delete($contacts);*/
-        return redirect()->route('contacts.postimport')->withSuccess($contacts . " contacts imported");
+            ->pluck('id')
+            ->toarray();
+
+        $this->import->destroy($contacts);
+        return redirect()->route('contacts.postimport')->withSuccess(count($contacts) . " contacts imported");
     }
 
 
