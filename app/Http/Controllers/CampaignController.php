@@ -81,19 +81,13 @@ class CampaignController extends Controller
     
     /**
      * [create description]
-     * 
+     *
      * @return [type] [description]
      */
     public function create()
     {
-        
 
-        $verticals = $this->vertical->industrysegments();
-        $companies = $this->company
-            ->whereIn('accounttypes_id', [1,4])
-            ->whereHas('locations')
-            ->orderBy('companyname')
-            ->get();
+
         $servicelines = $this->serviceline->all();
         $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
         // refactor to Person model
@@ -104,7 +98,7 @@ class CampaignController extends Controller
             ->orderBy('firstname')->get();
         
        
-        return response()->view('campaigns.create', compact('verticals', 'companies', 'managers', 'servicelines'));
+        return response()->view('campaigns.create', compact('managers', 'servicelines'));
     }
     /**
      * [store description]
@@ -115,7 +109,7 @@ class CampaignController extends Controller
      */
     public function store(CampaignFormRequest $request)
     {
-       
+    
         $data = $this->_transformRequest($request);
         $servicelines = request('serviceline');
         $manager = Person::findOrFail($data['manager_id']);
@@ -126,10 +120,7 @@ class CampaignController extends Controller
         $campaign->branches()->sync($branches);
         $campaign->servicelines()->sync($data['serviceline']); 
         
-        if (isset($data['vertical'])) {
-            $campaign->vertical()->sync($data['vertical']);
-           
-        }
+        
         //$data['branches'] = $this->_getCampaignData($campaign);
         //$campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
         $campaign->companies()->sync($data['companies']);
@@ -148,11 +139,11 @@ class CampaignController extends Controller
         if ($campaign->status == 'planned') {
 
            
-            $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
+            /*$campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
             
-            $data = $this->_getCampaignSummaryData($campaign);
+            $data = $this->_getCampaignSummaryData($campaign);*/
             
-            return response()->view('campaigns.show', compact('campaign', 'data'));
+            return response()->view('campaigns.show', compact('campaign'));
         }
        
         return redirect()->route('campaigns.track', $campaign->id);
@@ -196,7 +187,7 @@ class CampaignController extends Controller
     {
         
         $data = $this->_transformRequest($request);
-        
+      
         $campaign->update($data);
 
         $servicelines = $this->_getCampaignServicelines($campaign);
@@ -208,10 +199,8 @@ class CampaignController extends Controller
 
         $campaign->servicelines()->sync($data['serviceline']); 
   
-        if (isset($data['vertical'])) {
-            $campaign->vertical()->sync($data['vertical']);
-        }
-       
+        
+        
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
     }
@@ -492,7 +481,7 @@ class CampaignController extends Controller
         $data = request()->except(['_token']);
         $data['datefrom'] = Carbon::parse($data['datefrom'])->startOfDay();
         $data['dateto'] = Carbon::parse($data['dateto'])->endOfDay();
-        if (request()->has('vertical')) {
+        if (request()->has('vertical') && ! request('companies')) {
             $data['companies'] = $this->_getCompaniesInVertical($request);
         } else {
             $data['companies'] = request('companies');

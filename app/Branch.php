@@ -587,7 +587,7 @@ class Branch extends Model implements HasPresenter
      */
     public function currentcampaigns()
     {
-        return $this->belongsToMany(Campaign::class)->where('datefrom', '<=',now()->startOfDay())->where('dateto', '>=', now()->endOfDay());
+        return $this->belongsToMany(Campaign::class)->where('datefrom', '<=', now()->startOfDay())->where('dateto', '>=', now()->endOfDay());
     }
 
     /**
@@ -617,6 +617,22 @@ class Branch extends Model implements HasPresenter
                 }
             ]
         );
+           
+    }
+
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function scopeWithCountCampaignLeads($query, Campaign $campaign)
+    {
+        return  $query->withCount(
+            'campaignLeads', function ($q1) use ($campaign) {
+                $q1->where('campaign_id', $campaign->id);
+            }
+        );
+                
            
     }
 

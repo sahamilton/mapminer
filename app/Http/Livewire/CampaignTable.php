@@ -47,6 +47,7 @@ class CampaignTable extends Component
                         }
                     )
                     ->withCount('branches')
+                    ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                

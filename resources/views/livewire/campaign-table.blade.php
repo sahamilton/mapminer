@@ -28,7 +28,14 @@
         </div>
           
         @include('campaigns.partials._list')
+        <div class="row">
+            <div class="col">
+                {{ $campaigns->links() }}
+            </div>
 
+            <div class="col text-right text-muted">
+                Showing {{ $campaigns->firstItem() }} to {{ $campaigns->lastItem() }} out of {{ $campaigns->total() }} results
+            </div>
         </div>
     </div>
 </div>

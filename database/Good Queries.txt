@@ -1183,3 +1183,25 @@ $contacts = App\ContactImport::query()
 ->get()->toArray();
 App\Address::insert($contacts);
 App\Address::whereNull('created_at')->update(['created_at'=>now()]);   
+
+/*************************************************************************
+get unassigned campaign leads for branches in campaign
+select
+    b.branchname, a.id as address_id
+FROM
+    branches b
+
+INNER JOIN addresses a ON
+    a.id =(
+    SELECT
+        b1.id
+    FROM
+        addresses b1
+    WHERE
+        ST_DISTANCE_SPHERE(a.position, b1.position, b.radius * 1609.344) < 25
+        and b1.company_id in(1369,1370,1371, 1372)
+
+    ORDER BY
+        ST_DISTANCE_SPHERE(a.position, b1.position)
+    LIMIT 1
+) where b.id in (1069, 1505, 1506)

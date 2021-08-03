@@ -85,7 +85,10 @@ class SearchFilter extends NodeModel
             ->pluck('filter', 'id')
             ->toArray();
     }
-
+    public function scopeActive($query)
+    {
+        return $query->where('inactive', 0);
+    } 
     /**
      * [vertical description].
      *
@@ -115,7 +118,10 @@ class SearchFilter extends NodeModel
 
             ->where('inactive', '=', 0);
     }
-
+    public function scopeTable($query, $table)
+    {
+        return $query->where('searchtable', $table);
+    }
     /**
      * [companies description].
      *
