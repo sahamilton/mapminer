@@ -11,6 +11,7 @@ use App\Campaign;
 use App\Company;
 use App\Branch;
 use App\User;
+use App\AddressBranch;
 use App\Jobs\SendCampaignLaunched;
 
 class AssignCampaignLeadsJob implements ShouldQueue
@@ -43,19 +44,25 @@ class AssignCampaignLeadsJob implements ShouldQueue
         $addresses = $addresses->flatten()->pluck('id')->toArray();
 
         $assignable = $this->campaign->getAssignableLocationsofCampaign($addresses, $count = false);
-        
+        $foreach($assignable as $assign) {
+
+            $newleads[]= array_merge($assign, ['created_at'=>now(), 'status'=2]);
+        }
+        AddressBranch::insert($newleads);
+
+        // need to add status, created at,
         // loop through assignable and id branch and address
         // return array branch[id]=>[address]
         // [branch_id][$address->id => ['status_id' => 1 ],$address->id => ['status' => 1 ] ]
         // select each branch
         // sync 
 
-        foreach ($this->_getBranchAddresses($assignable) as $branch_id=>$addresses) {
+        /*foreach ($this->_getBranchAddresses($assignable) as $branch_id=>$addresses) {
             $branch = Branch::findOrFail($branch_id);
             $branch_ids[] = $branch_id;
            
             $branch->leads()->attach($addresses);
-        }
+        }*/ 
         
     }
 

@@ -187,8 +187,8 @@ class Campaign extends Model
             branchname, companyname";
         } else {
             $query = "select 
-            a.id,
-            b.id as branch ";
+            a.id as address_id,
+            b.id as branch_id ";
         }
         
 
