@@ -16,6 +16,7 @@
 			<td>segment</td>
 			<td>lat</td>
 			<td>lng</td>
+			<td>Assigned to Branch(es)</td>
 
 		</tr>
 		@foreach($company->locations as $location)
@@ -35,6 +36,10 @@
 			<td>{{$location->segment}}</td>
 			<td>{{$location->lat}}</td>
 			<td>{{$location->lng}}</td>
+			<td>
+				{{implode(" | ", $location->assignedtoBranch->pluck('branchname')->toArray())}}
+
+			</td>
 			</tr>
 		@endforeach
 	</tbody>

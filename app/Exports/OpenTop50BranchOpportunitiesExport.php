@@ -31,16 +31,14 @@ class OpenTop50BranchOpportunitiesExport implements FromView
      */
     public function view(): View
     {
-        $branches = Branch::agingOpportunities($this->period);
-
-        if ($this->branch) {
-            $branches = $branches->whereIn('id', $this->branch);
-        }
-        $branches = $branches->with('manager')
+        $branches = Branch::agingOpportunities($this->period)
+        ->when(
+            $this->branch, function ($q) {
+                $q->whereIn('id', $this->branch);
+            }
+        )->with('manager.reportsTo')
             ->get();
 
-        $period = $this->period;
-
-        return view('reports.agingOpportunities', compact('branches', 'period'));
+        return view('reports.agingOpportunities', ['branches'=>$branches, 'period'=>$this->period]);
     }
 }

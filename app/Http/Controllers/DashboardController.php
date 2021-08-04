@@ -15,6 +15,33 @@ class DashboardController extends Controller
     public $person;
     public $branch;
     public $user;
+    public $reports;
+    public $leadFields = [
+            'leads',
+            'active_leads',
+            'newbranchleads'
+        ];
+    public $opportunityFields =[
+            "lost_opportunities",
+            "open_opportunities",
+            "top25_opportunities",
+            "won_opportunities",
+            "active_value",
+            "lost_value",
+            "won_value",
+        ];
+    public $activityFields = [
+
+            '4'=>'sales_appointment',
+            '5'=>'stop_by',
+            '7'=>'proposal',
+            '10'=>'site_visit',
+            '13'=>'log_a_call',
+            '14'=>'in_person'
+
+
+
+        ];
 
     /**
      * [__construct description]
@@ -41,6 +68,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
+       
         $myTeam = auth()->user()->person->myTeam()->get()->pluck('user_id')->toArray();
        
         if (! session('manager') or ! in_array(session('manager'), $myTeam)) {
@@ -189,39 +217,28 @@ class DashboardController extends Controller
     protected function getSummaryBranchData() 
     {
        
-        
-        $leadFields = [
-            'leads',
-            'active_leads'
-        ];
-        $opportunityFields =[
-            "lost_opportunities",
-            "open_opportunities",
-            "top25_opportunities",
-            "won_opportunities",
-            "active_value",
-            "lost_value",
-            "won_value",
-        ];
-        $activityFields = [
-
-            '4'=>'sales_appointment',
-            '5'=>'stop_by',
-            '7'=>'proposal',
-            '10'=>'site_visit',
-            '13'=>'log_a_call',
-            '14'=>'in_person'
-
-
-
-        ];
-
         return $this->branch->select('id', 'branchname')
-            ->SummaryLeadStats($this->period, $leadFields)
-            ->SummaryOpportunities($this->period, $opportunityFields)
-            ->SummaryActivities($this->period, $activityFields)
+            ->SummaryLeadStats($this->period, $this->leadFields)
+            ->SummaryOpportunities($this->period, $this->opportunityFields)
+            ->SummaryActivities($this->period, $this->activityFields)
             ->with('manager', 'manager.reportsTo')
             ->whereIn('id', $this->myBranches)
+            ->get(); 
+
+    }
+    /**
+     * [_getSummaryBranchData description]
+     * 
+     * @return [type]           [description]
+     */
+    protected function getSummaryTeamData() 
+    {
+       
+        return $this->person->selectRaw('persons.id, concat_ws(" ",firstname, lastname) as manager, lft, rgt')
+            
+            ->SummaryActivities($this->period, $this->activityFields)
+            
+            ->whereIn('user_id', $this->reports)
             ->get(); 
 
     }

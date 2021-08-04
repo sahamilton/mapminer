@@ -16,8 +16,8 @@
 			id="managerselect" 
 			name="manager" 
 			onchange="this.form.submit()">
-				<option>Select</option>
-					@foreach ($data['team']['team'] as $mgr)
+				<option>Select Manager</option>
+					@foreach ($data['team'] as $mgr)
 						<option value="{{$mgr->id}}">{{$mgr->fullName()}}</option>
 					@endforeach 
 			</select>

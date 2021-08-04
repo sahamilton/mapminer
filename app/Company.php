@@ -503,13 +503,99 @@ class Company extends NodeModel
                     ]
                 );
             }
-        )
-        ;
+        );
 
         
     }
 
+    public function scopeCompanyCampaignSummaryStats($query, Campaign $campaign, $fields = null)
+    {
+        
+        if (! $fields) {
+            $fields = $this->summaryFields;
+        }
+        $this->campaign = $campaign;
+        $this->fields = $fields;
+        $this->period = ['from'=>$campaign->datefrom, 'to'=>$campaign->dateto];
+        
+        return $query->when(
+            in_array('campaign_leads', $this->fields), function ($q) {
+                $q->withCount(
+                    [
+                        'locations as campaign_leads'=>function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            );
+                        }
+                    ]
+                );
+            }
+        )->when(
+            in_array('touched_leads', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'locations as touched_leads'=>function ($query) {
+                            $query->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            )->touchedLeads($this->period);
+                        }
+                    ]
+                );
+            }
+        )->when(
+            in_array('new_opportunities', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'opportunities as new_opportunities'=>function ($q1) {
+                
+                            $q1->newOpportunities($this->period);
+                                
+                        }
+                    ]
+                );
+            }
+        )
+        ->when(
+            in_array('open_opportunities', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'opportunities as open_opportunities'=>function ($q1) {
+                            $q1->open($this->period);
+                        }
+                    ]
+                );
+            }
+        )->when(
+            in_array('won_opportunities', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'opportunities as won_opportunities'=>function ($q1) {
+                            $q1->won($this->period);
+                        }
+                    ]
+                );
+            }
+        )->when(
+            in_array('won_value', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'opportunities as won_value'=>function ($query) {
+                
+                            $query->wonValue($this->period);
+                                
+                           
+                        }
+                    ]
+                );
+            }
+        );  
 
+
+    }
     public function scopeOpportunitySummary($query, $period, $branches, $fields = null)
     {
     

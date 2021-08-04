@@ -53,7 +53,7 @@ var leadsTypeChart = new Chart(ctopportunitiesvalue,
                   autoSkip:false,
                   beginAtZero: true ,  // minimum value will be 0.
             
-              callback: function(value) { return numberWithCommas(value); },
+                  callback: function(value) { "$" + return numberWithCommas(value); },
             }, 
             }],
         }, // scales

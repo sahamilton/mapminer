@@ -18,6 +18,7 @@ class Chart extends Model
      
         $chart= array();
         foreach ($data['team'] as $team) {
+
             if (isset($data['data'][$team->id]['activities'])) {
                 $chart[$team->postName()]=$data['data'][$team->id]['activities'];
             } else {
@@ -36,35 +37,54 @@ class Chart extends Model
      */
     public function getTeamActivityByTypeChart(array $data)
     {
+    
         $full = ActivityType::all()->pluck('activity', 'color')->toArray();
        
-        $team = $data['team']->filter(
-            function ($person) use ($data) { 
-                return in_array($person->id, array_keys($data['data']));
-            }
-        );
-           
         // Initialize
-        $labels = $team->map(
-            function ($person) {
-                return ['pid'=>$person->id,'name'=>$person->postName()];
-            }
-        );
-        $activitydata = collect($data['data'])->pluck('activitiestype'); 
         
-        $labels = implode("','", $labels->pluck('name')->toArray());
-        $chart['labels'] = $labels;
+        $chart['labels']= "'" . implode("','", $data['teamdata']->keys()->toArray()). "'";
         foreach ($full as $color=>$activity) {
             $chart['data'][$activity]['color']=$color;
-            $chart['data'][$activity]['labels']=$labels;
+            $chart['data'][$activity]['labels']=$chart['labels'];
             $type = str_replace(" ", "_", strtolower($activity));
-            $chart['data'][$activity]['data'] = implode(",", $activitydata->pluck($type)->toArray());
+            $chart['data'][$activity]['data'] =  implode(",", $data['teamdata']->pluck($type)->toArray());
         }
        
         return $chart;
         
     }
+    /**
+     * [getTeamActivityByTypeChart description]
+     * 
+     * @param array $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function getBranchesActivityByTypeChart(array $data)
+    {
 
+        $full = ActivityType::all()->pluck('activity', 'color')->toArray();
+        
+        
+        // Initialize
+        $labels = $data['branches']->map(
+            function ($branch) {
+                return ['id'=>$branch->id,'name'=>$branch->branchname];
+            }
+        );
+        
+
+        $chart['labels'] = "'" .  implode("','", $labels->pluck('name')->toArray())."'";
+        
+        foreach ($full as $color=>$activity) {
+            $chart['data'][$activity]['color']=$color;
+            $chart['data'][$activity]['labels']=$chart['labels'];
+            $type = str_replace(" ", "_", strtolower($activity));
+            $chart['data'][$activity]['data'] = implode(",", $data['branches']->pluck($type)->toArray());
+        }
+        return $chart;
+        
+    }
     private function _getActivityTypeColors()
     {
         $colors = ActivityType::select('activity','color')->get();
@@ -92,27 +112,17 @@ class Chart extends Model
         return $out;
 
     }
-    /**
-     * [getTeamPipelineChart description]
-     * 
-     * @param array $data [description]
-     * 
-     * @return [type]       [description]
-     */
-    public function getTeamPipelineChart(array $data)
+   
+    public function getBranchChart(array $data, $field)
     {
-      
-        $chart= array();
+        
+       
+        $chart['keys'] = "'" . implode("','", $data['branches']->pluck('branchname')->toArray())."'";
+        $chart['data'] = implode(",", $data['branches']->pluck($field, 'branchname')->toArray());
 
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id]['open'])) {
-                $chart[$team->postName()]=$data['data'][$team->id]['open'];
-            } else {
-                $chart[$team->postName()]=0;
-            }
-        }
-        return $this->_getChartData($chart);
+        return $chart;
     }
+
     /**
      * [getTeamTop25Chart description]
      * 
@@ -120,77 +130,18 @@ class Chart extends Model
      * 
      * @return [type]       [description]
      */
-    public function getTeamTop25Chart(array $data)
+    public function getTeamChart(array $data, $field)
     {
-      
-        $chart= array();
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id]['Top25'])) {
-                $chart[$team->postName()]=$data['data'][$team->id]['Top25'];
-            } else {
-                $chart[$team->postName()]=0;
-            }
-        }
-        return $this->_getChartData($chart);
+        
+        
+        $chart['data'] =  implode(",", $data['teamdata']->pluck($field)->toArray()); 
+        $chart['keys'] = "'" . implode("','", $data['teamdata']->keys()->toArray())."'";
+        
+        return $chart;
     }
-    /**
-     * [getWinRatioChart description]
-     * 
-     * @param array $data [description]
-     * 
-     * @return [type]       [description]
-     */
-    public function getWinRatioChart(array $data)
-    {
     
-        $chart= array();
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id])) {
-                $won = $data['data'][$team->id]['won'];
-                $lost = $data['data'][$team->id]['lost'];
-                $both = $won + $lost;
-                if($both > 0) {
-
-                    $chart[$team->postName()] 
-                        = ( $won / $both) * 100;
-                } else {
-                   $chart[$team->postName()] = 0; 
-                }
-            }
-            
-            /*if (isset($data['data'][$team->id]) 
-                && ($data['data'][$team->id]['won_opportunities'] + $data['data'][$team->id]['lost_opportunities'] > 0)
-            ) {
-                $chart[$team->postName()] 
-                    =  $data['data'][$team->id]->sum('won_opportunities')
-                        / ($data['data'][$team->id]['won_opportunities'] + $data['data'][$team->id]['lost_opportunities']) * 100;
-            } else {
-                
-            }*/
-        }
-       
-        return $this->_getChartData($chart);
-    }
-    /**
-     * [getOpenLeadsChart description]
-     * 
-     * @param array $data [description]
-     * 
-     * @return [type]       [description]
-     */
-    public function getOpenLeadsChart(array $data)
-    {
-        $chart= array();
-        foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id]['leads'])) {
-                $chart[$team->postName()]=$data['data'][$team->id]['leads'];
-            } else {
-                  $chart[$team->postName()]=0;
-            }
-
-        }
-        return $this->_getChartData($chart);
-    }
+   
+   
 
     /**
      * [_getChartData description]
@@ -213,8 +164,8 @@ class Chart extends Model
      * @param array $data [description]
      * 
      * @return [type]       [description]
-     */
-    public function getBranchActivityByTypeChart(Object $data)
+    */
+    public function getBranchActivityByDateTypeChart(Object $data)
     {
         $labels = $data->pluck('day')->unique()->toArray();
         sort($labels);
@@ -238,7 +189,7 @@ class Chart extends Model
             $chart[$activity->activity]['data'] = implode(",", $res[$activity->activity]['data']);
             $chart[$activity->activity]['labels'] = $labelstring;
         }
-        ray($chart);
+
         return $chart;
 
     }

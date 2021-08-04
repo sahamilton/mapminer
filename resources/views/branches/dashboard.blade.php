@@ -11,10 +11,10 @@
 	@foreach ($branch->manager as $manager)
 		<p><strong>Manager:</strong>{{$manager->fullName()}}</p>
 	@endforeach
-@if(isset($data['branches']))
+@if(isset($data['branches']) && $data['branches']->count() >1)
 	@include('branches.partials._branchdashboardselector')
 @endif
-@if($data['team']['team'])
+@if($data['team'])
 	@include('opportunities.partials._dashboardselect')
 @endif
 
@@ -36,14 +36,22 @@
 		<tbody>
 			<td class="text-center">
 				<a href="{{route('opportunity.index')}}">
-					{{$data['summary']->first()->open_opportunities }}</a></td>
-			<td class="text-center">{{$data['summary']->first()->top25_opportunities}}</td>
-			<td class="text-center">{{$data['summary']->first()->won_opportunities}}</td>
-			<td class="text-center">{{ $data['summary']->first()->lost_opportunities}}</td>
+					{{$data['teamdata']->first()['open_opportunities'] }}
+				</a>
+				</td>
+			<td class="text-center">{{$data['teamdata']->first()['top25_opportunities']}}
+			</td>
+			<td class="text-center">{{$data['teamdata']->first()['won_opportunities']}}
+			</td>
+			<td class="text-center">{{ $data['teamdata']->first()['lost_opportunities']}}
+			</td>
 			<td class="text-center">
-				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
+				<a href="{{route('branch.leads')}}">{{$data['teamdata']->first()['leads']}}
+				</a>
+			</td>
 			<td class="text-center">
-				<a href="{{route('activity.index')}}">{{$data['summary']->first()->activities_count}}</a></td>	
+				
+			</td>	
 		</tbody>
 	</table>
 </div>
@@ -70,7 +78,8 @@
 	<div class="col-sm-6 float-right" style="margin-top:10px">
 		<div class="card-header">
 			<h4>Activities</h4>
-		</div>@if(count($data['activitychart']) >0)
+
+		</div>@if(count($data['charts']['activitychart']) >0)
 		<div class="card-body">
 				  <canvas id="ctb" width="450" height="400" ></canvas>
 				 

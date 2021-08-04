@@ -9,11 +9,11 @@ var barChart = new Chart(ctw,
 	
     data:{
 
-      labels: [{!! $data['team']['winratiochart']['chart']['keys'] !!}],
+      labels: [{!! $data['charts']['winratiochart']['keys'] !!}],
 
       datasets:[{
       	label: 'Win Loss %',
-        data: [{!! $data['team']['winratiochart']['chart']['data'] !!}],
+        data: [{!! $data['charts']['winratiochart']['data'] !!}],
         backgroundColor: 'red'
       }]
       

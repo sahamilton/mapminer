@@ -678,7 +678,7 @@ select
 select 
     a.id,
     b.id,
-    st_distance_sphere(a.position, b.position)  * 0.00062137119 dist 
+    st_distance_sphere(a.position, b.position, 25)  * 0.00062137119 as dist 
 from addresses a
 left join address_branch on a.id = address_branch.address_id
 inner join branches b
@@ -743,8 +743,8 @@ $data= User::from('User as u')
 select addresses.*
 FROM addresses
    INNER JOIN (SELECT 
-              addresses.id as id,
-               st_distance_sphere(a.position, b.position)  * 0.00062137119 dist,
+              a.id as id,
+               st_distance_sphere(a.position, b.position)  * 0.00062137119 as dist,
 
                FROM   addresses a, branches b, address_branch
                where addresses.id = address_branch.address_id
@@ -1113,3 +1113,108 @@ where addresses.id = address_branch.address_id
 and addresses.lead_source_id = leadsources.id
 and state in ('AB','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT')
 and lat < 48
+
+/*****************************************************************
+Reconciling MM's dashboard
+/*****************************************************************
+SELECT 
+
+count(activities.id), concat_ws(' ',firstname, lastname) as manager, branch_id, activity
+from activities, persons, activity_type
+where activity_date between '2021-07-01' and '2021-07-31 23:59'
+and completed = 1
+and activitytype_id = activity_type.id
+and activities.user_id = persons.user_id
+and (persons.reports_to = 1931 or persons.id = 1931)
+group by manager, branch_id, activity
+
+select concat_ws(' ', firstname, lastname), branch_id
+from persons, branch_person
+where reports_to = 1931
+and persons.id = branch_person.person_id
+and role_id = 9
+
+/********************************************************************
+/********* Find closest address to contact
+/********************************************************************
+update contacts_import t1
+join(
+select
+    a.id as contact, b.id as address_id
+FROM
+    contacts_import a
+
+INNER JOIN addresses b ON
+    b.id =(
+    SELECT
+        b1.id
+    FROM
+        addresses b1
+    WHERE
+        ST_DISTANCE_SPHERE(a.position, b1.position, 250) < 1
+        and a.company_id = b1.company_id 
+    ORDER BY
+        ST_DISTANCE_SPHERE(a.position, b1.position)
+    LIMIT 1
+)
+WHERE
+    a.company_id = b.company_id ) t2
+    set t1.address_id = t2.address_id
+    where t1.id = t2.contact
+ 
+
+ $contacts = App\ContactImport::query()
+->get();
+foreach ($contacts as $contact) {
+  
+  if ($location = App\Address::query()->where('company_id', $contact->company_id)->nearby($contact, .01, 1)->first()) {
+    
+    $contact->update(['address_id' =>$location->id]);
+    
+  }
+  
+}
+
+$contacts = App\ContactImport::query()
+  ->distinct('street', 'city', 'state', 'zip')
+  ->select('company_id', 'businessname', 'street', 'city', 'state', 'zip', 'position')
+  ->whereNotNull('company_id')
+  ->whereNull('address_id')
+->get()->toArray();
+App\Address::insert($contacts);
+App\Address::whereNull('created_at')->update(['created_at'=>now()]);   
+
+/*************************************************************************
+get unassigned campaign leads for branches in campaign
+select
+    b.branchname, a.id as address_id
+FROM
+    branches b
+
+INNER JOIN addresses a ON
+    a.id =(
+    SELECT
+        b1.id
+    FROM
+        addresses b1
+    WHERE
+        ST_DISTANCE_SPHERE(a.position, b1.position, b.radius * 1609.344) < 25
+        and b1.company_id in(1369,1370,1371, 1372)
+
+    ORDER BY
+        ST_DISTANCE_SPHERE(a.position, b1.position)
+    LIMIT 1
+) where b.id in (1069, 1505, 1506)
+/**********************************************************************
+Tinker: Get campaign assignable locations 
+/**********************************************************************
+$address = new App\Address;
+$branches = $campaign->branches;
+$data =App\Company::with('unassigned')->whereIn('id', $campaign->companies->pluck('id')->toArray())->get();
+$addresses = $data->map(
+            function ($company) {
+                return $company->unassigned;
+            }
+        )->flatten()->pluck('id')->toArray();
+
+$campaign->getCompanyAssignableLocationsofCampaign($addresses, true);

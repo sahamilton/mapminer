@@ -17,7 +17,7 @@ use Excel;
 use App\Http\Requests\BranchFormRequest;
 use App\Http\Requests\BranchReassignFormRequest;
 use App\Http\Requests\BranchImportFormRequest;
-use App\Exports\BranchTeamExport;
+use App\Exports\BranchExport;
 
 class BranchesController extends BaseController
 {
@@ -675,27 +675,16 @@ class BranchesController extends BaseController
         );
         
     }
-    /**
-     * [exportTeam description]
-     * 
-     * @return [type] [description]
-     */
-    public function exportTeam() 
-    {
-    
-        return Excel::download(new BranchExport(), 'BranchTeam.csv');
-    }
-    
-     
+        
     /**
      * [export description]
      * 
      * @return [type] [description]
      */
-    public function export() 
+    public function export(array $branches = null) 
     {
-    
-        return Excel::download(new BranchTeamExport(), 'Branch.csv');
+
+        return Excel::download(new BranchExport(), 'Branch.csv');
     }
     /**
      * [geoCodeBranches description]

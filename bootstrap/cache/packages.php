@@ -194,6 +194,13 @@
       'Yaml' => 'PragmaRX\\Yaml\\Package\\Facade',
     ),
   ),
+  'protonemedia/laravel-form-components' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'ProtoneMedia\\LaravelFormComponents\\Support\\ServiceProvider',
+    ),
+  ),
   'spatie/laravel-fractal' => 
   array (
     'providers' => 
@@ -217,6 +224,13 @@
     'providers' => 
     array (
       0 => 'Spatie\\UptimeMonitor\\UptimeMonitorServiceProvider',
+    ),
+  ),
+  'stechstudio/laravel-ssh-tunnel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'STS\\Tunneler\\TunnelerServiceProvider',
     ),
   ),
   'toin0u/geocoder-laravel' => 

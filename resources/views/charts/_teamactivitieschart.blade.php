@@ -9,11 +9,11 @@ var barChart = new Chart(ctb,
 	
     data:{
 
-      labels: [{!! $data['team']['activities']['chart']['keys'] !!}],
+      labels: [{!! $data['team']['activities']['keys'] !!}],
 
       datasets:[{
       	label: 'Activities',
-        data: [{!! $data['team']['activities']['chart']['data'] !!}],
+        data: [{!! $data['team']['activities']['data'] !!}],
         backgroundColor: 'red'
       }]
       

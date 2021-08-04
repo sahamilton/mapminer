@@ -6,6 +6,7 @@ use App\Http\Requests\SearchFiltersFormRequest;
 use App\SearchFilter;
 use Excel;
 use Illuminate\Http\Request;
+use App\Exports\IndustryAnalysisExport;
 
 class SearchFiltersController extends BaseController
 {
@@ -142,7 +143,7 @@ class SearchFiltersController extends BaseController
      */
     public function filterAnalysis($id = null)
     {
-        $verticals = $this->getVerticalAnalysis($id);
+        $verticals = $this->_getVerticalAnalysis($id);
 
         return response()->view('filters.analysis', compact('verticals'));
     }
@@ -154,37 +155,34 @@ class SearchFiltersController extends BaseController
      *
      * @return [type]     [description]
      */
-    public function export($id = null)
+    public function export($industry = null)
     {
-        $verticals = $this->getVerticalAnalysis();
-        Excel::download(
-            'Verticals', function ($excel) {
-                $excel->sheet(
-                    'Industries', function ($sheet) {
-                        $verticals = $this->getVerticalAnalysis();
-                        $sheet->loadView('filters.export', compact('verticals'));
-                    }
-                );
-            }
-        )->download('csv');
-
-        return response()->return();
+        
+        return Excel::download(
+            new IndustryAnalysisExport($industry), "Industry_analysis_.csv"
+        );
+        
     }
 
     /**
-     * [getVerticalAnalysis description].
+     * [_getVerticalAnalysis description].
      *
      * @param [type] $id [description]
      *
      * @return [type]     [description]
      */
-    private function getVerticalAnalysis($id = null)
+    private function _getVerticalAnalysis($id = null)
     {
-        return $this->filter
-            ->with('leads', 'people', 'companies', 'campaigns')
+        
+        return SearchFilter::withCount('leads', 'people', 'companies', 'campaigns')
             ->whereNotNull('type')
             ->where('type', '!=', 'group')
             ->where('inactive', '=', 0)
+            ->when(
+                $id, function ($q) {
+                    $q->where('id', $id);
+                }
+            )
             ->get();
     }
 

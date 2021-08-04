@@ -85,7 +85,10 @@ class SearchFilter extends NodeModel
             ->pluck('filter', 'id')
             ->toArray();
     }
-
+    public function scopeActive($query)
+    {
+        return $query->where('inactive', 0);
+    } 
     /**
      * [vertical description].
      *
@@ -115,7 +118,10 @@ class SearchFilter extends NodeModel
 
             ->where('inactive', '=', 0);
     }
-
+    public function scopeTable($query, $table)
+    {
+        return $query->where('searchtable', $table);
+    }
     /**
      * [companies description].
      *
@@ -133,7 +139,7 @@ class SearchFilter extends NodeModel
      */
     public function leads()
     {
-        return $this->belongsToMany(Address::class, 'lead_searchfilter', 'searchfilter_id');
+        return $this->hasMany(Address::class, 'vertical', 'id');
     }
 
     /**

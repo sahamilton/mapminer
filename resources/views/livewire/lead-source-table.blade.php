@@ -20,7 +20,16 @@
         @include('livewire.partials._perpage')
         <label>&nbsp;&nbsp;<i class="fas fa-filter text-danger"></i> Filters &nbsp;&nbsp;</label>
         @include('livewire.partials._staleMonths')
-        
+        <label for="types">Types:</label>
+            <select wire:model="type" 
+            class="form-control">
+                <option value="All">All</options>
+                @foreach ($types as $key)
+                    <option value="{{$key}}">{{ucwords($key)}}</option>
+                @endforeach
+                
+            </select>
+
        
     </div>
     

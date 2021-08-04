@@ -320,19 +320,29 @@ class ProjectsController extends BaseController
 
     public function myProjects()
     {
-        $projects = $this->getMyProjects();
+        $projects = $this->_getMyProjects();
 
         return response()->view('projects.myprojects', compact('projects'));
     }
 
     public function exportMyProjects()
     {
-        Excel::download('Projects', function ($excel) {
-            $excel->sheet('Watching', function ($sheet) {
-                $projects = $this->getMyProjects();
-                $sheet->loadView('projects.export', compact('projects'));
-            });
-        })->download('csv');
+        $projects = $this->_getMyProjects();
+        if ($projects->count() >0) {
+            Excel::download(
+                'Projects', function ($excel) {
+                    $excel->sheet(
+                        'Watching', function ($sheet) {
+                            $projects = $this->_getMyProjects();
+                            $sheet->loadView('projects.export', compact('projects'));
+                        }
+                    );
+                }
+            )->download('csv');
+        } else {
+            return redirect()->back()->withError('You currently have no projects');
+        }
+        
 
         return response()->return();
     }
@@ -340,9 +350,12 @@ class ProjectsController extends BaseController
     public function ownedProjects($id)
     {
         $projects = $this->project
-        ->whereHas('owner', function ($q) use ($id) {
-            $q->where('id', '=', $id);
-        })->with('owner')->get();
+            ->whereHas(
+                'owner', function ($q) use ($id) {
+                    $q->where('id', '=', $id);
+                }
+            )->with('owner')
+            ->get();
         $owner = $this->person->findOrFail($id);
 
         return response()->view('projects.ownedBy', compact('projects', 'owner'));
@@ -372,14 +385,18 @@ class ProjectsController extends BaseController
 
     public function exportProjectStats()
     {
-        Excel::download('Projects', function ($excel) {
-            $excel->sheet('Stats', function ($sheet) {
-                $projects = $this->project->projectStats($id = null);
-                $projects = $this->createStats($projects);
-                $statuses = $this->project->statuses;
-                $sheet->loadView('projects.exportstats', compact('projects', 'statuses'));
-            });
-        })->download('csv');
+        Excel::download(
+            'Projects', function ($excel) {
+                $excel->sheet(
+                    'Stats', function ($sheet) {
+                        $projects = $this->project->projectStats($id = null);
+                        $projects = $this->createStats($projects);
+                        $statuses = $this->project->statuses;
+                        $sheet->loadView('projects.exportstats', compact('projects', 'statuses'));
+                    }
+                );
+            }
+        )->download('csv');
 
         return response()->return();
     }
@@ -439,19 +456,22 @@ class ProjectsController extends BaseController
         return $personProject;
     }
 
-    private function getMyProjects()
+    private function _getMyProjects()
     {
         return $this->project->with('owner', 'companies')
-        ->whereHas('owner', function ($q) {
-            $q->where('person_id', '=', auth()->user()->person()->first()->id);
-        })->get();
+            ->whereHas(
+                'owner', function ($q) {
+                    $q->where('person_id', '=', auth()->user()->person()->first()->id);
+                }
+            )->get();
     }
 
     private function getOwnedProjects($id = null)
     {
         if ($id) {
             return $this->project->where('project_source_id', '=', $id)
-            ->with('source')->has('owner')->get();
+                ->with('source')
+                ->has('owner')->get();
         }
 
         return $this->project->has('owner')->with('source')->get();

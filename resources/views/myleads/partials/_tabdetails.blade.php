@@ -3,7 +3,7 @@
 	<div style="float:left;width:300px">
 		<p>
 		<p><i>A location of {{$mylead->companyname}}</a></i></p>
-
+		
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			<p>
 

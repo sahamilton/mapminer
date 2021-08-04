@@ -184,15 +184,15 @@ class Campaign extends Model
         if ($count) {
             $query = "select 
             count(a.id) as assignable,
-            b.id as branch ";
+            branchname, companyname";
         } else {
             $query = "select 
-            a.id,
-            b.id as branch ";
+            a.id as address_id,
+            b.id as branch_id ";
         }
         
 
-        $query.="from addresses a
+        $query.=" from companies, addresses a 
             left join address_branch on a.id = address_branch.address_id
             inner join branches b
                 on b.id = (
@@ -206,9 +206,60 @@ class Campaign extends Model
                     limit 1
                 )
             where a.id in ('". implode("','", $addresses) . "')
-            and address_branch.address_id is null";
+            and address_branch.address_id is null
+            and a.company_id = companies.id";
         if ($count) {
-            $query.=" group by branch";
+            $query.=" group by branchname, companyname";
+        }
+        return \DB::select(\DB::raw($query));
+       
+
+
+
+    }
+
+    /**
+     * [getAssignableLocationsofCampaign description]
+     * 
+     * @param [type]  $addresses [description]
+     * @param boolean $count     [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function getCompanyAssignableLocationsofCampaign(array $addresses, $count = false)
+    {
+        
+        $branches = $this->getCampaignBranches()->pluck('id')->toArray();
+        //$companies = $this->companies->pluck('id')->toArray();
+        if ($count) {
+            $query = "select 
+            count(a.id) as assignable,
+            companyname";
+        } else {
+            $query = "select 
+            a.id,
+            companyname ";
+        }
+        
+
+        $query.=" from companies, addresses a 
+            left join address_branch on a.id = address_branch.address_id
+            inner join branches b
+                on b.id = (
+                    select b1.id
+                    from branches b1,  branch_serviceline s
+                    where st_distance_sphere(a.position, b1.position, 40233) * 0.00062137119 < b1.radius
+                    and b1.id = s.branch_id
+                    and s.serviceline_id in (5)
+                    and b1.id in ('". implode("','", $branches). "')
+                    order by st_distance_sphere(a.position, b1.position) 
+                    limit 1
+                )
+            where a.id in ('". implode("','", $addresses) . "')
+            and address_branch.address_id is null
+            and a.company_id = companies.id";
+        if ($count) {
+            $query.=" group by companyname";
         }
         return \DB::select(\DB::raw($query));
        
@@ -464,6 +515,11 @@ class Campaign extends Model
         );
 
         
+    }
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('title', 'like', "%{$search}%")
+            ->orWhere('description', 'like', "%{$search}%");
     }
     public function scopeLocations($query) {
         $query->with(

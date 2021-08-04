@@ -344,7 +344,7 @@ class PersonsController extends BaseController
     {
 
         $data = $this->persons
-            ->with('userdetails', 'userdetails.roles', 'userdetails.serviceline', 'reportsTo', 'reportsTo.userdetails', 'industryfocus')
+            ->with('userdetails.roles', 'userdetails.serviceline', 'reportsTo.userdetails', 'industryfocus')
             ->get();
 
         return Excel::download(new PeopleExport($data), 'AllPeople.csv');

@@ -48,8 +48,8 @@ class DocumentsController extends BaseController
      */
     public function index()
     {
-        $documents = $this->document->with('rankings', 'rank', 'score', 'author', 'vertical', 'process')->get();
-        return response()->view('documents.index', compact('documents'));
+        
+        return response()->view('documents.index');
     }
 
     /**

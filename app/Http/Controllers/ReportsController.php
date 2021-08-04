@@ -10,6 +10,7 @@ use App\Role;
 use App\Company;
 use App\Person;
 use App\SalesOrg;
+use App\User;
 use Illuminate\Support\Str;
 use App\Http\Requests\ReportFormRequest;
 use App\Http\Requests\RunReportFormRequest;
@@ -89,7 +90,12 @@ class ReportsController extends Controller {
      */
     public function store(ReportFormRequest $request)
     {   
-
+        if (request()->filled('job') && ! $this->_checkValidJob(request('job'))) {
+            return redirect()->back()->withError('job does not exist');
+        }
+        if (request()->filled('export') && ! $this->_checkValidJob(request('export'))) {
+            return redirect()->back()->withError('export does not exist');
+        }
         $report = $this->report->create(request()->all());
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
@@ -158,7 +164,10 @@ class ReportsController extends Controller {
     {
 
         
-        if (! $this->_checkValidJob(request('job'))) {
+        if (request()->filled('job') && ! $this->_checkValidJob(request('job'))) {
+            return redirect()->back()->withError('job does not exist');
+        }
+        if (request()->filled('export') && ! $this->_checkValidJob(request('export'))) {
             return redirect()->back()->withError('job does not exist');
         }
         $report->update(request()->all());
@@ -186,7 +195,7 @@ class ReportsController extends Controller {
     public function addRecipient(AddRecipientReportRequest $request, Report $report)
     {
         
-        if (! $user = \App\User::where('email', request('email'))->where('confirmed', 1)->first()) {
+        if (! $user = User::where('email', request('email'))->where('confirmed', 1)->first()) {
             return redirect()->back()->withError('Not a valid Mapminer user');
         }
        
@@ -231,66 +240,28 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, RunReportFormRequest $request)
     {
-     
-        
-        if (request()->has('fromdate')) {
-                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
-                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-            
-        } elseif (session()->has('period')) {
-            $period=session('period');
-        
-        } else {
-            $period = [];
+       
+        $distribution = User::with('person')->where('id', auth()->user()->id)->get();
+        $this->_dispatchJob($report, $request, $distribution);
+        return redirect()->back()->withSuccess('Your job has been dispatched. Check your email in a few minutes time');
+       
+
+    }
+
+    private function _dispatchJob(Report $report, Request $request, \Illuminate\Database\Eloquent\Collection $distribution)
+    {
+        $manager = request('manager');
+        $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+        $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+        $distribution = User::with('person')->where('id', auth()->user()->id)->get();
+       
+        switch($report->object) {
+        case 'Branch':
+            return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager);
+            break;
+
         }
-        if (! $report->export) {
-            $job = "\App\Jobs\\". $report->job;
-            $job::dispatch($period);
-  
-        } elseif ($data = $this->_getMyBranches($request)) {
-      
-            $manager = $data['manager'];
-            $myBranches = $data['branches'];
-            $team = $data['team'];
-            
-            
-            
-            $export = "\App\Exports\\". $report->export;
         
-            switch ($report->object) {
-            case 'Company':
-
-                $company = $this->company->findOrFail(request('company'));
-                return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
-                break;
-
-            case 'Role':
-               
-                return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
-                break;
-
-            case 'User':
-                
-                return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
-                break;
-
-            case 'Campaign':
-
-                return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
-                break;
-
-            default:
-    
-                return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
-                break;
-
-            } 
-            
-          
-        } else {
-            return redirect()->route('welcome');
-        }
-
     }
 
     /**
@@ -303,32 +274,9 @@ class ReportsController extends Controller {
      */
     public function send(Report $report, Request $request)
     {
-        
-        if ($data = $this->_getMyBranches($request)) {
-
-            $manager = $data['manager'];
-
-            $myBranches = $data['branches'];
-            $team = $data['team'];
-            $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
-            $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-            $job = "\App\Jobs\\". $report->job; 
-            
-            if (request()->has('company')) {
-                $company = $this->company->findOrFail(request('company'));
-                dispatch(new $job($company, $period, $myBranches, $report));
-            } elseif ($report->mail == 1) {
-                
-                dispatch(new $job($period, $manager));
-            } else {    
-                dispatch(new $job($period, $myBranches, $report));
-            }   
-            return redirect()->back();
-        } else {
-            
-            return redirect()->route('welcome');
-        }
-
+        $report->load('distribution');
+        $this->_dispatchJob($report, $request, $report->distribution);
+        return redirect()->back()->withSuccess('Your job has been dispatched. Reports are being sent to the distribution list.');
     }
     /**
      * [_getObject description]
@@ -435,7 +383,7 @@ class ReportsController extends Controller {
      */
     private function _checkValidJob($class)
     {
-        $check = ['Jobs','Exports'];
+        $check = ['Exports'];
         foreach ($check as $type) {
             if (! $this->_checkClassExists($class, $type)) {
                 return false;
@@ -461,8 +409,8 @@ class ReportsController extends Controller {
             break;
 
         case "Exports":
-            $dir = "\App\\Exports\\";
-            $class = $class.'Export';
+            $dir = "\App\\Exports\\Reports\\Branch\\";
+           
             break;
         }
         

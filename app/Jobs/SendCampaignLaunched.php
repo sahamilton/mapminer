@@ -37,6 +37,7 @@ class SendCampaignLaunched implements ShouldQueue
      */
     public function handle()
     {
+        $this->campaign->update(['status'=> 'launched']);
         Mail::to([['email'=>$this->user->email, 'name'=>$this->user->person->fullName()]])
 
                 ->send(new SendCampaignLaunchedMail($this->user, $this->campaign));

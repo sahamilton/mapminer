@@ -11,6 +11,7 @@ class LeadSource extends Model
     public $table='leadsources';
     public $dates = ['created_at','updated_at','datefrom','dateto'];
     public $fillable = ['source','description','reference','datefrom','dateto','user_id','filename','type'];
+    const TYPES = ['web'=>'Web', 'purchased'=>'Purchased', 'mylead' =>'branch','campaign'=>'Campaign'];
 
     /**
      * [verticals description]
@@ -114,6 +115,16 @@ class LeadSource extends Model
       
       return $this->belongsToMany(Serviceline::class);
 
+    }
+
+        /**
+     * [documents description]
+     * 
+     * @return [type] [description]
+     */
+    public function documents()
+    {
+        return $this->belongsToMany(Document::class);
     }
     /**
      * [author description]

@@ -1,6 +1,9 @@
 <table>
 <thead> 
     <tr>
+        <td>Registered Mapminer Users (with soft deleted)</td>
+    </tr>
+    <tr>
         <th>First Name</th>
         <th>Last Name</th>
       
