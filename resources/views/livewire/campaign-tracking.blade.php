@@ -21,22 +21,14 @@
                 <option value = 'branch'>Branch</option>
             </select>
         </div>
-        </div>
     </div>
 
-
-       
-    <
- 
-        
-    
 
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
             <th>
                 <a wire:click.prevent="sortBy('name')" 
-                    role="button" href="#" 
-                    wire:loading.class="bg-danger">
+                    role="button" href="#">
                     {{ucwords($type)}}
                     @include('includes._sort-icon', ['field' => 'name'])
                 </a>
@@ -45,8 +37,7 @@
             @foreach ($fields as $field)
                 <th>
                     <a wire:click.prevent="sortBy('{{$field}}')" 
-                    role="button" href="#" 
-                    wire:loading.class="bg-danger">
+                    role="button" href="#">
                         {{ucwords(str_replace("_", " ", $field))}}
                         @include('includes._sort-icon', ['field' => '{{$field}}'])
                     </a>
@@ -55,10 +46,11 @@
         </thead>
         <tbody>
             @foreach ($data as $item)
+
             <tr>
                 <td>{{$type=='company' ? $item->companyname : $item->branchname}}</td>
                 @foreach ($fields as $field)
-                    <td>{{$item->$field}}</td>
+                    <td>{{$item->$field ? $item->$field : '0'}}</td>
                 @endforeach
             </tr>
             @endforeach

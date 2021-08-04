@@ -579,6 +579,19 @@ class Company extends NodeModel
                     ]
                 );
             }
+        )->when(
+            in_array('won_value', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'opportunities as won_value'=>function ($query) {
+                
+                            $query->wonValue($this->period);
+                                
+                           
+                        }
+                    ]
+                );
+            }
         );  
 
 
