@@ -63,7 +63,7 @@ class AssignCampaignLeadsJob implements ShouldQueue
     {
         $data = [];
         foreach ($assignable as $item) {
-            $data[$item->branch][$item->id] = ['status_id' => 1 ];
+            $data[$item->branch][$item->id] = ['status_id' => 2 ];
         }
 
 

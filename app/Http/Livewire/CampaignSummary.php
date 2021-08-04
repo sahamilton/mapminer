@@ -13,7 +13,7 @@ class CampaignSummary extends Component
     use WithPagination;
     
     public $campaign;
-    public $type = 'branch';
+    public $type = 'company';
     public $perPage = 10;
     public $sortField = 'name';
     public $sortAsc = true;
@@ -56,6 +56,7 @@ class CampaignSummary extends Component
                 ->search($this->search)
                 ->orderBy($sort, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
+                'summarycount'=>$this->_summaryCounts(),
                 'assignable'=>$this->_assignable(),
             ]
         );
@@ -105,5 +106,17 @@ class CampaignSummary extends Component
         }
         return [];
        
+    }
+
+    private function _summaryCounts()
+    {
+        $all = $this->_getData()->get();
+        $data['assigned'] = $all->sum('assigned_count');
+        if ($this->type == 'company') {
+            $data['unassigned'] = $all->sum('unassigned_count');
+            
+        }
+        return $data;
+
     }
 }

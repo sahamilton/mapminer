@@ -85,8 +85,9 @@
                 <tr>
                     <th></th>
                     
+                    <th>{{$summarycount['assigned']}}</th>
+                    <th>{{$type=='branch' ?  $assignable->sum('assignable') : $summarycount['unassigned']}}</th>
 
-                    <th>{{$type=='branch' ?  $assignable->sum('assignable') : ''}}</th>
                 </tr>
 
         </tfoot>
