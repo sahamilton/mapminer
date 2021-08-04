@@ -80,7 +80,7 @@ class CampaignTrackingController extends Controller
     public function show(Campaign $campaign)
     {
         
-        $campaign->load('companies', 'branches');
+        /*$campaign->load('companies', 'branches');
 
         $branches = $this->_getBranchesInCampaign($campaign);
        
@@ -90,13 +90,15 @@ class CampaignTrackingController extends Controller
         $campaigns = $this->campaign->current($branches->pluck('id')->toArray())->get(); 
 
         
-        if($campaign->type=== 'open') {
+        if ($campaign->type=== 'open') {
             $fields =  $this->openfields;
-        }else{
+        } else {
             $fields =  $this->fields;
         }
-     
+        
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns', 'fields'));
+        */
+       return response()->view('campaigns.show', compact('campaign'));
     }
     /**
      * [company description]
@@ -218,7 +220,7 @@ class CampaignTrackingController extends Controller
         $branch_ids = $campaign->branches->pluck('id')->toArray();
         if ($campaign->type === 'open') {
             return $this->branch->whereIn('id', $branch_ids)
-            ->summaryOpenCampaignStats($campaign)->get();
+                ->summaryOpenCampaignStats($campaign)->get();
         }
         return $this->branch->whereIn('id', $branch_ids)
             ->summaryCampaignStats($campaign)->get();

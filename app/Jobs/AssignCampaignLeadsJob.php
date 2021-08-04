@@ -40,29 +40,16 @@ class AssignCampaignLeadsJob implements ShouldQueue
      */
     public function handle()
     {
-        $addresses = $this->company->unassigned;
-        $addresses = $addresses->flatten()->pluck('id')->toArray();
+        $addresses = $this->company->unassigned->flatten()->pluck('id')->toArray();;
 
         $assignable = $this->campaign->getAssignableLocationsofCampaign($addresses, $count = false);
-        $foreach($assignable as $assign) {
+        $assignable = json_decode(json_encode($assignable), true);
+        foreach ($assignable as $assign) {
+            
+            $newleads = array_merge($assign, ['created_at'=>now(), 'status_id'=>2]);
 
-            $newleads[]= array_merge($assign, ['created_at'=>now(), 'status'=2]);
         }
         AddressBranch::insert($newleads);
-
-        // need to add status, created at,
-        // loop through assignable and id branch and address
-        // return array branch[id]=>[address]
-        // [branch_id][$address->id => ['status_id' => 1 ],$address->id => ['status' => 1 ] ]
-        // select each branch
-        // sync 
-
-        /*foreach ($this->_getBranchAddresses($assignable) as $branch_id=>$addresses) {
-            $branch = Branch::findOrFail($branch_id);
-            $branch_ids[] = $branch_id;
-           
-            $branch->leads()->attach($addresses);
-        }*/ 
         
     }
 

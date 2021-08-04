@@ -1205,3 +1205,16 @@ INNER JOIN addresses a ON
         ST_DISTANCE_SPHERE(a.position, b1.position)
     LIMIT 1
 ) where b.id in (1069, 1505, 1506)
+/**********************************************************************
+Tinker: Get campaign assignable locations 
+/**********************************************************************
+$address = new App\Address;
+$branches = $campaign->branches;
+$data =App\Company::with('unassigned')->whereIn('id', $campaign->companies->pluck('id')->toArray())->get();
+$addresses = $data->map(
+            function ($company) {
+                return $company->unassigned;
+            }
+        )->flatten()->pluck('id')->toArray();
+
+$campaign->getCompanyAssignableLocationsofCampaign($addresses, true);

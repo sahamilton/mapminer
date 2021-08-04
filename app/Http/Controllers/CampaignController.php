@@ -226,6 +226,11 @@ class CampaignController extends Controller
      */
     public function launch(Campaign $campaign)
     {
+        // assign leads to branches
+        // update address_branch_campaign
+        // notify branch managers
+        // update status
+        // notify job complete
         $companies = $campaign->getCompanyLocationsOfCampaign();
                
         foreach ($companies as $company) {

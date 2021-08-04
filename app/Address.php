@@ -107,7 +107,10 @@ class Address extends Model
      * 
      * @return [type] [description]
      */
-   
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class);
+    }
 
     public function currentcampaigns()
     {
@@ -430,16 +433,7 @@ class Address extends Model
         )->where('closed', 0);
     }
 
-    /**
-     * [opportunities description]
-     * 
-     * @return [type] [description]
-     */
-    public function campaigns()
-    {
- 
-        return $this->belongsToMany(Campaign::class);
-    }
+    
 
 
     /**
