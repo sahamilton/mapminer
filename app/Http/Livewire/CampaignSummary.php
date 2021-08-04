@@ -13,10 +13,9 @@ class CampaignSummary extends Component
     use WithPagination;
     
     public $campaign;
-    public $type = 'company';
-    
+    public $type = 'branch';
     public $perPage = 10;
-    public $sortField = 'id';
+    public $sortField = 'name';
     public $sortAsc = true;
     public $search ='';
     public $paginationTheme = 'bootstrap';
@@ -26,7 +25,11 @@ class CampaignSummary extends Component
     {
         $this->resetPage();
     }
-
+    public function updatingType()
+    {
+        $this->resetPage();
+        
+    }
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -46,11 +49,12 @@ class CampaignSummary extends Component
 
     public function render()
     {
+        $sort = $this->_setSort();
         return view(
             'livewire.campaign-summary',
             ['data'=>$this->_getData()
                 ->search($this->search)
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                ->orderBy($sort, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
                 'assignable'=>$this->_assignable(),
             ]
@@ -82,10 +86,18 @@ class CampaignSummary extends Component
 
 
     }
+    private function _setSort()
+    {
+        if ($this->sortField == 'name') {
+            return $this->type.'name';
+        } else {
+            return $this->sortField;
+        }
+    }
 
     private function _assignable()
     {
-        if ($this->type=='branch') {
+        if ($this->type == 'branch') {
             $addresses = Address::doesntHave('assignedToBranch')
                 ->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
                 ->pluck('id')->toArray();

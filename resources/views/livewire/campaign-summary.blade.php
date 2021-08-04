@@ -1,5 +1,6 @@
 <div>
     <h2>{{$campaign->title}} Campaign</h2>
+    Sorting by {{$sortField}}
     <h4>{{ucwords($type)}} Summary</h4>
     <p><a href="{{route('campaigns.index')}}">Return to all campaigns</a></p>
     <div class="float-right">
@@ -35,26 +36,14 @@
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
             <th>
-                @switch($type)
-                    @case('branch')
-                        <a wire:click.prevent="sortBy('branchname')" 
-                            role="button" href="#" 
-                            wire:loading.class="bg-danger">
-                            Branch
-                            @include('includes._sort-icon', ['field' => 'branchname'])
-                        </a>
-                    @break
-
-                    @case('company')
-                        <a wire:click.prevent="sortBy('companyname')" 
-                            role="button" href="#" 
-                            wire:loading.class="bg-danger">
-                            Company
-                            @include('includes._sort-icon', ['field' => 'companyname'])
-                        </a>
-                    @break
-                @endswitch
-                <th>
+                <a wire:click.prevent="sortBy('name')" 
+                    role="button" href="#" 
+                    wire:loading.class="bg-danger">
+                    {{ucwords($type)}}
+                    @include('includes._sort-icon', ['field' => 'name'])
+                </a>
+            </th>    
+            <th>
                 <a wire:click.prevent="sortBy('assigned_count')" 
                 role="button" href="#" 
                 wire:loading.class="bg-danger">
