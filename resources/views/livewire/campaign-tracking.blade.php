@@ -55,7 +55,14 @@
             </tr>
             @endforeach
         </tbody>
-        
+        <tfoot>
+            <th></th>
+            
+                @foreach ($fields as $field)
+                    <th>{{$summarycount[$field]}}</th>
+                @endforeach
+            
+        </tfoot>
     </table>
     <div class="row">
             <div class="col">

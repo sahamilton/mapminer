@@ -13,7 +13,10 @@
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')
-            @include('livewire.partials._search', ['placeholder'=>'Search '])
+            @include('livewire.partials._search', ['placeholder'=>'Search ']) 
+            <div wire:loading class="spinner-border text-danger" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
             <div class="col form-inline">
             <label>View By:</label>
             <select class="form-control" wire:model="type">
@@ -26,9 +29,7 @@
 
 
        
-    <div wire:loading class="spinner-border text-danger" role="status">
-          <span class="sr-only">Loading...</span>
-    </div>
+   
  
         
     
@@ -37,16 +38,14 @@
         <thead>
             <th>
                 <a wire:click.prevent="sortBy('name')" 
-                    role="button" href="#" 
-                    wire:loading.class="bg-danger">
+                    role="button" href="#">
                     {{ucwords($type)}}
                     @include('includes._sort-icon', ['field' => 'name'])
                 </a>
             </th>    
             <th>
                 <a wire:click.prevent="sortBy('assigned_count')" 
-                role="button" href="#" 
-                wire:loading.class="bg-danger">
+                role="button" href="#">
                     Assigned Locations
                     @include('includes._sort-icon', ['field' => 'assigned_count'])
                 </a>
@@ -55,8 +54,8 @@
                 @if($type=="company")
                 
                     <a wire:click.prevent="sortBy('unassigned_count')" 
-                    role="button" href="#" 
-                    wire:loading.class="bg-danger">
+                    role="button" href="#"
+>
                         UnAssigned Locations
                         @include('includes._sort-icon', ['field' => 'unassigned_count'])
                     </a>

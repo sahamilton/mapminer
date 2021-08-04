@@ -138,14 +138,14 @@ class CampaignController extends Controller
        
         if ($campaign->status == 'planned') {
 
-           
+            dd('no herere');
             /*$campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
             
             $data = $this->_getCampaignSummaryData($campaign);*/
             
             return response()->view('campaigns.show', compact('campaign'));
         }
-       
+       dd('hree');
         return redirect()->route('campaigns.track', $campaign->id);
         
     }
@@ -231,18 +231,16 @@ class CampaignController extends Controller
         // notify branch managers
         // update status
         // notify job complete
-        $companies = $campaign->getCompanyLocationsOfCampaign();
-               
-        foreach ($companies as $company) {
-            AssignCampaignLeadsJob::withChain(
-                [
-                    new AssignAddressesToCampaignJob($company, $campaign)
-                ]
-            )->dispatch($company, $campaign);
-        }
-        AssignBranchesToCampaignJob::dispatch($campaign);
-        $campaign->update(['status'=> 'launched']);
-        SendCampaignLaunched::dispatch(auth()->user(), $campaign);
+        AssignCampaignLeadsJob::withChain(
+            [
+                new AssignAddressesToCampaignJob($campaign),
+                new AssignBranchesToCampaignJob($campaign),
+                new SendCampaignLaunched(auth()->user(), $campaign),
+            ]
+        )->dispatch($campaign);
+       
+        
+        
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched. You will receive an email when all leads have been assigned.');
        
         

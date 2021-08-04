@@ -87,7 +87,7 @@ class ContactsImportController extends ImportController
         $contacts = $this->import->query()
             ->whereHas('company')
             ->distinct('street', 'city', 'state', 'zip')
-            ->select('company_id', 'businessname', 'street', 'city', 'state', 'zip', 'position', 'user_id', 'lead_source_id')
+            ->select('company_id', 'businessname', 'street', 'city', 'state', 'zip', 'position', 'user_id', 'lead_source_id', 'lat', 'lng')
             ->whereNotNull('company_id')
             ->whereNull('address_id')
             ->get()

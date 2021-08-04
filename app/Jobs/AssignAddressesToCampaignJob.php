@@ -10,21 +10,24 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Campaign;
 use App\Company;
 use App\Address;
+use App\AddressCampaign;
+
 
 class AssignAddressesToCampaignJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $company;
+
     public $campaign;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Company $company, Campaign $campaign)
+    public function __construct(Campaign $campaign)
     {
-        $this->company = $company;
-        $this->campaign = $campaign;
+        
+        $this->campaign = $campaign->load('companies');
+        
     }
 
     /**
@@ -34,21 +37,20 @@ class AssignAddressesToCampaignJob implements ShouldQueue
      */
     public function handle()
     {
-       
-            
-        $branches = $this->campaign->manager->getMyBranches();
-        $addresses = Address::whereHas(
-            'assignedToBranch', function ($q) use ($branches) {
-                    $q->whereIn('branches.id', $branches);
-            }
-        )
-        ->whereDoesntHave(
-            'campaigns', function ($q) {
-                $q->where('campaigns.id', '=', $this->campaign->id);
-            }
-        )->where('company_id', $this->company->id)
-        ->get();
+        $companies = $this->campaign->companies;
+        
+        foreach ($companies as $company) {
 
-        $this->campaign->addresses()->sync($addresses->flatten()->pluck('id')->toArray());
+            $results = [];
+            $locations = $company->locations->pluck('id')->toArray();
+            foreach ($locations as $location) {
+                $results[] = ['address_id'=>$location, 'campaign_id'=>$this->campaign->id];
+            }
+            AddressCampaign::insert($results);
+        }
+
+        
     }
+
+
 }
