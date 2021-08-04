@@ -1979,7 +1979,7 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryOpenCampaignStats($query,Campaign $campaign, $fields = null)
+    public function scopeSummaryOpenCampaignStats($query,Campaign $campaign, array $fields = null)
     {
         $this->period['from'] = $campaign->datefrom;
         $this->period['to'] = $campaign->dateto;
@@ -2085,7 +2085,6 @@ class Branch extends Model implements HasPresenter
                         'opportunities as open_opportunities'=>function ($q) {
                         
                             $q->whereClosed(0)
-                                ->whereBetween('actual_close', [$this->period['from'],$this->period['to']])
                                 ->whereHas(
                                     'location', function ($q) {
                                         $q->whereHas(

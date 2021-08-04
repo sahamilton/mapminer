@@ -519,15 +519,29 @@ class Company extends NodeModel
         $this->period = ['from'=>$campaign->datefrom, 'to'=>$campaign->dateto];
         
         return $query->when(
-            in_array('campaign_leads', $this->fields), function ($q) {
+            in_array('unassigned_leads', $this->fields), function ($q) {
                 $q->withCount(
                     [
-                        'locations as campaign_leads'=>function ($q) {
+                        'locations as unassigned_leads'=>function ($q) {
                             $q->whereHas(
                                 'campaigns', function ($q) {
                                     $q->where('campaign_id', $this->campaign->id);
                                 }
-                            );
+                            )->doesntHave('assignedToBranch');;
+                        }
+                    ]
+                );
+            }
+        )->when(
+            in_array('assigned_leads', $this->fields), function ($q) {
+                $q->withCount(
+                    [
+                        'locations as assigned_leads'=>function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            )->has('assignedToBranch');
                         }
                     ]
                 );

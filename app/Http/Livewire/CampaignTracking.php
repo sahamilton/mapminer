@@ -28,10 +28,10 @@ class CampaignTracking extends Component
                 'won_opportunities',
                 'won_value'
             ];
-    public $companyfields = [  
-                'campaign_leads',
+    public $companyfields = [
+                'unassigned_leads', 
+                'assigned_leads',
                 'touched_leads',
-                
                 'new_opportunities',
                 'open_opportunities',
                 'won_opportunities',
@@ -126,7 +126,7 @@ class CampaignTracking extends Component
     private function _summaryCounts()
     {
         $all = $this->_getData()->get();
-        foreach($this->fields as $field){
+        foreach ($this->fields as $field){
             $data[$field] = $all->sum($field);
         }
 
