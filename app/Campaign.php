@@ -184,7 +184,7 @@ class Campaign extends Model
         if ($count) {
             $query = "select 
             count(a.id) as assignable,
-            b.id as branch, companyname";
+            branchname, companyname";
         } else {
             $query = "select 
             a.id,
@@ -209,7 +209,7 @@ class Campaign extends Model
             and address_branch.address_id is null
             and a.company_id = companies.id";
         if ($count) {
-            $query.=" group by branch, companyname";
+            $query.=" group by branchname, companyname";
         }
         return \DB::select(\DB::raw($query));
        
@@ -226,11 +226,11 @@ class Campaign extends Model
      * 
      * @return [type]             [description]
      */
-    public function getCompanyAssignableLocationsofCampaign($count = false)
+    public function getCompanyAssignableLocationsofCampaign(array $addresses, $count = false)
     {
         
         $branches = $this->getCampaignBranches()->pluck('id')->toArray();
-        $companies = $this->companies->pluck('id')->toArray();
+        //$companies = $this->companies->pluck('id')->toArray();
         if ($count) {
             $query = "select 
             count(a.id) as assignable,
@@ -238,7 +238,7 @@ class Campaign extends Model
         } else {
             $query = "select 
             a.id,
-            b.id as branch ";
+            companyname ";
         }
         
 
@@ -255,7 +255,7 @@ class Campaign extends Model
                     order by st_distance_sphere(a.position, b1.position) 
                     limit 1
                 )
-            where a.company_id in ('". implode("','", $companies) . "')
+            where a.id in ('". implode("','", $addresses) . "')
             and address_branch.address_id is null
             and a.company_id = companies.id";
         if ($count) {

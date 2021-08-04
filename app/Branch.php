@@ -654,9 +654,12 @@ class Branch extends Model implements HasPresenter
         
         return $query->with(
             ['locations'=>function ($q) use ($campaigns) { 
-                $q->whereHas('campaigns', function ($q1) use($campaigns) { 
-                    $q1->whereIn('campaigns.id', $campaigns); });
-                }
+                $q->whereHas(
+                    'campaigns', function ($q1) use ($campaigns) { 
+                        $q1->whereIn('campaigns.id', $campaigns); 
+                    }
+                );
+            }
             ]
         );
 
@@ -1838,7 +1841,7 @@ class Branch extends Model implements HasPresenter
                 }
             );
     }
-     /**
+    /**
      * [scopeSummaryOpenCampaignStats description]
      * 
      * @param [type] $query    [description]
@@ -1846,7 +1849,7 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryOpenCampaignStats($query,Campaign $campaign)
+    public function scopeSummaryOpenCampaignStats($query,Campaign $campaign, $fields = null)
     {
         $this->period['from'] = $campaign->datefrom;
         $this->period['to'] = $campaign->dateto;

@@ -15,7 +15,7 @@
             @include('livewire.partials._search', ['placeholder'=>'Search '])
             <div class="col form-inline">
             <label>View By:</label>
-            <select wire:model="type">
+            <select class="form-control" wire:model="type">
                 <option value="company">Company</option>
                 <option value = 'branch'>Branch</option>
             </select>
@@ -23,14 +23,15 @@
         </div>
     </div>
 
-    <div class="row mb-4 ">
+
        
-        <div wire:loading>
-            <div class="spinner-border"></div>
-        </div>
+    <div wire:loading class="spinner-border text-danger" role="status">
+          <span class="sr-only">Loading...</span>
+    </div>
+ 
         
     
-    </div>
+
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
             <th>
@@ -62,12 +63,17 @@
                 </a>
             </th>
             <th>
-                <a wire:click.prevent="sortBy('unassigned_count')" 
-                role="button" href="#" 
-                wire:loading.class="bg-danger">
-                    UnAssigned Locations
-                    @include('includes._sort-icon', ['field' => 'unassigned_count'])
-                </a>
+                @if($type=="company")
+                
+                    <a wire:click.prevent="sortBy('unassigned_count')" 
+                    role="button" href="#" 
+                    wire:loading.class="bg-danger">
+                        UnAssigned Locations
+                        @include('includes._sort-icon', ['field' => 'unassigned_count'])
+                    </a>
+                @else
+                    Assignable
+                @endif
             </th>
         </thead>
         <tbody>
@@ -75,10 +81,26 @@
             <tr>
                 <td>{{$type=='company' ? $item->companyname : $item->branchname}}</td>
                 <td>{{$item->assigned_count}}</td>
-                <td>{{$item->unassigned_count}}</td>
+                <td>
+                    @if($type == 'company')
+                        {{$item->unassigned_count}}
+                    @else
+                
+                        {{ $assignable->where('branchname', $item->branchname)->sum('assignable') }}
+                    @endif
+                </td>
             </tr>
             @endforeach
         </tbody>
+        <tfoot>
+                <tr>
+                    <th></th>
+                    
+
+                    <th>{{$type=='branch' ?  $assignable->sum('assignable') : ''}}</th>
+                </tr>
+
+        </tfoot>
     </table>
     <div class="row">
             <div class="col">

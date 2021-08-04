@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\Campaign;
 use App\Company;
+use App\Address;
 use App\Branch;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,7 +13,7 @@ class CampaignSummary extends Component
     use WithPagination;
     
     public $campaign;
-    public $type = 'branch';
+    public $type = 'company';
     
     public $perPage = 10;
     public $sortField = 'id';
@@ -51,6 +52,7 @@ class CampaignSummary extends Component
                 ->search($this->search)
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
+                'assignable'=>$this->_assignable(),
             ]
         );
     }
@@ -79,5 +81,17 @@ class CampaignSummary extends Component
         }
 
 
+    }
+
+    private function _assignable()
+    {
+        if ($this->type=='branch') {
+            $addresses = Address::doesntHave('assignedToBranch')
+                ->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
+                ->pluck('id')->toArray();
+            return collect($this->campaign->getAssignableLocationsofCampaign($addresses, true));
+        }
+        return [];
+       
     }
 }
