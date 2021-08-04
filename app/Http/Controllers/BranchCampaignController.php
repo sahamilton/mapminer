@@ -66,7 +66,7 @@ class BranchCampaignController extends Controller
     public function index()
     {
         
-        if (! session('manager')) {
+        /*if (! session('manager')) {
             $manager = $this->person->where('user_id', auth()->user()->id)->first();
             session(['manager'=>auth()->user()->id]);
         } else {
@@ -110,14 +110,16 @@ class BranchCampaignController extends Controller
             ->get();
 
         
-        if($campaign->type === 'open') {
+        if ($campaign->type === 'open') {
             $fields=$this->openfields;
         } else {
             $fields=$this->fields;
         }
-        
+       
 
-        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields', 'manager'));
+        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields', 'manager')); 
+        */
+       return response()->view('campaigns.branch');
     }
 
     public function store(Request $request)

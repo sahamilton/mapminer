@@ -273,9 +273,9 @@ Route::group(
 
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 
-        Route::post('branchcampaigns/{campaign}/setmgr',['as'=>'branchcampaign.manager','uses'=>'BranchCampaignController@setManager']);
+        Route::post('branchcampaigns/{campaign}/setmgr', ['as'=>'branchcampaign.manager','uses'=>'BranchCampaignController@setManager']);
 
-        Route::resource('branchcampaigns', 'BranchCampaignController',['except'=>['destroy']]);
+        Route::resource('branchcampaigns', 'BranchCampaignController', ['except'=>['destroy']]);
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
         //   Sales organization

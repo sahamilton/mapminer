@@ -1,7 +1,8 @@
 @php
 $statuses = ['0'=>'Open', '1'=>"Closed Won", '2'=>'Closed Lost']
 @endphp
-<table class="table table-striped"
+<table id="sorttable{{$loop->index}}"
+    class="table table-striped"
     >
     <thead>
       <th>Title</th>
@@ -15,13 +16,18 @@ $statuses = ['0'=>'Open', '1'=>"Closed Won", '2'=>'Closed Lost']
     </thead>
     <tbody>
        
-        @foreach ($data as $opportunity)
+        @foreach ($branch->openOpportunities as $opportunity)
         <tr>
           <td>
-           
+           @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()) or auth()->user()->hasRole(['admin', 'sales_operations']))
+            
+            <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
+            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
+          
+              @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 
-
+              @endif
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
           </td>

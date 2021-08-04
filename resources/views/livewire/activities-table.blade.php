@@ -36,10 +36,6 @@
                 @endforeach
             </select>
         </div>
-
-        <div wire:loading>
-            <div class="spinner-border"></div>
-        </div>
     
     </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
@@ -47,8 +43,7 @@
             <th>Company</th>
             <th>
                 <a wire:click.prevent="sortBy('activity_date')" 
-                role="button" href="#" 
-                wire:loading.class="bg-danger">
+                role="button" href="#">
                     Activity Date
                     @include('includes._sort-icon', ['field' => 'activity_date'])
                 </a>
