@@ -25,7 +25,7 @@ class BranchExport implements FromView
      */
     public function view(): View
     {
-        $result = Branch::with('manager.reportsTo', 'servicelines')
+        $result = Branch::with('manager.reportsTo', 'manager.userdetails', 'servicelines')
             ->when(
                 $this->branch, function ($q) {
                     $q->whereIn('id', $this->branch);

@@ -59,16 +59,20 @@ class BranchCampaign extends Component
         $this->sortField = $field;
     }
 
-    public function mount()
+    public function mount($branch_id=null)
     {
         
         $this->campaignid = Campaign::active()->first()->id;
         $myBranches = auth()->user()->person->getMyBranches();
         $this->myBranches = Branch::whereIn('id', $myBranches)->pluck('branchname', 'id');
-        
-        $this->branch_id = reset($myBranches);
+        if (! $branch_id) {            
+            $this->branch_id = reset($myBranches);
+        } else {
+            $this->branch_id  =$branch_id;
+        }
 
     }
+
     public function render()
     {
        
