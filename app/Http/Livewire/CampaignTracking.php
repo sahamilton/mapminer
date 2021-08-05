@@ -10,10 +10,11 @@ use Livewire\WithPagination;
 class CampaignTracking extends Component
 {
     use WithPagination;
-
+    public $branches;
     public Campaign $campaign;
     public $type = 'company';
-
+    public $campaigns;
+    public $campaign_id; 
     public $perPage = 10;
     public $sortField = 'name';
     public $sortAsc = true;
@@ -42,10 +43,12 @@ class CampaignTracking extends Component
     {
         $this->resetPage();
     }
-    public function mount($campaign_id)
+    public function mount()
     {
         
-        $this->campaign = Campaign::with('companies', 'branches')->findOrFail($campaign_id);
+        $this->campaigns = Campaign::active()->get();
+        $this->campaign = $this->campaigns->first();
+        $this->campaign_id = $this->campaign->id;
     }
     public function sortBy($field)
     {
@@ -61,6 +64,7 @@ class CampaignTracking extends Component
     {
         $sort = $this->_setSort();
         $this->fields = $this->_getTypeFields();
+        $this->_getCurrentCampaign();
         return view(
             'livewire.campaign-tracking',
             ['data'=>$this->_getData()
@@ -79,6 +83,15 @@ class CampaignTracking extends Component
         switch($this->type) {
         case 'company':
             return Company::whereIn('id', $this->campaign->companies->pluck('id')->toArray())
+                ->whereHas(
+                    'locations', function ($q) {
+                        $q->whereHas(
+                            'assignedToBranch', function ($q) {
+                                $q->whereIn('branches.id', $this->branches);
+                            }  
+                        );
+                    }
+                )
                 ->companyCampaignSummaryStats($this->campaign, $this->fields);
 
             break;    
@@ -86,7 +99,7 @@ class CampaignTracking extends Component
         case 'branch':
             return Branch::hasCampaignleads($this->campaign)
                 ->summaryOpenCampaignStats($this->campaign, $this->fields)
-                ->whereIn('id', $this->campaign->branches->pluck('id')->toArray());
+                ->whereIn('id', $this->branches);
             break;    
         }
 
@@ -132,5 +145,11 @@ class CampaignTracking extends Component
 
         return $data;
 
+    }
+    private function _getCurrentCampaign()
+    {
+        
+        $this->campaign = Campaign::findOrFail($this->campaign_id);
+        $this->branches = array_intersect(auth()->user()->person->getMyBranches(), $this->campaign->branches->pluck('id')->toArray());
     }
 }

@@ -12,7 +12,9 @@ class CampaignSummary extends Component
 {
     use WithPagination;
     
+    public $campaigns;
     public $campaign;
+    public $campaign_id;
     public $type = 'company';
     public $perPage = 10;
     public $sortField = 'name';
@@ -41,15 +43,20 @@ class CampaignSummary extends Component
         $this->sortField = $field;
     }
 
-    public function mount($campaign_id)
+    public function mount()
     {
         
-        $this->campaign = Campaign::with('companies', 'branches')->findOrFail($campaign_id);
+        $this->campaigns = Campaign::active()->get();
+        $this->campaign = $this->campaigns->first();
+        $this->campaign_id = $this->campaign->id;
+
     }
 
     public function render()
     {
         $sort = $this->_setSort();
+        $this->_getCurrentCampaign();
+       
         return view(
             'livewire.campaign-summary',
             ['data'=>$this->_getData()
@@ -58,6 +65,7 @@ class CampaignSummary extends Component
                 ->paginate($this->perPage),
                 'summarycount'=>$this->_summaryCounts(),
                 'assignable'=>$this->_assignable(),
+                'campaign' => Campaign::active()->findOrFail($this->campaign_id),
             ]
         );
     }
@@ -77,16 +85,18 @@ class CampaignSummary extends Component
                 [ 
                     'addresses as assigned_count'=>function ($q) {
                         $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
-                            ->where('address_branch.created_at', '<=', $this->campaign->dateto);
+                            ->where('address_branch.created_at', '<=', $this->campaign->dateto)
+                            ;
                         
                     }
                 ]
-            )->whereIn('id', $this->campaign->branches->pluck('id')->toArray());
+            )->whereIn('id', $this->branches);
             break;    
         }
 
 
     }
+
     private function _setSort()
     {
         if ($this->sortField == 'name') {
@@ -107,7 +117,12 @@ class CampaignSummary extends Component
         return [];
        
     }
-
+    private function _getCurrentCampaign()
+    {
+        
+        $this->campaign = Campaign::findOrFail($this->campaign_id);
+        $this->branches = array_intersect(auth()->user()->person->getMyBranches(), $this->campaign->branches->pluck('id')->toArray());
+    }
     private function _summaryCounts()
     {
         $all = $this->_getData()->get();

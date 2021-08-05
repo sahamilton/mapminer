@@ -22,7 +22,7 @@ class BranchCampaign extends Component
 
     public $campaignid;
     public $view = 'leads';
-    public $branchid;
+    public $branch_id;
     public $period;
     public $campaign;
     public $myBranches;
@@ -51,7 +51,7 @@ class BranchCampaign extends Component
         $myBranches = auth()->user()->person->getMyBranches();
         $this->myBranches = Branch::whereIn('id', $myBranches)->pluck('branchname', 'id');
         
-        $this->branchid = reset($myBranches);
+        $this->branch_id = reset($myBranches);
 
     }
     public function render()
@@ -71,7 +71,7 @@ class BranchCampaign extends Component
                     ->toArray(),
                 'campaigns'=>Campaign::active()->pluck('title', 'id')
                     ->toArray(),
-                'branch' => Branch::findOrFail($this->branchid),
+                'branch' => Branch::findOrFail($this->branch_id),
                 'views'=>['leads','activities', 'opportunities'] ,
             ]
         );
@@ -90,7 +90,7 @@ class BranchCampaign extends Component
                 )
                 ->whereHas(
                     'assignedToBranch', function ($q) {
-                        $q->where('branches.id', $this->branchid);
+                        $q->where('branches.id', $this->branch_id);
                     }
                 );
 
@@ -98,7 +98,7 @@ class BranchCampaign extends Component
             
         case 'activities':
             return Activity::with('relatesToAddress')
-                ->where('branch_id', $this->branchid)
+                ->where('branch_id', $this->branch_id)
                 ->whereBetween('activities.activity_date', [$this->period['from'], $this->period['to']])
                 ->whereHas(
                     'relatesToAddress', function ($q) {
@@ -109,7 +109,7 @@ class BranchCampaign extends Component
             break; 
 
         case 'opportunities':
-            return Opportunity::where('branch_id', $this->branchid)
+            return Opportunity::where('branch_id', $this->branch_id)
                 ->where('opportunities.created_at', '<=', $this->campaign->dateto)
                 ->where(
                     function ($q) { 
