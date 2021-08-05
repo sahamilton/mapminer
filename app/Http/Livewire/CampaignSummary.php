@@ -46,9 +46,8 @@ class CampaignSummary extends Component
     public function mount()
     {
         
-        $this->campaigns = Campaign::active()->get();
+        $this->campaigns = Campaign::where('status', 'planned')->orderBy('id', 'desc')->get();
         $this->campaign = $this->campaigns->first();
-        dd($this->campaign, $this->campaigns);;
         $this->campaign_id = $this->campaign->id;
 
     }
