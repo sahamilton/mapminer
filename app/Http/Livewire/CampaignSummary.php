@@ -48,6 +48,7 @@ class CampaignSummary extends Component
         
         $this->campaigns = Campaign::active()->get();
         $this->campaign = $this->campaigns->first();
+        dd($this->campaign);
         $this->campaign_id = $this->campaign->id;
 
     }
