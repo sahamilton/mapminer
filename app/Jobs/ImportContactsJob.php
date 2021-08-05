@@ -41,12 +41,14 @@ class ImportContactsJob implements ShouldQueue
             ->whereNotNull('address_id')
             ->get()
             ->toArray();
-        foreach ($contacts as $contact) {
-            
-            $inserts[] = array_merge($contact, ['created_at'=>now(), 'user_id'=> $this->user->id]);
-           
+        if (count($contacts) >0) {
+            foreach ($contacts as $contact) {
+                
+                $inserts[] = array_merge($contact, ['created_at'=>now(), 'user_id'=> $this->user->id]);
+               
+            }
+            Contact::insert($inserts);
         }
        
-        Contact::insert($inserts);
     }
 }

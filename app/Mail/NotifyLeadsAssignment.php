@@ -26,9 +26,7 @@ class NotifyLeadsAssignment extends Mailable
     {
         $this->data = $data;
         $this->branch = $branch;
-        
         $this->manager = $manager;
-
         $this->leadsource = $leadsource;
     }
 

@@ -1,5 +1,5 @@
 @component('mail::table')
-|Date|Company|Activity|
+| Date | Company | Activity |
 |------------- |------------- |------------- |------------- |------------- |------------- |
 @foreach ($branch->activities as $activity)
 |{!! $activity->activity_date ? $activity->activity_date->format('Y-m-d'):''!!}|[{{$activity->relatesToAddress->businessname}}]({!!route('address.show', $activity->address_id)!!}) | @if($activity->type)     {{$activity->type->activity}} @endif |
