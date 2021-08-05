@@ -43,11 +43,16 @@ class CampaignSummary extends Component
         $this->sortField = $field;
     }
 
-    public function mount()
+    public function mount($campaign_id=null)
     {
         
         $this->campaigns = Campaign::where('status', 'planned')->orderBy('id', 'desc')->get();
-        $this->campaign = $this->campaigns->first();
+        if ($campaign_id) {
+             $this->campaign = Campaign::find($campaign_id);
+        } else {
+            $this->campaign = $this->campaigns->first();
+        }
+        
         $this->campaign_id = $this->campaign->id;
 
     }
@@ -65,7 +70,7 @@ class CampaignSummary extends Component
                 ->paginate($this->perPage),
                 'summarycount'=>$this->_summaryCounts(),
                 'assignable'=>$this->_assignable(),
-                'campaign' => Campaign::active()->findOrFail($this->campaign_id),
+                'campaign' => Campaign::findOrFail($this->campaign_id),
             ]
         );
     }
@@ -85,8 +90,7 @@ class CampaignSummary extends Component
                 [ 
                     'addresses as assigned_count'=>function ($q) {
                         $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
-                            ->where('address_branch.created_at', '<=', $this->campaign->dateto)
-                            ;
+                            ->where('address_branch.created_at', '<=', $this->campaign->dateto);
                         
                     }
                 ]
@@ -121,6 +125,7 @@ class CampaignSummary extends Component
     {
         
         $this->campaign = Campaign::findOrFail($this->campaign_id);
+
         $this->branches = array_intersect(auth()->user()->person->getMyBranches(), $this->campaign->branches->pluck('id')->toArray());
     }
     private function _summaryCounts()
