@@ -14,12 +14,13 @@ class BranchCampaign extends Component
     use WithPagination;
    
     public $perPage = 10;
-    public $sortField = 'businessname';
+    public $sortField = 'id';
     public $sortAsc = true;
     public $search = '';
     public $status = 'All';
     public $paginationTheme = 'bootstrap';
 
+    public $company_id = 'All';
     public $campaignid;
     public $view = 'leads';
     public $branch_id;
@@ -32,7 +33,21 @@ class BranchCampaign extends Component
     {
         $this->resetPage();
     }
-
+    public function updatingView()
+    {
+        $this->resetPage();
+        switch($this->view) {
+        case 'leads':
+            $this->sortField='businessname';
+            break;
+        case 'activities':
+            $this->sortField = 'activity_date';
+            break;  
+        case 'opportunities':
+            $this->sortField = 'expected_close';
+            break;
+        }
+    }
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -66,8 +81,7 @@ class BranchCampaign extends Component
                     ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'companies'=>Campaign::active()
-                    ->find($this->campaignid)->companies->pluck('companyname', 'id')
+                'companies'=>Campaign::find($this->campaignid)->companies->sortBy('companyname')->pluck('companyname', 'id')
                     ->toArray(),
                 'campaigns'=>Campaign::active()->pluck('title', 'id')
                     ->toArray(),
@@ -82,11 +96,19 @@ class BranchCampaign extends Component
         
         switch($this->view) {
         case 'leads':
+
+            $this->sortField='businessname';
+            
             return Address::with('company')
                 ->whereIn(
                     'company_id', 
                     Campaign::active()
                         ->find($this->campaignid)->companies->pluck('id')->toArray()
+                )
+                ->when(
+                    $this->company_id != 'All', function ($q) {
+                        $q->where('company_id', $this->company_id);
+                    }
                 )
                 ->whereHas(
                     'assignedToBranch', function ($q) {
@@ -97,18 +119,30 @@ class BranchCampaign extends Component
             break;
             
         case 'activities':
+
+            $this->sortField = 'activity_date';
+           
             return Activity::with('relatesToAddress')
                 ->where('branch_id', $this->branch_id)
                 ->whereBetween('activities.activity_date', [$this->period['from'], $this->period['to']])
                 ->whereHas(
                     'relatesToAddress', function ($q) {
-                        $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray()); 
+                        $q->when(
+                            $this->company_id != 'All', function ($q) {
+                                $q->where('company_id', $this->company_id);
+                            }, function ($q) {
+                                $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray()); 
+                            } 
+                        );
                     }         
                 );
 
             break; 
 
         case 'opportunities':
+
+            $this->sortField = 'expected_close';
+           
             return Opportunity::where('branch_id', $this->branch_id)
                 ->where('opportunities.created_at', '<=', $this->campaign->dateto)
                 ->where(
@@ -118,7 +152,13 @@ class BranchCampaign extends Component
                     }
                 )->whereHas(
                     'location', function ($q) {
-                        $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray()); 
+                        $q->when(
+                            $this->company_id != 'All', function ($q) {
+                                $q->where('company_id', $this->company_id);
+                            }, function ($q) {
+                                $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray()); 
+                            } 
+                        );
                     }       
                 );
             break;

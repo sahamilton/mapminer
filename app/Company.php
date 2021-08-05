@@ -510,7 +510,7 @@ class Company extends NodeModel
 
     public function scopeCompanyCampaignSummaryStats($query, Campaign $campaign, $fields = null)
     {
-        
+        $this->branches = auth()->user()->person->getMyBranches();
         if (! $fields) {
             $fields = $this->summaryFields;
         }
@@ -527,7 +527,8 @@ class Company extends NodeModel
                                 'campaigns', function ($q) {
                                     $q->where('campaign_id', $this->campaign->id);
                                 }
-                            )->doesntHave('assignedToBranch');;
+                            )->doesntHave('assignedToBranch');
+        
                         }
                     ]
                 );
@@ -541,7 +542,11 @@ class Company extends NodeModel
                                 'campaigns', function ($q) {
                                     $q->where('campaign_id', $this->campaign->id);
                                 }
-                            )->has('assignedToBranch');
+                            )->whereHas(
+                                'assignedToBranch', function ($q) {
+                                    $q->whereIn('branches.id', $this->branches);
+                                }
+                            );
                         }
                     ]
                 );
@@ -555,6 +560,10 @@ class Company extends NodeModel
                                 'campaigns', function ($q) {
                                     $q->where('campaign_id', $this->campaign->id);
                                 }
+                            )->whereHas(
+                                'assignedToBranch', function ($q) {
+                                    $q->whereIn('branches.id', $this->branches);
+                                }
                             )->touchedLeads($this->period);
                         }
                     ]
@@ -565,8 +574,9 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as new_opportunities'=>function ($q1) {
-                
-                            $q1->newOpportunities($this->period);
+                            
+                            $q1->whereIn('branch_id', $this->branches)
+                                ->newOpportunities($this->period);
                                 
                         }
                     ]
@@ -578,7 +588,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as open_opportunities'=>function ($q1) {
-                            $q1->open($this->period);
+                            $q1->whereIn('branch_id', $this->branches)
+                                ->open($this->period);
                         }
                     ]
                 );
@@ -588,7 +599,8 @@ class Company extends NodeModel
                 $q->withCount(       
                     [
                         'opportunities as won_opportunities'=>function ($q1) {
-                            $q1->won($this->period);
+                            $q1->whereIn('branch_id', $this->branches)
+                                ->won($this->period);
                         }
                     ]
                 );
@@ -599,7 +611,8 @@ class Company extends NodeModel
                     [
                         'opportunities as won_value'=>function ($query) {
                 
-                            $query->wonValue($this->period);
+                            $query->whereIn('branch_id', $this->branches)
+                                ->wonValue($this->period);
                                 
                            
                         }
