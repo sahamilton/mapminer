@@ -17,7 +17,7 @@
 			<td>Manager</td>
 			<td>Reports To</td>
 			<td>Role</td>
-			
+		
 		</tr>
 		@foreach($result as $branch)
 			<tr>  

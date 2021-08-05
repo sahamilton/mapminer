@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use App\Role;
 use App\Branch;
-
+ 
 class BranchExport implements FromView
 {   
     public $branch;
