@@ -44,9 +44,9 @@ class AssignAddressesToCampaignJob implements ShouldQueue
             $results = [];
             $locations = $company->locations->pluck('id')->toArray();
             foreach ($locations as $location) {
-                $results[] = ['address_id'=>$location, 'campaign_id'=>$this->campaign->id];
+                $results[] = ['created_at'=>now(), 'address_id'=>$location, 'campaign_id'=>$this->campaign->id];
             }
-            AddressCampaign::insert($results);
+            AddressCampaign::insertOrIgnore($results);
         }
 
         

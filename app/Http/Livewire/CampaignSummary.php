@@ -91,7 +91,6 @@ class CampaignSummary extends Component
                     'addresses as assigned_count'=>function ($q) {
                         $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
                             ->where('address_branch.created_at', '<=', $this->campaign->dateto);
-                        
                     }
                 ]
             )->whereIn('id', $this->branches);

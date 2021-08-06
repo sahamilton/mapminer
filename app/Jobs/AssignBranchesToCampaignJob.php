@@ -30,7 +30,9 @@ class AssignBranchesToCampaignJob implements ShouldQueue
      */
     public function handle()
     {
-        $branches = $this->campaign->getCampaignBranches()->pluck('id')->toArray();
+        $branches = $this->campaign->getCampaignBranches()
+            ->pluck('id')
+            ->toArray();
         $this->campaign->branches()->sync($branches);
     }
 }

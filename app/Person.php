@@ -205,7 +205,7 @@ class Person extends NodeModel implements Auditable
             return $this->_getAllBranches($servicelines);
         }        
         $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
-       
+        
         $branches = $branchMgrs->with('branchesServiced')
             ->when(
                 $servicelines, function ($q) use ($servicelines) {

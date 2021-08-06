@@ -216,7 +216,7 @@ class BranchCampaignController extends Controller
         $views = $this->_getCampaignViews($campaign);
        
         return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));*/
-         return response()->view('campaigns.branch', compact('campaign','branch'));
+         return response()->view('campaigns.branch', compact('campaign', 'branch'));
         
     }
 

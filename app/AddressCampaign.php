@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AddressCampaign extends Model
 {
     public $incrementing = false;
-    public $timestamps = false;
+    public $timestamps = true;
     public $fillable = ['campaign_id', 'address_id'];
     protected $table = 'address_campaign';
     

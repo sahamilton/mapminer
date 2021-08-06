@@ -5,7 +5,7 @@
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')
-            @include('livewire.partials._branchselector')
+         
             @include('livewire.partials._search', ['placeholder'=>'Search '])
             <div wire:loading class="spinner-border text-danger" role="status">
               <span class="sr-only">Loading...</span>

@@ -26,7 +26,7 @@ class BranchCampaign extends Component
     public $branch_id;
     public $period;
     public $campaign;
-    public $myBranches;
+    protected $myBranches;
   
 
     public function updatingSearch()
@@ -59,12 +59,12 @@ class BranchCampaign extends Component
         $this->sortField = $field;
     }
 
-    public function mount($branch_id=null)
+    public function mount($campaign_id, $branch_id=null)
     {
         
-        $this->campaignid = Campaign::active()->first()->id;
+        $this->campaignid = $campaign_id;
         $myBranches = auth()->user()->person->getMyBranches();
-        $this->myBranches = Branch::whereIn('id', $myBranches)->pluck('branchname', 'id');
+        $this->myBranches = Branch::whereIn('id', $myBranches)->pluck('branchname', 'id')->toArray();
         if (! $branch_id) {            
             $this->branch_id = reset($myBranches);
         } else {
@@ -91,6 +91,7 @@ class BranchCampaign extends Component
                     ->toArray(),
                 'branch' => Branch::findOrFail($this->branch_id),
                 'views'=>['leads','activities', 'opportunities'] ,
+                'myBranches' => $this->myBranches,
             ]
         );
     }
@@ -156,14 +157,12 @@ class BranchCampaign extends Component
                     }
                 )->whereHas(
                     'location', function ($q) {
-                        $q->when(
-                            $this->company_id != 'All', function ($q) {
-                                $q->where('company_id', $this->company_id);
-                            }, function ($q) {
-                                $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray()); 
-                            } 
+                        $q->whereHas(
+                            'campaigns', function ($q) {
+                                $q->where('campaigns.id', $this->campaign->id);
+                            }
                         );
-                    }       
+                    }     
                 );
             break;
         }

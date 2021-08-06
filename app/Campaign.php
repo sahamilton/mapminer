@@ -98,41 +98,50 @@ class Campaign extends Model
     }
     public function getCampaignBranches()
     {
-        // get managers team
-        $team = $this->getCampaignBranchTeam();
-       
-        $branches = $team->map(
-            function ($manager) {
-                return $manager->branchesServiced;
-            }
-        )
-        ->flatten()
-        ->unique();
-        return $branches;
+        if (! $this->status =='launched' || $this->type == 'open') {
+            // get managers team
+            $team = $this->getCampaignBranchTeam();
+           
+            return $team->map(
+                function ($manager) {
+                    return $manager->branchesServiced;
+                }
+            )
+            ->flatten()
+            ->unique();
+        } else {
+            return Branch::whereHas(
+                'leads', function ($q) {
+                    $q->whereIn('company_id', $this->companies->pluck('id')->toArray());
+                }
+            )
+            ->get();
+        }
     }
 
     public function getCampaignBranchTeam()
     {
-      
-        return Person::whereId($this->manager->id)->firstOrFail()
-            ->descendantsAndSelf()
-            ->whereHas(
-                'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['9']);
-                }
-            )
-            ->with(
-                [
-                    'branchesServiced' => function ($q) {
-                        $q->whereHas(
-                            'servicelines', function ($q1) {
-                                $q1->whereIn('id', $this->servicelines->pluck('id')->toArray());
-                            }
-                        );
+        
+            return Person::whereId($this->manager->id)->firstOrFail()
+                ->descendantsAndSelf()
+                ->whereHas(
+                    'userdetails.roles', function ($q) {
+                            $q->whereIn('roles.id', ['9']);
                     }
-                ]
-            )
-            ->get();
+                )
+                ->with(
+                    [
+                        'branchesServiced' => function ($q) {
+                            $q->whereHas(
+                                'servicelines', function ($q1) {
+                                    $q1->whereIn('id', $this->servicelines->pluck('id')->toArray());
+                                }
+                            );
+                        }
+                    ]
+                )
+                ->get();
+        
     }
     /**
      * [getCompanyLocationsOfCampaign description]

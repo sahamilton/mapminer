@@ -111,19 +111,11 @@ class CampaignController extends Controller
     {
     
         $data = $this->_transformRequest($request);
-        $servicelines = request('serviceline');
-        $manager = Person::findOrFail($data['manager_id']);
-        $branches = array_keys($manager->myBranches($manager));
- 
         $campaign = $this->campaign->create($data);
-        // this has to go to a back ground job
-        $campaign->branches()->sync($branches);
-        $campaign->servicelines()->sync($data['serviceline']); 
-        
-        
-        //$data['branches'] = $this->_getCampaignData($campaign);
-        //$campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
+        $campaign->servicelines()->sync($data['serviceline']);
         $campaign->companies()->sync($data['companies']);
+        $this->_assignBranchesToCampaigns($campaign);
+        
         return redirect()->route('campaigns.show', $campaign->id);
     }
     /**
@@ -179,19 +171,10 @@ class CampaignController extends Controller
         $data = $this->_transformRequest($request);
       
         $campaign->update($data);
-
-        $servicelines = $this->_getCampaignServicelines($campaign);
-        $manager = Person::findOrFail($data['manager_id']);
-        $data['branches'] = array_keys($manager->myBranches($manager));
-        $campaign->branches()->sync($data['branches']); 
-
-        $campaign->load('branches');
-
-        $campaign->servicelines()->sync($data['serviceline']); 
-  
-        
-        
+        $campaign->servicelines()->sync($data['serviceline']);
         $campaign->companies()->sync($data['companies']);
+        $this->_assignBranchesToCampaigns($campaign);
+
         return redirect()->route('campaigns.show', $campaign->id);
     }
     /**
@@ -250,6 +233,14 @@ class CampaignController extends Controller
             
         }
         
+    }
+
+    private function _assignBranchesToCampaigns(Campaign $campaign)
+    {
+        $manager = $campaign->manager;
+        $servicelines = $campaign->servicelines->pluck('id')->toArray();
+        $branches = array_values($manager->getMyBranches($servicelines));
+        return $campaign->sync($branches);
     }
     /**
      * [branchTest description]
