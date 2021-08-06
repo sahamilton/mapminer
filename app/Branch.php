@@ -330,6 +330,32 @@ class Branch extends Model implements HasPresenter
     {
             return $this->belongsToMany(Serviceline::class);
     }
+
+    public function scopeActive($query, $months = 3)
+    {
+        return $query->whereHas(
+            'manager', function ($q) use ($months) {
+                $q->whereHas(
+                    'userdetails', function ($q) use ($months) {
+                        $q->where('lastlogin', '>', now()->subMonths($months));
+                    }
+                );
+            }
+        );
+    } 
+    public function scopeInServiceLines($query, $servicelines=null)
+    {
+        if (! $servicelines) {
+            $servicelines = auth()->user()->serviceline;
+        }
+        //$servicelines = $servicelines->pluck('id')->toArray();
+        return $query->whereHas(
+            'servicelines', function ($q) use ($servicelines) {
+                $q->whereIn('servicelines.id', $servicelines);
+            
+            }
+        );
+    }
     /**
      * [servicedBy description]
      * 

@@ -96,26 +96,34 @@ class Campaign extends Model
        
         
     }
-    public function getCampaignBranches()
+    public function getCampaignBranches() : array
     {
-        if (! $this->status =='launched' || $this->type == 'open') {
+        
+        if (( $this->status !== 'launched') && $this->type == 'restricted') {
+            
             // get managers team
             $team = $this->getCampaignBranchTeam();
-           
-            return $team->map(
+            // the branches of the manager
+            $managerbranches = $team->map(
                 function ($manager) {
                     return $manager->branchesServiced;
                 }
             )
             ->flatten()
             ->unique();
+            
+            $activebranches = Branch::inServiceLines($this->servicelines->pluck('id')->toArray())
+                ->active('3')
+                ->pluck('id')
+                ->toArray();
+               
+            return array_intersect(array_values($this->manager->getMyBranches($this->servicelines->pluck('id')->toArray())), $activebranches);
+
         } else {
-            return Branch::whereHas(
-                'leads', function ($q) {
-                    $q->whereIn('company_id', $this->companies->pluck('id')->toArray());
-                }
-            )
-            ->get();
+            
+            return $this->branches
+                ->pluck('id')
+                ->toarray();
         }
     }
 
@@ -188,7 +196,7 @@ class Campaign extends Model
     public function getAssignableLocationsofCampaign($addresses, $count = false)
     {
         
-        $branches = $this->getCampaignBranches()->pluck('id')->toArray();
+        $branches = $this->getCampaignBranches();
 
         if ($count) {
             $query = "select 

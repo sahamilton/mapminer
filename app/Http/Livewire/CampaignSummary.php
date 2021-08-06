@@ -93,7 +93,7 @@ class CampaignSummary extends Component
                             ->where('address_branch.created_at', '<=', $this->campaign->dateto);
                     }
                 ]
-            )->whereIn('id', $this->branches);
+            )->whereIn('id', $this->campaign->branches->pluck('id')->toArray());
             break;    
         }
 

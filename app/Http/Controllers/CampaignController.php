@@ -239,8 +239,12 @@ class CampaignController extends Controller
     {
         $manager = $campaign->manager;
         $servicelines = $campaign->servicelines->pluck('id')->toArray();
-        $branches = array_values($manager->getMyBranches($servicelines));
-        return $campaign->sync($branches);
+        $activebranches = Branch::inServiceLines($servicelines)
+            ->active()
+            ->pluck('id')
+            ->toArray();
+        $branches = array_intersect(array_values($manager->getMyBranches($servicelines)), $activebranches);
+        return $campaign->branches()->sync($branches);
     }
     /**
      * [branchTest description]

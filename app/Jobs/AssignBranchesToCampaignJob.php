@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Campaign;
+use App\Branch;
 
 class AssignBranchesToCampaignJob implements ShouldQueue
 {
@@ -30,9 +31,7 @@ class AssignBranchesToCampaignJob implements ShouldQueue
      */
     public function handle()
     {
-        $branches = $this->campaign->getCampaignBranches()
-            ->pluck('id')
-            ->toArray();
-        $this->campaign->branches()->sync($branches);
+
+        $this->campaign->branches()->sync($this->campaign->getCampaignBranches());
     }
 }
