@@ -227,7 +227,7 @@ class CampaignController extends Controller
                 new AssignBranchesToCampaignJob($campaign),
                 new SendCampaignLaunched(auth()->user(), $campaign),
             ]
-        )->dispatch($campaign);
+        )->dispatch($campaign->id);
        
         
         

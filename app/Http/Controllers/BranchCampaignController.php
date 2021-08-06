@@ -185,7 +185,7 @@ class BranchCampaignController extends Controller
     public function show(Campaign $campaign, Branch $branch)
     {
         
-        $person = $this->person->findOrFail(auth()->user()->person->id);
+        /*$person = $this->person->findOrFail(auth()->user()->person->id);
            
 
         $myBranches = $this->person->myBranches($person);
@@ -215,8 +215,8 @@ class BranchCampaignController extends Controller
        
         $views = $this->_getCampaignViews($campaign);
        
-        return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));
-
+        return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));*/
+         return response()->view('campaigns.branch', compact('campaign','branch'));
         
     }
 

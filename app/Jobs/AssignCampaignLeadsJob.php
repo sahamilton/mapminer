@@ -25,9 +25,9 @@ class AssignCampaignLeadsJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Campaign $campaign)
+    public function __construct($campaign_id)
     {
-        $this->campaign = $campaign;
+        $this->campaign = Campaign::with('companies.unassigned')->find($campaign_id);
         
         
         
@@ -40,17 +40,16 @@ class AssignCampaignLeadsJob implements ShouldQueue
      */
     public function handle()
     {
-        $companies = $this->campaign->companies;
-        foreach ($companies as $company) {
+        foreach ($this->campaign->companies as $company) {
+            $newleads = []; 
             $addresses = $company->unassigned->flatten()->pluck('id')->toArray();
             $assignable = $this->campaign->getAssignableLocationsofCampaign($addresses, $count = false);
             $assignable = json_decode(json_encode($assignable), true);
             foreach ($assignable as $assign) {
-                $newleads = array_merge($assign, ['created_at'=>now(), 'status_id'=>2]);
+                $newleads[] = array_merge($assign, ['created_at'=>now(), 'status_id'=>2]);
             }
             AddressBranch::insert($newleads);
         }
-        
         
     }
 

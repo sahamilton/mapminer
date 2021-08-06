@@ -25,7 +25,7 @@ class BranchCampaign implements ShouldQueue
      */
     public function handle()
     {
-        foreach (Campaign::active()->limit(1)->get() as $campaign) {
+        foreach (Campaign::where('status', 'launched')->where('dateto', '>=', now())->get() as $campaign) {
             $branches = $this->_getCampaignDetails($campaign);
             foreach ($branches as $branch) {
                 if ($branch->manager && $branch->manager->first()->userdetails) {

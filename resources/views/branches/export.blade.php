@@ -16,8 +16,8 @@
 			<td>Service Lines</td>
 			<td>Manager</td>
 			<td>Reports To</td>
-			<td>Role</td>
-		
+			
+			
 		</tr>
 		@foreach($result as $branch)
 			<tr>  
@@ -38,10 +38,11 @@
 				</td>
 				<td>
 					@foreach($branch->manager as $manager)
-						{{$manager->fullName()}} ( pid= {{$manager->id}},uid = {{$manager->user_id}} )
+						{{$manager->fullName()}} ( pid= {{$manager->id}},uid = {{$manager->user_id}}, login in past 3 months = {{$manager->userdetails->lastlogin &&  $manager->userdetails->lastlogin > now()->subMonth(3) ? 'Yes' : 'No'}} )
 						@if( ! $loop->last) | @endif
 					@endforeach
 				</td>
+				
 				<td>
 					
 					@foreach($branch->manager as $manager)
@@ -51,13 +52,7 @@
 					@endforeach
 	
 				</td>
-				<td>
-					@foreach($branch->manager as $manager)
-						{{$manager->reportsTo ? implode(",",$manager->reportsTo->userdetails->roles->pluck('display_name')->toArray()) : ''}}
-						@if( ! $loop->last) | @endif
-						
-					@endforeach
-				</td>
+				
 				
 				
 

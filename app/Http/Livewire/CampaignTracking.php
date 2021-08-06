@@ -11,6 +11,7 @@ class CampaignTracking extends Component
 {
     use WithPagination;
     public $branches;
+   
     public Campaign $campaign;
     public $type = 'company';
     public $campaigns;

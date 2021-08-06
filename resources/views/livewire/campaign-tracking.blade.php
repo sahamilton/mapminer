@@ -10,6 +10,7 @@
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')
+
             @include('livewire.partials._search', ['placeholder'=>'Search '])
             <div wire:loading class="spinner-border text-danger" role="status">
                   <span class="sr-only">Loading...</span>
@@ -48,7 +49,13 @@
             @foreach ($data as $item)
 
             <tr>
-                <td>{{$type=='company' ? $item->companyname : $item->branchname}}</td>
+                <td>
+                    @if($type=='company') 
+                    {{$item->companyname}}
+                    @else
+                    <a href="{{route('branchcampaign.show',[$campaign->id, $item->id])}}" >{{$item->branchname}}</a>
+                    @endif
+                </td>
                 @foreach ($fields as $field)
                     <td>{{$item->$field ? $item->$field : '0'}}</td>
                 @endforeach
