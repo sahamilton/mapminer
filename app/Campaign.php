@@ -113,7 +113,7 @@ class Campaign extends Model
             ->unique();
             
             $activebranches = Branch::inServiceLines($this->servicelines->pluck('id')->toArray())
-                ->active('3')
+                ->with('manager')
                 ->pluck('id')
                 ->toArray();
                

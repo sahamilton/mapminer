@@ -10,26 +10,31 @@ use App\Salesactivity;
 use App\SearchFilter;
 use Illuminate\Http\Request;
 use Mail;
+use App\Campaign;
 
 class CampaignEmailController extends Controller
 {
     public $searchfilter;
     public $activity;
 
-    public function __construct(Salesactivity $activity, SearchFilter $searchfilter)
+    public function __construct(Salesactivity $activity, SearchFilter $searchfilter, )
     {
         $this->activity = $activity;
         $this->searchfilter = $searchfilter;
     }
 
-    public function announceCampaign($id)
+    public function announceCampaign(Campaign $campaign)
     {
-        $activity = $this->activity->with('campaignparticipants')->findOrFail($id);
+        
+        /*$activity = $this->activity->with('campaignparticipants')->findOrFail($campaign->id);
         $verticals = $this->searchfilter->industrysegments();
         $salesteam = $activity->campaignparticipants;
+        */
+        $branches = $campaign->load('branches.managers');
         $campaignverticals = array_unique($activity->vertical()->pluck('filter')->toArray());
         $message = $this->constructMessage($activity, $campaignverticals);
-
+        */
+       
         return response()->view('salesactivity.salesteam', compact('salesteam', 'activity', 'message', 'verticals'));
     }
 
@@ -78,7 +83,21 @@ class CampaignEmailController extends Controller
             sleep(1);
         }
     }
+    private function constructRestrictedCampaignMessage($activity, $verticals)
+    {
+        $message =
+        $activity->title.' campaign runs from '.$activity->datefrom->format('M j, Y').' until '.$activity->dateto->format('M j, Y').
+        '. '.$activity->description.'</p>';
+        $message .= 'This campaign focuses on: <ul>';
+        $message .= '<li>'.implode('</li><li>', array_unique($activity->salesprocess()->pluck('step')->toArray())).'</li>';
+        $message .= '</ul> for the following sales verticals:';
+        $message .= '<ul>';
+        $message .= '<li>'.implode('</li><li>', $verticals).'</li>';
+        $message .= '</ul></p>';
+        $message .= '<p>Check out <strong><a href="'.route('salesactivity.show', $activity->id).'">MapMiner</a></strong> for resources, including nearby locations, to help you with this campaign.</p>';
 
+        return $message;
+    }fn () => 
     private function constructMessage($activity, $verticals)
     {
         $message =

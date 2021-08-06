@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Campaign;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,13 +12,14 @@ class SendCampaignMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
+    public $campaign;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, Campaign $campaign)
     {
         $this->data = $data;
     }
