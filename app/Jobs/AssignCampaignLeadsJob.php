@@ -8,12 +8,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Campaign;
-use App\Company;
-use App\Branch;
-use App\User;
-use App\AddressBranch;
-use App\Jobs\SendCampaignLaunched;
 
+use App\Jobs\InsertLeadsToBranchJob;
 class AssignCampaignLeadsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -48,7 +44,7 @@ class AssignCampaignLeadsJob implements ShouldQueue
             foreach ($assignable as $assign) {
                 $newleads[] = array_merge($assign, ['created_at'=>now(), 'status_id'=>2]);
             }
-            AddressBranch::insert($newleads);
+            InsertLeadsToBranchJob::dispatch($newleads);
         }
         
     }
