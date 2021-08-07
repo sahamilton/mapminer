@@ -22,7 +22,7 @@ class ActivityOpportunity implements ShouldQueue
     
     public $distribution;
     public $file;
-    public $manager;
+  
     public $period;
     public $person;
     public $report; 
@@ -33,7 +33,7 @@ class ActivityOpportunity implements ShouldQueue
      
         $this->period = $period;
         $this->report = Report::where('job', class_basename($this))->firstOrFail();
-        $this->manager = $manager;   
+   
         $this->distribution = $this->report->distribution;
 
     }
