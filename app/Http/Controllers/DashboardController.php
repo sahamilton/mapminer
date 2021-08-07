@@ -216,7 +216,7 @@ class DashboardController extends Controller
      */
     protected function getSummaryBranchData() 
     {
-       
+        
         return $this->branch->select('id', 'branchname')
             ->SummaryLeadStats($this->period, $this->leadFields)
             ->SummaryOpportunities($this->period, $this->opportunityFields)

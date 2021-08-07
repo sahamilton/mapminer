@@ -223,11 +223,13 @@ class MgrDashboardController extends DashboardController
      */
     private function _getDashBoardData()
     {
-        
+        $data['me'] = $this->person->findOrFail($this->manager->id);
+        $data['team'] = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
-        $data['me'] = $this->person->findOrFail($this->manager->id);
-        $data['team'] = $data['me']->getDescendantsAndSelf();
+        
+
+        
        
         if (! $data['teamdata'] = $this->_myTeamsData($data)) {
             
@@ -285,30 +287,32 @@ class MgrDashboardController extends DashboardController
      */
     private function _myTeamsData($data)
     {
-        $fields = array_merge($this->leadFields, $this->opportunityFields);
-        
+        $fields = array_merge($this->leadFields, $this->opportunityFields, $this->activityFields);
+
         //* gets the associated branch data (opportunities and leads)
         foreach ($data['team'] as $report) {
             
             $mgrBranches = $report->getMyBranches();
-
+            
             foreach ($fields as $field) {
                 $data['teamdata'][$report->fullName()][$field] = $data['branches']->whereIn('id', $mgrBranches)->sum($field);
 
             }
         }
-        //* gets the associated people data (activities)
-        $this->reports = $data['me']->getDescendantsAndSelf()->pluck('user_id')->toArray();
+       
+        /* gets the associated people data (activities)
+        $this->reports = $data['me']->descendantsAndSelf()->limitDepth(1)->pluck('user_id')->toArray();
 
-        $data['activities'] = $this->getSummaryTeamData($this->period, $this->activityFields);
+        $data['activities'] = $this->getSummaryTeamData($this->period, );
+        dd($data['activities']);
         $directReports = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
         foreach ($directReports as $report) {
 
-            foreach ($this->activityFields as $field) {
+           foreach ($this->activityFields as $field) {
                
-                $data['teamdata'][$report->fullName()][$field] = $data['activities']->where('lft', '>=', $report->lft)->where('rgt', '<=', $report->rgt)->sum($field);
+               $data['teamdata'][$report->fullName()][$field] = $data['activities']->where('lft', '>=', $report->lft)->where('rgt', '<=', $report->rgt)->sum($field);
             }
-        }
+        }*/
 
         return collect($data['teamdata']);
         
