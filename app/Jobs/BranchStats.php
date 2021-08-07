@@ -56,23 +56,8 @@ class BranchStats implements ShouldQueue
             [
                 new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 
-        foreach ($this->distribution as $recipient) {
-            $this->user = $recipient;
-            $this->file = $this->_makeFileName();
-            $branches = $this->_getReportBranches($recipient); 
-            (new BranchStatsExport($this->period, $branches))
-                ->store($this->file, 'reports')
-                ->chain(
-                    [
-                        new ReportReadyJob(
-                            $recipient, 
-                            $this->period, 
-                            $this->file, 
-                            $this->report
-                        )
-                    ]
-                );
-        }
+            ]
+        );  
     }
 
     private function _makeFileName()
