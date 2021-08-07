@@ -20,7 +20,6 @@ class BranchStats implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $distribution;
     public $file;
-   
     public $period;
     public $person;
     public $report; 
@@ -33,8 +32,6 @@ class BranchStats implements ShouldQueue
         $this->period = $period;
         $this->report = Report::where('job', class_basename($this))->firstOrFail();
         
-        //$this->distribution = $distribution;
-
     }
 
     /**

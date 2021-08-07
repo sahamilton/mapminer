@@ -36,13 +36,13 @@ class DailyBranch implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(array $period, $distribution, $manager = null)
+    public function __construct(array $period)
     {
        
         $this->period = $period; 
         $this->report = Report::where('job', class_basename($this))->firstOrFail();   
-        $this->distribution = $distribution;
-        $this->manager = $manager;
+
+
     } 
 
     /**
