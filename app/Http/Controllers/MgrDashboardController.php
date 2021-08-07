@@ -224,7 +224,7 @@ class MgrDashboardController extends DashboardController
     private function _getDashBoardData()
     {
         $data['me'] = $this->person->findOrFail($this->manager->id);
-        $data['team'] = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
+        $data['team'] = $data['me']->descendants()->limitDepth(1)->get();
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
         
