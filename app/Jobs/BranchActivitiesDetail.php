@@ -26,13 +26,13 @@ class BranchActivitiesDetail implements ShouldQueue
     public $report; 
     public $user;
     
-    public function __construct(Array $period= null, $distribution, $manager)
+    public function __construct(Array $period= null)
     {
      
         $this->period = $period;
         $this->report = Report::where('job', class_basename($this))->firstOrFail();
-        $this->manager = $manager;   
-        $this->distribution = $distribution;
+        
+        $this->distribution =  $this->report->distribution;
 
     }
 
