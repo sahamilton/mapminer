@@ -90,14 +90,14 @@ use Illuminate\Http\Request;
         Route::post('lastlogged', ['as'=>'lastlogged', 'uses'=>'Admin\AdminUsersController@lastlogged']);
         //   Reports
         //Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
-
+        
         Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
         Route::get('reports/review/{filename?}', ['as'=>'reports.review', 'uses'=>'ReportsController@review']);
         Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
         Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
-
-
         Route::resource('reports', 'ReportsController', ['except'=>['index','show']]);
+
+        
         
         
         //   User Role Management

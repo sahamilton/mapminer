@@ -253,8 +253,7 @@ class ReportsController extends Controller {
         $manager = request('manager');
         $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
         $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-        $distribution = User::with('person')->where('id', auth()->user()->id)->get();
-       
+        
         switch($report->object) {
         case 'Branch':
             return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager);
@@ -274,10 +273,9 @@ class ReportsController extends Controller {
      */
     public function send(Report $report, Request $request)
     {
-        //$report->load('distribution');
-        dd(Person::findOrFail(request('manager')));
+        $recipients = $report->distribution->count();
         $this->_dispatchJob($report, $request, $report->distribution);
-        return redirect()->back()->withSuccess('Your job has been dispatched. Reports are being sent to the distribution list.');
+        return redirect()->back()->withSuccess('Your job has been dispatched. Reports are being sent to the ' . $recipients. ' on the distribution list.');
     }
     /**
      * [_getObject description]
