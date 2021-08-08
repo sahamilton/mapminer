@@ -5,6 +5,7 @@
     data-href="{{route('reports.run',$report->id)}}" 
     data-toggle="modal" 
     data-target="#run-report" 
+    title="Send a copy of the report to yourself"
     data-title = "{{$report->report}}" 
     href="#">
     <i class="fas fa-file-download"></i>
@@ -16,7 +17,8 @@
     data-toggle="modal" 
     data-target="#run-report" 
     data-title = "{{$report->report}}" 
-    href="#">
+    href="#"
+    title="Send report to the recipients">
     <i class="far fa-envelope"></i>
     Send Report
     </a>
