@@ -67,7 +67,7 @@ class DailyBranch implements ShouldQueue
                         new ReportReadyJob($recipient, $this->period, $this->file, $this->report)
 
                     ]
-                );
+                )->onQueue('reports');
             
             
         }

@@ -67,7 +67,7 @@ class BranchReportJob implements ShouldQueue
                             $this->report
                         )
                     ]
-                );
+                )->onQueue('reports');
             
         }
     }

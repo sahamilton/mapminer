@@ -256,7 +256,7 @@ class ReportsController extends Controller {
         
         switch($report->object) {
         case 'Branch':
-            return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager);
+            return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;
 
         }
