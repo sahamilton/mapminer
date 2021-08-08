@@ -41,11 +41,11 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     ];
 
     
-    public function __construct(Report $report, array $period, array $branches = null)
+    public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
-        $this->report = $report;
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
     }
 
     public function headings(): array

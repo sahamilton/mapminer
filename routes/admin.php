@@ -199,8 +199,8 @@ use Illuminate\Http\Request;
                 //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
                 //App\Jobs\BranchStats::dispatch($period);
-                App\Jobs\BranchCampaign::dispatch();
-                //App\Jobs\DailyBranch::dispatch($period);
+                //App\Jobs\BranchCampaign::dispatch();
+                App\Jobs\DailyBranch::dispatch($period);
                 //
                 //App\Jobs\WeeklyActivityReminder::dispatch($period);
                 //App\Jobs\WeeklySummary::dispatch($period);

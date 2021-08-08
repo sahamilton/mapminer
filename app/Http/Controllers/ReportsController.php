@@ -231,7 +231,7 @@ class ReportsController extends Controller {
         return redirect()->route('reports.index')->withMessage($report->report . ' Report deleted');
     }
     /**
-     * [run description]
+     * The Run Command sets the distribution to the user
      * 
      * @param Report  $report  [description]
      * @param Request $request [description]
@@ -265,7 +265,7 @@ class ReportsController extends Controller {
     }
 
     /**
-     * [run description]
+     * The send command sends the report to the selected manager
      * 
      * @param Report  $report  [description]
      * @param Request $request [description]
@@ -274,7 +274,8 @@ class ReportsController extends Controller {
      */
     public function send(Report $report, Request $request)
     {
-        $report->load('distribution');
+        //$report->load('distribution');
+        dd(Person::findOrFail(request('manager')));
         $this->_dispatchJob($report, $request, $report->distribution);
         return redirect()->back()->withSuccess('Your job has been dispatched. Reports are being sent to the distribution list.');
     }

@@ -6,7 +6,7 @@ use Mail;
 use App\Report;
 use App\Person;
 
-use App\Exports\DailyBranchExport;
+use App\Exports\reports\Branch\DailyBranchExport;
 
 use Illuminate\Support\Str;
 
@@ -53,9 +53,9 @@ class DailyBranch implements ShouldQueue
     public function handle()
     {
     
+        
 
-
-        foreach ($this->distribution as $recipient) {
+        foreach ($this->report->distribution as $recipient) {
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
            

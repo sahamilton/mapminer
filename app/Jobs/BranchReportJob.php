@@ -31,7 +31,8 @@ class BranchReportJob implements ShouldQueue
     public function __construct(
         Report $report, 
         Array $period= null, 
-        $distribution, $manager
+        $distribution, 
+        $manager
     ) {
      
         $this->period = $period;
@@ -53,8 +54,9 @@ class BranchReportJob implements ShouldQueue
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient);
-            $export = '\App\Exports\Reports\Branch\\' . $this->report->export;
-            (new $export($this->report, $this->period, $branches))
+            $export = $this->_getExportClass();
+           
+            (new $export($this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
@@ -90,6 +92,39 @@ class BranchReportJob implements ShouldQueue
             return Person::findOrFail($this->manager)->getMyBranches();
         }
         return $recipient->person->getMyBranches();
+    }
+
+    private function _getExportClass()
+    {
+        switch(strtolower($this->report->object)) {
+        case "branch":
+            return "\App\Exports\Reports\Branch\\". $this->report->export;
+            break;
+
+        case "company": 
+            return "\App\Exports\\". $this->report->export;
+            break;
+
+
+        
+
+        case "role": 
+            return "\App\Exports\\". $this->report->export;
+            break;
+
+
+       
+
+        case "user": 
+            return "\App\Exports\\". $this->report->export;
+            break;
+
+        default:
+            return "\App\Exports\\". $this->report->export;
+            break;
+
+        } 
+
     }
         
 }
