@@ -44,9 +44,11 @@ class ActivitiesTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount()
+    public function mount($status = null)
     {
-        
+        if ($status) {
+            $this->status = $status;
+        }
         $this->myBranches = auth()->user()->person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
 
@@ -71,10 +73,12 @@ class ActivitiesTable extends Component
                     ->search($this->search)
                     ->when(
                         $this->status != 'All', function ($q) {
-                            if ($this->status ==='') {
-                                $this->status = null;
+                            if ($this->status ==='1') {
+                                $q->whereNotNull('completed');
+                            } else {
+                                $q->whereNull('completed');
                             } 
-                            $q->where('completed', $this->status);
+                            
                         }
                     )
                     ->when(
@@ -87,6 +91,7 @@ class ActivitiesTable extends Component
                     ->paginate($this->perPage),
                 'activitytypes' => ActivityType::orderBy('activity')->pluck('activity', 'id')->toArray(),
                 'branch' => Branch::findOrFail($this->branch_id),
+                'statuses' => ['All'=>'All', '1'=>'Completed', '0'=>'Planned'],
                 
                            ]
         );

@@ -1,7 +1,8 @@
 <div>
     <h2>{{$branch->branchname}}</h2>
-    <h4>Activities</h4>
+    <h4>{{$statuses[$status]}} Activities</h4>
     <p>for the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
+    <p><a href="{{route('dashboard')}}">Return To Branch Dashboard</a></p>
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')
@@ -19,9 +20,9 @@
             <label for="status">Status:</label>
             <select wire:model="status" 
             class="form-control">
-                <option value="All">All</options>
-                <option value='1'>Complete</options>
-                <option value=''>Planned</options>
+                @foreach ($statuses as $key=>$value)
+                    <option value="{{$key}}">{{$value}}</options>
+                @endforeach
                 
             </select>
         </div>
