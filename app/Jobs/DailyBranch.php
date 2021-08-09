@@ -6,7 +6,7 @@ use Mail;
 use App\Report;
 use App\Person;
 
-use App\Exports\reports\Branch\DailyBranchExport;
+use App\Exports\Reports\Branch\DailyBranchExport;
 
 use Illuminate\Support\Str;
 

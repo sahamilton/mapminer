@@ -120,6 +120,7 @@ class BranchCampaignController extends Controller
 
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields', 'manager')); 
         */
+      
        return response()->view('campaigns.branch', compact('campaign'));
     }
 
