@@ -73,14 +73,19 @@ class BranchCampaignController extends Controller
         $manager = $this->person->where('user_id', session('manager'))->first();
         
         $myBranches = $manager->getMyBranches();
-        
-        $campaigns = $this->campaign->active()->current($myBranches)->with('branches')->get();
-       
-        if (! $campaigns->count()) {
+
+        if (! $campaigns = $this->campaign->active()->current($myBranches)->with('branches')->first()) {
+            return redirect()->back()
+                ->withMessage('There are no leads in this campaign currently assigned to your branches');
+        }
+        if (! $branches = $campaigns->branches->intersectByKeys($myBranches)) {
             return redirect()->back()
                 ->withMessage('There are no current sales campaigns for your branches');
         }
-        $branches = $campaign->branches->intersect($myBranches);
+
+        
+        
+        
         
         if (session('campaign') && session('campaign') != 'all') {
             $campaign = $this->campaign->findOrFail(session('campaign'));
