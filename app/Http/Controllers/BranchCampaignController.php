@@ -66,7 +66,7 @@ class BranchCampaignController extends Controller
     public function index()
     {
         
-        /*if (! session('manager')) {
+        if (! session('manager')) {
             $manager = $this->person->where('user_id', auth()->user()->id)->first();
             session(['manager'=>auth()->user()->id]);
         } else {
@@ -75,27 +75,28 @@ class BranchCampaignController extends Controller
        
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
         
-        $campaigns = $this->campaign->active()->current($myBranches->pluck('id')->toArray())->get();
-        
+        $campaign = $this->campaign->active()->current($myBranches->pluck('id')->toArray())->first();
+       
         
        
-        if (! $campaigns->count()) {
+        if (! $campaign->count()) {
             return redirect()->back()
                 ->withMessage('There are no current sales campaigns for your branches');
         }
-        $branches = $campaigns->first()->branches->intersect($myBranches);
+        $branches = $campaign->branches->intersect($myBranches);
+        
         if (session('campaign') && session('campaign') != 'all') {
             $campaign = $this->campaign->findOrFail(session('campaign'));
         } else {
-            $campaign = $campaigns->first();
-            session(['campaign'=>$campaigns->first()->id]);
+            //$campaign = $campaigns->first();
+            session(['campaign'=>$campaign->id]);
         }
         
         if ($branches->count() == 1) {
 
             return $this->show($campaign, $branches->first());
         } 
-
+        /*
         $team = $this->_getCampaignTeam($campaign);
         
         $branches = $this->branch
@@ -119,7 +120,7 @@ class BranchCampaignController extends Controller
 
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields', 'manager')); 
         */
-       return response()->view('campaigns.branch');
+       return response()->view('campaigns.branch', compact('campaign'));
     }
 
     public function store(Request $request)
