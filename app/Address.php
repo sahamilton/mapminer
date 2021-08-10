@@ -115,8 +115,8 @@ class Address extends Model
     public function currentcampaigns()
     {
         return $this->belongsToMany(Campaign::class)
-            ->where('datefrom','<=', now()->startOfDay())
-            ->where('dateto','>=', now()->endOfDay());
+            ->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
     }
     /**
      * [project description]

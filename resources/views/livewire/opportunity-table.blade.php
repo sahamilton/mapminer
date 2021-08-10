@@ -11,19 +11,24 @@
         </a>
     </p>
 
-
-    @include('livewire.partials._branchselector')
+    <div class="row" style="margin-bottom:10px">
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._branchselector')
+            @include('livewire.partials._search', ['placeholder'=>'Search opportunities'])
+        </div>
+    </div>
+    
     
     <div class="row mb-4">
         <div class="col form-inline">
-            @include('livewire.partials._perpage')
+            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
             @include('livewire.partials._periodselector', ['all'=>true])
             <div wire:loading>
                 <div class="spinner-border text-danger"></div>
             </div>
-        </div>
-        <div class="col form-inline">
-            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
+        
+            
             Status: &nbsp;
             <select wire:model="filter" class="form-control">
                 @foreach ($filters as $key=>$value)
@@ -32,9 +37,6 @@
             </select>
         </div>
 
-        <div class="col">
-            <input wire:model="search" class="form-control" type="text" placeholder="Search opportunities...">
-        </div>
     </div>
 
     <div class="row">

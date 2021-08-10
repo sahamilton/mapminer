@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 use App\Address;
 use App\Activity;
 use App\Branch;
+use App\Campaign;
 use App\Person;
 use App\ActivityType;
 use Livewire\Component;
@@ -32,7 +33,7 @@ class LeadTable extends Component
     public $address_id;
     public $branch_id;
     public $lead_source_id = 'All';
-   
+    public $campaign_id = 'All';
     public $myBranches;
 
  
@@ -112,8 +113,15 @@ class LeadTable extends Component
                         
                     }
                 )
-
-                ->whereIn(
+                ->when(
+                    $this->campaign_id != 'All', function ($q) {
+                        $q->whereHas(
+                            'campaigns', function ($q) {
+                                $q->where('campaigns.id', $this->campaign_id);
+                            }
+                        );
+                    }
+                )->whereIn(
                     'addresses.id', function ($query) {
                         $query->select('address_id')
                             ->from('address_branch')
@@ -128,18 +136,25 @@ class LeadTable extends Component
                 )
             
                 ->with('assignedToBranch')
-
+                ->when(
+                    $this->lead_source_id != 'All', function ($q) {
+                        $q->where('lead_source_id', $this->lead_source_id);
+                    }
+                )
                 
                 ->withLastActivityId()
                 ->with('lastActivity')
                 ->dateAdded()
-                
-
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-                'branch'=>Branch::query()->with('currentcampaigns')->findOrFail($this->branch_id),
+                'branch'=>Branch::query()->with('manager', 'currentcampaigns', 'currentopencampaigns')->findOrFail($this->branch_id),
                 'opstatus'=>['All', 'Without', 'Only Open', 'Any'],
                 'activities'=>ActivityType::pluck('activity', 'id')->toArray(),
+                'leadsources' => $this->_getLeadSources(),
+                'campaigns'=> Campaign::active()
+                    ->current([$this->branch_id])
+                    ->pluck('title', 'id')
+                    ->toArray(),
             ]
         );
     }
@@ -154,6 +169,27 @@ class LeadTable extends Component
         if ($this->setPeriod != 'All') {
             $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
         }
+        
+    }
+
+    private function _getLeadSources()
+    {
+        return collect(
+            \DB::select(
+                \DB::raw(
+                    "select distinct leadsources.id, 
+                        leadsources.source 
+                        from address_branch, addresses, leadsources 
+                        where address_branch.branch_id = ". $this->branch_id .
+                        " and addresses.id = address_branch.address_id
+                        and address_branch.status_id = 2 
+                        and addresses.lead_source_id = leadsources.id"
+                )
+            )
+        )
+            ->sortBy('source')
+            ->pluck('source', 'id')
+            ->toarray();
         
     }
 }

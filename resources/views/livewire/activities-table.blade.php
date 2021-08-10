@@ -12,10 +12,8 @@
     </div>
 
     <div class="row mb-4 ">
-       
-        <div wire:loading>
-            <div class="spinner-border text-danger"></div>
-        </div>
+       <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
+        @include('livewire.partials._periodselector')
         <div class="col form-inline">
             <label for="status">Status:</label>
             <select wire:model="status" 
@@ -25,9 +23,7 @@
                 @endforeach
                 
             </select>
-        </div>
-        @include('livewire.partials._periodselector')
-         <div class="col form-inline">
+        
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 
             class="form-control">
@@ -37,7 +33,9 @@
                 @endforeach
             </select>
         </div>
-    
+        <div wire:loading>
+            <div class="spinner-border text-danger"></div>
+        </div>
     </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
