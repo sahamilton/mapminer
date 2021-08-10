@@ -5,7 +5,7 @@
     @include('livewire.partials._companyselector')
     <h4>Account Summary</h4>
      <div wire:loading>
-            <div class="spinner-border"></div>
+            <div class="spinner-border text-danger"></div>
         </div>
     <x-table.table>
         <x-slot name="head">

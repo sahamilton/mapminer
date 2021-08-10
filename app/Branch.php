@@ -612,7 +612,23 @@ class Branch extends Model implements HasPresenter
      */
     public function currentcampaigns()
     {
-        return $this->belongsToMany(Campaign::class)->where('datefrom', '<=', now()->startOfDay())->where('dateto', '>=', now()->endOfDay());
+        return $this->belongsToMany(Campaign::class)
+
+            ->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
+    }
+
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function currentopencampaigns()
+    {
+        return $this->belongsToMany(Campaign::class)
+            ->where('type', 'open')
+            ->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
     }
 
     /**

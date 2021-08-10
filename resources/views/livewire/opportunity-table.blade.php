@@ -19,7 +19,7 @@
             @include('livewire.partials._perpage')
             @include('livewire.partials._periodselector', ['all'=>true])
             <div wire:loading>
-                <div class="spinner-border"></div>
+                <div class="spinner-border text-danger"></div>
             </div>
         </div>
         <div class="col form-inline">

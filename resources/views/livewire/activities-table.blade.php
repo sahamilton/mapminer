@@ -14,7 +14,7 @@
     <div class="row mb-4 ">
        
         <div wire:loading>
-            <div class="spinner-border"></div>
+            <div class="spinner-border text-danger"></div>
         </div>
         <div class="col form-inline">
             <label for="status">Status:</label>

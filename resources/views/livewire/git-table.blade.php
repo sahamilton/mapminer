@@ -5,7 +5,7 @@
         @include('livewire.partials._search', ['placeholder'=>'Search Git Commits'])
     </div>
     <div wire:loading>
-        <div class="spinner-border"></div>
+        <div class="spinner-border text-danger"></div>
     </div>
 
     <button class="btn btn-success float-right" 

@@ -10,7 +10,7 @@
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             <div wire:loading>
-                <div class="spinner-border"></div>
+                <div class="spinner-border text-danger"></div>
             </div>
             
             <div class="input-group-prepend">

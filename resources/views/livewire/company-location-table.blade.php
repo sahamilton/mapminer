@@ -33,7 +33,7 @@
             </select>
         </div>
         <div wire:loading>
-        <div class="spinner-border"></div>
+        <div class="spinner-border text-danger"></div>
     </div>
         @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
     </div>
