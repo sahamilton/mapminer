@@ -15,7 +15,7 @@ Related to your original feedback:
 
 @component('mail::panel')
 
-{{$feedback->comments->last()['comment']}}
+{!! $feedback->comments->last()['comment'] !!}
 
 @endcomponent
 
