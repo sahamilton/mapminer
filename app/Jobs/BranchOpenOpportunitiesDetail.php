@@ -5,7 +5,7 @@ namespace App\Jobs;
 use Mail;
 use App\Person;
 use App\Report;
-use App\Exports\BranchOpenOpportunitiesDetailExport;
+use App\Exports\Reports\Branch\BranchOpenOpportunitiesDetailExport;
 
 use Illuminate\Support\Str;
 

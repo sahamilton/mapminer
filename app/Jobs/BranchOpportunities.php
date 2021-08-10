@@ -7,7 +7,7 @@ use Excel;
 use App\Report;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use App\Exports\BranchOpportunitiesExport;
+use App\Exports\Reports\Branch\BranchOpportunitiesExport;
 use App\Mail\BranchOpportunitiesReport;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

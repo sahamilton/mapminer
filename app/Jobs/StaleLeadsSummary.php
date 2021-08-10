@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Excel;
-use App\Exports\StaleLeadsSummaryExport;
+use App\Exports\Reports\Branch\StaleLeadsSummaryExport;
 
 class StaleLeadsSummary implements ShouldQueue
 {

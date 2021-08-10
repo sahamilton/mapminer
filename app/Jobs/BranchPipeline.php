@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Branch;
-use App\Exports\BranchPipelineExport;
+use App\Exports\Reports\Branch\BranchPipelineExport;
 use App\Mail\BranchPipelineReport;
 use App\Report;
 use Carbon\Carbon;
