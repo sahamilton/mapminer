@@ -66,7 +66,7 @@ class BranchCampaignController extends Controller
     public function index()
     {
 
-
+  
         
         if (! session('manager')) {
             $manager = $this->person->where('user_id', auth()->user()->id)->first();
