@@ -24,13 +24,7 @@ class LeadTable extends Component
     //public $updateMode = false;
     public $setPeriod = 'All';
     public $period;
-    public $activitytype_id;
-    public $note;
-    public $activity_date='2021-02-03';
-    public $completed =1;
-    public $followup_date;
-    public $followup_activity;
-    public $address_id;
+    //public $activity_date;
     public $branch_id;
     public $lead_source_id = 'All';
     public $campaign_id = 'All';
@@ -44,6 +38,13 @@ class LeadTable extends Component
     public function updatingLeadSourceId()
     {
         $this->resetPage();
+    }
+    public function updatingBranchId()
+    {
+        $this->resetPage();
+        $this->lead_source_id = 'All';
+        $this->campaign_id = 'All';
+
     }
     /**
      * [sortBy description]
