@@ -50,12 +50,12 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
      * @param Array $period   [description]
      * @param array $branches [description]
      */
-    public function __construct(Report $report, Array $period, Array $branches)
+    public function __construct(Array $period, Array $branches)
     {
        
         $this->period = $period;
         $this->branches = $branches;
-        $this->report = $report;
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
         $this->allFields = $this->_getAllFields();
        
        
