@@ -48,6 +48,7 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
      */
     public function __construct(Report $report, Array $period, Array $branches=null)
     {
+
         $this->period = $period;
         $this->branches = $branches;
         $this->report = $report;
@@ -62,9 +63,9 @@ class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, Wit
     {
         return [
            [' '],
-           [$report->report],
+           [$this->report->report],
            ['for the period from '. $this->period['from']->format('M jS, Y'). ' to ' . $this->period['to']->format('M jS, Y')],
-           [$report->description],
+           [$this->report->description],
            $this->fields,
         ];
   
