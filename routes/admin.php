@@ -181,16 +181,19 @@ use Illuminate\Http\Request;
 
                 $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay(), 
                     'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay()];
-                $branches =  [ 0 => "8032",
-                              1 => "2977",
-                              2 => "2986",
-                              3 => "1415",
-                              4 => "8047",
-                              5 => "1196",
-                              6 => "1179",
-                              7 => "7209",
-                              8 => "1182"];
-                
+                $branches =  [ 
+                    0 => "8032",
+                    1 => "2977",
+                    2 => "2986",
+                    3 => "1415",
+                    4 => "8047",
+                    5 => "1196",
+                    6 => "1179",
+                    7 => "7209",
+                    8 => "1182"
+                ];
+                $report = App\Report::findOrFail(30);
+                App\Jobs\BranchReportJob::dispatch($report, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period, $branches);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 
@@ -199,7 +202,7 @@ use Illuminate\Http\Request;
                 //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
                 //App\Jobs\BranchStats::dispatch($period);
-                App\Jobs\BranchCampaign::dispatch();
+                //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\DailyBranch::dispatch($period);
                 //
                 //App\Jobs\WeeklyActivityReminder::dispatch($period);

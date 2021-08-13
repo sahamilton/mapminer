@@ -11,8 +11,9 @@ use App\Campaign;
 USE App\Company;
 use App\Opportunity;
 use Excel;
-use App\Exports\CampaignSummaryExport;
+use App\Exports\Reports\Campaign\CampaignSummaryExport;
 use App\Exports\CampaignCompanyExport;
+use App\Jobs\CampaignSummary;
 class CampaignTrackingController extends Controller
 {
     public $activity;
@@ -160,13 +161,15 @@ class CampaignTrackingController extends Controller
     public function export(Campaign $campaign)
     {
         
-        $campaign->load('companies', 'branches');
+        /*$campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
         $fields = $this->fields;
         //dd($branches);
         //$branches= $this->_getAllBranchesInCampaign($campaign);
         //dd($branches);
-        return Excel::download(new CampaignSummaryExport($campaign, $branches, $fields), $campaign->title.time().'Export.csv');
+        //return Excel::download(new CampaignSummaryExport($campaign, $branches, $fields), $campaign->title.time().'Export.csv');*/
+        CampaignSummary::dispatch($campaign);
+        return redirect()->back()->withMessage("Job has been dispatched and the report will be emailed to you");
 
     }
 
@@ -184,7 +187,7 @@ class CampaignTrackingController extends Controller
         $period = $this->_getCampaignPeriod($campaign);
         $companies = $this->company->whereIn('id', $companies)->summaryStats($period, $branches)->get();
         $fields = $this->fields;
-        return Excel::download(new CampaignCompanyExport($campaign, $companies, $fields), $campaign->title.time().'CompanyExport.csv');
+        return Excel::download(new CampaignCompanyExport($campaign), $campaign->title.time().'CompanyExport.csv');
 
     }
 

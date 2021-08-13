@@ -6,6 +6,7 @@ use Mail;
 use App\Report;
 use App\Person;
 use App\Exports\BranchLoginsExport;
+use App\Exports\Reports\Branch\BranchLoginsExport;
 
 use Illuminate\Support\Str;
 
@@ -32,9 +33,11 @@ class BranchLogins implements ShouldQueue
     {
      
         $this->period = $period;
-        $this->report = Report::where('job', class_basename($this))->firstOrFail();
-        $this->manager = $manager;   
-        $this->distribution = $distribution;
+        $this->report = Report::where('job', class_basename($this))
+            ->with('distribution')
+            ->firstOrFail();
+      
+        $this->distribution = $this->report->getDistribution();
 
     }
 
@@ -47,15 +50,15 @@ class BranchLogins implements ShouldQueue
     {
         
         foreach ($this->distribution as $recipient) {
-            $this->user = $recipient;
+         
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient); 
-            (new BranchLoginsExport($this->period, $branches))
+            (new BranchLoginsExport($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
                         new ReportReadyJob(
-                            $recipient, 
+                            $this->distribution, 
                             $this->period, 
                             $this->file, 
                             $this->report

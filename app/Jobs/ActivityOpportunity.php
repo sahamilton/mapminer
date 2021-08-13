@@ -50,7 +50,7 @@ class ActivityOpportunity implements ShouldQueue
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient); 
-            (new ActivityOpportunityExport($this->period, $branches))
+            (new ActivityOpportunityExport($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
@@ -81,10 +81,7 @@ class ActivityOpportunity implements ShouldQueue
 
     private function _getReportBranches($recipient)
     {
-        if ($this->manager) {
-
-            return Person::findOrFail($this->manager)->getMyBranches();
-        }
+        
         return $recipient->person->getMyBranches();
     }
         

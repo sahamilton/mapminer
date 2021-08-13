@@ -16,7 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 
-class BranchReportJob implements ShouldQueue
+class CampaignReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
@@ -27,19 +27,18 @@ class BranchReportJob implements ShouldQueue
     public $person;
     public $report; 
     public $user;
+    public $campaign;
     
     public function __construct(
         Report $report, 
-        Array $period = null, 
-        $distribution = null, 
-        $manager = null
+        Campaign $campaign,
     ) {
      
-        $this->period = $period;
+        $this->campaign = $campaign;
         $this->report = $report;
         $this->manager = $manager;   
-        $this->distribution = $this->report->distribution;
-
+        $this->distribution = $distribution;
+        $this->period = $this->campaign->period();
     }
 
     /**
@@ -49,13 +48,14 @@ class BranchReportJob implements ShouldQueue
      */
     public function handle()
     {
-        /// what do we do if there is no distribution?
+   
         foreach ($this->distribution as $recipient) {
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient);
-            $export = '\App\Exports\Reports\Branch\\' . $this->report->export;
-            (new $export($this->report, $this->period, $branches))
+            $export = $this->_getExportClass();
+           
+            (new $export($this->campaign, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
@@ -66,36 +66,31 @@ class BranchReportJob implements ShouldQueue
                             $this->report
                         )
                     ]
-                );
+                )->onQueue('reports');
             
         }
     }
 
     private function _makeFileName()
     {
-        if (! is_a($this->user, 'App\User')) {
-            $this->user = User::with('person')->first();          
-        }
-
         return 
-                strtolower(
-                    Str::slug(
-                        $this->user->person->fullName()." ".
-                        $this->report->filename ." ". 
-                        $this->period['from']->format('Y_m_d'), 
-                        '_'
-                    )
-                ). ".xlsx";  
-        
+            strtolower(
+                Str::slug(
+                    $this->user->person->fullName()." ".
+                    $this->report->filename ." ". 
+                    $this->period['from']->format('Y_m_d'), 
+                    '_'
+                )
+            ). ".xlsx";
     }
 
     private function _getReportBranches($recipient)
     {
-        if ($this->manager) {
+        if (! $this->manager) {
 
-            return Person::findOrFail($this->manager)->getMyBranches();
+            return $this->campaign->branches->pluck('id')->toArray();
         }
-        return $recipient->person->getMyBranches();
+        return array_intersect($recipient->person->getMyBranches(), $this->campaign->branches->pluck('id')->toArray());
     }
 
     private function _getExportClass()
@@ -109,6 +104,10 @@ class BranchReportJob implements ShouldQueue
             return "\App\Exports\\". $this->report->export;
             break;
 
+        case 'campaign':
+            return "\App\Exports\Reports\Campaign\\". $this->report->export;
+            break; 
+
 
         
 
@@ -117,9 +116,7 @@ class BranchReportJob implements ShouldQueue
             break;
 
 
-        case "campaign": 
-            return "\App\Exports\Campaign\\". $this->report->export;
-            break;
+       
 
         case "user": 
             return "\App\Exports\\". $this->report->export;
