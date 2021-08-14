@@ -2230,7 +2230,7 @@ class Branch extends Model implements HasPresenter
         $this->period = $period;
         $this->fields = [
             'untouchedLeads',
-            'workedLeads',
+            'workedleads',
             'opportunitiesClosingThisWeek',
             'upcomingActivities',
 
@@ -2260,10 +2260,10 @@ class Branch extends Model implements HasPresenter
                
             }
         )->when(
-            in_array('workedLeads', $this->fields), function ($query) {
+            in_array('workedleads', $this->fields), function ($query) {
                 $query->with(
                     [ 
-                        'workedLeads'=>function ($q) {
+                        'workedleads'=>function ($q) {
                             $q->whereHas(
                                 'campaigns', function ($q) {
                                     $q->where('campaign_id', $this->campaign->id);

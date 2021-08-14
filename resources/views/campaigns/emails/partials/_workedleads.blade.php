@@ -1,5 +1,4 @@
 @component('mail::table')
-
 Business | Address| City| State | ZIP|
 ------------- |------------- |------------- |------------- |------------- |
 @foreach ($data->workedLeads as $lead)
