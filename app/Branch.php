@@ -237,7 +237,15 @@ class Branch extends Model implements HasPresenter
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0);
     }
 
-    
+    public function managerEmailAddress()
+    {
+        return $this->manager->map(
+            function ($manager) {
+                return ['name'=>$manager->fullName(), 'email'=>$manager->userdetails->email];
+            }
+        )
+        ->toArray();
+    }
 
     /**
      * [opportunitiesClosingThisWeek description]
@@ -444,7 +452,6 @@ class Branch extends Model implements HasPresenter
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
             ->whereDoesntHave('activities')
-            
             ->whereIn('status_id', [2]); 
 
     }
@@ -2197,59 +2204,119 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]             [description]
      */
-    public function scopeCampaignDetail($query,Campaign $campaign, array $companies=null)
+    public function scopeCampaignDetail($query,Campaign $campaign, array $fields = null)
+    {
+        if ($campaign->type=== 'restricted') {
+            return $this->restrictedCampaignDetail($campaign, $fields);
+        } else {
+            return $this->openCampaignDetail($campaign, $fields);
+        }
+    } 
+    
+    /**
+     * [scopeCampaignRestrictedDetail description]
+     * 
+     * @param [type]   $query    [description]
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function scopeRestrictedCampaignDetail($query,Campaign $campaign, array $fields = null)
     {
      
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
-        if (! $companies) {
-            $this->company_ids = $campaign->companies->pluck('id')->toarray();
-        } else {
-            $this->company_ids = $companies;
-        }
-        
-        
-        $this->location_ids = $campaign->getLocations();
-        $period = new Request([
-            'period'   => $period,
-            ]
-        );
+        $this->campaign = $campaign;
+        $this->period = $period;
+        $this->fields = [
+            'untouchedLeads',
+            'workedLeads',
+            'opportunitiesClosingThisWeek',
+            'upcomingActivities',
 
-        $this->setPeriod($period);
-        
-        return $query->with(       
-            ['offeredLeads'=>function ($q) {
-                $q->whereIn('company_id', $this->company_ids);
-                    
-            },
-            'untouchedLeads'=>function ($q) {
-                 $q->whereIn('company_id', $this->company_ids);
-            },
-            'workedLeads'=>function ($q) {
-                 $q->whereIn('company_id', $this->company_ids);
-            },
-            'opportunitiesClosingThisWeek'=>function ($q) {
-                $q->whereHas(
-                    'address.address', function ($q1) {
-                            $q1->whereIn('company_id', $this->company_ids);
-                    }  
+        ];
+        return $query->when(
+            in_array('untouchedLeads', $this->fields), function ($query) {
+                $query->with(
+                    [
+                        'leads'=>function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            )->whereDoesntHave(
+                                'activities', function ($q) {
+                                    $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                                }
+                            )
+                            ->whereDoesntHave(
+                                'opportunities', function ($q) {
+                                    $q->whereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']]);
+                                }
+                            ); 
+                        }
+                    ]
                 );
-            },
-            'upcomingActivities'=>function ($q) {
-                $q->whereHas(
-                    'relatesToAddress', function ($q1) {
-                            $q1->whereIn('company_id', $this->company_ids);
-                    }  
+               
+            }
+        )->when(
+            in_array('workedLeads', $this->fields), function ($query) {
+                $query->with(
+                    [ 
+                        'workedLeads'=>function ($q) {
+                            $q->whereHas(
+                                'campaigns', function ($q) {
+                                    $q->where('campaign_id', $this->campaign->id);
+                                }
+                            )->where('address_branch.created_at', '<', $this->period['to']); 
+                        }
+                    ]
                 );
-            },
-            ]
+               
+            }
+        )->when(
+            in_array('opportunitiesClosingThisWeek', $this->fields), function ($query) {
+                $query->with(
+                    [ 
+                        'opportunitiesClosingThisWeek'=>function ($q) {
+                            $q->whereHas(
+                                'address.address', function ($q1) {
+                                    $q1->whereHas(
+                                        'campaigns', function ($q) {
+                                            $q->where('campaign_id', $this->campaign->id);
+                                        }
+                                    );
+                                }  
+                            );
+                        }
+                    ]
+                );               
+            }
+        )->when(
+            in_array('upcomingActivities', $this->fields), function ($query) {
+                $query->with(
+                    [ 
+                        'upcomingActivities'=>function ($q) {
+                            $q->whereHas(
+                                'relatesToAddress', function ($q1) {
+                                    $q1->whereHas(
+                                        'campaigns', function ($q) {
+                                            $q->where('campaign_id', $this->campaign->id);
+                                        }
+                                    );
+                                }  
+                            );
+                        }
+                    ]
+                );
+            }
         );
     }
     /**
-     * [scopeCampaignDetail description]
+     * [scopeOpenCampaignDetail description]
      * 
-     * @param [type]   $query    [description]
-     * @param Campaign $campaign [description]
+     * @param QueryBuilder $query    [description]
+     * @param Campaign     $campaign [description]
      * 
      * @return [type]             [description]
      */
@@ -2268,8 +2335,7 @@ class Branch extends Model implements HasPresenter
                         $q->where('campaign_id', $this->campaign->id);
                     }
                 )
-                 ->where('lead_source_id', 4)
-                 ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);    
+                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);    
             },
             'untouchedLeads'=>function ($q) {
                 $q->whereHas(
@@ -2283,7 +2349,7 @@ class Branch extends Model implements HasPresenter
                     'campaigns', function ($q) {
                         $q->where('campaign_id', $this->campaign->id);
                     }
-                )->where('address_branch.created_at', '<', $this->period['to']); ; 
+                )->where('address_branch.created_at', '<', $this->period['to']); 
             },
             'opportunitiesClosingThisWeek'=>function ($q) {
                 $q->whereHas(
