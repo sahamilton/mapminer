@@ -259,6 +259,14 @@ class ReportsController extends Controller {
             return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;
 
+        case 'Campaign':
+            return \App\Jobs\CampaignReportJob::dispatch($report, $distribution, $manager)->onQueue('reports');
+            break;
+            
+        default:
+            return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
+            break; 
+
         }
         
     }

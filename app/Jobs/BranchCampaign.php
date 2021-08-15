@@ -25,41 +25,28 @@ class BranchCampaign implements ShouldQueue
      */
     public function handle()
     {
-        foreach (Campaign::where('status', 'launched')->where('dateto', '>=', now())->get() as $campaign) {
-            $branches = $this->_getCampaignDetails($campaign);
+        foreach (Campaign::active()->get() as $campaign) {
+           
+            $branches = $this->_getBranches($campaign);
             foreach ($branches as $branch) {
-                if ($branch->manager && $branch->manager->first()->userdetails) {
 
-                    
-                    Mail::to([['email'=>$branch->manager->first()->userdetails->email, 'name'=>$branch->manager->first()->fullName()]])
+                Mail::to($branch->managerEmailAddress())
                      ->queue(new BranchCampaignReport($branch, $campaign));
-                }
+                   
+               
             }
         }
     }
 
-    /**
-     * [_getCampaignDetails description].
-     *
-     * @param Campaign $campaign [description]
-     *
-     * @return [type]             [description]
-     */
-    private function _getCampaignDetails(Campaign $campaign)
+    private function _getBranches(Campaign $campaign)
     {
-        $campaign->load('branches', 'companies');
-        $branch_ids = $campaign->branches->pluck('id')->toarray();
-        $company_ids = $campaign->companies->pluck('id')->toarray();
-        // get branch campaign details
-        return  Branch::whereHas(
-            'locations', function ($q) use ($company_ids) {
-                $q->whereIn('company_id', $company_ids);
-            }
-        )
-        ->whereIn('id', $branch_ids)
-        ->with('manager.userdetails')
-        ->campaignDetail($campaign)
 
-        ->get();
+        return Branch::has('manager')
+            ->active()
+            
+            ->whereIn('id', $campaign->branches->pluck('id')->toArray())
+            ->get();
+
     }
+    
 }

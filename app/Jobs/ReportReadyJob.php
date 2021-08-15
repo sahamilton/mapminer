@@ -44,7 +44,7 @@ class ReportReadyJob implements ShouldQueue
     public function handle()
     {
         if (! $this->distribution->count() && auth()->user()->id) {
-            $this->distribution = User::findOrFail(auth()->user()->id);
+            $this->distribution = User::findOrFail(1);
             Mail::to([$this->distribution->getFormattedEmail()])->send($email);
         } 
         if (is_a($this->distribution, 'App\User')) {

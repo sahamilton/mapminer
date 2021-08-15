@@ -12,7 +12,7 @@
     </div>
     <div class="pl-10  @if(! $loop->first) collapse @endif " 
         id="{{$view['title']}}">
-        @include('campaigns.partials._'.$key)
+        @include('campaigns.partials._'.strtolower($key))
             {{$view['title']}}
     </div>
 @endforeach

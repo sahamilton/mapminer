@@ -47,15 +47,15 @@ class BranchLogins implements ShouldQueue
     {
         
         foreach ($this->distribution as $recipient) {
-            $this->user = $recipient;
+         
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient); 
-            (new BranchLoginsExport($this->period, $branches))
+            (new BranchLoginsExport($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
                         new ReportReadyJob(
-                            $recipient, 
+                            $this->distribution, 
                             $this->period, 
                             $this->file, 
                             $this->report

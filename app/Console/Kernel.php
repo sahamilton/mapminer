@@ -31,7 +31,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         'App\Console\Commands\BackupDatabase',
-        'App\Console\Commands\BackupRestore'
+        'App\Console\Commands\BackupRestore',
+        '\App\Console\Commands\FlushRedis',
     ];
 
     /**

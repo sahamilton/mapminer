@@ -554,6 +554,6 @@ class Campaign extends Model
 
     public function period()
     {
-        return ['from'=>$this->datefrom, 'to'=>$this->dateto];
+        return ['from'=>$this->datefrom->startOfDay(), 'to'=>$this->dateto->endOfDay()];
     }
 }
