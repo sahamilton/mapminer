@@ -422,7 +422,7 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type] [description]
      */
-    public function workedLeads()
+    public function workedleads()
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereIn('address_branch.status_id', [2]); 
@@ -430,11 +430,11 @@ class Branch extends Model implements HasPresenter
     }
 
     /**
-     * [neglectedLeads description]
+     * [neglectedleads description]
      * 
      * @return [type] [description]
      */
-    public function neglectedLeads()
+    public function neglectedleads()
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
@@ -443,11 +443,11 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
-     * [untouchedLeads description]
+     * [untouchedleads description]
      * 
      * @return [type] [description]
      */
-    public function untouchedLeads()
+    public function untouchedleads()
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
@@ -456,11 +456,11 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
-     * [rejectedLeads description]
+     * [rejectedleads description]
      * 
      * @return [type] [description]
      */
-    public function rejectedLeads()
+    public function rejectedleads()
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
@@ -476,7 +476,7 @@ class Branch extends Model implements HasPresenter
     public function scopeCampaignUntouchedLeads($query)
     {   
         return $query->with(
-            ['untouchedLeads'=>function ($q) {
+            ['untouchedleads'=>function ($q) {
                     $q->whereIn('company_id', ['388']);
             }
             ]
@@ -1481,7 +1481,7 @@ class Branch extends Model implements HasPresenter
                         }
                     );
                 },
-                'neglectedLeads',
+                'neglectedleads',
                 'leads as newbranchleads'=>function ($query) {
                     $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
                         ->where(
@@ -1676,7 +1676,7 @@ class Branch extends Model implements HasPresenter
                 in_array('worked_leads', $this->fields), function ($q) {
                     $q->withCount(       
                         [
-                            'workedLeads as worked_leads'=>function ($q) {
+                            'workedleads as worked_leads'=>function ($q) {
                                 $q->whereIn('company_id', $this->company_ids)
                                     ->where('address_branch.created_at', '<=', $this->period['to']);
                                     
@@ -1689,7 +1689,7 @@ class Branch extends Model implements HasPresenter
                 in_array('rejected_leads', $this->fields), function ($q) {
                     $q->withCount(       
                         [
-                            'rejectedLeads as rejected_leads'=>function ($q) {
+                            'rejectedleads as rejected_leads'=>function ($q) {
                                 $q->whereIn('company_id', $this->company_ids)
                                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                                     
@@ -2207,9 +2207,9 @@ class Branch extends Model implements HasPresenter
     public function scopeCampaignDetail($query,Campaign $campaign, array $fields = null)
     {
         if ($campaign->type=== 'restricted') {
-            return $this->restrictedCampaignDetail($campaign, $fields);
+            return $query->restrictedCampaignDetail($campaign, $fields);
         } else {
-            return $this->openCampaignDetail($campaign, $fields);
+            return $query->openCampaignDetail($campaign, $fields);
         }
     } 
     
@@ -2228,18 +2228,21 @@ class Branch extends Model implements HasPresenter
         $period['to'] = $campaign->dateto;
         $this->campaign = $campaign;
         $this->period = $period;
-        $this->fields = [
-            'untouchedLeads',
-            'workedleads',
-            'opportunitiesClosingThisWeek',
-            'upcomingActivities',
+        if (! $fields) {
+            $fields = [
+                'untouchedleads',
+                'workedleads',
+                'opportunitiesClosingThisWeek',
+                'upcomingActivities' ,
 
-        ];
+            ];
+        }
+        $this->fields = $fields;
         return $query->when(
-            in_array('untouchedLeads', $this->fields), function ($query) {
+            in_array('untouchedleads', $this->fields), function ($query) {
                 $query->with(
                     [
-                        'leads'=>function ($q) {
+                        'untouchedleads'=>function ($q) {
                             $q->whereHas(
                                 'campaigns', function ($q) {
                                     $q->where('campaign_id', $this->campaign->id);
@@ -2337,14 +2340,14 @@ class Branch extends Model implements HasPresenter
                 )
                 ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);    
             },
-            'untouchedLeads'=>function ($q) {
+            'untouchedleads'=>function ($q) {
                 $q->whereHas(
                     'campaigns', function ($q) {
                         $q->where('campaign_id', $this->campaign->id);
                     }
                 ); 
             },
-            'workedLeads'=>function ($q) {
+            'workedleads'=>function ($q) {
                 $q->whereHas(
                     'campaigns', function ($q) {
                         $q->where('campaign_id', $this->campaign->id);
@@ -2406,12 +2409,12 @@ class Branch extends Model implements HasPresenter
                     
             },
 
-            'workedLeads as worked_leads'=>function ($q) {
+            'workedleads as worked_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->where('address_branch.created_at', '<=', $this->period['to']);
                     
             },
-            'rejectedLeads as rejected_leads'=>function ($q) {
+            'rejectedleads as rejected_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     

@@ -44,7 +44,7 @@ class BranchCampaign implements ShouldQueue
         return Branch::has('manager')
             ->active()
             
-            ->whereIn('id', $campaign->branches->pluck('id')->toarray())
+            ->whereIn('id', [1265])
             ->get();
 
     }
