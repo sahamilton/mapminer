@@ -91,7 +91,7 @@ class TestJobController extends Controller
     }
     private function _getJobs(): Collection
     {
-        return collect(File::allFiles(app_path('jobs')))
+        return collect(File::allFiles(app_path('Jobs')))
             ->map(
                 function ($item) {
                     $path = $item->getRelativePathName();
