@@ -24,8 +24,8 @@ class BranchCampaignReport extends Mailable
             
             'workedleads'=>['title'=>"Campaign Leads", 'detail'=>'Here are your leads that are part of this campaign'],
             'untouchedleads'=>['title'=>"Untouched Campaign Leads", 'detail'=>'Here your leads that are part of this campaign but have not had any activity. Make sure you enter in any activity that has taken place to remove these leads for this list.'],
-            'opportunitiesclosingthisweek'=>['title'=>"Opportunities to Close this Week", 'detail'=>'Make sure you are updating your Opportunities status. Opportunities should be marked Closed – Won once we have billed the our new customer.'],
-            'upcomingactivities'=>['title'=>"Upcoming Activities", 'detail'=>'Activities scheduled for this week at leads within this campaign'],
+            'opportunitiesClosingThisWeek'=>['title'=>"Opportunities to Close this Week", 'detail'=>'Make sure you are updating your Opportunities status. Opportunities should be marked Closed – Won once we have billed the our new customer.'],
+            'upcomingActivities'=>['title'=>"Upcoming Activities", 'detail'=>'Activities scheduled for this week at leads within this campaign'],
              
         ];
 

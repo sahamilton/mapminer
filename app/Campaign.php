@@ -551,4 +551,9 @@ class Campaign extends Model
         return Address::whereIn('company_id', $this->companies->pluck('id')->toArray())
             ->has('assignedToBranch')->get();
     }
+
+    public function period()
+    {
+        return ['from'=>$this->datefrom->startOfDay(), 'to'=>$this->dateto->endOfDay()];
+    }
 }

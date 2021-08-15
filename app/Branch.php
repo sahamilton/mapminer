@@ -2227,6 +2227,7 @@ class Branch extends Model implements HasPresenter
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
         $this->campaign = $campaign;
+        $this->company_ids = $campaign->companies->pluck('id')->toArray();
         $this->period = $period;
         if (! $fields) {
             $fields = [
@@ -2243,15 +2244,12 @@ class Branch extends Model implements HasPresenter
                 $query->with(
                     [
                         'untouchedleads'=>function ($q) {
-                            $q->whereHas(
-                                'campaigns', function ($q) {
-                                    $q->where('campaign_id', $this->campaign->id);
-                                }
-                            )->whereDoesntHave(
-                                'activities', function ($q) {
-                                    $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                                }
-                            )
+                            $q->whereIn('company_id', $this->company_ids)
+                                ->whereDoesntHave(
+                                    'activities', function ($q) {
+                                        $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                                    }
+                                )
                             ->whereDoesntHave(
                                 'opportunities', function ($q) {
                                     $q->whereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']]);
@@ -2302,11 +2300,7 @@ class Branch extends Model implements HasPresenter
                         'upcomingActivities'=>function ($q) {
                             $q->whereHas(
                                 'relatesToAddress', function ($q1) {
-                                    $q1->whereHas(
-                                        'campaigns', function ($q) {
-                                            $q->where('campaign_id', $this->campaign->id);
-                                        }
-                                    );
+                                    $q1->whereIn('company_id', $this->company_ids);
                                 }  
                             );
                         }
