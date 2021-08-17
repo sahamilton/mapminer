@@ -283,7 +283,7 @@ class ReportsController extends Controller {
     {
         $recipients = $report->distribution->count();
         $this->_dispatchJob($report, $request, $report->distribution);
-        return redirect()->back()->withSuccess('Your job has been dispatched. Reports are being sent to the ' . $recipients. ' on the distribution list.');
+        return redirect()->back()->withSuccess('Your job has been dispatched. Reports are being sent to the distribution list.');
     }
     /**
      * [_getObject description]
