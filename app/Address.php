@@ -633,12 +633,25 @@ class Address extends Model
     {
         return $query->whereHas(
             'assignedToBranch', function ($q1) use ($period) {
-                $q1->whereBetween('address_branch.created_at',  [$period['to'], $period['from']]);
+                $q1->whereBetween('address_branch.created_at',  [$period['from'], $period['to']]);
             }
         );
          
     }
-
+    /**
+     * [scopePeriodActivities description]
+     * 
+     * @param [type] $query  [description]
+     * @param Array  $period Period[from], Period[to]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopePeriodActivities($query,Array $period)
+    {
+        return $query->whereBetween(
+            'addresses.created', [$period['from'], $period['to']]
+        );
+    }
     public function scopeSuppliedLeads($query, $period)
     {
         return $query->whereHas(

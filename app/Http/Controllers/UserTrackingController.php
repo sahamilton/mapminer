@@ -24,16 +24,8 @@ class UserTrackingController extends Controller
      */
     public function index()
     {
-
-            $persons = $this->_getBranchManagers();
-            $models = ['Activity', 'Address', 'Opportunity', 'Track'];
-            return view(
-                'usertracking.index', 
-                [
-                    'models'=>$this->models, 
-                    'persons'=>$persons
-                ]
-            );
+            $managers = $this->_getBranchManagers();
+            return response()->view('usertracking.index', compact('managers'));
         
 
     }

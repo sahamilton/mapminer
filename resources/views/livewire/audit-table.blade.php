@@ -41,8 +41,7 @@
             <th>Event</th>
             <th>
                 <a wire:click.prevent="sortBy('created_at')" 
-                role="button" href="#" 
-                wire:loading.class="bg-danger">
+                role="button" href="#">
                     Date
                     @include('includes._sort-icon', ['field' => 'created_at'])
                 </a>

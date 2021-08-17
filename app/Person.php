@@ -309,6 +309,11 @@ class Person extends NodeModel implements Auditable
             }
             return $this->_getBranchesFromTeam($person);
         }
+    }
+
+    public function logins()
+    {
+        return $this->hasMany(Track::class, 'user_id', 'user_id');
     }  
     /**
      * [_getBranchesFromTeam description]
@@ -694,16 +699,20 @@ class Person extends NodeModel implements Auditable
                 }
             )->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
+    public function leads()
+    {
+        return $this->hasMany(Address::class, 'user_id', 'user_id');
+    }
     /**
      * [leads description]
      * 
      * @return [type] [description]
-     */
+    
     public function leads()
     {
         return $this->belongsToMany(Address::class, 'address_person', 'person_id', 'address_id')
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
-    }
+    } */
     /**
      * [offeredleads description]
      * 
@@ -916,7 +925,15 @@ class Person extends NodeModel implements Auditable
     {
         return $this->hasMany(Activity::class, 'user_id', 'user_id');
     }
-    
+    /**
+     * [activities description]
+     * 
+     * @return [type] [description]
+     */
+    public function opportunities()
+    {
+        return $this->hasMany(Opportunity::class, 'user_id', 'user_id');
+    }
     /**
      * [salesLeadsByStatus description]
      * 

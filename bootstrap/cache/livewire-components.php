@@ -30,8 +30,10 @@
   'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',
+  'usertrack-detail' => 'App\\Http\\Livewire\\UsertrackDetail',
   'usertrack-leads' => 'App\\Http\\Livewire\\UsertrackLeads',
   'usertrack-logins' => 'App\\Http\\Livewire\\UsertrackLogins',
   'usertrack-opportunities' => 'App\\Http\\Livewire\\UsertrackOpportunities',
+  'usertrack-table' => 'App\\Http\\Livewire\\UsertrackTable',
   'nam-summary' => 'App\\Http\\Livewire\\namSummary',
 );
