@@ -33,10 +33,18 @@ class FeedbackClosed extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.feedbackclosed')
-            ->to($this->feedback->providedBy->email)
-            ->cc(config('mapminer.system_contact'))
-            ->bcc(config('mapminer.developer_email'))
-            ->subject('Feedback Closed');
+        if (! $this->feedback->providedBy) {
+            return $this->markdown('emails.feedbackclosed')
+                ->to(config('mapminer.system_contact'))
+                ->cc(config('mapminer.developer_email'))
+                ->subject('Feedback Closed');
+        } else {
+            return $this->markdown('emails.feedbackclosed')
+                ->to($this->feedback->providedBy->email)
+                ->cc(config('mapminer.system_contact'))
+                ->bcc(config('mapminer.developer_email'))
+                ->subject('Feedback Closed');
+        }
+        
     }
 }
