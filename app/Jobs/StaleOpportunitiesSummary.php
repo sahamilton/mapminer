@@ -6,7 +6,7 @@ use Mail;
 use App\Report;
 use App\Person;
 
-use App\Exports\StaleOpportunitiesSummaryExport;
+use App\Exports\Reports\Branch\StaleOpportunitiesSummaryExport;
 
 use Illuminate\Support\Str;
 

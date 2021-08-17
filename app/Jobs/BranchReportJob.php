@@ -34,7 +34,7 @@ class BranchReportJob implements ShouldQueue
         $distribution = null, 
         $manager = null
     ) {
-     
+        
         $this->period = $period;
         $this->report = $report;
         $this->manager = $manager;   
@@ -54,7 +54,8 @@ class BranchReportJob implements ShouldQueue
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient);
-            $export = '\App\Exports\Reports\Branch\\' . $this->report->export;
+            $export = $this->_getExportClass();
+            
             (new $export($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
@@ -66,7 +67,7 @@ class BranchReportJob implements ShouldQueue
                             $this->report
                         )
                     ]
-                );
+                )->onQueue('reports');
             
         }
     }

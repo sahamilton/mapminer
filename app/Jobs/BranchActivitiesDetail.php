@@ -5,7 +5,7 @@ namespace App\Jobs;
 use Mail;
 use App\Report;
 use App\Person;
-use App\Exports\BranchActivitiesDetailExport;
+use App\Exports\Reports\Branch\BranchActivitiesDetailExport;
 
 use Illuminate\Support\Str;
 
@@ -26,13 +26,13 @@ class BranchActivitiesDetail implements ShouldQueue
     public $report; 
     public $user;
     
-    public function __construct(Array $period= null, $distribution, $manager)
+    public function __construct(Array $period= null)
     {
      
         $this->period = $period;
         $this->report = Report::where('job', class_basename($this))->firstOrFail();
-        $this->manager = $manager;   
-        $this->distribution = $distribution;
+        
+        $this->distribution =  $this->report->distribution;
 
     }
 
@@ -51,7 +51,7 @@ class BranchActivitiesDetail implements ShouldQueue
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient); 
             
-            (new BranchActivitiesDetailExport($this->period, $branches))
+            (new BranchActivitiesDetailExport($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [

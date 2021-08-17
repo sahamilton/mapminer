@@ -115,7 +115,7 @@ use Illuminate\Http\Request;
         Route::get('projects/exportstats', ['as'=>'project.exportstats', 'uses'=>'ProjectsController@exportProjectStats']);
         Route::get('projects/{id}/owner', ['as'=>'project.owner', 'uses'=>'ProjectsController@ownedProjects']);
         Route::post('projects/{id}/release', ['as'=>'projects.release', 'uses'=>'ProjectsController@release']);
-        // Managemnet Team
+        // Management Team
         Route::get('managers',['as'=>'managers.livewire', 'uses'=>'ManagersController@livewireManagers']);
 
         //     Project Source

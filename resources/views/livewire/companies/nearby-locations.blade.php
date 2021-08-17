@@ -68,7 +68,7 @@
        
     </div>
     <div wire:loading>
-            <div class="spinner-border"></div>
+            <div class="spinner-border text-danger"></div>
         </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>

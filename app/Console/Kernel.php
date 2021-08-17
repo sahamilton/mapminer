@@ -65,8 +65,8 @@ class Kernel extends ConsoleKernel
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
             // Weekly Summary Mapminer Stats
-            $period['from'] = Carbon::now()->subWeek()->startOfWeek()->startOfDay();
-            $period['to'] = Carbon::now()->subWeek()->endOfWeek()->endOfDay();
+            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new WeeklySummary($period))
                 ->weekly()
                 ->mondays()

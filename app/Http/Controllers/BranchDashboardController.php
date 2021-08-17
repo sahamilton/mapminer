@@ -91,6 +91,7 @@ class BranchDashboardController extends DashboardController
         if (! session('manager')) {
             session(['manager'=>auth()->user()->id]);
         }
+
         $this->manager = $this->person
             ->where('user_id', '=', session('manager'))->first();
         
@@ -187,10 +188,11 @@ class BranchDashboardController extends DashboardController
                 );
         }
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
-        $this->myBranches = [$branch->id];
+        $this->myBranches = array_keys($myBranches);
         $data = $this->_getDashBoardData();
-       
-        return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns'));
+        $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
+      
+        return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
 
     }
    
@@ -210,18 +212,18 @@ class BranchDashboardController extends DashboardController
         $data['team'] = $data['me']->getDescendantsAndSelf();
 
         $data['branches'] = $this->getSummaryBranchData();
+
         if (! $data['teamdata'] = $this->_myTeamsData($data)) {
             
             return false;
 
         }
         $data['charts'] = $this->_getCharts($data);
-          ;
-       
         return $data;
     }
     private function _getCharts($data)
     {
+        
         $charts['activitychart'] = $this->chart->getBranchActivityByDateTypeChart(
             $this->_getActivityTypeChartData()
         );

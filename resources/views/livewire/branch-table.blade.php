@@ -5,7 +5,7 @@
             
             @include('livewire.partials._search', ['placeholder'=>'Search Branches'])
             <div wire:loading>
-                <div class="spinner-border"></div>
+                <div class="spinner-border text-danger"></div>
             </div>
         </div>
     </div>

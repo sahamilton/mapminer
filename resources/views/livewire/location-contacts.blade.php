@@ -1,41 +1,39 @@
 <div>
     <h2>{{$branch->branchname}} Contacts</h2>
-        <div class="row mb4" style="padding-bottom: 10px">
-        @include('livewire.partials._branchselector')
-        @include('livewire.partials._search', ['search'=>"Search contacts"])   
-        
+    <div class="row mb4" style="padding-bottom: 10px">
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._branchselector')
+            @include('livewire.partials._search', ['placeholder'=>'Search Contacts'])
+        </div>
+    
     </div>
 
     <div class="row mb-4 ">
         <div class="col form-inline">
-            @include('livewire.partials._perpage')
-            <div wire:loading>
-                <div class="spinner-border"></div>
-            </div>
-            
-            <div class="input-group-prepend">
-            <span class="input-group-text">
-                <i class="fas fa-filter text-danger"></i>
-            </span>
 
+            <i class="fas fa-filter text-danger"> </i>
+
+            <label>With Phone / Email </label>
             <select wire:model="filter" 
             class="form-control">
-                <option value="All">All</options>
-                <option value='email'>with Email</options>
-                <option value='contactphone'>with Phone</options>
-                
-                
+                <option value="All">All</option>
+                <option value='email'>with Email</option>
+                <option value='contactphone'>with Phone</option>
             </select>
-            
+            <div wire:loading>
+                <div class="spinner-border text-danger"></div>
+            </div>
         </div> 
 
-    </div>
-    <div class="float-right">
-            <a href="{{route('contacts.export', [$branch->id, 'filter'=>$filter])}}">
-                <button class="btn btn-success">
-                    Export Contacts
-                </button> 
-        </a> 
+    
+        <div class="float-right">
+                <a href="{{route('contacts.export', [$branch->id, 'filter'=>$filter])}}">
+                    <button class="btn btn-success">
+                        Export Contacts
+                    </button> 
+            </a> 
+        </div>
     </div>
     <table  style="margin-top:20px" class='table table-striped table-bordered table-condensed table-hover'>
         <thead>

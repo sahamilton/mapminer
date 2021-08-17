@@ -5,8 +5,8 @@ namespace App\Jobs;
 use Mail;
 use App\Report;
 use App\Person;
-use App\Exports\BranchStatsExport;
-
+use App\Exports\Reports\Branch\BranchStatsExport;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 use Illuminate\Bus\Queueable;
@@ -47,7 +47,7 @@ class BranchStats implements ShouldQueue
             ->firstOrFail();
         
         // create the file
-        $this->file = $report->filename. Carbon::now()->timestamp.'.xlsx';
+        $this->file = $report->filename. now()->timestamp.'.xlsx';
        
         (new BranchStatsExport($this->period))->store($this->file, 'reports')->chain(
             [

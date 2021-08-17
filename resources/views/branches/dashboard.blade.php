@@ -11,8 +11,11 @@
 	@foreach ($branch->manager as $manager)
 		<p><strong>Manager:</strong>{{$manager->fullName()}}</p>
 	@endforeach
-@if(isset($data['branches']) && $data['branches']->count() >1)
-	@include('branches.partials._branchdashboardselector')
+
+@if(isset($data['mybranches']) && $data['mybranches']->count() >1)
+
+	@include('dashboards.partials._branchnewdashboardselector')
+
 @endif
 @if($data['team'])
 	@include('opportunities.partials._dashboardselect')

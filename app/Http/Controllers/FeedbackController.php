@@ -153,8 +153,8 @@ class FeedbackController extends Controller
         $feedback->update(['status'=>'open']);
         $feedback->load('comments');
         Mail::to(config('mapminer.system_contact'))
-        ->cc(config('mapminer.developer_email'))
-        ->send(new FeedbackOpened($feedback));
+            ->cc(config('mapminer.developer_email'))
+            ->send(new FeedbackOpened($feedback));
 
         return redirect()->route('feedback.show', $feedback->id)->withMessage('Feedback reopened. Add a comment');
     }

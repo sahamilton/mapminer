@@ -5,7 +5,6 @@ namespace App\Jobs;
 use Mail;
 use App\Report;
 use App\Person;
-use App\Exports\BranchLoginsExport;
 use App\Exports\Reports\Branch\BranchLoginsExport;
 
 use Illuminate\Support\Str;
@@ -29,15 +28,13 @@ class BranchLogins implements ShouldQueue
     public $report; 
     public $user;
     
-    public function __construct(Array $period= null, $distribution, $manager)
+    public function __construct(Array $period= null)
     {
      
         $this->period = $period;
-        $this->report = Report::where('job', class_basename($this))
-            ->with('distribution')
-            ->firstOrFail();
+        $this->report = Report::where('job', class_basename($this))->firstOrFail();
       
-        $this->distribution = $this->report->getDistribution();
+        $this->distribution = $this->report->distribution;
 
     }
 

@@ -8,7 +8,7 @@
     
     
     <div wire:loading>
-        <div class="spinner-border"></div>
+        <div class="spinner-border text-danger"></div>
     </div>
     <div class="row mb-4  form-inline">
         

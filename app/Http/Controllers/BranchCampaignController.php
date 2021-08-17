@@ -65,61 +65,45 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
+
+  
         
-        /*if (! session('manager')) {
+        if (! session('manager')) {
             $manager = $this->person->where('user_id', auth()->user()->id)->first();
             session(['manager'=>auth()->user()->id]);
-        } else {
-            $manager = $this->person->where('user_id', session('manager'))->first();
+        } 
+        $manager = $this->person->where('user_id', session('manager'))->first();
+    
+        $myBranches = $manager->getMyBranches();
+
+        if (! $campaign = $this->campaign->active()->current($myBranches)->with('branches')->first()) {
+            return redirect()->back()
+                ->withMessage('There are no leads in this campaign currently assigned to your branches');
         }
-       
-        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($manager)))->get();
-        
-        $campaigns = $this->campaign->active()->current($myBranches->pluck('id')->toArray())->get();
-        
-        
-       
-        if (! $campaigns->count()) {
+        if (! $branches = $campaign->branches->whereIn('id', $myBranches)) {
             return redirect()->back()
                 ->withMessage('There are no current sales campaigns for your branches');
         }
-        $branches = $campaigns->first()->branches->intersect($myBranches);
+
+   
+        
+        
+        
         if (session('campaign') && session('campaign') != 'all') {
             $campaign = $this->campaign->findOrFail(session('campaign'));
         } else {
-            $campaign = $campaigns->first();
-            session(['campaign'=>$campaigns->first()->id]);
+            
+            session(['campaign'=>$campaign->id]);
         }
-        
+
         if ($branches->count() == 1) {
 
             return $this->show($campaign, $branches->first());
         } 
-
-        $team = $this->_getCampaignTeam($campaign);
+        $branch = $branches->first();
         
-        $branches = $this->branch
-            ->whereIn('id', $branches->pluck('id')->toArray())
-            ->when(
-                $campaign->type === 'open', function ($q)  use($campaign){
-                    $q->summaryOpenCampaignStats($campaign);
-                }, function ($q) use ($campaign) {
-                    $q->summaryCampaignStats($campaign);
-                }
-            ) 
-            ->get();
-
-        
-        if ($campaign->type === 'open') {
-            $fields=$this->openfields;
-        } else {
-            $fields=$this->fields;
-        }
-       
-
-        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields', 'manager')); 
-        */
-       return response()->view('campaigns.branch');
+      
+        return response()->view('campaigns.branch', compact('campaign', 'branch'));
     }
 
     public function store(Request $request)

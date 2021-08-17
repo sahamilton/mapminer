@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\Branch;
 use App\Address;
+use App\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
 class BranchLocationsTable extends Component
@@ -17,12 +18,16 @@ class BranchLocationsTable extends Component
     public $range;
     public $accounttype=false;
     public $paginationTheme = 'bootstrap';
+    public $myBranches;
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
-
+    public function updatingBranch()
+    {
+        $this->resetPage();
+    }
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -33,30 +38,44 @@ class BranchLocationsTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch)
+    public function mount($branch=null)
     {
         
-        $this->branch = Branch::findOrFail($branch);
-        $this->range = $this->branch->radius;
+        $person = new Person();
+        $this->myBranches = $person->myBranches();
+        if (! $branch) {
+            $branch = array_key_first($this->myBranches);
+        }
+        $this->branch_id = $branch;
+       
     }
 
 
 
     public function render()
     {
-        
+        $this->_getBranch();
         return view(
             'livewire.branch-locations-table', [
             'addresses'=>
                 Address::query()
+
                     ->search($this->search)
-                    ->nearby($this->branch, $this->range)
+                    ->nearby($this->branch, $this->branch->radius)
                     ->whereDoesntHave('assignedToBranch')
                     ->with('company', 'industryVertical')
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
+                
             ]
         );
+    }
+
+    
+
+    private function _getBranch()
+    {
+        $this->branch = Branch::findOrFail($this->branch_id);
     }
 }
 /*

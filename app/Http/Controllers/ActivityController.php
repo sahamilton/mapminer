@@ -49,19 +49,19 @@ class ActivityController extends Controller
      */
     public function index()
     {
-      
-        if (! $myBranches = $this->person->myBranches()) {
+        $this->person = auth()->user()->person;
+        if (! $myBranches = $this->person->getMyBranches()) {
             return redirect()->back()
                 ->withError('You are not assigned to any branches');
         }
-
+        
         
         if (session('branch')) {
             $branch = $this->branch->findOrFail(session('branch'));
 
         } else {
-            $branches = array_keys($myBranches);
-            $branch = $this->branch->findOrFail(reset($branches));
+           
+            $branch = $this->branch->findOrFail(reset($myBranches));
             session(['branch'=>$branch->id]);
         }
     
@@ -151,6 +151,7 @@ class ActivityController extends Controller
      */
     private function _getBranchActivities(Branch $branch,$from=null)
     {
+        
         $data['activities'] = $this->activity->myBranchActivities([$branch->id])
             ->when(
                 $from, function ($q) {
@@ -170,11 +171,12 @@ class ActivityController extends Controller
             ->where('completed', '=', 1)
             ->pluck('activities', 'yearweek')
             ->toArray();
-      
+        
         $data['summary'] = $this->activity->summaryData($weekCount);
-        $activitytypes = $this->_getBranchActivititiesByType($branch);
-        $data['activitychart'] = $this->chart->getBranchesActivityByTypeChart
-($activitytypes);
+
+        $data['activitytypes'] = $this->_getBranchActivititiesByType($branch)->toArray();
+
+        $data['activitychart'] = $this->chart->getBranchesActivityByTypeChart($data);
         return $data;
     }
     /**
@@ -406,7 +408,7 @@ class ActivityController extends Controller
      * 
      * @return [type]         [description]
      */
-    private function _getBranchActivititiesByType($branch)
+    private function _getBranchActivititiesByType(Branch $branch)
     {
        
         if (! $this->period) {

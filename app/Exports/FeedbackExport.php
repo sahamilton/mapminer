@@ -15,7 +15,7 @@ class FeedbackExport implements FromView
      */
     public function view(): View
     {
-        $feedback = $feedback = Feedback::with('providedBy', 'comments', 'comments.by')->get();
+        $feedback = Feedback::with('providedBy', 'comments', 'comments.by')->get();
 
         return view('feedback.export', compact('feedback'));
     }

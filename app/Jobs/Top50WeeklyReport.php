@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Exports\OpenTop25BranchOpportunitiesExport;
-use App\Exports\Top25WeekReportExport;
+use App\Exports\Reports\Branch\Top25WeekReportExport;
 use App\Mail\SendTop25WeeklyReport;
 use App\Opportunity;
 use App\Report;

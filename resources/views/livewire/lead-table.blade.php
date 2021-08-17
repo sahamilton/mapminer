@@ -1,6 +1,13 @@
 <div>
     <h1>{{$branch->branchname . " leads"}}</h1>
     <h4>
+        @if ($campaign_id != 'All')
+            Included in the  {{$campaigns[$campaign_id]}} Campaign
+        @elseif($lead_source_id != 'All') 
+            From the  {{$leadsources[$lead_source_id]}} Source
+
+        @endif
+   
         @switch($withOps)
         @case('All')
         With or Without Any Opportunities
@@ -24,21 +31,20 @@
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
     <div class="row" style="margin-bottom:10px">
         <div class="col form-inline">
+            @include('livewire.partials._perpage')
             @include('livewire.partials._branchselector')
             @include('livewire.partials._search', ['placeholder'=>'Search leads'])
         </div>
     </div>
     
-    <div class="row">
+    <div class="row" style="margin-bottom:10px">
         <div class="col form-inline">
-            @include('livewire.partials._perpage')
+            <i class="fas fa-filter text-danger"></i>
+            @include('livewire.partials._periodselector', ['all'=>true])
         </div>
-        <div wire:loading>
-            <div class="spinner-border"></div>
-        </div>
-        @include('livewire.partials._periodselector', ['all'=>true])
         <div class="col form-inline">
-            <div class="input-group-prepend">
+            <label>With / Without Opportunities</label>
+             <div class="input-group-prepend">
                 <span class="input-group-text h-38" title="With or Without Opportunities">
                     <i class="fas fa-funnel-dollar"></i>
                 </span>
@@ -49,7 +55,36 @@
                 @endforeach
             </select>
         </div>
-       
+    </div>
+    <div class="row" style="margin-bottom:10px">
+        <div class="col form-inline">
+            <label>Lead Source </label>
+            <select wire:model="lead_source_id" 
+            class="form-control" 
+            title="Lead Source">
+                <option value="All">All</option>
+                @foreach ($leadsources as $key=>$source)
+                    <option value="{{$key}}">{{$source}}</option>
+                @endforeach
+            </select>
+        </div>
+        @if(count($campaigns)> 0)
+            <div class="col form-inline">
+                <label>Sales Campaign </label>
+                <select wire:model="campaign_id" 
+                class="form-control" 
+                title="Lead Source">
+                    <option value="All">All</option>
+                    @foreach ($campaigns as $key=>$source)
+                        <option value="{{$key}}">{{$source}}</option>
+                    @endforeach
+                </select>
+                
+            </div>
+        @endif
+       <div wire:loading>
+            <div class="spinner-border text-danger"></div>
+        </div>
         
         
     </div>
@@ -117,43 +152,49 @@
             <tbody>
                @foreach($leads as $lead)
 
- <tr>
-        <td>
-            <a href="{{route('address.show',$lead->id)}}">
-                {{$lead->businessname}}
-            </a>
-            
-        </td>
+                <tr>
+                    <td>
+                        <a href="{{route('address.show',$lead->id)}}">
+                            {{$lead->businessname}}
+                        </a>
+                        
+                    </td>
 
-        <td>{{$lead->street}}</td>
-        <td>{{$lead->city}}</td>
-        <td>{{$lead->state}}</td>
-        <td>
-            @if($lead->leadsource)
-             {{$lead->leadsource->source}}
-            @endif
-        </td>
+                    <td>{{$lead->street}}</td>
+                    <td>{{$lead->city}}</td>
+                    <td>{{$lead->state}}</td>
+                    <td>
+                        @if($lead->leadsource)
+                         {{$lead->leadsource->source}}
+                        @endif
+                    </td>
         
-        @if ($branch->currentcampaigns->count())
+       
         <td>
             @foreach ($lead->currentcampaigns as $campaign)
                
-                   <li>{{$campaign->title}}</li>
+                <li>
+                    <a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">
+                        {{$campaign->title}}
+                    </a>
+                </li>
                
-            @endforeach
-            @if(auth()->user()->hasRole('branch_manager'))
-            <a 
-                data-pk="{{$lead->id}}"
-                data-id="{{$lead->id}}"
-                data-toggle="modal" 
-                data-target="#addtocampaign" 
-                data-title = "" 
-                href="#">
-                <i class="text-success fas fa-plus-circle"></i> Add to current campaign
-            </a>
-           @endif
+            @endforeach 
+            @if ($branch->currentopencampaigns->count() && in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
+                
+                <a 
+                    data-pk="{{$lead->id}}"
+                    data-id="{{$lead->id}}"
+                    data-toggle="modal" 
+                    data-target="#addtocampaign" 
+                    data-title = "" 
+                    href="#">
+                    <i class="text-success fas fa-plus-circle"></i> Add to current campaign
+                </a>
+              
+            @endif
         </td>
-        @endif
+        
         <td>
             @if($lead->lastActivity)
                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
@@ -164,7 +205,7 @@
                 {{$lead->dateAdded->format('Y-m-d')}}
             @endif
         </td>
-        @if(auth()->user()->hasRole(['branch_manager']))
+        @if(in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
         <td>
        
             

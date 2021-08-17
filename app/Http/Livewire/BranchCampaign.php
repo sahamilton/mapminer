@@ -19,20 +19,26 @@ class BranchCampaign extends Component
     public $search = '';
     public $status = 'All';
     public $paginationTheme = 'bootstrap';
-
     public $company_id = 'All';
     public $campaignid;
     public $view = 'leads';
     public $branch_id;
+    public $myBranches;
     public $period;
     public $campaign;
-    protected $myBranches;
-  
+
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
+
+    public function updatingBranchId()
+    {
+        $this->resetPage();
+    }
+
+
     public function updatingView()
     {
         $this->resetPage();
@@ -63,13 +69,12 @@ class BranchCampaign extends Component
     {
         
         $this->campaignid = $campaign_id;
-        $myBranches = auth()->user()->person->getMyBranches();
-        $this->myBranches = Branch::whereIn('id', $myBranches)->pluck('branchname', 'id')->toArray();
+        $this->myBranches = auth()->user()->person->getMyBranches();
+        $this->myBranches = Branch::whereIn('id', $this->myBranches)->pluck('branchname', 'id')->toArray();
         if (! $branch_id) {            
-            $this->branch_id = reset($myBranches);
-        } else {
-            $this->branch_id  =$branch_id;
+            $branch_id = reset($this->myBranches);
         }
+            $this->branch_id  =$branch_id;
 
     }
 
@@ -91,7 +96,7 @@ class BranchCampaign extends Component
                     ->toArray(),
                 'branch' => Branch::findOrFail($this->branch_id),
                 'views'=>['leads','activities', 'opportunities'] ,
-                'myBranches' => $this->myBranches,
+                
             ]
         );
     }

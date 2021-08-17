@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Feedback;
 use App\FeedbackCategory;
+use Excel;
+use App\Exports\FeedbackExport;
 
 class FeedbackTable extends Component
 {
@@ -95,6 +97,12 @@ class FeedbackTable extends Component
     {
          $feedback->update(['status'=>'open']);
     }
-
+    public function export()
+    {
+        
+        return Excel::download(
+            new FeedbackExport(), 'feedback.csv'
+        );
+    }
 
 }

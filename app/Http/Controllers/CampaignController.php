@@ -16,6 +16,7 @@ use App\Jobs\AssignAddressesToCampaignJob;
 use App\Jobs\AssignBranchesToCampaignJob;
 use App\Jobs\SendCampaignLaunched;
 use App\Http\Requests\CampaignFormRequest;
+use App\Jobs\CampaignSummary;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -335,7 +336,7 @@ class CampaignController extends Controller
     public function export(Request $request, Campaign $campaign)
     {
         
-        $servicelines = $this->_getCampaignServicelines($campaign);
+        /*$servicelines = $this->_getCampaignServicelines($campaign);
         if (! request('manager_id')) {
             $manager_id = $campaign->manager_id;
         } else {
@@ -355,7 +356,10 @@ class CampaignController extends Controller
 
         // get summaryStats from campaign with branches
         // 
-        // Export report
+        // Export report*/
+
+        CampaignSummary::dispatch($campaign);
+        return redirect()->back()->withMessage('Job has been dispatched. Check your email shortly');
     }
     
 
