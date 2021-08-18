@@ -36,9 +36,11 @@ class UserTrackingController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function show(Request $request)
+    public function show(Person $person)
     {
         
+        return response()->view('usertracking.show', compact('person'));
+        /*
         $selectModels = $this->models;
         $setPeriod = request('setPeriod');
         
@@ -62,7 +64,7 @@ class UserTrackingController extends Controller
                 'models'=>$this->models, 
                 'persons'=>$persons
             ]
-        );
+        );*/
     }
     /**
      * [detail description]

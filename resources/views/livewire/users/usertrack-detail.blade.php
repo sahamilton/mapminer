@@ -1,5 +1,5 @@
 <div>
-    <h2>{{$manager->fullName}} Mapminer Stats</h2>
+    <h2>{{$manager->fullName()}} Mapminer Stats</h2>
     <h3>For the period from {{session('period')['from']->format('Y-m-d')}} to {{session('period')['to']->format('Y-m-d')}}</h3>
     
     <div class="row mb4" style="padding-bottom: 10px">

@@ -365,7 +365,8 @@ Route::group(
         // User Tracking
         
         Route::get('usertracking', ['as'=>'usertracking.index', 'uses'=>'UserTrackingController@index']);
-        Route::post('usertracking/show', ['as'=>'usertracking.show', 'uses'=>'UserTrackingController@show']);
+        //Route::post('usertracking/show', ['as'=>'usertracking.show', 'uses'=>'UserTrackingController@show']);
+        Route::get('usertracking/{person}/show', ['as'=>'usertracking.show', 'uses'=>'UserTrackingController@show']);
         Route::get('usertracking/{model}/detail', ['as'=>'usertracking.detail', 'uses'=>'UserTrackingController@detail']);
         
         //     User (Profile) settings

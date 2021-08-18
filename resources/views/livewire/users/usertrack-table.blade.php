@@ -40,7 +40,7 @@
             @foreach ($data as $item)
                 
                 <tr>
-                    <td>{{$item->fullName()}}</td>
+                    <td><a href ="{{route('usertracking.show', $item->id)}}">{{$item->fullName()}}</a></td>
                      @foreach ($fields as $key=>$field)
                         <td>{{$item->$key}}</td>
                     @endforeach
