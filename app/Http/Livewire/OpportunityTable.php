@@ -60,6 +60,9 @@ class OpportunityTable extends Component
         } else {
             $this->branch_id =$branch_id;
         }
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
         $this->setPeriod = session('period')['period'];
     }
     /**

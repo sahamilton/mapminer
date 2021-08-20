@@ -67,8 +67,11 @@ class namSummary extends Component
     public function mount()
     {
         
-        $this->period = $this->getPeriod();
-        $this->setPeriod = $this->period['period'];
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
+        $this->setPeriod = session('period')['period'];
+       
         if (auth()->user()->hasRole(['admin'])) {
             $this->managers = $this->_getNAMS();
             $this->person = $this->managers->first();
@@ -110,10 +113,9 @@ class namSummary extends Component
 
     private function _setPeriod()
     {
-        if ($this->setPeriod != session('period')) {
+        
             $this->livewirePeriod($this->setPeriod);
             
-        }
     }
 
 

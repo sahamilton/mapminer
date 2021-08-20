@@ -42,6 +42,9 @@ class BranchOpportunityTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
         $this->setPeriod = session('period')['period'];
     }
     

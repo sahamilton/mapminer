@@ -74,6 +74,9 @@ class LeadTable extends Component
         $this->myBranches = $person->myBranches();
         $this->search = $search;
         $this->branch_id = array_keys($this->myBranches)[0];
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
         $this->setPeriod = session('period')['period'];
         
     }

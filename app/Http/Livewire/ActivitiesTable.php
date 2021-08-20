@@ -57,6 +57,9 @@ class ActivitiesTable extends Component
         }
         
         
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
         $this->setPeriod = session('period')['period'];
 
     }
