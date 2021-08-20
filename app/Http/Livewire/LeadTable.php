@@ -23,7 +23,7 @@ class LeadTable extends Component
     public $withOps = 'All';
     //public $updateMode = false;
     public $setPeriod;
-    public $period;
+ 
     //public $activity_date;
     public $branch_id;
     public $lead_source_id = 'All';
