@@ -6,17 +6,17 @@ use App\Branch;
 use App\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\PeriodSelector;
 
 class OpportunityTable extends Component
 {
-    use WithPagination;
+    use WithPagination, PeriodSelector;
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'opportunities.created_at';
     public $sortAsc = true;
     public $search = '';
-    public $setPeriod = 'All';
-    public $period;
+    public $setPeriod;
     public $branch_id;
     public $filter = '0';
     public $myBranches;
@@ -60,7 +60,7 @@ class OpportunityTable extends Component
         } else {
             $this->branch_id =$branch_id;
         }
-        
+        $this->setPeriod = session('period')['period'];
     }
     /**
      * [render description]
@@ -106,9 +106,7 @@ class OpportunityTable extends Component
 
     private function _setPeriod()
     {
-        if ($this->setPeriod != 'All') {
-            $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
-        }
+        $this->livewirePeriod($this->setPeriod);
         
     }
 }

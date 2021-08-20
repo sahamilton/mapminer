@@ -19,7 +19,10 @@ class='table table-striped table-bordered table-condensed table-hover'>
   
           <tr>
             <td>
-              <a href="{{route('branchdashboard.show',$branch->id)}}">{{$branch->branchname}}</a>
+              <a href="{{route('branchdashboard.show',$branch->id)}}"
+                title="See {{$branch->branchname}}  dashboard">
+                {{$branch->branchname}}
+              </a>
             </td>
             
             <td>
@@ -28,13 +31,15 @@ class='table table-striped table-bordered table-condensed table-hover'>
               @endforeach
             </td>
              <td align="center">
-              <a href="{{route('opportunities.branch',$branch->id)}}">
+              <a href="{{route('opportunities.branch',$branch->id)}}"
+                 title="See {{$branch->branchname}}  opportunities">
                 {{$branch->open_opportunities}}
               </a>
             </td>
             <td align="center">
               @if($branch->won_opportunities >0)
-              <a href="{{route('opportunities.branch',$branch->id)}}">
+              <a href="{{route('opportunities.branch',$branch->id)}}"
+                 title="See {{$branch->branchname}}  opportunities">
                 {{$branch->won_opportunities}}
               </a> 
               @else
@@ -43,7 +48,8 @@ class='table table-striped table-bordered table-condensed table-hover'>
             </td>
             <td  align="center"> 
               @if($branch->lost_opportunities >0)
-              <a href="{{route('opportunities.branch',$branch->id)}}">
+              <a href="{{route('opportunities.branch',$branch->id)}}"
+                 title="See {{$branch->branchname}}  opportunities">
                 {{$branch->lost_opportunities}}
               </a> 
             @else 
@@ -52,14 +58,16 @@ class='table table-striped table-bordered table-condensed table-hover'>
           </td>
 
             <td align="center">
-              <a href="{{route('lead.branch',$branch->id)}}"> 
+              <a href="{{route('lead.branch',$branch->id)}}"
+                 title="See {{$branch->branchname}}  leads"> 
                 {{$branch->leads_count}}
               </a>
             </td>
             
            
             <td align="center">
-              <a href="{{route('activity.branch',$branch->id)}}">
+              <a href="{{route('activity.branch',$branch->id)}}"
+                 title="See {{$branch->branchname}}  activities">
                  {{$branch->activities_count}}
               </a>
             </td>

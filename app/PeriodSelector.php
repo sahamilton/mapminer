@@ -33,9 +33,12 @@ trait PeriodSelector
         return redirect()->back();
     }
 
-    public function livewirePeriod($period)
+    public function livewirePeriod($period = null)
     {
-        if (method_exists($this, $period)) {
+        
+        if (! $period) {
+            $this->period = $this->_default();
+        } elseif (method_exists($this, $period)) {
             
             $this->period = $this->$period();
         } else {

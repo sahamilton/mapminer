@@ -5,17 +5,16 @@ use App\Person;
 use App\Branch;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+use App\PeriodSelector;
 class BranchOpportunityTable extends Component
 {
     
-    use WithPagination;
+    use WithPagination, PeriodSelector;
     public $perPage = 10;
     public $sortField = 'branches.id';
     public $sortAsc = true;
     public $search = '';
     public $branch;
-    public $period = 'All';
     public $setPeriod;
     public $myBranches;
     public $manager;
@@ -43,16 +42,15 @@ class BranchOpportunityTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
-        
+        $this->setPeriod = session('period')['period'];
     }
     
     public function render()
     {
-        if (! $this->setPeriod or $this->setPeriod != $this->period['period']) {
-
-           $this->_setPeriod(); 
         
-        }
+
+        $this->_setPeriod(); 
+        
         
         return view('livewire.branch-opportunity-table',
             ['branches'=>Branch::summaryOpportunities($this->period)
@@ -68,6 +66,6 @@ class BranchOpportunityTable extends Component
 
     private function _setPeriod()
     {
-        $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
+        $this->livewirePeriod($this->setPeriod);
     }
 }
