@@ -190,8 +190,9 @@ class BranchDashboardController extends DashboardController
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
         $this->myBranches = array_keys($myBranches);
         $data = $this->_getDashBoardData();
+        
         $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
-      
+     
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
 
     }
@@ -285,6 +286,7 @@ class BranchDashboardController extends DashboardController
         $this->reports = $data['me']->getDescendantsAndSelf()->pluck('user_id')->toArray();
 
         $data['activities'] = $this->getSummaryTeamData($this->period, $this->activityFields);
+
         $directReports = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
         foreach ($directReports as $report) {
 

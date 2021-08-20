@@ -115,7 +115,7 @@ class ActivityController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function branchActivities(Request $request, Branch $branch) 
+    public function branchActivities(Branch $branch) 
     {
         $myBranches = $this->person->myBranches();
         

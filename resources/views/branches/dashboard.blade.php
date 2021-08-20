@@ -42,18 +42,23 @@
 					{{$data['teamdata']->first()['open_opportunities'] }}
 				</a>
 				</td>
-			<td class="text-center">{{$data['teamdata']->first()['top25_opportunities']}}
+			<td class="text-center">{{$data['teamdata']->sum('top25_opportunities')}}
 			</td>
-			<td class="text-center">{{$data['teamdata']->first()['won_opportunities']}}
+			<td class="text-center">{{$data['teamdata']->sum('won_opportunities')}}
 			</td>
-			<td class="text-center">{{ $data['teamdata']->first()['lost_opportunities']}}
+			<td class="text-center">{{ $data['teamdata']->sum('lost_opportunities')}}
 			</td>
 			<td class="text-center">
-				<a href="{{route('branch.leads')}}">{{$data['teamdata']->first()['leads']}}
+				<a href="{{route('branch.leads')}}">{{$data['teamdata']->sum('leads')}}
 				</a>
 			</td>
+			
 			<td class="text-center">
+				<a href="{{route('activity.branch', $branch->id)}}">
+				{{$data['teamdata']->sum('activities_count')}}
+			</a>
 				
+	
 			</td>	
 		</tbody>
 	</table>
