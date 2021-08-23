@@ -223,6 +223,11 @@ class LeadSource extends Model
 
     
     }
+
+    public function companies()
+    {
+        return $this->hasMany(Address::class)->with('company')->distinct('companyname');
+    }
     public function scopeActive()
     {
         return $this->where('datefrom', '<=', now()->startOfDay())

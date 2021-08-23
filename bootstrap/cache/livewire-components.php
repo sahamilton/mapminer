@@ -20,6 +20,7 @@
   'git-table' => 'App\\Http\\Livewire\\GitTable',
   'lead-source-table' => 'App\\Http\\Livewire\\LeadSourceTable',
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
+  'leadsource-show' => 'App\\Http\\Livewire\\LeadsourceShow',
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
   'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
   'manager-table' => 'App\\Http\\Livewire\\ManagerTable',

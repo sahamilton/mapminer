@@ -133,9 +133,9 @@ class LeadSourceController extends Controller
     {
 
 
-        $leadsource = $leadsource->with('author')->summary()->findOrFail($leadsource->id);
-     
-        $teamStats=[];
+        $leadsource = $leadsource->with('author', 'leads.company')->findOrFail($leadsource->id);
+        
+        /*$teamStats=[];
         $team = $leadsource->salesteam($leadsource->id);
 
         foreach ($team as $person) {
@@ -179,9 +179,10 @@ class LeadSourceController extends Controller
 
         // $data = $this->leadsource->leadRepStatusSummary($id);
         $statuses = LeadStatus::pluck('status', 'id')->toArray();
-   
+        
 
-        return response()->view('leadsource.show', compact('statuses', 'teamStats', 'branches', 'branchStats', 'leadsource'));
+        return response()->view('leadsource.show', compact('statuses', 'teamStats', 'branches', 'branchStats', 'leadsource'));*/
+        return response()->view('leadsource.show', compact('leadsource'));
     }
 
     
