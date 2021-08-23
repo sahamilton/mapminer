@@ -40,6 +40,7 @@
     <div class="row" style="margin-bottom:10px">
         <div class="col form-inline">
             <i class="fas fa-filter text-danger"></i>
+            <label>Lead Created</label>
             @include('livewire.partials._periodselector', ['all'=>true])
         </div>
         <div class="col form-inline">
@@ -170,16 +171,19 @@
                     </td>
         
        
-        <td>
-            @foreach ($lead->currentcampaigns as $campaign)
-               
-                <li>
-                    <a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">
-                        {{$campaign->title}}
-                    </a>
-                </li>
-               
-            @endforeach 
+        
+            @if($branch->currentcampaigns->count())
+            <td>       
+                @foreach ($lead->currentcampaigns as $campaign)
+                   
+                    <li>
+                        <a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">
+                            {{$campaign->title}}
+                        </a>
+                    </li>
+                   
+                @endforeach 
+            
             @if ($branch->currentopencampaigns->count() && in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
                 
                 <a 
@@ -194,7 +198,7 @@
               
             @endif
         </td>
-        
+        @endif
         <td>
             @if($lead->lastActivity)
                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
