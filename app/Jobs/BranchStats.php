@@ -49,7 +49,7 @@ class BranchStats implements ShouldQueue
         // create the file
         $this->file = $report->filename. now()->timestamp.'.xlsx';
        
-        (new BranchStatsExport($this->period))->store($this->file, 'reports')->chain(
+        (new BranchStatsExport($this->report, $this->period))->store($this->file, 'reports')->chain(
             [
                 new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 
