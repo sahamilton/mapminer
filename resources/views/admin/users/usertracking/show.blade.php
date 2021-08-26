@@ -3,7 +3,7 @@
 
 <div class="container">
     <h2>User actions for {{$user->person->fullName()}}</h2>
-    <p>for the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
+    <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
     <p><a href="{{route('usertracking.index')}}">Return to all user tracking</a></p>
     <p>
         <a href="{{route('usertracking.detail', 'Activity')}}"><strong>Activities:</strong>

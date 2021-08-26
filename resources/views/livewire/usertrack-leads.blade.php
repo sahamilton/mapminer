@@ -1,5 +1,5 @@
 <div>
-<p>for the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
+<p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
 
     <div class="row mb-4">
         @include('livewire.partials._perpage')

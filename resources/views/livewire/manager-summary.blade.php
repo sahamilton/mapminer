@@ -2,7 +2,7 @@
 
     <h2>Branch Summaries</h2>
 
-    <p>for the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
+    <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
     <div class="row form-inline">
       @include('livewire.partials._perpage')
       @include('livewire.partials._periodselector')

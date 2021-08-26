@@ -1,7 +1,7 @@
 <div>
     <h2>{{$branch->branchname}}</h2>
     <h4>{{$statuses[$status]}} Activities</h4>
-    <p>for the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
+    <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
 
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">
     <i class="fas fa-tachometer-alt"></i>

@@ -24,7 +24,7 @@
         @endswitch
     </h4>
     @if ($this->setPeriod !="All")
-    <p>created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
+    <p class="bg-warning">Created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
     @else
     <p>created in all time periods</p>
     @endif
