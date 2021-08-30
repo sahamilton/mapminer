@@ -42,12 +42,10 @@ class BranchStats implements ShouldQueue
     public function handle()
     {
         
-        $report = Report::with('distribution')
-            ->where('job', 'BranchStats')
-            ->firstOrFail();
+        
         
         // create the file
-        $this->file = $report->filename. now()->timestamp.'.xlsx';
+        $this->file = $this->report->filename. now()->timestamp.'.xlsx';
        
         (new BranchStatsExport($this->report, $this->period))->store($this->file, 'reports')->chain(
             [
