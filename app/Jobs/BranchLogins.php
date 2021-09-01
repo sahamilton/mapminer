@@ -71,7 +71,6 @@ class BranchLogins implements ShouldQueue
         return 
             strtolower(
                 Str::slug(
-                    $this->user->person->fullName()." ".
                     $this->report->filename ." ". 
                     $this->period['from']->format('Y_m_d'), 
                     '_'
