@@ -118,10 +118,10 @@ class Kernel extends ConsoleKernel
                 ->at('18:30');
             */
             // Branch Login Report
-            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth()->startOfDay();  
-            $period['to'] = Carbon::now()->subWeek()->endOfWeek()->endOfDay();
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchLogins($period))
-                ->monthlyOn(1, '1:17');
+                ->monthlyOn(2, '1:17');
                
                 
             // Branch Activities Report
