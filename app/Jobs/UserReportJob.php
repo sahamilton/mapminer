@@ -39,7 +39,7 @@ class UserReportJob implements ShouldQueue
         $this->period = $period;
         $this->report = $report;
         $this->manager = $manager;   
-        $this->distribution = $this->report->distribution;
+        $this->distribution = $distribution;
        
     }
 
@@ -135,10 +135,22 @@ class UserReportJob implements ShouldQueue
         } 
 
     }
+    /**
+     * [_getDistribution description]
+     * 
+     * @return Collection [description]
+     */
     private function _getDistribution()
     {
-        if (! $this->report->distribution->count()) {
-            return User::where('id', auth()->user()->id)->get();
+        if ($this->distribution) {
+            return $this->distribution;
+        } elseif (! $this->report->distribution->count()) {
+            if (auth()->user()) {
+                return User::where('id', auth()->user()->id)->get();
+            } else {
+                return User::where('id', 1)->get();
+            }
+            
         }
         return $this->report->distribution;
     }  
