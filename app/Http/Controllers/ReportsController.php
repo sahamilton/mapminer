@@ -240,7 +240,7 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, RunReportFormRequest $request)
     {
-       
+        
         $distribution = User::with('person')->where('id', auth()->user()->id)->get();
         $this->_dispatchJob($report, $request, $distribution);
         return redirect()->back()->withSuccess('Your job has been dispatched. Check your email in a few minutes time');
