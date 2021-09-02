@@ -55,7 +55,7 @@ class BranchLogins implements ShouldQueue
                 ->chain(
                     [
                         new ReportReadyJob(
-                            $this->distribution, 
+                            $recipient, 
                             $this->period, 
                             $this->file, 
                             $this->report
