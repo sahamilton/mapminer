@@ -272,4 +272,14 @@ trait PeriodSelector
         return $data;
     }
 
+
+    private function allDates()
+    {
+        $data['from'] = Carbon::now()->subYear(6)->startOfYear(); 
+        $data['to'] = Carbon::now()->addYear(6)->endOfYear();
+        
+        $data['period'] = 'allDates';
+        return $data;
+    }
+
 }
