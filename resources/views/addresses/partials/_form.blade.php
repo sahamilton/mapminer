@@ -18,7 +18,7 @@
     </div>
 </div>
 <!-- address -->
-<div class="form-group row{{ $errors->has('address') ? ' has-error' : '' }}">
+<div class="form-group row{{ $errors->has('street') ? ' has-error' : '' }}">
     <label for="address" class="col-md-2 control-label">Address: </label>
      <div class="col-sm-8">
         <input required type="text" 
@@ -44,7 +44,7 @@
         value="{{ old('city', isset($address) ? $address->city : '' )}}" 
         placeholder="city">
         <span class="help-block">
-            <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
+            <strong>{{ $errors->has('city') ? $errors->first('city') : ''}}</strong>
         </span>
     </div>
 </div>
@@ -91,6 +91,21 @@
         placeholder="phone">
         <span class="help-block">
             <strong>{{ $errors->has('phone') ? $errors->first('phone') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<div class="form-group row{{ $errors->has('customer_id') ? ' has-error' : '' }}">
+    <label for="customer_id" class="col-md-2 control-label">Customer Id: </label>
+     <div class="col-sm-8">
+        <input 
+        type="text" 
+        class="form-control" 
+        name='customer_id' 
+        description="Customer id" 
+        value="{{ old('customer_id', isset($address) ? $address->customer_id : '' )}}" 
+        placeholder="Customer Id">
+        <span class="help-block">
+            <strong>{{ $errors->has('customer_id') ? $errors->first('customer_id') : ''}}</strong>
         </span>
     </div>
 </div>

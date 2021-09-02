@@ -59,6 +59,8 @@ trait Geocode
                     ->getCountry()
                     ->getCode();     
 
+            } else {
+                $data['country'] =null;
             }
 
             $data['fulladdress'] = trim(

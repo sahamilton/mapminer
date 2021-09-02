@@ -19,6 +19,7 @@ class BranchLocationsTable extends Component
     public $accounttype=false;
     public $paginationTheme = 'bootstrap';
     public $myBranches;
+    public $branch_id;
 
     public function updatingSearch()
     {

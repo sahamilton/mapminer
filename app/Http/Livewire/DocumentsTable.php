@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use App\LeadSource;
+use App\Campaign;
 use App\Document;
 use App\Person; 
 class DocumentsTable extends Component
@@ -48,7 +48,7 @@ class DocumentsTable extends Component
     {
         $this->types = array_merge(['select'], Document::TYPES);
         $this->document = new Document();
-        $this->campaigns = array_merge(['select'], LeadSource::where('status', '!=', 'completed')->orderBy('title')->pluck('title', 'id')->toArray());
+        $this->campaigns = array_merge(['select'], Campaign::where('status', '!=', 'completed')->orderBy('title')->pluck('title', 'id')->toArray());
     }
     public function render()
     {

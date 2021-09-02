@@ -115,28 +115,13 @@ class ActivityController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function branchActivities(Request $request, Branch $branch) 
+    public function branchActivities(Branch $branch) 
     {
-    
-        if (request()->has('branch')) {
-            $branch = $this->branch->findOrFail(request('branch'));
-        }
         $myBranches = $this->person->myBranches();
-       
-        if (! ( $myBranches)  
-            or ! in_array($branch->id, array_keys($myBranches))
-        ) {
-            return redirect()->back()
-                ->withError('You are not assigned to any branches');
-        }
-       
-         
-        $data = $this->_getBranchActivities($branch, $from = false);
         
-        $title= $data['branches']->first()->branchname . " activities";
         return response()->view(
-            'activities.index',
-            compact('data', 'myBranches', 'title')
+            'activities.newindex',
+            compact('branch', 'myBranches')
         );
     }
     

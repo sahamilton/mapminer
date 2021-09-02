@@ -12,11 +12,7 @@ class Person extends NodeModel implements Auditable
     use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch, \OwenIt\Auditing\Auditable;
     public $salesroles = ['5','9'];
     public $branchroles = ['9'];
-    // Add your validation rules here
-    public static $rules = [
-        'email'=>'required',
-        'mgrtype' => 'required',
-    ];
+       
     
     protected $table ='persons';
     protected $hidden = ['created_at','updated_at','deleted_at','position'];

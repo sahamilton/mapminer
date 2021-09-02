@@ -154,7 +154,7 @@ class BranchDashboardController extends DashboardController
     public function show(Branch $branch)
     {
         $myBranches = $this->person->myBranches();
-        
+
          
         if (! array_key_exists($branch->id, $myBranches)) {
              return redirect()->back()
@@ -188,10 +188,11 @@ class BranchDashboardController extends DashboardController
                 );
         }
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
-        $this->myBranches = array_keys($myBranches);
+        $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
+
         $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
-      
+     
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
 
     }
@@ -219,6 +220,7 @@ class BranchDashboardController extends DashboardController
 
         }
         $data['charts'] = $this->_getCharts($data);
+       
         return $data;
     }
     private function _getCharts($data)
@@ -285,6 +287,7 @@ class BranchDashboardController extends DashboardController
         $this->reports = $data['me']->getDescendantsAndSelf()->pluck('user_id')->toArray();
 
         $data['activities'] = $this->getSummaryTeamData($this->period, $this->activityFields);
+
         $directReports = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
         foreach ($directReports as $report) {
 

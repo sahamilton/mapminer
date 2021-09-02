@@ -61,7 +61,7 @@ class AddressController extends BaseController
      */
     public function create()
     {
-        //
+        //this is weird!  Where is the create method?
     }
 
     /**
@@ -73,7 +73,7 @@ class AddressController extends BaseController
      */
     public function store(Request $request)
     {
-        //
+        //this is weird!  Where is the create method?
     }
 
     /**
@@ -88,7 +88,6 @@ class AddressController extends BaseController
         
         
         $location = $address->load(
-           
             'contacts.relatedActivities',
             'primaryContact',
             'activities.type',
@@ -172,15 +171,16 @@ class AddressController extends BaseController
      */
     public function update(Request $request, Address $address)
     {
-      
+        
         $geocode = app('geocoder')->geocode($this->_getAddress($request))->get();
         $data = $this->address->getGeoCode($geocode);
 
-        $data['businessname'] =request('companyname');
+        $data['businessname'] = request('companyname');
       
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
-
+        $data = $this->_setCustomer($request, $data);
         $address->update($data);
+        dd(request()->all(), $data, $address);
         if (request()->filled('campaign') && request('campaign')!=0) {
             $address->campaigns()->attach(request('campaign'));
         } else {
@@ -200,6 +200,19 @@ class AddressController extends BaseController
     {
         $address->delete();
         return redirect()->route('address.index')->withWarning('Location deleted');
+    }
+    /**
+     * [_setCustomer description]
+     * @param Request $request [description]
+     * @param array   $data    [description]
+     */
+    private function _setCustomer(Request $request, array $data) :array
+    {
+        if (request()->has('customer_id')) {
+            $data['customer_id'] = request('customer_id');
+            $data['addressable_type'] = 'customer';
+        }
+        return $data;
     }
     /**
      * [findLocations description]

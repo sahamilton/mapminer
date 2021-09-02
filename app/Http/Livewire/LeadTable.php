@@ -10,10 +10,10 @@ use App\ActivityType;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\AddressBranch;
-
+use App\PeriodSelector;
 class LeadTable extends Component
 {
-    use WithPagination;
+    use WithPagination, PeriodSelector;
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'businessname';
@@ -22,8 +22,8 @@ class LeadTable extends Component
    
     public $withOps = 'All';
     //public $updateMode = false;
-    public $setPeriod = 'All';
-    public $period;
+    public $setPeriod;
+ 
     //public $activity_date;
     public $branch_id;
     public $lead_source_id = 'All';
@@ -74,6 +74,10 @@ class LeadTable extends Component
         $this->myBranches = $person->myBranches();
         $this->search = $search;
         $this->branch_id = array_keys($this->myBranches)[0];
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
+        $this->setPeriod = session('period')['period'];
         
     }
     /**
@@ -167,9 +171,7 @@ class LeadTable extends Component
 
     private function _setPeriod()
     {
-        if ($this->setPeriod != 'All') {
-            $this->period = Person::where('user_id', auth()->user()->id)->first()->getPeriod($this->setPeriod);
-        }
+        $this->livewirePeriod($this->setPeriod);
         
     }
 

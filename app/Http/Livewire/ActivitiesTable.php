@@ -20,7 +20,7 @@ class ActivitiesTable extends Component
     public $sortAsc = false;
     public $search ='';
 
-    public $setPeriod = 'thisWeek';
+    public $setPeriod;
 
     public $branch_id;
     public $myBranches;
@@ -44,14 +44,23 @@ class ActivitiesTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($status = null)
+    public function mount($branch=null, $status = null)
     {
+        $this->myBranches = auth()->user()->person->myBranches();
+        $this->branch_id = array_key_first($this->myBranches);
+        if ($branch) {
+            $this->branch_id = $branch;
+        }
+
         if ($status) {
             $this->status = $status;
         }
-        $this->myBranches = auth()->user()->person->myBranches();
-        $this->branch_id = array_key_first($this->myBranches);
-
+        
+        
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
+        $this->setPeriod = session('period')['period'];
 
     }
     /**
@@ -68,7 +77,7 @@ class ActivitiesTable extends Component
             [
                 'activities'=>Activity::query()
                     ->where('branch_id', $this->branch_id)
-                    ->periodActions($this->period)
+                    ->periodActivities($this->period)
                     ->with('relatesToAddress', 'type')
                     ->search($this->search)
                     ->when(
@@ -103,10 +112,10 @@ class ActivitiesTable extends Component
      */
     private function _setPeriod()
     {
-        if ($this->setPeriod != session('period')) {
-            $this->livewirePeriod($this->setPeriod);
+        
+        $this->livewirePeriod($this->setPeriod);
             
-        }
+        
     }
 
     private function _setBranchSession()

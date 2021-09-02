@@ -33,9 +33,12 @@ trait PeriodSelector
         return redirect()->back();
     }
 
-    public function livewirePeriod($period)
+    public function livewirePeriod($period = null)
     {
-        if (method_exists($this, $period)) {
+        
+        if (! $period) {
+            $this->period = $this->_default();
+        } elseif (method_exists($this, $period)) {
             
             $this->period = $this->$period();
         } else {
@@ -266,6 +269,16 @@ trait PeriodSelector
         $data['to'] = Carbon::now()->endOfDay();;
         
         $data['period'] = 'lastSixMonths';
+        return $data;
+    }
+
+
+    private function allDates()
+    {
+        $data['from'] = Carbon::now()->subYear(6)->startOfYear(); 
+        $data['to'] = Carbon::now()->addYear(6)->endOfYear();
+        
+        $data['period'] = 'allDates';
         return $data;
     }
 

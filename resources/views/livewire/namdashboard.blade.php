@@ -33,7 +33,7 @@
         </x-slot>
     </x-table.table>
     <h4>Branch Summary</h4>
-    <p>For the period {{$this->period['from']}} to {{$this->period['to']}}</p>
+    <p class="bg-warning">For the period {{$this->period['from']}} to {{$this->period['to']}}</p>
     <div class="row form-inline">
         @include('livewire.partials._perpage')
         @include('livewire.partials._search', ['placehodler'=>'Search branches ...'])

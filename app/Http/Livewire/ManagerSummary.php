@@ -46,7 +46,10 @@ class ManagerSummary extends Component
     {
         $this->myBranches = auth()->user()->person->getMyBranches();
         $this->period = $this->getPeriod();
-        $this->setPeriod = $this->period['period'];
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
+        $this->setPeriod = session('period')['period'];
     }
     /**
      * [render description]
@@ -74,9 +77,8 @@ class ManagerSummary extends Component
 
     private function _setPeriod()
     {
-        if ($this->setPeriod != session('period')) {
+        
             $this->livewirePeriod($this->setPeriod);
-            
-        }
+
     }
 }

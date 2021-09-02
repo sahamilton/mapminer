@@ -17,12 +17,18 @@ class CampaignEmailController extends Controller
     public $searchfilter;
     public $activity;
 
-    public function __construct(Salesactivity $activity, SearchFilter $searchfilter, )
+    public function __construct(Salesactivity $activity, SearchFilter $searchfilter)
     {
         $this->activity = $activity;
         $this->searchfilter = $searchfilter;
     }
-
+    /**
+     * [announceCampaign description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     public function announceCampaign(Campaign $campaign)
     {
         
@@ -32,12 +38,19 @@ class CampaignEmailController extends Controller
         */
         $branches = $campaign->load('branches.managers');
         $campaignverticals = array_unique($activity->vertical()->pluck('filter')->toArray());
-        $message = $this->constructMessage($activity, $campaignverticals);
-        */
+        $message = $this->_constructMessage($activity, $campaignverticals);
+     
        
         return response()->view('salesactivity.salesteam', compact('salesteam', 'activity', 'message', 'verticals'));
     }
-
+    /**
+     * [email description]
+     * 
+     * @param Request $request [description]
+     * @param [type]  $id      [description]
+     * 
+     * @return [type]           [description]
+     */
     public function email(Request $request, $id)
     {
         $data['activity'] = $this->activity->findOrFail($id);
@@ -46,29 +59,49 @@ class CampaignEmailController extends Controller
         $data['message'] = request('message');
         $data['count'] = count($salesteam);
 
-        $this->notifySalesTeam($data, $salesteam);
+        $this->_notifySalesTeam($data, $salesteam);
 
-        $this->notifyManagers($data, $salesteam);
+        $this->_notifyManagers($data, $salesteam);
 
-        $this->notifySender($data);
+        $this->_notifySender($data);
 
         return response()->view('salesactivity.sendercampaign', compact('data'));
     }
-
-    private function notifySalesTeam($data, $salesteam)
+    /**
+     * [_notifySalesTeam description]
+     * 
+     * @param [type] $data      [description]
+     * @param [type] $salesteam [description]
+     * 
+     * @return [type]            [description]
+     */
+    private function _notifySalesTeam($data, $salesteam)
     {
         foreach ($salesteam as $data['sales']) {
             Mail::queue(new SendCampaignMail($data));
         }
     }
-
-    private function notifySender($data)
+    /**
+     * [_notifySender description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _notifySender($data)
     {
         $data['sender'] = auth()->user()->email;
         Mail::queue(new SendSenderCampaignMail($data));
     }
-
-    private function notifyManagers($data, $salesteam)
+    /**
+     * [_notifyManagers description]
+     * 
+     * @param [type] $data      [description]
+     * @param [type] $salesteam [description]
+     * 
+     * @return [type]            [description]
+     */
+    private function _notifyManagers($data, $salesteam)
     {
         foreach ($salesteam as $salesrep) {
             if ($salesrep->reportsTo) {
@@ -83,9 +116,9 @@ class CampaignEmailController extends Controller
             sleep(1);
         }
     }
-    private function constructRestrictedCampaignMessage($activity, $verticals)
+    /*private function constructRestrictedCampaignMessage($activity, $verticals)
     {
-        $message =
+        $message = '';
         $activity->title.' campaign runs from '.$activity->datefrom->format('M j, Y').' until '.$activity->dateto->format('M j, Y').
         '. '.$activity->description.'</p>';
         $message .= 'This campaign focuses on: <ul>';
@@ -97,10 +130,18 @@ class CampaignEmailController extends Controller
         $message .= '<p>Check out <strong><a href="'.route('salesactivity.show', $activity->id).'">MapMiner</a></strong> for resources, including nearby locations, to help you with this campaign.</p>';
 
         return $message;
-    }fn () => 
-    private function constructMessage($activity, $verticals)
+    }*/
+    /**
+     * [_constructMessage description]
+     * 
+     * @param [type] $activity  [description]
+     * @param [type] $verticals [description]
+     * 
+     * @return [type]            [description]
+     */
+    private function _constructMessage($activity, $verticals)
     {
-        $message =
+        $message = "";
         $activity->title.' campaign runs from '.$activity->datefrom->format('M j, Y').' until '.$activity->dateto->format('M j, Y').
         '. '.$activity->description.'</p>';
         $message .= 'This campaign focuses on: <ul>';
@@ -113,25 +154,5 @@ class CampaignEmailController extends Controller
 
         return $message;
     }
-
-    private function filterSalesReps($verticals)
-    {
-        // find sales reps (user role = 5)
-        //
-        // The filter by vertical if they have a vertical
-        // or include them if they don't
-        //  This doesnt include the not specified
-        return Person::with('userdetails', 'reportsTo', 'reportsTo.userdetails')
-        ->whereHas('userdetails.roles', function ($q) {
-            $q->where('role_id', '=', 5);
-        })
-        ->where(function ($query) use ($verticals) {
-            $query->whereHas('industryfocus', function ($q) use ($verticals) {
-                $q->whereIn('search_filter_id', $verticals);
-            });
-        })
-        ->whereNotNull('lat')
-        ->whereNotNull('lng')
-        ->get();
-    }
+    
 }

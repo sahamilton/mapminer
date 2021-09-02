@@ -50,6 +50,10 @@ class ManagerTable extends Component
     public function mount()
     {
         $this->capoDiCapo = Person::findOrFail(config('mapminer.topdog'));
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
+        $this->setPeriod = session('period')['period'];
     }
 
 
@@ -119,9 +123,8 @@ class ManagerTable extends Component
      */
     private function _setPeriod()
     {
-        if ($this->setPeriod != session('period')) {
+        
             $this->livewirePeriod($this->setPeriod);
-            
-        }
+       
     }
 }

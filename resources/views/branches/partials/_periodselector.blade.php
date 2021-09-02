@@ -1,4 +1,4 @@
-<p>for the period from {{$data['period']['from']->format('Y-m-d')}} to {{$data['period']['to']->format('Y-m-d')}}</p>
+<p class="bg-warning">For the period from {{$data['period']['from']->format('Y-m-d')}} to {{$data['period']['to']->format('Y-m-d')}}</p>
 <div class="form">
 	<form method="post" 
 	class="inline" 

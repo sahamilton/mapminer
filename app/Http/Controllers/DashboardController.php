@@ -37,7 +37,8 @@ class DashboardController extends Controller
             '7'=>'proposal',
             '10'=>'site_visit',
             '13'=>'log_a_call',
-            '14'=>'in_person'
+            '14'=>'in_person',
+            'activities_count'
 
 
 
