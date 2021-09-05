@@ -23,7 +23,13 @@
     {{$activity->type->activity}}</p>
 <p><strong>Details:</strong>
     {{$activity->note}}</p>
+@if($activity->relatedContact)
+    <p><strong>Contact:</strong>
+        @foreach ($activity->relatedContact as $contact)
+           <li> {{$contact->fullName()}} {{$contact->id}}</li>
+        @endforeach
 
+@endif
 
 <p><strong>Status:</strong>{{$activity->completed == 1 ? 'Completed' : 'Open'}}</p>
 </div>

@@ -79,7 +79,7 @@ class ActivityController extends Controller
 
     public function show(Activity $activity)
     {
-        $activity->load('branch', 'user.person', 'relatesToAddress', 'type');
+        $activity->load('branch', 'user.person', 'relatesToAddress', 'relatedContact', 'type');
         return response()->view('activities.show', compact('activity'));
     }
     /**
@@ -189,23 +189,21 @@ class ActivityController extends Controller
     public function store(ActivityFormRequest $request)
     {
       
-        // can we detect the branch here?
-        $data = $this->_parseData($request); 
-       
-        $activity = Activity::create($data['activity']);
+        
+        $data = $this->_parseData($request);
 
+        $activity = Activity::create($data['activity']);
+        
         if (request()->filled('followup_date')) {
             // create a new activity
              $followup = Activity::create($data['followup']);
              
              $activity->followupActivity()->associate($followup);
-             //$activity->followupActivity()->create($data['followup']);
-
-      
         }
         if (request()->filled('contact')) {
-            $activity->relatedContact()->attach($data['contact']['contact']);
+            $activity->relatedContact()->sync($data['contact']['contact']);
         }
+        
         $activity->load('relatedContact');
         if (request()->has('mobile')) {
             return redirect()->route('mobile.show', $data['activity']['address_id']);

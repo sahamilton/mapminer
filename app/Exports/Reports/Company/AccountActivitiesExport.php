@@ -5,6 +5,7 @@ namespace App\Exports\Reports\Company;
 use App\Address;
 use App\Company;
 use App\Report;
+use App\ActivityType;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -21,6 +22,7 @@ class AccountActivitiesExport implements FromQuery, ShouldQueue, WithHeadings, W
     public $period;
     public $branches;
     public $report;
+    public $types;
 
     public $fields = [
         'address'=>'Address',
@@ -37,6 +39,7 @@ class AccountActivitiesExport implements FromQuery, ShouldQueue, WithHeadings, W
         $this->period = $period;
         $this->company = $company;
         $this->report = $report;
+        $this->types = ActivityType::pluck('activity', 'id')->toArray();
     }
 
     public function headings(): array
@@ -56,37 +59,35 @@ class AccountActivitiesExport implements FromQuery, ShouldQueue, WithHeadings, W
     public function map($address): array
     {
        
-       
-        foreach ($address->activities as $activity) {
-            foreach ($this->fields as $key=>$field) {
-                switch($key) {
-                case 'address':
-                    $detail[$address->id][] = $address->fullAddress();
-                    break;
+        foreach ($this->fields as $key=>$field) {
+            switch($key) {
+            case 'address':
+                $detail[] = $address->fullAddress();
+                break;
 
-                case 'address2': 
-                    $detail[$address->id][] = $address->address2;
-                    break;
-                
-                case 'branch':
-                    $detail[$address->id][] = $address->branch->branchname;
-                    break;
+            case 'address2': 
+                $detail[] = $address->address2;
+                break;
+            
+            case 'branch':
+                $detail[] = $address->branchname;
+                break;
 
-                case 'type':
-                    $detail[$address->id][] = $activity->type->activity;
-                    break;
+            case 'type':
+                $detail[] = $this->types[$address->activitytype_id];
+                break;
 
-                case 'activity_date':
-                    $detail[$address->id][] = $activity->activity_date->format('Y-m-d');
-                    break;
+            case 'activity_date':
+                $detail[] = $address->activity_date;
+                break;
 
-                default:
-                    $detail[$address->id][]= $activity->$key;
-                    break;
+            default:
+                $detail[]= $address->$key;
+                break;
 
-                }
-                
             }
+                
+
            
         }
         return $detail;
@@ -104,22 +105,9 @@ class AccountActivitiesExport implements FromQuery, ShouldQueue, WithHeadings, W
     public function query()
     {
         return  Address::where('company_id', $this->company->id)
-                ->whereHas(
-                    
-                    'activities', function ($q) {
-                        $q->where('completed', '1')
-                            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                    }
-                    
-                )
-                ->with(
-                    
-                    [
-                        'activities'=>function ($q) {
-                            $q->where('completed', '1')
-                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
-                        }
-                    ], 'activities.branch'
-                );
+                ->join('activities', 'activities.address_id', '=', 'addresses.id')
+                ->join('branches', 'activities.branch_id', '=', 'branches.id')
+                ->whereBetween('activities.activity_date', [$this->period['from'], $this->period['to']])
+                ->where('activities.completed', 1);
     }
 }
