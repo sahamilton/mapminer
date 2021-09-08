@@ -6,6 +6,7 @@ use Mail;
 use App\Report;
 use App\Person;
 use App\User;
+use App\Company;
 use App\Exports\ActivityOpportunityExport;
 
 use Illuminate\Support\Str;
@@ -17,13 +18,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 
-class UserReportJob implements ShouldQueue
+class CompanyReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
     public $distribution;
     public $file;
-    public $manager;
+    public $company;
     public $period;
     public $person;
     public $report; 
@@ -33,12 +34,12 @@ class UserReportJob implements ShouldQueue
         Report $report, 
         Array $period = null, 
         $distribution = null, 
-        $manager = null
+        $company = null
     ) {
         
         $this->period = $period;
         $this->report = $report;
-        $this->manager = $manager;   
+        $this->company = Company::findOrFail($company);;   
         $this->distribution = $distribution;
        
     }
@@ -57,8 +58,8 @@ class UserReportJob implements ShouldQueue
             $this->file = $this->_makeFileName();
            
             $export = $this->_getExportClass();
-            
-            (new $export($this->period, [$this->manager]))
+         
+            (new $export($this->report, $this->company, $this->period))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
@@ -83,6 +84,7 @@ class UserReportJob implements ShouldQueue
         return 
                 strtolower(
                     Str::slug(
+                        $this->company->companyname." ".
                         $this->report->report." ".
                         $this->report->filename ." ". 
                         $this->period['from']->format('Y_m_d'), 
@@ -103,36 +105,8 @@ class UserReportJob implements ShouldQueue
 
     private function _getExportClass()
     {
-        switch(strtolower($this->report->object)) {
-        case "branch":
-            return "\App\Exports\Reports\Branch\\". $this->report->export;
-            break;
-
-        case "company": 
-            return "\App\Exports\\". $this->report->export;
-            break;
-
-
         
-
-        case "role": 
-            return "\App\Exports\\". $this->report->export;
-            break;
-
-
-        case "campaign": 
-            return "\App\Exports\Campaign\\". $this->report->export;
-            break;
-
-        case "user": 
-            return "\App\Exports\\". $this->report->export;
-            break;
-
-        default:
-            return "\App\Exports\\". $this->report->export;
-            break;
-
-        } 
+        return "\App\Exports\Reports\Company\\". $this->report->export;   
 
     }
     /**

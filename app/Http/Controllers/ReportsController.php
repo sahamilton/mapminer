@@ -250,11 +250,11 @@ class ReportsController extends Controller {
 
     private function _dispatchJob(Report $report, Request $request, \Illuminate\Database\Eloquent\Collection $distribution)
     {
-        
+       
         $manager = $this->_getManager($request);
         $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
         $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-   
+       
         switch($report->object) {
         case 'Branch':
             return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
@@ -267,7 +267,10 @@ class ReportsController extends Controller {
         case 'User':
             return \App\Jobs\UserReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;   
-        
+        case 'Company':
+            $company = request('company');
+            return \App\Jobs\CompanyReportJob::dispatch($report, $period, $distribution, $company)->onQueue('reports');
+            break;
         default:
             return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break; 

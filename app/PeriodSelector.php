@@ -271,7 +271,22 @@ trait PeriodSelector
         $data['period'] = 'lastSixMonths';
         return $data;
     }
-
+    /**
+     * ThisQuarterToDate returns beginging date
+     * of current quarter to current date
+     * 
+     * @return array of from & to  Carbon instance
+     */
+    private function lastThreeMonths()
+    {
+        
+        
+        $data['from'] = Carbon::now()->subMonths(3)->startOfDay();;
+        $data['to'] = Carbon::now()->endOfDay();;
+        
+        $data['period'] = 'lastThreeMonths';
+        return $data;
+    }
 
     private function allDates()
     {
