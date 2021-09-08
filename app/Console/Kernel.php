@@ -76,7 +76,7 @@ class Kernel extends ConsoleKernel
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchStats($period))
                 ->weekly()
-                ->wednesday()
+                ->wednesdays()
                 ->at('23:05');
 
             
