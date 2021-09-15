@@ -129,7 +129,7 @@ class ReportsController extends Controller {
         } else {
             $object=null;
         }
-        if (auth()->user()->hasRole(['admin', 'sales_ops'])){
+        if (auth()->user()->hasRole(['admin', 'sales_operations'])){
             
             $managers = auth()->user()->person->managers();
         } else {
