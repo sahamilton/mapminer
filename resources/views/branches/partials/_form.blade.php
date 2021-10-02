@@ -168,10 +168,3 @@ $states = $state->getStates();
 </div>
 
 </div>
-
-
-
-
-
-
->>>>>>> master
