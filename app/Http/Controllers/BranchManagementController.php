@@ -56,7 +56,7 @@ class BranchManagementController extends Controller
     public function index()
     {
         $id = auth()->user()->id;
-       
+
         return redirect()->route('branchassignments.show', $id);
     }
 
@@ -87,6 +87,7 @@ class BranchManagementController extends Controller
         }
  
         $branches = $details->branchesServiced->merge($branches);
+
         return response()->view(
             'branchassignments.show', ['details'=>$details,'branches'=>$branches]
         );

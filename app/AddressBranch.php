@@ -92,6 +92,11 @@ class AddressBranch extends Model
             ->groupBy(['branch_id','yearweek'])
             ->orderBy('yearweek', 'asc');
     }
+
+    public function OpportunitiesOpen()
+    {
+        return $this->hasMany(Opportunity::class, 'address_branch_id', 'id')->where('closed', 0);
+    }
     /**
      * [scopeOpenOpportunities description]
      * 

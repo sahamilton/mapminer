@@ -29,7 +29,7 @@ class BranchManagementController extends BaseController
 
     public $branchmanagement;
     
-    public $branchRoles = [3,5,11,9,13];
+    public $branchRoles = [9];
     /**
      * [__construct description]
      * 
@@ -72,6 +72,7 @@ class BranchManagementController extends BaseController
         $roles = $this->role->whereIn('id', $this->branchRoles)->get();
  
         $branches = $this->_branchesWithoutManagers();
+
         $people = $this->_managersWithoutBranches();
 
         return response()->view('admin.branches.manage', compact('branches', 'people', 'roles'));
@@ -88,6 +89,7 @@ class BranchManagementController extends BaseController
         
         $roles = $this->role->whereIn('id', $this->branchRoles)->get();
         $branches = $this->_branchesWithoutManagers();
+
         $people = $this->_managersWithoutBranches();
      
          return Excel::download(new BranchManagementSheet($roles, $branches, $people, $type), now()->format('Y-m-d') ." " . $type. ' branchmanagement.csv');
@@ -190,12 +192,6 @@ class BranchManagementController extends BaseController
     {
         return $this->branch
             ->doesntHave('manager')
-            ->orWhere(
-                function ($q) {
-                    $q->doesntHave('businessmanager')
-                        ->doesntHave('marketmanager');
-                }
-            )
             ->with('servicelines', 'manager', 'marketmanager', 'businessmanager')
             ->get();
     }
