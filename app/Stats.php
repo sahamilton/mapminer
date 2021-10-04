@@ -137,6 +137,7 @@ class Stats extends Model
                         $q->whereBetween('activity_date',  [$period['from'], $period['to']]);
                     }
                 )->count(),
+                'branches_without_manager'=>Branch::doesntHave('manager')->count(),
                 'activities' => Activity::completed()->whereBetween('activity_date', [$period['from'], $period['to']])
                     ->when(
                         $this->branches, function ($q) {
