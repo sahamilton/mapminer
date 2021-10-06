@@ -18,7 +18,7 @@
       role="tab" 
       aria-controls="locations" 
       aria-selected="true">
-    <strong> Nearby Locations</strong>
+    <strong> Nearby Unassigned Locations</strong>
   </a>
     <a class="nav-item nav-link"  
         data-toggle="tab" 
