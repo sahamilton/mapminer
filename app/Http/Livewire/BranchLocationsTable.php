@@ -57,7 +57,7 @@ class BranchLocationsTable extends Component
 
     public function render()
     {
-
+        $this->_checkDistance();
         return view(
             'livewire.branch-locations-table', [
             'addresses'=>
@@ -80,21 +80,11 @@ class BranchLocationsTable extends Component
     {
         $this->branch = Branch::findOrFail($this->branch_id);
     }
-}
-/*
-$roles = \App\Role::pluck('display_name', 'id');
-        $mywatchlist= [];
-        $data['branch'] = $branch->load('manager.reportsTo','manager.userdetails');
-    
-        $data['title']='National Accounts';
-        $servicelines = Serviceline::all();
-        $locations  = $this->address->nearby($branch, 25)->with('company')->get();
 
-        $watchlist = User::where('id', '=', auth()->user()->id)
-            ->with('watching')->get();
-        foreach ($watchlist as $watching) {
-            foreach ($watching->watching as $watched) {
-                $mywatchlist[]=$watched->id;
-            }
+    private function _checkDistance()
+    {
+        if (! $this->distance) {
+            $this->distance = $this->branch->radius;
         }
- */
+    }
+}
