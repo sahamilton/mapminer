@@ -44,6 +44,13 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
 
     ];
 
+    public $opportunityFields = [
+
+        "won_opportunities"=>'won_opportunities',
+        "won_value"=>'won_value',
+
+    ];
+
     /**
      * [__construct description]
      * 
@@ -125,8 +132,11 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
     public function query()
     {
       
-        return Branch::query()->summaryLeadStats($this->period, array_keys($this->leadFields))
+        return Branch::query()
+            
+            ->summaryLeadStats($this->period, array_keys($this->leadFields))
             ->summaryActivities($this->period, $this->activityFields)
+            ->summaryOpportunities($this->period, $this->opportunityFields)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {
@@ -147,7 +157,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
             $data[str_replace(" ", "_", strtolower($field))] = $field;
         }
 
-        return array_merge($this->fields, $this->leadFields, $data);
+        return array_merge($this->fields, $this->leadFields, $this->opportunityFields, $data);
        
     }
 }

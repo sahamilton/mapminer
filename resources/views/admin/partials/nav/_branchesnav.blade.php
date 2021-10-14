@@ -4,6 +4,12 @@
     <ul class="dropdown-menu">
         <li>
             <a class="dropdown-item" 
+            href="{{ route('branches.index') }}">
+                <i class="fab fa-pagelines" aria-hidden="true"></i> All Branches
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" 
             href="{{ route('branches.create') }}">
                 <i class="fas fa-plus-circle"></i> Add Branch
             </a>
