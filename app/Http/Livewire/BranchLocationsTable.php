@@ -11,17 +11,22 @@ class BranchLocationsTable extends Component
     
     use WithPagination;
     public $perPage = 10;
-    public $sortField = 'businessname';
+    public $sortField = 'distance';
     public $sortAsc = true;
     public $search = '';
     public $branch;
     public $range;
+    public $distance;
     public $accounttype=false;
     public $paginationTheme = 'bootstrap';
-    public $myBranches;
-    public $branch_id;
+  
+    
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingDistance()
     {
         $this->resetPage();
     }
@@ -39,15 +44,12 @@ class BranchLocationsTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount($branch=null)
+    public function mount(int $branch)
     {
         
-        $person = new Person();
-        $this->myBranches = $person->myBranches();
-        if (! $branch) {
-            $branch = array_key_first($this->myBranches);
-        }
-        $this->branch_id = $branch;
+               
+        $this->branch = Branch::findOrFail($branch);
+        $this->distance = $this->branch->radius;
        
     }
 
@@ -55,18 +57,18 @@ class BranchLocationsTable extends Component
 
     public function render()
     {
-        $this->_getBranch();
+        $this->_checkDistance();
         return view(
             'livewire.branch-locations-table', [
             'addresses'=>
                 Address::query()
-
                     ->search($this->search)
-                    ->nearby($this->branch, $this->branch->radius)
+                    ->nearby($this->branch, $this->distance)
                     ->whereDoesntHave('assignedToBranch')
                     ->with('company', 'industryVertical')
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
+
                 
             ]
         );
@@ -78,21 +80,11 @@ class BranchLocationsTable extends Component
     {
         $this->branch = Branch::findOrFail($this->branch_id);
     }
-}
-/*
-$roles = \App\Role::pluck('display_name', 'id');
-        $mywatchlist= [];
-        $data['branch'] = $branch->load('manager.reportsTo','manager.userdetails');
-    
-        $data['title']='National Accounts';
-        $servicelines = Serviceline::all();
-        $locations  = $this->address->nearby($branch, 25)->with('company')->get();
 
-        $watchlist = User::where('id', '=', auth()->user()->id)
-            ->with('watching')->get();
-        foreach ($watchlist as $watching) {
-            foreach ($watching->watching as $watched) {
-                $mywatchlist[]=$watched->id;
-            }
+    private function _checkDistance()
+    {
+        if (! $this->distance) {
+            $this->distance = $this->branch->radius;
         }
- */
+    }
+}
