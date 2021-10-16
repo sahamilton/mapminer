@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Imports;
 
 use App\Address;
 use App\Company;
+use App\Contact;
 use App\LocationPostImport;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,8 +14,17 @@ use Illuminate\Support\Arr;
 class LocationPostImportController extends ImportController
 {
     public $company;
+    public $contact;
     public $import;
     public $address;
+    public $contactFields = [
+        "fullname",
+        "firstname",
+        "lastname",
+        "title" ,
+        "email",
+        "contactphone",
+    ];
 
     /**
      * [__construct description].
@@ -26,11 +36,13 @@ class LocationPostImportController extends ImportController
     public function __construct(
         LocationPostImport $import,
         Company $company,
-        Address $address
+        Address $address,
+        Contact $contact
     ) {
         $this->company = $company;
         $this->import = $import;
         $this->address = $address;
+        $this->contact = $contact;
     }
 
     /**
@@ -41,13 +53,13 @@ class LocationPostImportController extends ImportController
     public function index()
     {
         $import = $this->import->first();
-
+        
         // what happens if no company?
         if ($this->company = $this->company->find($import->company_id)) {
             $data = $this->import->returnAddressMatchData($this->company);
 
             $this->_addNewLocations($data);
-
+            // import the contacts
             $message = 'Imported '.$data['add']->count().' locations. Matched '.count($data['matched']).' existing locations';
 
             return redirect()->route('company.show', $this->company->id)->withMessage($message);
@@ -110,23 +122,63 @@ class LocationPostImportController extends ImportController
           }
         });*/
 
-        /*$m = $this->_getIdsFromArray($data['add']);
-
+        $m = $this->_getIdsFromArray($data['add']);
+        
         $this->import->whereIn('id', $m)
             ->chunk(
                 100, function ($inserts) {
                     $inserts->each(
                         function ($insert) {
+                            $branch_id = $this->_getBranchId($insert);
+                            
                             $item = $this->_setImportRef($insert);
-                            \DB::table('addresses')->insert($item->toArray());
+                            
+                            $address = \DB::table('addresses')->insertGetId($item->toArray());
+                            $contact = $this->_getContactData($insert, $address);
+                            $this->_updateImportTable($item, $address);
+                            if ($branch_id) {
+                                $this->_assignToBranch($address, $branch_id);
+                            }
+                        
                         }
                     );
                 }
-            );*/
+            );
 
         return $data;
     }
 
+    private function _assignToBranch(int $address_id, int $branch_id )
+    {
+        $this->address->findOrFail($address_id)->assignedToBranch()->attach($branch_id);
+    }
+    private function _getBranchId($insert)
+    {
+        if (isset($insert->branch_id)) {
+            return $insert->branch_id;
+        }
+        return false;
+    }
+    private function _getContactData($insert, $address_id)
+    {
+        
+        $result = false;
+        foreach ($this->contact->fillable as $field) {
+            if ($field != 'user_id' && null !== $insert->getOriginal($field)) {
+                $result = true;
+                $data[$field] = $insert->getOriginal($field);
+            }
+        }
+        if ($result) {
+            
+            $data['user_id'] = auth()->user()->id;
+            $data['address_id'] = $address_id;
+            $data['comments'] = 'Imported from lead source '. $insert->lead_source_id;
+            $contact = Contact::create($data);
+            
+        }
+        
+    }
     /**
      * [_copyAddressIdToImport description].
      *
@@ -227,7 +279,7 @@ class LocationPostImportController extends ImportController
         $item->user_id = auth()->user()->id;
         $item->created_at = Carbon::now();
 
-        return Arr::except($item, ['id', 'address_id', 'contactphone', 'email', 'firstname', 'lastname', 'fullname', 'title']);
+        return Arr::except($item, ['id', 'address_id', 'contactphone', 'email', 'firstname', 'lastname', 'fullname', 'title','branch_id']);
     }
 
     /**
@@ -237,12 +289,8 @@ class LocationPostImportController extends ImportController
      *
      * @return [type]       [description]
      */
-    private function _updateImportTable($data)
+    private function _updateImportTable($item, $address_id)
     {
-        foreach ($data as $el) {
-            $import = $this->import->whereId($el->id)->update(['address_id' => $el->import_ref]);
-        }
-
-        return true;
+        $item->update(['import_ref'=>$address_id]);
     }
 }

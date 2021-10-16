@@ -47,6 +47,7 @@ class LocationsImportController extends ImportController
      */
     public function import(Request $request) 
     {
+       
         $data = request()->except('_token');
         
         $title="Map the locations import file fields";
@@ -67,7 +68,8 @@ class LocationsImportController extends ImportController
                 $this->import->setDontCreateTemp(false);
                 $company_id = null;
         }
-        
+        $this->import->tempTable = $this->temptable;
+       
         $fields = $this->getFileFields($data);
         $skip = ['id','created_at','updated_at','lead_source_id','serviceline_id','addressable_id','user_id','addressable_type','import_ref'];
         $columns = $this->location->getTableColumns($this->table, $skip);
@@ -104,20 +106,23 @@ class LocationsImportController extends ImportController
      */
     public function mapfields(Request $request)
     {
-       
+        
         $data = $this->getData($request);
         
         if ($error = $this->validateInput($request)) {
             return redirect()->route('locations.importfile')->withError($error)->withInput($data);
         }
         $data['table']=$this->table;
-
-        $this->import->setFields($data);
-        if (request('type')!='location') {
-            $this->import->setDontCreateTemp(false); 
+        
+        
+        if (request('type') != 'location') {
+            $data['dontCreateTemp'] =false; 
+            
         } else {
-            $this->import->setDontCreateTemp(true);
+            $data['dontCreateTemp'] =true;
+            $data['tempTable'] = $this->temptable;
         }
+        $this->import->setFields($data);
         if ($fileimport = $this->import->import($request)) {
             
             if (request()->has('company') or request('type') == 'location') {

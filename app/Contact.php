@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-    protected $fillable=[
+    public $fillable=[
         'address_id',
         'contactphone',
         'comments',
@@ -17,8 +17,7 @@ class Contact extends Model
         'location_id',
         'primary',
         'title',
-        'user_id',
-        'created_at'
+        'user_id'
         ];
         
     public $dates = ['created_at', 'updated_at'];

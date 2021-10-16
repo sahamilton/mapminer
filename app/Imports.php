@@ -28,6 +28,7 @@ class Imports extends Model
         } else {
             $this->additionaldata = [];
         }
+
         // set null empty fields
         
         // remove any additional data fields from input fields
@@ -35,13 +36,16 @@ class Imports extends Model
         $data['fields'][key(array_intersect($data['fields'], array_keys($this->additionaldata)))]='@ignore';
         
         $this->fields = implode(",", $data['fields']);  
-        
+       
         $this->table = $data['table'];
         
         
-        if (! $this->tempTable && ! $this->dontCreateTemp) {
+        if (! $data['dontCreateTemp']) {
             $this->tempTable = $this->table . "_import";
+        } else {
+            $this->tempTable = $data['tempTable'];
         }
+        
 
             
 
@@ -97,7 +101,7 @@ class Imports extends Model
         
         
         if (! $this->dontCreateTemp) {
-            $this->tempTable = $this->table;
+            $this->tempTable = "temp_".$this->table;
            
             $this->_createTemporaryImportTable();
         } 
@@ -117,12 +121,12 @@ class Imports extends Model
         $this->_addCreatedAtField();
         $this->_createPositon();
         $this->_updateAdditionalFields($request);
-        if (! $this->dontCreateTemp) {
+              
             
-            $this->_copyTempToBaseTable();
-        }
+       // $this->_copyTempToBaseTable();
+       
         //$this->_copyAddressIdBackToImportTable(request('lead_source_id'));
-        if (request()->filled('contacts')) {
+       /* if (request()->filled('contacts')) {
                 
             
             $this->_copyContactsToContactsTable();
@@ -133,7 +137,7 @@ class Imports extends Model
             
             $this->_assignLeadstoBranches();
 
-        }
+        }*/
             
             
 
@@ -326,14 +330,15 @@ class Imports extends Model
         */
   
         $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id, user_id, position";
+        
         if ($this->table !== 'usersimport') {
             $skip = ["branch_id"];
             $this->fields = implode(",", array_diff(explode(",", $this->fields), $this->contactFields, $skip));
         }
        
         // Copy addresses over to base table
-        $query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT id,".$this->fields." FROM `".$this->tempTable."`";
-        
+        $query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->tempTable."`";
+      
         return $this->_executeQuery($query);
     }
     /**
@@ -416,8 +421,10 @@ class Imports extends Model
 
     private function _truncateTempTable()
     {
-       
-        return $this->_executeQuery("TRUNCATE TABLE ".$this->tempTable);
+        if ($this->tempTable) {
+            return $this->_executeQuery("TRUNCATE TABLE ".$this->tempTable);
+        }
+        
     }
     /**
      * [_executeQuery description]
