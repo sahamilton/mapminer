@@ -56,15 +56,10 @@ class Stats extends Model
     private function _getPriorPeriod()
     {
 
-        $days = $this->period['from']->diffInDays($this->period['to']);
-
-        if ($days <= 7) {
-            $this->priorPeriod['from'] = $this->period['from']->copy()->subWeek(); 
-        } else {
-            
-            $this->priorPeriod['from'] = $this->period['from']->copy()->subMonth(intdiv($days, 28));
-        }
+        $days = $this->period['from']->diffInDays($this->period['to'])+1;
+        $this->priorPeriod['from'] = $this->period['from']->copy()->subDays($days);
         $this->priorPeriod['to'] = $this->period['from']->copy()->subDay();
+        
        
     }
 
