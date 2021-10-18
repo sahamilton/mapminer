@@ -1,7 +1,7 @@
 <div>
     <h2>{{$branch->branchname}} Branch {{$filters[$filter]}} Opportunities</h2>
 
-    @if ($this->setPeriod !="All")
+    @if (! in_array($this->setPeriod,["All", 'allDates']))
     <p class="bg-warning">Created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
     @else
     <p>Created in all time periods</p>

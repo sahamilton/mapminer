@@ -38,17 +38,18 @@ trait PeriodSelector
         
         if (! $period) {
             $this->period = $this->_default();
-            session()->put('period', $this->period);
+            
         } elseif (method_exists($this, $period)) {
             $this->period = $this->$period();
-            session()->put('period', $this->period);
+            
         } elseif ($period === 'All') {
-            $this->period = 'All';
+            $this->period = $this->allDates();
+            
         } else {
             $this->period = $this->_default();
-            session()->put('period', $this->period);
+            
         }
-        
+        session()->put('period', $this->period);
     }
     /**
      * [getPeriod description]
