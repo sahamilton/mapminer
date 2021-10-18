@@ -39,27 +39,29 @@ class BackupRestore extends Command
     {
       
         //get lastest zip file in transfer directory
-        $backupFilename = $this->_getLatestRestorableFile();
+        if ($backupFilename = $this->_getLatestRestorableFile()) {
         
-        if ($this->confirm("Are you sure you want to restore " . env('DB_DATABASE') . " from ".$backupFilename->getFilename()."? [y|N]")) {
-            if (! $command = $this->_createRestoreCommand($backupFilename)) {
-                $this->error('Unable to generate restore command');
+            if ($this->confirm("Are you sure you want to restore " . env('DB_DATABASE') . " from ".$backupFilename->getFilename()."? [y|N]")) {
+                if (! $command = $this->_createRestoreCommand($backupFilename)) {
+                    $this->error('Unable to generate restore command');
+                }
+                $returnVar  = null;
+                $output     = null;
+                exec($command, $output, $returnVar);
+                if (! $returnVar) {
+                    Storage::disk('local')->delete("/transfers/". $backupFilename);
+                    $this->info('Database Restored');
+
+                } else {
+
+                    $this->error($returnVar);   
+
+                }
+
             }
-            $returnVar  = null;
-            $output     = null;
-            exec($command, $output, $returnVar);
-            if (! $returnVar) {
-                Storage::disk('local')->delete($backupFilename);
-                $this->info('Database Restored');
-
-            } else {
-
-                $this->error($returnVar);   
-
-            }
-
+        } else {
+            $this->error('No file to restore');
         }
-        
         
     }
     /**

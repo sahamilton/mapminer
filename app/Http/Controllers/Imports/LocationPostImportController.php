@@ -173,6 +173,7 @@ class LocationPostImportController extends ImportController
             
             $data['user_id'] = auth()->user()->id;
             $data['address_id'] = $address_id;
+            $data['primary'] = 1; 
             $data['comments'] = 'Imported from lead source '. $insert->lead_source_id;
             $contact = Contact::create($data);
             
