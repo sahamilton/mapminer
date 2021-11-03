@@ -65,12 +65,21 @@
         </thead>
         <tbody>
             @foreach($feedback as $item)
+
                 <tr>  
                     <td>
                         <a title="See details" href="{{route('feedback.show',$item->id)}}">{{$item->created_at->format('M j, Y')}}</a>
                     </td>
                     <td>{{$item->category->category}}</td>
-                    <td>{{$item->providedBy->person->fullName()}}</td>
+                    <td>
+                        @if($item->user_id)
+                        <a href="{{route('users.show', $item->user_id)}}"
+                        title="See details of {{$item->providedBy->person->fullName()}}"
+                        >
+                        {{$item->providedBy->person->fullName()}}
+                        @endif
+                    </a>
+                    </td>
                     <td>
                         @if( strpos($item->feedback, '.')) 
                             {{substr($item->feedback, 0, strpos($item->feedback, '.'))}} 

@@ -248,8 +248,11 @@ class ReportsController extends Controller {
 
     }
 
-    private function _dispatchJob(Report $report, Request $request, \Illuminate\Database\Eloquent\Collection $distribution)
-    {
+    private function _dispatchJob(
+        Report $report, 
+        Request $request, 
+        \Illuminate\Database\Eloquent\Collection $distribution
+    ) {
        
         $manager = $this->_getManager($request);
         $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
