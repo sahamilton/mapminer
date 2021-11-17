@@ -22,15 +22,16 @@ $data['type'] ='people';
 <tbody>
 @foreach ($people as $person)
 <tr>
-	<td><a href="{{route('salesorg.show',$person->id)}}">{{$person->fullName()}}</a></td>
+	<td>
+		<a href="{{route('salesorg.show', $person->id)}}">{{$person->fullName()}}</a></td>
 	<td>
 		@foreach ($person->userdetails->roles as $role)
 			{{$role->display_name}}
 		@endforeach
 	</td>
 	<td>
-		@if($person->reportsTo)
-			<a href="{{route('salesorg.show',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a>
+		@if($person->reportsTo()->exists())
+			<a href="{{route('salesorg.show', $person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a>
 		@endif
 	</td>
 	<td>{{$person->fullAddress()}}</td>
