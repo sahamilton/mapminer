@@ -180,9 +180,23 @@
 				</div>
 			</div>
 		
-
+			@if($user->scheduledReports()->exists())
+				<div class="list-group-item"><p class="list-group-item-text"><strong>Scheduled Reports</strong>
+					<ul style="list-style-type: none;">
+						@foreach($user->scheduledReports as $report)
+							<li>
+								<a href="{{route('reports.show', $report->id)}}"
+									title="Review the {{$report->report}} report">
+									{{$report->report}}
+								</a>
+							</li>
+						@endforeach
+					</ul>
+				</div>
+			
+			@endif
 			@if($user->person->managesAccount()->exists())
-				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
+				<div class="list-group-item"><p class="list-group-item-text"><strong>Accounts Managed</strong>
 					<ul style="list-style-type: none;">
 						@foreach($user->person->managesAccount as $account)
 							<li><a href="{{route('company.show',$account->id)}}">{{$account->companyname}}</a></li>
@@ -193,7 +207,7 @@
 
 			
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Industry Focus</strong>
-				</p>
+				
 					@if(count($user->person->industryfocus)==0)
 					<div class="alert alert-warning">
 						<p>{{$user->person->firstname}} is not associated with any particular industry.</p>

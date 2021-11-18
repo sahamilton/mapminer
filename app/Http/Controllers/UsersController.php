@@ -35,7 +35,8 @@ class UsersController extends Controller
             'person.directReports',
             'manager',
             'person.industryfocus',
-            'roles'
+            'roles',
+            'scheduledReports'
             
         )->loadCount('usage');
      
