@@ -282,7 +282,10 @@ class User extends Authenticatable implements Auditable
         return $this->belongsToMany(Serviceline::class)->withTimestamps();
 
     }
-
+    public function scheduledReports()
+    {
+        return $this->belongsToMany(Report::class, 'report_distribution')->withTimestamps()->orderBy('report');
+    }
     /**
      * [watching description]
      * 
