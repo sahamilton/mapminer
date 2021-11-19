@@ -146,6 +146,21 @@
 				<div style="clear:both"></div>  
 				</div>
 			@endcan
+			@if($user->scheduledReports()->exists())
+				<div class="list-group-item"><p class="list-group-item-text"><strong>Scheduled Reports</strong>
+					<ul style="list-style-type: none;">
+						@foreach($user->scheduledReports as $report)
+							<li>
+								<a href="{{route('reports.show', $report->id)}}"
+									title="Review the {{$report->report}} report">
+									{{$report->report}}
+								</a>
+							</li>
+						@endforeach
+					</ul>
+				</div>
+			
+			@endif
 			@can('manage_accounts')
 				<div class="list-group-item"><p class="list-group-item-text">
 					<strong>Accounts Managed</strong></p>

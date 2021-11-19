@@ -28,7 +28,10 @@ class PersonSearchController extends Controller
     public function find(Person $person)
     {
         
-        $user = User::withLastLoginId()->withCount('usage')->with('lastLogin', 'roles', 'serviceline')->find($person->user_id);
+        $user = User::withLastLoginId()
+            ->withCount('usage')
+            ->with('lastLogin', 'roles', 'serviceline', 'scheduledReports')
+            ->find($person->user_id);
 
         $branches = $person->branchesManaged();
 
