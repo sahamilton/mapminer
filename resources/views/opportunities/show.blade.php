@@ -3,13 +3,15 @@
 <div class="container">
 	<div class="float-right">
 		<a href="{{route('opportunity.edit',$opportunity->id)}}" class="btn btn-info" name="editopportunity" >Edit Opportunity</a>
-		<a class="btn btn-danger"
-        data-href="{{route('opportunity.destroy',$opportunity->id)}}" 
-        data-toggle="modal" 
-        data-target="#confirm-delete" 
-        data-title = " this opportunity from your list" 
-        href="#">Delete Opportunity
-            <i class="fas fa-trash-alt text-danger"></i></a>
+        @if($opportunity->closed != 0)
+    		<a class="btn btn-danger"
+            data-href="{{route('opportunity.destroy',$opportunity->id)}}" 
+            data-toggle="modal" 
+            data-target="#confirm-delete" 
+            data-title = " this opportunity from your list" 
+            href="#">Delete Opportunity
+                <i class="fas fa-trash-alt text-danger"></i></a>
+        @endif
 	</div>
     @if($opportunity->closed == 0 && auth()->user()->hasRole('branch_manager'))
         <button class="btn btn-danger" 
