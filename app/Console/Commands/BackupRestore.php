@@ -51,7 +51,7 @@ class BackupRestore extends Command
                 if (! $returnVar) {
                     Storage::disk('local')->delete("/transfers/". $backupFilename);
                     $this->info('Database Restored');
-
+                    
                 } else {
 
                     $this->error($returnVar);   

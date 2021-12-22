@@ -10,6 +10,7 @@
   'campaign-summary' => 'App\\Http\\Livewire\\CampaignSummary',
   'campaign-table' => 'App\\Http\\Livewire\\CampaignTable',
   'campaign-tracking' => 'App\\Http\\Livewire\\CampaignTracking',
+  'change-reporting' => 'App\\Http\\Livewire\\ChangeReporting',
   'company-location-table' => 'App\\Http\\Livewire\\CompanyLocationTable',
   'company-selector' => 'App\\Http\\Livewire\\CompanySelector',
   'company-table' => 'App\\Http\\Livewire\\CompanyTable',
