@@ -17,6 +17,20 @@
         </span>
     </div>
 </div>
+<div class="form-group row {{ $errors->has('companyname') ? ' has-error' : '' }}">
+    <label for="companyname" 
+    class="col-sm-2 col-form-label">
+        Is Customer:   </label>
+     <div class="col-sm-8">
+        <input 
+        value="1"
+        type="checkbox" 
+        class="form-control" 
+        name='isCustomer' 
+        >
+        
+    </div>
+</div>
 <!-- address -->
 <div class="form-group row{{ $errors->has('address') ? ' has-error' : '' }}">
     <label for="address" class="col-md-2 control-label">Address: </label>
@@ -163,7 +177,7 @@ $branches = auth()->user()->person->getMyBranches();
 <input type="hidden" name="branch" value="{{reset($branches)}}" />
 @endif
 
-@if(isset($campaigns))
+@if($campaigns->count()))
 <!-- campaign -->
 <div class="form-group row{{ $errors->has('email') ? ' has-error' : '' }}">
     <label for="campaign" class="col-md-2 control-label">Add to Campaign: </label>

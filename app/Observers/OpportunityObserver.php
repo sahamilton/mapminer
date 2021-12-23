@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Jobs\WonOpportunity;
 use App\Opportunity;
+use App\Address;
+
 
 class OpportunityObserver
 {
@@ -144,9 +146,12 @@ class OpportunityObserver
      */
     public function updated(Opportunity $opportunity)
     {
-        // limiting to Eric Lynn's branches
-        if ($opportunity->closed == 1 && in_array($opportunity->branch_id, $this->branches)) {
-            WonOpportunity::dispatch($opportunity);
+        
+        if ($opportunity->closed == 1) {
+             Address::where('id', $opportunity->address_id)->update(['isCustomer' => 1]);
+            if ($opportunity->value > 10000) {
+                WonOpportunity::dispatch($opportunity);
+            }
         }
     }
 

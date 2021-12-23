@@ -1,5 +1,7 @@
 <div>
-    <h1>{{$branch->branchname . " leads"}}</h1>
+    
+    <h1>{{$branch->branchname . ($type=='Customers' ? ' Customers' : ' Leads')}}</h1>
+
     <h4>
         @if ($campaign_id != 'All')
             Included in the  {{$campaigns[$campaign_id]}} Campaign
@@ -12,6 +14,7 @@
         @case('All')
         With or Without Any Opportunities
         @break
+        
         @case('Without')
         {{$withOps}} Any Opportunities
         @break
@@ -43,8 +46,12 @@
             <i class="fas fa-filter text-danger"></i>
             <label>Lead Created</label>
             @include('livewire.partials._periodselector', ['all'=>true])
-        </div>
-        <div class="col form-inline">
+            <label>Customer / Lead: </label>
+            <select wire:model="type" class="form-control" title="With or Without Opportunities">
+                @foreach ($types as $key)
+                    <option value="{{$key}}">{{$key}}</option>
+                @endforeach
+            </select>
             <label>With / Without Opportunities</label>
              <div class="input-group-prepend">
                 <span class="input-group-text h-38" title="With or Without Opportunities">
@@ -219,8 +226,20 @@
                 data-toggle="modal" 
                 data-target="#delete-lead" 
                 data-title = "  {{$lead->businessname}} lead from your branch" 
-                href="#"><i class="fas fa-trash-alt text-danger"></i>
-            </a>  
+                href="#"
+                title="Delete lead from your branch"><i class="fas fa-trash-alt text-danger"></i>
+            </a>
+            @if(! $lead->isCustomer)
+                <a wire:click="changeCustomer({{ $lead->id }})"
+                    title= "Mark lead as customer">
+                    <i class="far fa-check-circle text-success"></i>
+                </a>
+            @else 
+                <a wire:click="changeCustomer({{ $lead->id }})" 
+                    title= "Mark customer as lead">
+                    <i class="far fa-times-circle text-danger"></i>
+                </a>
+            @endif
         </td>
        @endif
     </tr>

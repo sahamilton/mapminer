@@ -295,7 +295,7 @@ class MyLeadsController extends BaseController
      * 
      * @return [type]           [description]
      */
-    private function _cleanseInput(Request $request)
+    private function _cleanseInput(Request $request) : array
     {
         $address = $this->_getAddress($request); 
         $geocode = app('geocoder')->geocode($address)->get();
@@ -310,7 +310,7 @@ class MyLeadsController extends BaseController
         $data['lead'] = $this->_fillAddress($request, $data['lead']);
         $data['lead']['user_id'] = auth()->user()->id;
         $data['lead']['businessname'] =request('companyname');
-      
+        $data['lead']['isCustomer'] = request('isCustomer');
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
         if (! request()->has('leadsource_id')) {
             $data['lead']['lead_source_id'] = 4;
