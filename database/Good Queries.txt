@@ -1218,3 +1218,17 @@ $addresses = $data->map(
         )->flatten()->pluck('id')->toArray();
 
 $campaign->getCompanyAssignableLocationsofCampaign($addresses, true);
+/**************************************************
+Market Manager team logins for period
+/**************************************************
+SELECT  concat_ws(" ",m.firstname,m.lastname) as manager, count(track.id) as logins
+from persons m, persons b, role_user, track
+where m.deleted_at is null
+and b.deleted_at is null
+and m.user_id = role_user.user_id
+and role_user.role_id = 3
+and b.reports_to = m.id
+and b.user_id = track.user_id
+and track.lastactivity between '2021-10-01' and '2021-12-31'
+group by manager
+order by logins desc
