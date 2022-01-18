@@ -14,7 +14,8 @@ class AddSoftDeletesToBranchTable extends Migration
     public function up()
     {
         Schema::table(
-            'branches', function (Blueprint $table) {
+            'branches
+            ', function (Blueprint $table) {
                 $table->softDeletes();
             }
         );
