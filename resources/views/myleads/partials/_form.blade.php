@@ -177,7 +177,7 @@ $branches = auth()->user()->person->getMyBranches();
 <input type="hidden" name="branch" value="{{reset($branches)}}" />
 @endif
 
-@if($campaigns->count()))
+@if(isset($campaigns) && $campaigns->count()))
 <!-- campaign -->
 <div class="form-group row{{ $errors->has('email') ? ' has-error' : '' }}">
     <label for="campaign" class="col-md-2 control-label">Add to Campaign: </label>
