@@ -5,12 +5,13 @@ use App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Branch extends Model implements HasPresenter
 {
-    use Geocode, PeriodSelector, \Awobaz\Compoships\Compoships;
+    use Geocode, PeriodSelector, SoftDeletes, \Awobaz\Compoships\Compoships;
     public $table ='branches';
-    protected $hidden = ['created_at','updated_at','position'];
+    protected $hidden = ['created_at','updated_at','deleted_at','position'];
     protected $primaryKey = 'id'; // or null
     protected $spatialFields = [
         'position'
