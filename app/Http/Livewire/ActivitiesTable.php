@@ -46,6 +46,7 @@ class ActivitiesTable extends Component
     }
     public function mount($branch=null, $status = null)
     {
+        
         $this->myBranches = auth()->user()->person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
         if ($branch) {
@@ -60,7 +61,13 @@ class ActivitiesTable extends Component
         if (! session()->has('period')) {
             $this-> _setPeriod();
         } 
-        $this->setPeriod = session('period')['period'];
+        if ($status == 0) {
+            $this->setPeriod = 'allDates';
+        } else {
+            $this->setPeriod = session('period')['period']; 
+        }
+        //$this->setPeriod = session('period')['period'];
+        
 
     }
     /**
