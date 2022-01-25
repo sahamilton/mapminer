@@ -263,6 +263,11 @@ class User extends Authenticatable implements Auditable
 
         return $this->hasMany(User::class, 'id', 'mgrid');
     }
+
+    public function oracleMatch()
+    {
+        return $this->hasOne(Oracle::class, 'person_number', 'employee_id');
+    }
     /**
      * [roles description]
      * 

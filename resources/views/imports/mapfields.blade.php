@@ -16,6 +16,7 @@
 <th>Select Mapping</th>
 <th colspan='3'>Example Data</th>
 </thead>
+
 <tbody>
 
         @foreach ($fields[0] as $key=>$field)

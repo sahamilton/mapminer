@@ -29,6 +29,7 @@
   'namdetail' => 'App\\Http\\Livewire\\Namdetail',
   'nearby-locations' => 'App\\Http\\Livewire\\NearbyLocations',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
+  'oracle-table' => 'App\\Http\\Livewire\\OracleTable',
   'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',

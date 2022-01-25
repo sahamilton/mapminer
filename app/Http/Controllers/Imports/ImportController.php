@@ -20,7 +20,7 @@ class ImportController extends BaseController
      */
     public function index()
     {
-        $imports = ['branches','branch_team','companies','contacts','locations','users'];
+        $imports = ['branches','branch_team','companies','contacts','locations','oracle','users'];
         $exports = ['allcompanies','branches','companies','person','projects','vertical','watch', 'persons_data', 'users'];
         return response()->view('imports.index', compact('imports', 'exports'));
     }
@@ -86,14 +86,17 @@ class ImportController extends BaseController
      */
     protected function validateInput(Request $request)
     {
+        
         if ($fields = $this->import->detectDuplicateSelections(request('fields'))) {
+
             return $error = ['You have to mapped a field more than once.  Field: '.implode(' , ', $fields)];
         }
 
         if ($fields = $this->import->validateImport(request('fields'))) {
-            return $error = ['You have to map all required fields.  Missing: '.implode(' , ', $fields)];
+             
+             return $error = ['You have to map all required fields.  Missing: '.implode(' , ', $fields)];
         }
-
+        
         return false;
     }
 }
