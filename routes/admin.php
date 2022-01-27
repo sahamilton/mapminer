@@ -76,7 +76,7 @@ use Illuminate\Http\Request;
         Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
         Route::resource('user/importcleanse', 'Imports\UsersImportController');
          // Oracle
-        Route::get('users/sync', ['as'=>'users.sync', 'uses'=>'OracleController@index']);
+        Route::get('users/sync', ['as'=>'users.sync', 'uses'=>'OracleController@unmatched']);
 
         
         Route::get('oracle/import', ['as'=>'oracle.importfile', 'uses'=>'Imports\OracleImportController@getfile']);
