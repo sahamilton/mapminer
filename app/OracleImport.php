@@ -2,14 +2,17 @@
 
 namespace App;
 
-use App\Oracle;
+use App\OracleSource;
 use Illuminate\Database\Eloquent\Model;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
+use DB;
+
 
 class OracleImport extends Imports
 {
     public $table = 'oracle';
     public $tempTable = 'oracle_temp';
-
+    public $additionalFields;
     public $types = ['refresh', 'adds', 'deletes'];
 
     public $dontCreateTemp= true;
@@ -20,10 +23,10 @@ class OracleImport extends Imports
         'last_name',
         'primary_email',
         'business_title',
-        'current_hire_date',
         'home_zip_code',
         'manager_name',
         'manager_email_address',
+
     ];
 
 
@@ -36,7 +39,6 @@ class OracleImport extends Imports
         'job_code',
         'job_profile',
         'management_level',
-        'current_hire_date',
         'home_zip_code',
         'location_name',
         'country',
@@ -45,6 +47,10 @@ class OracleImport extends Imports
         'company',
         'manager_name',
         'manager_email_address',
+        'source_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -55,40 +61,50 @@ class OracleImport extends Imports
    
     public function import($request = null)
     {
+        $this->tempTable = $this->table ."_temp";
         $this->importfilename = request('file');
+        $this->_createSource($request);
+        $this->_createTemporaryImportTable();
         switch(request('type')) {
 
 
-            case'refresh':
-                \DB::statement("TRUNCATE TABLE ". $this->table);
-                $this->tempTable = $this->table;
-                $this->_importCSV();
+        case'refresh':
+                DB::statement("TRUNCATE TABLE ". $this->table);
+                $this->additionalFields = [
+                    'created_at'=>now(), 
+                    'source_id'=>$this->source_id
+                ];
+                
             break;
 
 
-            case 'adds':
-
-                //add =>import into temp table;
-                $this->tempTable = $this->table."_temp";
-                $this->_createTemporaryImportTable();
+        case 'adds':
+                $this->additionalFields = [
+                    'created_at'=>now(), 
+                    'source_id'=>$this->source_id
+                ];
                 
-                $this->_importCSV();
-                $this->_copyFromTempToMainTable();
-                 //insert ignore into table
+               
+              
             break;
 
 
-            case 'deletes':
-                $this->tempTable = $this->table."_temp";
-                $this->_createTemporaryImportTable();
+        case 'deletes':
                 
-                $this->_importCSV();
-                $this->_deleteFromMainTable();
+               $this->additionalFields = [
+                    'deleted_at'=>now(), 
+                    'source_id'=>$this->source_id
+                ];
+                
+                
+               
 
             break;
         }
-                       
-
+        $this->_importCSV();               
+        $this->_addAdditionalFields($request);
+        $this->_lowerCaseEmails();
+        $this->_copyFromTempToMainTable();
                 
         return true;
     }
@@ -101,7 +117,7 @@ class OracleImport extends Imports
         $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->tempTable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
       
         try {
-            return  \DB::connection()->getpdo()->exec($query);
+            return  DB::connection()->getpdo()->exec($query);
         } catch (Exception $e) {
              throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
         }
@@ -109,9 +125,10 @@ class OracleImport extends Imports
 
     private function _createTemporaryImportTable()
     {
+        
         $query = "CREATE TEMPORARY TABLE ". $this->tempTable . " SELECT * FROM ". $this->table . " LIMIT 0;";
 
-        return \DB::statement($query);
+        return DB::statement($query);
     }
 
     private function  _copyFromTempToMainTable()
@@ -121,16 +138,37 @@ class OracleImport extends Imports
             implode("`,`", $this->fillable).
         "`)  select `" .
             implode("`,`", $this->fillable)."` FROM ".$this->tempTable;
-    
-        return \DB::statement($query);
+        
+        return DB::statement($query);
     }
 
-    private function _deleteFromMainTable()
+    
+    private function _createSource($request)
     {
-        $query = "delete from " . $this->table . "
-         where person_number in (
-         select person_number from " . $this->tempTable.")";
+        $data = [
+            'user_id' => auth()->user()->id,
+            'type'=>request('type'),
+            'sourcefile' => $this->importfilename,
+            ];
+        $source = OracleSource::create($data);
+        $this->source_id = $source->id;
+    }
+
+    private function _addAdditionalFields()
+    {
         
-        return \DB::statement($query);
+        
+        return DB::table($this->tempTable)->update($this->additionalFields);
+
+    }
+
+    private function _lowerCaseEmails()
+    {
+        return DB::table($this->tempTable)->update(
+            [
+                'manager_email_address' => DB::raw('lower(`manager_email_address`)'),
+                'primary_email' => DB::raw('lower(`primary_email`)'),
+            ]
+        );
     }
 }

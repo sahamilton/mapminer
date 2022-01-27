@@ -79,7 +79,7 @@ class OracleImportController extends ImportController
     
         if ($this->import->import($request)) {
             
-            return redirect()->route('oracle.index')->with('success', 'Oracle Data imported');
+            return redirect()->route('oracle.index')->with('success', 'Oracle Data ('.request('type').') imported');
         }
     }
     

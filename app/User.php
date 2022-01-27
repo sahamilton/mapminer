@@ -268,6 +268,12 @@ class User extends Authenticatable implements Auditable
     {
         return $this->hasOne(Oracle::class, 'person_number', 'employee_id');
     }
+
+    public function oracleTeam()
+    {
+        
+        return $this->hasMany(Oracle::class, 'manager_email_address', 'email');
+    }
     /**
      * [roles description]
      * 

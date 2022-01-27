@@ -13,27 +13,31 @@ class CreateOracleTable extends Migration
      */
     public function up()
     {
-        Schema::create('oracle', function (Blueprint $table) {
+        Schema::create(
+            'oracle', function (Blueprint $table) {
             
-            $table->string('person_number')->primary();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('primary_email');
-            $table->string('business_title');
-            $table->string('job_code');
-            $table->string('job_profile');
-            $table->string('management_level');
-            $table->date('current_hire_date');
-            $table->string('home_zip_code');
-            $table->string('location_name');
-            $table->string('country');
-            $table->string('cost_center');
-            $table->string('service_line');
-            $table->string('company');
-            $table->string('manager_name');
-            $table->string('manager_email_address');
-            $table->timestamps();
-        });
+                $table->string('person_number')->primary();
+                $table->string('first_name');
+                $table->string('last_name');
+                $table->string('primary_email');
+                $table->string('business_title');
+                $table->string('job_code');
+                $table->string('job_profile');
+                $table->string('management_level');
+                $table->date('current_hire_date')->nullable();
+                $table->string('home_zip_code')->nullable();;
+                $table->string('location_name')->nullable();;
+                $table->string('country')->nullable();
+                $table->string('cost_center');
+                $table->string('service_line');
+                $table->string('company');
+                $table->string('manager_name');
+                $table->string('manager_email_address');
+                $table->integer('source_id')->nullable();
+                $table->softDeletes();
+                $table->timestamps();
+            }
+        );
     }
 
     /**

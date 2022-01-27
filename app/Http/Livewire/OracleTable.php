@@ -22,8 +22,7 @@ class OracleTable extends Component
     public $sortAsc = true;
     public $search = '';
     public $serviceline ='All';
-    public $selectRole = false;
-    public $status = 'current';
+    public $selectRole = 'All';
     public $showConfirmation=false;
 
     public function updatingSearch()
@@ -52,10 +51,31 @@ class OracleTable extends Component
                     ->join('persons', 'user_id', '=', 'users.id')
                     ->with('usage', 'roles')
                     ->doesntHave('oracleMatch')
+                    ->when(
+                        $this->serviceline != 'All', function ($q) {
+                            $q->whereHas(
+                                'serviceline', function ($q) {
+                                    $q->whereIn('servicelines.id', [$this->serviceline]);
+                                }
+                            );
+                        }
+                    )->when(
+                        $this->selectRole !='All', function ($q) {
+                            $q->whereHas(
+                                'roles', function ($q) {
+                                    $q->when(
+                                        $this->selectRole, function ($q) {
+                                            $q->where('roles.id', $this->selectRole);
+                                        }
+                                    );
+                                }
+                            );
+                        }
+                    )
                     ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                 'statuses'=>['all', 'deleted', 'current'],
+                 
                  'roles'=>Role::all(),
                  'servicelines'=>Serviceline::pluck('serviceline', 'id'),
              ]
