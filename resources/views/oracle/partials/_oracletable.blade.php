@@ -34,15 +34,16 @@
             </tr>
         </thead>
         <tbody>
+
          @foreach ($users as $user)
-            <tr>
+            <tr @if($user->mapminerUser) class="bg-success" @else class="bg-warning" @endif>
                 <td class="col-md-2">{{ $user->person_number }}</td>
                 <td class="col-md-2">{{$user->first_name}}</td>
                 <td class="col-md-2">{{$user->last_name}}</td>
                 <td class="col-md-2">{{ $user->primary_email }}</td>
                 <td class="col-md-2">{{$user->job_profile}}</td>
                 <td class="col-md-2">{{$user->location_name}}</td>
-                <td class="col-md-2">>{{$user->manager_name}}</td>    
+                <td @if(! $user->oracleManager) class="bg-warning" @endif>{{$user->manager_name}}</td>    
             </tr>
         @endforeach
             

@@ -106,8 +106,8 @@ use Illuminate\Http\Request;
         Route::get('oracle/import', ['as'=>'oracle.importfile', 'uses'=>'Imports\OracleImportController@getfile']);
         Route::post('oracle/bulkimport', ['as'=>'oracle.import', 'uses'=>'Imports\OracleImportController@import']);
         Route::post('/oracle/mapfields', ['as'=>'oracle.mapfields', 'uses'=>'Imports\OracleImportController@mapfields']);
-
-        Route::resource('oracle','OracleController');
+        Route::get('oracle/unmatched', ['as'=>'oracle.unmatched', 'uses'=>'OracleController@unmatched']);
+        Route::resource('oracle', 'OracleController');
         
         //   Projects
         Route::get('projects/import', ['as'=>'projects.importfile', 'uses'=>'Imports\ProjectsImportController@getFile']);

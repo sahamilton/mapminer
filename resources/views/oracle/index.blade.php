@@ -3,5 +3,5 @@
 
 <h2>Oracle HR Data</h2>
 
-@livewire('oracle-table')
+@livewire('oracle-list')
 @endsection

@@ -1,8 +1,4 @@
 <div>
-    
-    <h3>Users in Mapminer, not in Oracle HR</h3>
-
-    
     <div class="row mb-4">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
@@ -18,22 +14,14 @@
                 wire:model="selectRole"
                 class="form-control">
                 <option value='All'>All</option>
-                @foreach ($roles as $role)
-                    <option value="{{$role->id}}">
-                        {{$role->display_name}}
-                    </option>
-                @endforeach
+                
             </select>
             <label>&nbsp;Service Lines:&nbsp;</label>
             <select name="serviceline"
                 wire:model="serviceline"
                 class="form-control">
                 <option value='All'>All</option>
-                @foreach ($servicelines as $key=>$value)
-                    <option value="{{$key}}">
-                        {{$value}}
-                    </option>
-                @endforeach
+                
             </select>
      
             
@@ -52,4 +40,5 @@
     </div>
 
     
+</div>
 </div>
