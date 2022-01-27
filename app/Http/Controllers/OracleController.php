@@ -47,7 +47,8 @@ class OracleController extends Controller
      */
     public function show(Oracle $oracle)
     {
-        //
+        $oracle->load('teamMembers', 'oracleManager', 'mapminerUser', 'mapminerManager');
+        return response()->view('oracle.show', compact('oracle'));
     }
 
     /**
@@ -82,5 +83,13 @@ class OracleController extends Controller
     public function destroy(oracle $oracle)
     {
         //
+    }
+    /**
+     * [unmatched description]
+     * @return [type] [description]
+     */
+    public function unmatched()
+    {
+        return response()->view('oracle.matched');
     }
 }
