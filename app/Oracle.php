@@ -58,21 +58,29 @@ class Oracle extends Model
 
     public function oracleManager()
     {
-        return $this->hasOne(User::class,  'email', 'manager_email_address')->with('person');
+        return $this->hasOne(Oracle::class,  'primary_email', 'manager_email_address');
     }
 
     public function mapminerUser()
     {
-        return $this->hasOne(User::class,  'employee_id', 'person_number')->with('person');
+        return $this->hasOne(User::class,  'employee_id', 'person_number');
     }
-
+    public function mapminerManager()
+    {
+        return $this->hasOne(User::class,  'email', 'manager_email_address')->with('person');
+    }
+    public function fullName()
+    {
+        return $this->first_name . " " . $this->last_name;
+    }
     public function scopeSearch($query, $search)
     { 
         
         return  $query->where('primary_email', 'like', "%{$search}%")
             ->orWhere('first_name', 'like', "%{$search}%")
             ->orWhere('last_name', 'like', "%{$search}%")
-            ->orWhere('manager_name', 'like', "%{$search}%");
+            ->orWhere('manager_name', 'like', "%{$search}%")
+            ->orWhere('manager_email_address', 'like', "%{$search}%");
      
 
     }

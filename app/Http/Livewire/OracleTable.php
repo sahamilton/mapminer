@@ -24,6 +24,7 @@ class OracleTable extends Component
     public $serviceline ='All';
     public $selectRole = 'All';
     public $showConfirmation=false;
+    public $linked = 'no';
 
     public function updatingSearch()
     {
@@ -49,8 +50,19 @@ class OracleTable extends Component
                 'users'=>User::query()
                     ->select('users.*', 'persons.firstname', 'persons.lastname')
                     ->join('persons', 'user_id', '=', 'users.id')
-                    ->with('usage', 'roles')
-                    ->doesntHave('oracleMatch')
+                    ->with('usage', 'roles', 'person.reportsTo')
+                    ->when(
+                        $this->linked != 'All', function ($q) {
+                            $q->when(
+                                $this->linked == 'yes', function ($q) {
+                                    $q->has('oracleMatch');
+                                }, function ($q) {
+                                    $q->doesntHave('oracleMatch');
+                                }
+                            );  
+                        }
+                    )
+                    
                     ->when(
                         $this->serviceline != 'All', function ($q) {
                             $q->whereHas(
@@ -78,6 +90,7 @@ class OracleTable extends Component
                  
                  'roles'=>Role::orderBy('display_name')->get(),
                  'servicelines'=>Serviceline::pluck('serviceline', 'id'),
+                 'links'=>['All'=>'All', 'no'=>'Not In Oracle', 'yes'=>'In Oracle'],
              ]
          );
    

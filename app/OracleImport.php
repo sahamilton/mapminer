@@ -105,7 +105,7 @@ class OracleImport extends Imports
         $this->_addAdditionalFields($request);
         $this->_lowerCaseEmails();
         $this->_copyFromTempToMainTable();
-                
+        $this->_updateDateFields();        
         return true;
     }
 
@@ -128,7 +128,9 @@ class OracleImport extends Imports
         
         $query = "CREATE TEMPORARY TABLE ". $this->tempTable . " SELECT * FROM ". $this->table . " LIMIT 0;";
 
-        return DB::statement($query);
+        DB::statement($query);
+        $query = "ALTER TABLE ". $this->tempTable ." CHANGE `current_hire_date` `current_hire_date` VARCHAR(20) NULL DEFAULT NULL";
+        DB::statement($query);
     }
 
     private function  _copyFromTempToMainTable()
@@ -170,5 +172,13 @@ class OracleImport extends Imports
                 'primary_email' => DB::raw('lower(`primary_email`)'),
             ]
         );
+    }
+
+    private function _updateDateFields()
+    {
+        $query = "update oracle, oracle_temp  
+            set oracle.current_hire_date =  str_to_date(oracle_temp.current_hire_date, '%m/%d/%Y') 
+            where oracle_temp.person_number = oracle.person_number";
+        return DB::statement($query);
     }
 }

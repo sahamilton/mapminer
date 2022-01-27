@@ -1,7 +1,7 @@
 <div>
     
-    <h3>Users in Mapminer, not in Oracle HR</h3>
-
+    <h3>Users in Mapminer {{$links[$linked]}}</h3>
+    <p><a href="{{route('oracle.index')}}">See all Oracle Data</a></p>
     
     <div class="row mb-4">
         <div class="col form-inline">
@@ -35,12 +35,22 @@
                     </option>
                 @endforeach
             </select>
-     
-            
+            <label>&nbsp;In Oracle:&nbsp;</label>
+            <select name="linked"
+                wire:model="linked"
+                class="form-control">
+                
+                @foreach($links as $id=>$text)
+                    <option value='{{$id}}'>{{$text}}</option>
+                @endforeach
+            </select>
+            <div wire:loading>
+                <div class="spinner-border text-danger"></div>
+            </div>
         </div>
 
     </div>
-    @include('oracle.partials._oracletable')
+    @include('oracle.partials._matchtable')
     <div class="row">
         <div class="col">
             {{ $users->links() }}

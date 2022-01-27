@@ -1,4 +1,6 @@
 <div>
+    <h3>Employees in Oracle {{$links[$linked]}}</h3>
+    <p><a href="{{route('oracle.unmatched')}}">See all Mapminer User Data</a></p>
     <div class="row mb-4">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
@@ -14,21 +16,29 @@
                 wire:model="selectRole"
                 class="form-control">
                 <option value='All'>All</option>
-                
+                @foreach($roles as $role)
+                    <option value='{{$role->job_code}}'>{{$role->job_profile}}</option>
+                @endforeach
             </select>
-            <label>&nbsp;Service Lines:&nbsp;</label>
-            <select name="serviceline"
-                wire:model="serviceline"
+            <label>&nbsp;In Mapminer:&nbsp;</label>
+            <select name="linked"
+                wire:model="linked"
                 class="form-control">
-                <option value='All'>All</option>
                 
+                @foreach($links as $id=>$text)
+                    <option value='{{$id}}'>{{$text}}</option>
+                @endforeach
             </select>
+            
+             <div wire:loading>
+                <div class="spinner-border text-danger"></div>
+            </div>
      
             
         </div>
 
     </div>
-    @include('oracle.partials._oracletable')
+    @include('oracle.partials._oraclelist')
     <div class="row">
         <div class="col">
             {{ $users->links() }}
@@ -41,4 +51,4 @@
 
     
 </div>
-</div>
+

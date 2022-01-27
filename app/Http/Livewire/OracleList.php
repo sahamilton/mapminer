@@ -22,12 +22,16 @@ class OracleList extends Component
     public $serviceline ='All';
     public $selectRole = 'All';
     public $showConfirmation=false;
+    public $linked = 'yes';
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
-
+    public function updatingLinked()
+    {
+        $this->resetPage();
+    }
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -45,14 +49,31 @@ class OracleList extends Component
             'livewire.oracle-list', 
             [
                 'users'=>Oracle::query()
-                    ->with('mapminerUser', 'oracleManager')
+                    ->with('mapminerUser')
+                    ->when(
+                        $this->selectRole != 'All', function ($q) {
+                            $q->where('job_code', $this->selectRole);
+                        }
+                    )
+                    ->when(
+                        $this->linked != 'All', function ($q) {
+                            $q->when(
+                                $this->linked == 'yes', function ($q) {
+                                    $q->has('mapminerUser');
+                                }, function ($q) {
+                                    $q->doesntHave('mapminerUser');
+                                }
+                            );  
+                        }
+                    )
                     ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                 
+                'roles'=>Oracle::distinct()->orderBy('job_profile')->get(['job_code', 'job_profile']),
+                'links'=>['All'=>'All', 'no'=>'Not In Mapminer', 'yes'=>'In Mapminer'],
                  
              ]
          );
    
     }
-}
+};

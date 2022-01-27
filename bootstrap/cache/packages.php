@@ -14,7 +14,7 @@
     ),
     'aliases' => 
     array (
-      'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
+      'Debugbar' => 'Barryvdh\\Debugbar\\Facade',
     ),
   ),
   'baum/baum' => 
