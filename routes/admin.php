@@ -75,18 +75,26 @@ use Illuminate\Http\Request;
         Route::post('user/bulkdelete', ['as'=>'users.bulkdelete', 'uses'=>'Admin\AdminUsersController@confirmDelete']);
         Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
         Route::resource('user/importcleanse', 'Imports\UsersImportController');
+         // Oracle
+        Route::get('users/sync', ['as'=>'users.sync', 'uses'=>'OracleController@index']);
 
-        Route::get('users/sync', ['as'=>'users.sync', 'uses'=>'Admin\UserSyncController@index']);
-
-        Route::get('users/sync/delete', ['as'=>'users.sync.delete', 'uses'=>'Admin\UserSyncController@delete']);
         
-        Route::post('users/sync/confirm', ['as'=>'users.sync.confirm', 'uses'=>'Admin\UserSyncController@confirm']);
+        Route::get('oracle/import', ['as'=>'oracle.importfile', 'uses'=>'Imports\OracleImportController@getfile']);
+        Route::post('oracle/bulkimport', ['as'=>'oracle.import', 'uses'=>'Imports\OracleImportController@import']);
+        Route::post('/oracle/mapfields', ['as'=>'oracle.mapfields', 'uses'=>'Imports\OracleImportController@mapfields']);
+        Route::get('oracle/unmatched', ['as'=>'oracle.unmatched', 'uses'=>'OracleController@unmatched']);
+        Route::resource('oracle', 'OracleController');
+        //Route::get('users/sync/delete', ['as'=>'users.sync.delete', 'uses'=>'Admin\UserSyncController@delete']);
+        
+        //Route::post('users/sync/confirm', ['as'=>'users.sync.confirm', 'uses'=>'Admin\UserSyncController@confirm']);
 
-        Route::get('users/sync/reconfirm', ['as'=>'users.sync.reconfirm', 'uses'=>'Admin\UserSyncController@reconfirm']);
+        //Route::get('users/sync/reconfirm', ['as'=>'users.sync.reconfirm', 'uses'=>'Admin\UserSyncController@reconfirm']);
 
-        Route::post('users/sync/purge', ['as'=>'users.sync.purge', 'uses'=>'Admin\UserSyncController@purge']);
-        Route::get('users/newusers', ['as'=>'import.newusers', 'uses'=>'Imports\UsersImportController@newUsers']);
-        Route::post('users/createnewusers', ['as'=>'import.createnewusers', 'uses'=>'Imports\UsersImportController@createNewUsers']);
+        //Route::post('users/sync/purge', ['as'=>'users.sync.purge', 'uses'=>'Admin\UserSyncController@purge']);
+        
+        //Route::get('users/newusers', ['as'=>'import.newusers', 'uses'=>'Imports\UsersImportController@newUsers']);
+        
+        //Route::post('users/createnewusers', ['as'=>'import.createnewusers', 'uses'=>'Imports\UsersImportController@createNewUsers']);
 
         Route::get('users/serviceline/{serviceline}', ['as'=>'serviceline.user', 'uses'=>'Admin\AdminUsersController@index']);
         Route::get('users/nomanager', ['as'=>'nomanager', 'uses'=>'SalesOrgController@noManager']);

@@ -101,13 +101,7 @@ use Illuminate\Http\Request;
         Route::get('api/geocode', ['as'=>'api.geocode', 'uses'=>'LocationsController@bulkGeoCodeLocations']);
         Route::get('locations/{companyID}/create', ['as'=>'company.location.create', 'uses'=>'LocationsController@create']);
         Route::resource('locations', 'LocationsController', ['except'=>['show']]);
-        // Oracle
         
-        Route::get('oracle/import', ['as'=>'oracle.importfile', 'uses'=>'Imports\OracleImportController@getfile']);
-        Route::post('oracle/bulkimport', ['as'=>'oracle.import', 'uses'=>'Imports\OracleImportController@import']);
-        Route::post('/oracle/mapfields', ['as'=>'oracle.mapfields', 'uses'=>'Imports\OracleImportController@mapfields']);
-        Route::get('oracle/unmatched', ['as'=>'oracle.unmatched', 'uses'=>'OracleController@unmatched']);
-        Route::resource('oracle', 'OracleController');
         
         //   Projects
         Route::get('projects/import', ['as'=>'projects.importfile', 'uses'=>'Imports\ProjectsImportController@getFile']);
