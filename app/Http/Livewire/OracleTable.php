@@ -76,7 +76,7 @@ class OracleTable extends Component
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                  
-                 'roles'=>Role::all(),
+                 'roles'=>Role::orderBy('display_name')->get(),
                  'servicelines'=>Serviceline::pluck('serviceline', 'id'),
              ]
          );
