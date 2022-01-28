@@ -2,7 +2,7 @@
     
     <h3>Users in Mapminer {{$links[$linked]}}</h3>
     <p><a href="{{route('oracle.index')}}">See all Oracle Data</a></p>
-    
+    <p><button wire:click="export">Export Selection to Excel</button></p>
     <div class="row mb-4">
         <div class="col form-inline">
             @include('livewire.partials._perpage')

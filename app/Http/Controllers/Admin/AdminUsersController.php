@@ -513,7 +513,7 @@ class AdminUsersController extends BaseController
         if ($user->person->directReports()->count() >0) {
             
             $person = $user->person->load('directReports', 'reportsTo.directReports');
-            
+  
             return response()->view('admin.users.hasreports', compact('person'));
         }
      

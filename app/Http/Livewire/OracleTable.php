@@ -10,6 +10,8 @@ use App\Oracle;
 use App\User;
 use App\Role;
 use App\Serviceline;
+use Excel;
+use App\Exports\ExportOracleData;
 
 
 class OracleTable extends Component
@@ -94,6 +96,16 @@ class OracleTable extends Component
              ]
          );
    
+    }
+    public function export()
+    {
+               
+        return Excel::download(
+            new ExportOracleData(
+                $this->selectRole,
+                $this->linked, 
+            ), 'oraclemapminerdata.csv'
+        );
     }
 }
 

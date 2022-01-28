@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 
 use Livewire\WithPagination;
-
+use App\Exports\ExportOracleData;
 use App\Oracle;
 
 
@@ -74,6 +74,17 @@ class OracleList extends Component
                  
              ]
          );
-   
+    
+    }
+
+    public function export()
+    {
+               
+        return Excel::download(
+            new ExportOracleData(
+                $this->linked, 
+                $this->selectRole
+            ), 'oraclemapminerdata.csv'
+        );
     }
 };
