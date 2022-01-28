@@ -49,7 +49,7 @@ class OracleList extends Component
             'livewire.oracle-list', 
             [
                 'users'=>Oracle::query()
-                    ->with('mapminerUser')
+                    ->with('mapminerUser', 'mapminerManager.person')
                     ->when(
                         $this->selectRole != 'All', function ($q) {
                             $q->where('job_code', $this->selectRole);

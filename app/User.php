@@ -318,9 +318,7 @@ class User extends Authenticatable implements Auditable
     public function scopeSearch($query, $search)
     { 
         
-        return  $query->where('users.email', 'like', "%{$search}%")
-            ->orWhere('firstname', 'like', "%{$search}%")
-            ->orWhere('lastname', 'like', "%{$search}%");
+        return  $query->where('users.email', 'like', "%{$search}%");
      
 
     }

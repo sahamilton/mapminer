@@ -21,7 +21,7 @@ class OracleTable extends Component
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'created_at';
-    public $sortAsc = true;
+    public $sortAsc = false;
     public $search = '';
     public $serviceline ='All';
     public $selectRole = 'All';
@@ -50,8 +50,6 @@ class OracleTable extends Component
             'livewire.oracle-table', 
             [
                 'users'=>User::query()
-                    ->select('users.*', 'persons.firstname', 'persons.lastname')
-                    ->join('persons', 'user_id', '=', 'users.id')
                     ->with('usage', 'roles', 'person.reportsTo')
                     ->when(
                         $this->linked != 'All', function ($q) {

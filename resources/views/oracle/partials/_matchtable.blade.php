@@ -8,16 +8,14 @@
                 </a>
             </th>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('firstname')" role="button" href="#">
+                
                     First Name
-                    @include('includes._sort-icon', ['field' => 'firstname'])
-                </a>
+                    
             </th>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('lastname')" role="button" href="#">
+                
                     Last Name
-                    @include('includes._sort-icon', ['field' => 'lastname'])
-                </a>
+                    
             </th>
 
             <th class="col-md-2">
@@ -28,7 +26,7 @@
             </th>
             <th class="col-md-2">Roles</th>
             <th class="col-md-2">Service Lines</th>
-         
+            <th class="col-md-2">Manager</th>
             <th class="col-md-2">
                 <a wire:click.prevent="sortBy('lastlogin')" role="button" href="#">
                     LastLogin
@@ -51,12 +49,12 @@
         <td class="col-md-2">{{ $user->employee_id }}</td>
         <td class="col-md-2">
             <a href="{{route('users.show',$user->id)}}">
-                {{$user->firstname}}
+                {{$user->person->firstname}}
             </a>
         </td>
         <td class="col-md-2">
             <a href="{{route('users.show',$user->id)}}">
-                {{$user->lastname}}
+                {{$user->person->lastname}}
             </a>
         </td>
         <td class="col-md-2">{{ $user->email }}</td>
@@ -81,6 +79,13 @@
                     </li>
                 @endforeach
             </ul>
+        </td>
+        <td>
+            @if(isset($user->person->reportsTo))
+                <a href="{{route('users.show',$user->person->reportsTo->user_id)}}">
+                    {{$user->person->reportsTo->fullName()}}
+                </a>
+            @endif
         </td>
         <td>{{$user->lastlogin ? $user->lastlogin->format('M j, Y h:i a'): ''}}</td>
         <td>@if($user->updated_at) {{$user->updated_at->format('M j, Y h:i a')}} @endif</td>

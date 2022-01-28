@@ -37,7 +37,7 @@
 
      @foreach ($users as $user)
    
-        <tr @if($user->mapminerUser) class="bg-success" @else class="bg-warning" @endif>
+        <tr @if(! $user->mapminerUser)  class="bg-warning" @endif>
             <td class="col-md-2">
                 <a href="{{route('oracle.show', $user->person_number)}}">
                     {{ $user->person_number }}
@@ -57,7 +57,12 @@
             <td class="col-md-2">{{$user->job_profile}}</td>
             <td class="col-md-2">{{$user->location_name}}</td>
             
-            <td>{{$user->manager_name}}</td>
+            <td>
+                {{$user->manager_name}}
+                    @if(isset($user->mapminerManager) && $user->mapminerManager->person->postName() != $user->manager_name)
+                        <em>{{$user->mapminerManager->person->postName()}}</em>
+                    @endif
+            </td>
           
                
         </tr>
