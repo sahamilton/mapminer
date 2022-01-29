@@ -19,7 +19,7 @@ class CreateOracleTable extends Migration
                 $table->string('person_number')->primary();
                 $table->string('first_name');
                 $table->string('last_name');
-                $table->string('primary_email');
+                $table->string('primary_email')->unique();
                 $table->string('business_title');
                 $table->string('job_code');
                 $table->string('job_profile');
@@ -32,7 +32,7 @@ class CreateOracleTable extends Migration
                 $table->string('service_line');
                 $table->string('company');
                 $table->string('manager_name');
-                $table->string('manager_email_address');
+                $table->string('manager_email_address')->index();
                 $table->integer('source_id')->nullable();
                 $table->softDeletes();
                 $table->timestamps();

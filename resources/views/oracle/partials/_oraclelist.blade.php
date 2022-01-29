@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('id')" role="button" href="#">
+                <a wire:click.prevent="sortBy('person_number')" role="button" href="#">
                         Employee ID
                         @include('includes._sort-icon', ['field' => 'person_number'])
                 </a>
@@ -37,11 +37,16 @@
 
      @foreach ($users as $user)
    
-        <tr @if(! $user->mapminerUser)  class="bg-warning" @endif>
+        <tr> 
             <td class="col-md-2">
                 <a href="{{route('oracle.show', $user->person_number)}}">
                     {{ $user->person_number }}
                 </a>
+                @if(! $user->mapminerUser)  
+                <i class="fas fa-not-equal text-danger" title="Not in Mapminer"></i>
+                @else
+                <i class="fas fa-equals text-success" title="In Mapminer"></i>
+                 @endif
             </td>
             <td class="col-md-2">
                 <a href="{{route('oracle.show', $user->person_number)}}">
