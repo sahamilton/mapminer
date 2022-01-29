@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 
 use Livewire\WithPagination;
-use App\PeriodSelector;
+
 use App\Oracle;
 use App\User;
 use App\Role;
@@ -16,7 +16,7 @@ use App\Exports\ExportOracleData;
 
 class OracleTable extends Component
 {
-    use WithPagination, PeriodSelector;
+    use WithPagination;
     
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
@@ -47,7 +47,7 @@ class OracleTable extends Component
     public function render()
     {
         return view(
-            'livewire.oracle-table', 
+            'livewire.oracle.oracle-table', 
             [
                 'users'=>User::query()
                     ->with('usage', 'roles', 'person.reportsTo')

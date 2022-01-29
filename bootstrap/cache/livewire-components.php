@@ -31,6 +31,7 @@
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
   'oracle-list' => 'App\\Http\\Livewire\\OracleList',
   'oracle-table' => 'App\\Http\\Livewire\\OracleTable',
+  'oracle-verify' => 'App\\Http\\Livewire\\OracleVerify',
   'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',

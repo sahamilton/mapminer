@@ -10,7 +10,7 @@ class Oracle extends Model
 {
     use HasFactory, SoftDeletes;
     public $table = 'oracle';
-    protected $primaryKey = 'person_number';
+    
     public $fillable = [
         'person_number',
         'first_name',
@@ -77,10 +77,12 @@ class Oracle extends Model
     { 
         
         return  $query->where('primary_email', 'like', "%{$search}%")
+            ->orWhere('person_number', 'like', "%{$search}%")
             ->orWhere('first_name', 'like', "%{$search}%")
             ->orWhere('last_name', 'like', "%{$search}%")
             ->orWhere('manager_name', 'like', "%{$search}%")
-            ->orWhere('manager_email_address', 'like', "%{$search}%");
+            ->orWhere('manager_email_address', 'like', "%{$search}%")
+            ->orWhere('location_name', 'like', "%{$search}%");
      
 
     }

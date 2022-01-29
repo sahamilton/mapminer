@@ -30,7 +30,13 @@ class PersonSearchController extends Controller
         
         $user = User::withLastLoginId()
             ->withCount('usage')
-            ->with('lastLogin', 'roles', 'serviceline', 'scheduledReports')
+            ->with(
+                'lastLogin', 
+                'roles', 
+                'serviceline', 
+                'scheduledReports',
+                'oracleMatch'
+            )
             ->find($person->user_id);
 
         $branches = $person->branchesManaged();
@@ -39,6 +45,7 @@ class PersonSearchController extends Controller
         $person
             ->load(
                 'directReports.userdetails.roles',
+                'directReports.userdetails.oracleMatch',
                 'managesAccount.countlocations',
                 'managesAccount.industryVertical',
                 'industryfocus'

@@ -46,7 +46,7 @@ class OracleList extends Component
     public function render()
     {
         return view(
-            'livewire.oracle-list', 
+            'livewire.oracle.oracle-list', 
             [
                 'users'=>Oracle::query()
                     ->with('mapminerUser', 'mapminerManager.person')

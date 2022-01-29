@@ -2,7 +2,7 @@
         <thead>
             <tr>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('id')" role="button" href="#">
+                <a wire:click.prevent="sortBy('employee_id')" role="button" href="#">
                         Employee ID
                         @include('includes._sort-icon', ['field' => 'employee_id'])
                 </a>
