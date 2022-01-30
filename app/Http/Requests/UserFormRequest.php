@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class UserFormRequest extends FormRequest
 {
@@ -65,4 +66,17 @@ class UserFormRequest extends FormRequest
             'branchstring.required_without' =>'Branches or Branchstring required for branchmanagers',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        request()->merge(
+            [
+                'email' => Str::lower(request('email')),
+                'firstname' => Str::ucfirst(Str::lower(request('firstname'))),
+                'lastname' => Str::ucfirst(Str::lower(request('lastname'))),
+            ]
+        );
+        
+    }
 }
+
