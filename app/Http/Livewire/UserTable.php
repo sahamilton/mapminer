@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 use App\User;
 use App\Role;
-use App\ServiceLine;
+use App\Serviceline;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -82,7 +82,7 @@ class UserTable extends Component
                     ->paginate($this->perPage),
                     'roles'=>Role::all(),
                     'statuses'=>['all', 'deleted', 'current'],
-                    'servicelines'=>ServiceLine::pluck('serviceline', 'id'),
+                    'servicelines'=>Serviceline::pluck('serviceline', 'id'),
             ]
         );
     }

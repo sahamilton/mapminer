@@ -12,11 +12,29 @@
     @endif
 </p>
 @if($owned)
+
 @include('addresses.partials._ranking')
 @endif
+<p><strong>Type:</strong>
+  @if(! $location->isCustomer)
+      Lead
+      @if($owned)
+      <p><a href="{{route('mark.customer', $location->id)}}" class="btn btn-success">Mark as Customer</a></p>
+      @endif
+  @else
+    Customer 
+    @if($owned)
+      <a href="{{route('mark.customer', $location->id)}}" title="Change to lead">
+        <i class="fas fa-times text-danger"></i>
+      </a>
+    @endif
+  
+  @endif
+</p>
 <p><strong>Location Source:</strong> {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
-<p><strong>Type:</strong> {{ucwords($location->addressable_type)}}</p>
+
+
 <p><strong>Date Added:</strong> {{$location->created_at->format('Y-m-d')}}</p>
 
 @if($location->assignedToBranch)

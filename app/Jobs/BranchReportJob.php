@@ -49,13 +49,14 @@ class BranchReportJob implements ShouldQueue
      */
     public function handle()
     {
+        
         /// what do we do if there is no distribution?
         foreach ($this->distribution as $recipient) {
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient);
             $export = $this->_getExportClass();
-            
+      
             (new $export($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
@@ -127,7 +128,7 @@ class BranchReportJob implements ShouldQueue
             break;
 
         default:
-            return "\App\Exports\\". $this->report->export;
+            return "\App\Exports\Reports\Branch\\". $this->report->export;
             break;
 
         } 

@@ -23,7 +23,8 @@ class LeadTable extends Component
     public $withOps = 'All';
     //public $updateMode = false;
     public $setPeriod = 'All';
- 
+    
+    public $type= 'Either';
     //public $activity_date;
     public $branch_id;
     public $lead_source_id = 'All';
@@ -94,6 +95,18 @@ class LeadTable extends Component
             'leads' => Address::query()
                 ->search($this->search)
                 ->when(
+                    $this->type != 'Either', function ($q) {
+                        $q->when(
+                            $this->type == 'Customers', function ($q) {
+                                $q->where('isCustomer', 1);
+                            
+                            }, function ($q) {
+                                $q->whereNull('isCustomer');
+                            }
+                        );
+                    }
+                )
+                ->when(
                     $this->withOps != 'All', function ($q) {
                         $q->when(
                             $this->withOps == 'Without', function ($q) {
@@ -110,6 +123,7 @@ class LeadTable extends Component
                                 
                             }
                         )
+                        
                         ->when(
                             $this->withOps == 'Any', function ($q) {
                                 $q->has('opportunities');
@@ -153,6 +167,7 @@ class LeadTable extends Component
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
                 'branch'=>Branch::query()->with('manager', 'currentcampaigns', 'currentopencampaigns')->findOrFail($this->branch_id),
+                'types'=>['Either', 'Leads', 'Customers'],
                 'opstatus'=>['All', 'Without', 'Only Open', 'Any'],
                 'activities'=>ActivityType::pluck('activity', 'id')->toArray(),
                 'leadsources' => $this->_getLeadSources(),
@@ -195,4 +210,15 @@ class LeadTable extends Component
             ->toarray();
         
     }
+
+    public function changeCustomer(Address $address)
+    {
+        if ($address->isCustomer) {
+            $address->update(['isCustomer'=>null]);
+        } else {
+            $address->update(['isCustomer'=>1]);
+        }
+    }
+
+    
 }

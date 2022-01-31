@@ -8,6 +8,7 @@ use App\Person;
 use App\PeriodSelector;
 use App\Activity;
 use App\ActivityType;
+
 class UsertrackDetail extends Component
 {
     use WithPagination, PeriodSelector;
@@ -75,11 +76,7 @@ class UsertrackDetail extends Component
         switch($this->model) {
         case 'leads':
 
-
-
-
-
-
+        break;
         case 'activities':
         
             return [
@@ -112,11 +109,6 @@ class UsertrackDetail extends Component
                 ];
             break;
         } 
-
-    }
-
-
-
 
     }
 }

@@ -192,7 +192,7 @@ Route::group(
         Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
         Route::get('location/nearby', ['as' => 'nearby/location', 'uses' => 'LocationsController@mapNearbyLocations']);
         Route::post('location/contact', ['as'=>'location.addcontact', 'uses'=>'LocationContactController@store']);
-       
+        Route::get('customer/{address}', ['as' => 'mark.customer', 'uses' => 'LocationsController@markAsCustomer']);
         Route::resource('locations', 'LocationsController', ['only' => ['show']]);
         
         //     Managers

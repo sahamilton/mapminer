@@ -21,7 +21,13 @@
                 <i class="fas fa-tasks"></i> Management Teams
             </a>
         </li>
-
+        <li>
+            <a class="dropdown-item" 
+            href="{{ route('users.sync') }}">
+                <i class="fas fa-sync"></i> Sync to Oracle
+            </a>
+        </li>
+        
         <div class="dropdown-divider"></div>
         <li>
             <a class="dropdown-item" 

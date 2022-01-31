@@ -15,8 +15,8 @@ class CreateOracleTable extends Migration
     {
         Schema::create(
             'oracle', function (Blueprint $table) {
-            
-                $table->string('person_number')->primary();
+                $table->id();
+                $table->string('person_number')->unique();
                 $table->string('first_name');
                 $table->string('last_name');
                 $table->string('primary_email')->unique();

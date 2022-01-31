@@ -101,7 +101,8 @@ use Illuminate\Http\Request;
         Route::get('api/geocode', ['as'=>'api.geocode', 'uses'=>'LocationsController@bulkGeoCodeLocations']);
         Route::get('locations/{companyID}/create', ['as'=>'company.location.create', 'uses'=>'LocationsController@create']);
         Route::resource('locations', 'LocationsController', ['except'=>['show']]);
-
+        
+        
         //   Projects
         Route::get('projects/import', ['as'=>'projects.importfile', 'uses'=>'Imports\ProjectsImportController@getFile']);
         Route::get('projects/importcompany', ['as'=>'project_company.importfile', 'uses'=>'Imports\ProjectsCompanyImportController@getFile']);
