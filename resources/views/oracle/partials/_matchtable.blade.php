@@ -81,10 +81,11 @@
             </ul>
         </td>
         <td>
-            @if(isset($user->person->reportsTo))
+            @if(isset($user->person->reportsTo->user_id))
                 <a href="{{route('users.show',$user->person->reportsTo->user_id)}}">
-                    {{$user->person->reportsTo->fullName()}}
+                      {{$user->person->reportsTo->fullName()}}
                 </a>
+            
             @endif
         </td>
         <td>{{$user->lastlogin ? $user->lastlogin->format('M j, Y h:i a'): ''}}</td>

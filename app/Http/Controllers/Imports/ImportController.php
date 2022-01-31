@@ -52,13 +52,22 @@ class ImportController extends BaseController
      */
     protected function getFileFields($data)
     {
-       
+        
         $content = fopen($data['filename'], 'r');
-        $row = 1;
-        for ($i = 0; $i < 10; $i++) {
-            $fields[$i] = fgetcsv($content);
+        if (! isset($data['skip'])) {
+            $data['skip']=0;
         }
-
+        
+        for ($i = 0; $i < 10 + $data['skip']; $i++) {
+            
+                $fields[$i] = fgetcsv($content);
+            
+            
+        }
+        for ($i = 0; $i < $data['skip']; $i++) {
+            array_shift($fields);
+            echo $i;
+        }
         return $fields;
     }
 

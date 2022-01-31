@@ -53,7 +53,7 @@ class OracleImportController extends ImportController
         $requiredFields = $this->oracle->requiredfields;
         $data['type'] = request('type');
         $data['table']='oracle';
-        
+        $data['skip'] = 2;
         $data['route'] = 'oracle.mapfields';
         $fields = $this->getFileFields($data);
         $columns = $this->import->getTableColumns($data['table']);
