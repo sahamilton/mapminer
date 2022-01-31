@@ -44,4 +44,9 @@ class OracleController extends Controller
         
         return response()->view('oracle.verifiedemail');
     }
+
+    public function matchManager()
+    {
+        return response()->view('oracle.matchingManagers');
+    }
 }

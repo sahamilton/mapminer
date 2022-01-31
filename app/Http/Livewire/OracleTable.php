@@ -8,6 +8,7 @@ use Livewire\WithPagination;
 
 use App\Oracle;
 use App\User;
+use App\Person;
 use App\Role;
 use App\Serviceline;
 use Excel;
@@ -27,6 +28,13 @@ class OracleTable extends Component
     public $selectRole = 'All';
     public $showConfirmation=false;
     public $linked = 'no';
+    public $roles;
+    public $servicelines;
+    public $links = [
+        'All'=>'All', 
+        'no'=>'Not In Oracle', 
+        'yes'=>'In Oracle'
+    ];
 
     public function updatingSearch()
     {
@@ -43,7 +51,12 @@ class OracleTable extends Component
 
         $this->sortField = $field;
     }
+    public function mount()
+    {
+        $this->roles = Role::orderBy('display_name')->get();
+        $this->servicelines = Serviceline::pluck('serviceline', 'id');
 
+    }
     public function render()
     {
         return view(
@@ -88,9 +101,8 @@ class OracleTable extends Component
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                  
-                 'roles'=>Role::orderBy('display_name')->get(),
-                 'servicelines'=>Serviceline::pluck('serviceline', 'id'),
-                 'links'=>['All'=>'All', 'no'=>'Not In Oracle', 'yes'=>'In Oracle'],
+                 
+                 
              ]
          );
    
@@ -104,6 +116,34 @@ class OracleTable extends Component
                 $this->linked, 
             ), 'oraclemapminerdata.csv'
         );
+    }
+
+    public function deleteSelected()
+    {
+        $ids = User::query()
+            ->whereHas(
+                'roles', function ($q) {
+                    $q->when(
+                        $this->selectRole, function ($q) {
+                            $q->where('roles.id', $this->selectRole);
+                        }
+                    );
+                }
+            )
+            ->whereHas(
+                'person', function ($q) {
+                    $q->doesntHave('directReports');
+                }
+            )
+            ->doesntHave('oracleMatch')
+            ->pluck('id')->toArray();
+            // get branch associations
+            // notify manager
+            User::whereIn('id', $ids)->delete();
+            Person::whereIn('user_id', $ids)->delete();
+
+            session()->flash('message', count($ids) . " " . $this->roles->where('id', $this->selectRole)->first()->display_name."'s have been deleted");
+            $this->selectRole="All";
     }
 }
 

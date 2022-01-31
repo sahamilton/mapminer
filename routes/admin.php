@@ -84,6 +84,7 @@ use Illuminate\Http\Request;
         Route::post('/oracle/mapfields', ['as'=>'oracle.mapfields', 'uses'=>'Imports\OracleImportController@mapfields']);
 
         Route::get('oracle/verify', ['as'=>'oracle.verify', 'uses'=>'OracleController@verify']);
+        Route::get('oracle/manager', ['as'=>'oracle.manager', 'uses'=>'OracleController@matchManager']);
         Route::get('oracle/unmatched', ['as'=>'oracle.unmatched', 'uses'=>'OracleController@unmatched']);
         Route::resource('oracle', 'OracleController');
         //Route::get('users/sync/delete', ['as'=>'users.sync.delete', 'uses'=>'Admin\UserSyncController@delete']);

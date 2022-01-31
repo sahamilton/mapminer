@@ -63,9 +63,19 @@
             <td class="col-md-2">{{$user->location_name}}</td>
             
             <td>
-                {{$user->manager_name}}
-                    @if(isset($user->mapminerManager) && $user->mapminerManager->person->postName() != $user->manager_name)
-                        <em>{{$user->mapminerManager->person->postName()}}</em>
+                @if(isset($user->oracleManager->mapminerUser))
+                <a href="{{route('users.show', $user->oracleManager->mapminerUser->id)}}">
+                    {{$user->manager_name}}
+                </a>
+
+                @else
+                    {{$user->manager_name}}
+                @endif
+                    @if(isset($user->oracleManager->mapminerUser->person) 
+                    && isset($user->mapminerUser->person)
+                    && $user->oracleManager->mapminerUser->person->id 
+                    != $user->mapminerUser->person->reports_to)
+                        <em class="text-danger">{{$user->oracleManager->mapminerUser->person->postName()}}</em>
                     @endif
             </td>
           

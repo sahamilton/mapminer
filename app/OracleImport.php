@@ -114,7 +114,7 @@ class OracleImport extends Imports
         
         $filename =  str_replace("\\", "/", storage_path('/'. $this->importfilename));
         
-        $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->tempTable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
+        $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->tempTable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 3 LINES (".$this->fields.");";
       
         try {
             return  DB::connection()->getpdo()->exec($query);

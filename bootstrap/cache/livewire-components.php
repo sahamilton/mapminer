@@ -30,6 +30,7 @@
   'nearby-locations' => 'App\\Http\\Livewire\\NearbyLocations',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
   'oracle-list' => 'App\\Http\\Livewire\\OracleList',
+  'oracle-managers' => 'App\\Http\\Livewire\\OracleManagers',
   'oracle-table' => 'App\\Http\\Livewire\\OracleTable',
   'oracle-verify' => 'App\\Http\\Livewire\\OracleVerify',
   'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
