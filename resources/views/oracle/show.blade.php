@@ -31,20 +31,7 @@
 @endforeach
 
 <p><strong>Manager</strong></p>
-@if($oracle->mapminerManager)
-   @if($oracle->manager_name == $oracle->mapminerManager->postName())
-      <a href="{{route('person.details',$oracle->mapminerManager->person->id)}}">
-         
-         {{$oracle->mapminerManager->person->fullName()}}
-      </a>
-   
-   @else
-      <p>Reassign {{$oracle->fullName()}}</p>
-   @endif
 
-@else
-   {{dd($oracle)}}{{$oracle->manager_name}}
-@endif
 
 
 @endsection

@@ -67,7 +67,8 @@ class Oracle extends Model
     }
     public function mapminerManager()
     {
-        return $this->hasOne(User::class,  'email', 'manager_email_address')->with('person');
+        return $this->hasOne(User::class,  'email', 'manager_email_address');
+        
     }
     public function fullName()
     {

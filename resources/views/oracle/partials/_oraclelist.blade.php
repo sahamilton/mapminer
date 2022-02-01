@@ -39,7 +39,7 @@
    
         <tr> 
             <td class="col-md-2">
-                <a href="{{route('oracle.show', $user->person_number)}}">
+                <a href="{{route('oracle.show', $user->id)}}">
                     {{ $user->person_number }}
                 </a>
                 @if(! $user->mapminerUser)  
@@ -49,12 +49,12 @@
                  @endif
             </td>
             <td class="col-md-2">
-                <a href="{{route('oracle.show', $user->person_number)}}">
+                <a href="{{route('oracle.show', $user->id)}}">
                     {{$user->first_name}}
                 </a>
             </td>
             <td class="col-md-2">
-                <a href="{{route('oracle.show', $user->person_number)}}">
+                <a href="{{route('oracle.show', $user->id)}}">
                     {{$user->last_name}}
                 </a>
             </td>
