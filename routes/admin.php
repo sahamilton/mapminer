@@ -76,13 +76,14 @@ use Illuminate\Http\Request;
         Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
         Route::resource('user/importcleanse', 'Imports\UsersImportController');
          // Oracle
-        Route::get('users/sync', ['as'=>'users.sync', 'uses'=>'OracleController@unmatched']);
+        
 
         
         Route::get('oracle/import', ['as'=>'oracle.importfile', 'uses'=>'Imports\OracleImportController@getfile']);
         Route::post('oracle/bulkimport', ['as'=>'oracle.import', 'uses'=>'Imports\OracleImportController@import']);
         Route::post('/oracle/mapfields', ['as'=>'oracle.mapfields', 'uses'=>'Imports\OracleImportController@mapfields']);
 
+        Route::get('oracle/list', ['as'=>'oracle.list', 'uses'=>'OracleController@showOracle']);
         Route::get('oracle/verify', ['as'=>'oracle.verify', 'uses'=>'OracleController@verify']);
         Route::get('oracle/manager', ['as'=>'oracle.manager', 'uses'=>'OracleController@matchManager']);
         Route::get('oracle/unmatched', ['as'=>'oracle.unmatched', 'uses'=>'OracleController@unmatched']);

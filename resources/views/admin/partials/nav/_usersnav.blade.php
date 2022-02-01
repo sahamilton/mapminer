@@ -23,7 +23,7 @@
         </li>
         <li>
             <a class="dropdown-item" 
-            href="{{ route('users.sync') }}">
+            href="{{ route('oracle.index') }}">
                 <i class="fas fa-sync"></i> Sync to Oracle
             </a>
         </li>
