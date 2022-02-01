@@ -1244,3 +1244,14 @@ and users.id = role_user.user_id
 and role_user.role_id = roles.id
 and p.reports_to = m.id
 and person_number is null
+/***************************************************
+matching roles in Oracle with Users role
+/***************************************************
+SELECT concat_ws("-", job_code, job_profile) as job, roles.display_name as role, count(users.id) as mapminerUsers
+from oracle, users
+left join role_user on users.id = role_user.user_id
+join roles on role_user.role_id = roles.id
+where oracle.person_number = users.employee_id
+group by job, role
+order by mapminerUsers desc
+/***************************************************

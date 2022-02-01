@@ -530,7 +530,7 @@ class AdminUsersController extends BaseController
     private function _getManagerList()
     {
 
-        $managerroles=['1','3','4','6','7','8','11','13','14'];
+        $managerroles=['1','3','4','6','7','8','9','11','13','14'];
         
         return $this->person->select(
             \DB::raw("CONCAT(lastname ,', ',firstname) as fullname"),

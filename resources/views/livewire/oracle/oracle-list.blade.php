@@ -16,6 +16,9 @@
             title="Verify Oracle Data">
             <i class="fas fa-check-double text-warning"></i>Verify Oracle data
         </a>
+        <a href="{{route('oracle.manager')}}">
+            <i class="fas fa-users text-info"></i>Check Management Structure
+        </a>
     </p>
     <div class="row mb-4">
         <div class="col form-inline">
