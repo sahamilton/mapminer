@@ -77,6 +77,33 @@ class OracleList extends Component
     
     }
 
+    public function addUser(Oracle $oracle)
+    {
+        $oracle->load('oracleManager.mapminerUser.person');
+        $data = [
+            'user' => [
+                'employee_id'=>$oracle->person_number,
+                'email'=>$oracle->primary_email,
+                ],
+            'person' =>[
+                'firstname'=>$oracle->first_name,
+                'lastname'=>$oracle->last_name,
+                'reports_to'=>$oracle->oracleManager->mapminerUser->person->id,
+                'business_title'=>$oracle->job_profile,
+                'country'=>$oracle->country,
+                ],
+
+                'other'=>[
+                    // need to match this with the branch list
+                    'location'=>$oracle->location_name,
+                    // need to match this to the roles list
+                    // // can we use Oracle job_code?
+                    'role'=>$oracle->job_profile,
+                ],
+            ];
+            dd($data);
+    }
+
     public function export()
     {
                

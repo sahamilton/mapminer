@@ -1,7 +1,7 @@
 <div>
     <h2>Oracle HR Data compared to Mapminer</h2>
     <h4>Matched Email but Unmatched Employee #</h4>
-    <p><a href="{{route('oracle.list')}}">Return to Oracle Data</a></p>
+    <p><a href="{{route('oracle.index')}}">Return to Oracle Data</a></p>
     <div class="row mb-4">
         <div class="col form-inline">
             @include('livewire.partials._perpage')

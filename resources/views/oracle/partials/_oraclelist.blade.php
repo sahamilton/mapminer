@@ -67,7 +67,13 @@
                 <a href="{{route('users.show', $user->oracleManager->mapminerUser->id)}}">
                     {{$user->manager_name}}
                 </a>
-
+                @if(! $user->mapminerUser)  
+                    <a href=""
+                        wire:click.prevent="addUser({{$user->id}})"
+                        title="Add User">
+                        <i class="fas fa-user-plus text-success"></i>
+                    </a>
+                @endif
                 @else
                     {{$user->manager_name}}
                 @endif

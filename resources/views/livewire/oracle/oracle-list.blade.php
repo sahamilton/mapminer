@@ -1,25 +1,12 @@
 <div>
     <h3>Employees in Oracle {{$links[$linked]}}</h3>
     <p>
-        <a href="{{route('oracle.unmatched')}}"
-        title="See Mapminer data vs Oracle">
-            See all Mapminer User Data
+        <a href="{{route('oracle.index')}}"
+        title="Return to Oracle">
+            See all Oracle  Data
         </a>
     </p>
-    <p>
-        <a href="{{route('oracle.importfile')}}" 
-            title="Import Oracle Data">
-            <i class="fas fa-sync text-success"></i>Import Oracle Data
-        </a>
-    
-        <a href="{{route('oracle.verify')}}" 
-            title="Verify Oracle Data">
-            <i class="fas fa-check-double text-warning"></i>Verify Oracle data
-        </a>
-        <a href="{{route('oracle.manager')}}">
-            <i class="fas fa-users text-info"></i>Check Management Structure
-        </a>
-    </p>
+
     <div class="row mb-4">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
