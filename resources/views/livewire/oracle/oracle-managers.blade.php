@@ -1,5 +1,6 @@
 <div>
-    <h3>Difference in Manager between Oracle & Mapminer</h3>
+    <h3>Difference in Manager between {{$types[$type]['title']}}</h3>
+    <div class="alert alert-warning alert-block"><p>{{$types[$type]['description']}}</p></div>
     <p><a href="{{route('oracle.index')}}">See all Oracle Data</a></p>
     <p><button wire:click="export">Export Selection to Excel</button></p>
      <div>
@@ -17,8 +18,19 @@
     </div>
     <div class="row mb-4">
         <div class="col form-inline">
-            <label><i class="fas fa-filter text-danger"></i>Filters:&nbsp;  </label>
-           
+          
+           <label>&nbsp;View Type:&nbsp;</label>
+            <select name="types"
+               
+                wire:model="type"
+                class="form-control">
+               
+                @foreach ($types as $view)
+                    <option value="{{$view['id']}}">
+                        {{$view['message']}}
+                    </option>
+                @endforeach
+            </select>
             
             <div>
                 <div wire:loading>
@@ -31,7 +43,26 @@
         </div>
 
     </div>
-    @include('oracle.partials._managertable')
-    
+    @switch($type)
+        @case('oracle')
+            @include('oracle.partials._managertable')
+        @break
+        @case('mapminer')
+            @include('oracle.partials._oraclemanagertable')
+            @break
+        @case('missing')
+        
+            @include('oracle.partials._missingmanagertable')
+            @break
+    @endswitch
+    <div class="row">
+            <div class="col">
+                {{ $users->links() }}
+            </div>
 
-</div>
+            <div class="col text-right text-muted">
+                Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} out of {{ $users->total() }} results
+            </div>
+        </div>
+    </div
+

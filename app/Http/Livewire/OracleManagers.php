@@ -4,7 +4,9 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Oracle;
+use App\User;
 use Livewire\WithPagination;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
 
 class OracleManagers extends Component
 {
@@ -15,6 +17,7 @@ class OracleManagers extends Component
     public $sortField = 'created_at';
     public $sortAsc = false;
     public $search = '';
+    public $type ='oracle';
     
 
     public function updatingSearch()
@@ -34,19 +37,71 @@ class OracleManagers extends Component
     }
     public function render()
     {
-        return view(
-            'livewire.oracle.oracle-managers',
-            [
-                'users' => $this->_getUsers(),
-            ]
-        );
+        
+        switch($this->type) {
+        case 'oracle':
+            return view(
+                'livewire.oracle.oracle-managers',
+                [
+                    'users' => $this->_getUsers(),
+                    'types' => $this->_getThisTypes(),
+                ]
+            );
+            break;
+
+        case 'mapminer':
+            return view(
+                'livewire.oracle.oracle-managers',
+                [
+                    'users' => Oracle::has('mapminerUser')
+                        ->with('oracleManager', 'mapminerUser.roles', 'mapminerUser.person')
+                        ->whereHas(
+                            'oracleManager', function ($q) {
+                                $q->doesntHave('mapminerUser');
+                            }
+                        )->search($this->search)
+                        ->paginate($this->perPage),
+                    'types' => $this->_getThisTypes(),
+                    ]
+            );
+            break;
+
+        case 'missing':
+            return view(
+                'livewire.oracle.oracle-managers',
+                [   
+                    'users'=>User::wherehas(
+                        'person', function ($q) {
+                            $q->doesntHave('reportsTo');
+                        }
+                    )
+                    ->with('roles', 'oracleMatch.oracleManager')
+                    ->search($this->search)
+                    ->paginate($this->perPage),
+                    'types' => $this->_getThisTypes(),
+                ]
+            );
+            break;
+
+
+
+
+
+        } 
+        
     }
 
     private function _getUsers()
     {
-        $users = Oracle::has('mapminerUser')
-            ->has('oracleManager.mapminerUser')
-            ->with('oracleManager.mapminerUser.person', 'mapminerUser.person.reportsTo')->get();
+        $users = Oracle::whereHas(
+            'mapminerUser', function ($q) {
+                $q->search($this->search);
+            }
+        )
+        ->has('oracleManager.mapminerUser')
+        ->search($this->search)
+        ->with('oracleManager.mapminerUser.person', 'mapminerUser.person.reportsTo')
+        ->get();
 
         return $users->filter(
             function ($user) {
@@ -54,7 +109,7 @@ class OracleManagers extends Component
                     return $user;
                 }
             }
-        );
+        )->paginate($this->perPage);
     }
     public function rules()
     {
@@ -76,5 +131,26 @@ class OracleManagers extends Component
         foreach ($users as $user) {
             $this->reassign($user);
         }
+    }
+
+    private function _getThisTypes()
+    {
+        return [
+            'oracle'=>[
+                'id'=>'oracle',
+                'message'=>'Reassignable', 
+                'description'=>'Manager in Oracle different than in Mapminer. Oracle manager in Mapminer', 
+                'title'=>'Mapminer & Oracle'],
+            'mapminer'=>[
+                'id'=>'mapminer', 
+                'message'=>'Not reassignable', 
+                'description'=>'Manager in Mapminer different than in Oracle; Oracle manager not in Mapminer',
+                'title'=>'Oracle & Mapminer'],
+            'missing'=>[
+                'id'=>'missing', 
+                'message'=>'No Mapminer Manager', 
+                'description'=>'No Mapminer manager',
+                'title'=>'Oracle & Mapminer'],
+        ];
     }
 }
