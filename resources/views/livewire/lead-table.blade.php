@@ -258,5 +258,6 @@
             Showing {{ $leads->firstItem() }} to {{ $leads->lastItem() }} out of {{ $leads->total() }} results
         </div>
     </div>
+    @include('livewire.activities._modal')
 </div>
-@include('livewire.activities._modal')
+

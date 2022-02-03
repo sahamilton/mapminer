@@ -95,7 +95,7 @@
                     <i class="far fa-address-card"></i> Branch Contacts</a>
                      <a class="dropdown-item" href="{{ route('activity.index') }}">
                     <i class="far fa-calendar-alt"></i> Branch Activities</a>
-                     <
+
                   @endCan
 
                   @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager'))

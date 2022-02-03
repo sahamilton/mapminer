@@ -25,7 +25,7 @@
       <div class="modal-body">
                 
        
-        @include('livewire.activities._activityform')
+          @include('livewire.activities._activityform')
           <div class="float-right">
            <button 
            type="button" 
@@ -42,10 +42,6 @@
         
         
       </div>
-      </div>
-
-      
     </div>
-
   </div>
 </div>
