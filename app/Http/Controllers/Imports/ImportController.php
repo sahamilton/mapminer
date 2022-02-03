@@ -20,7 +20,7 @@ class ImportController extends BaseController
      */
     public function index()
     {
-        $imports = ['branches','branch_team','companies','contacts','locations','users'];
+        $imports = ['branches','branch_team','companies','contacts','locations','oracle','users'];
         $exports = ['allcompanies','branches','companies','person','projects','vertical','watch', 'persons_data', 'users'];
         return response()->view('imports.index', compact('imports', 'exports'));
     }
@@ -52,13 +52,22 @@ class ImportController extends BaseController
      */
     protected function getFileFields($data)
     {
-       
+        
         $content = fopen($data['filename'], 'r');
-        $row = 1;
-        for ($i = 0; $i < 10; $i++) {
-            $fields[$i] = fgetcsv($content);
+        if (! isset($data['skip'])) {
+            $data['skip']=0;
         }
-
+        
+        for ($i = 0; $i < 10 + $data['skip']; $i++) {
+            
+                $fields[$i] = fgetcsv($content);
+            
+            
+        }
+        for ($i = 0; $i < $data['skip']; $i++) {
+            array_shift($fields);
+            echo $i;
+        }
         return $fields;
     }
 
@@ -86,14 +95,17 @@ class ImportController extends BaseController
      */
     protected function validateInput(Request $request)
     {
+        
         if ($fields = $this->import->detectDuplicateSelections(request('fields'))) {
+
             return $error = ['You have to mapped a field more than once.  Field: '.implode(' , ', $fields)];
         }
 
         if ($fields = $this->import->validateImport(request('fields'))) {
-            return $error = ['You have to map all required fields.  Missing: '.implode(' , ', $fields)];
+             
+             return $error = ['You have to map all required fields.  Missing: '.implode(' , ', $fields)];
         }
-
+        
         return false;
     }
 }

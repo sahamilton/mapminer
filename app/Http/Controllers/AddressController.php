@@ -123,7 +123,12 @@ class AddressController extends BaseController
         }
       
         $rankingstatuses = $this->address->getStatusOptions;
-        $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->getMyBranches();
+        $myBranches = $this->person
+            ->where('user_id', auth()->user()->id)
+            ->first()
+            ->branchesManaged()
+            ->pluck('id')
+            ->toArray();
         
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
@@ -437,24 +442,12 @@ class AddressController extends BaseController
     private function _checkIfOwned(Address $address, Array $myBranches)
     {
         
-        //$myBranches = $this->person->where('user_id', auth()->user()->id)->first()->getMyBranches();
-        
-        $ownedBy = $address->assignedToBranch->whereIn('id', $myBranches);
-        
-        if (! $ownedBy->count()) {
-            return false;
-        }
-        // find out if the lead is offered or owned
-        $owner = $ownedBy->filter(
-            function ($branch) {
-                return $branch->pivot->status_id == 2;
-            }
-        );
+        $assignedTo = $address->assignedToBranch
+            ->where('pivot.status_id', 2)
+            ->pluck('id')
+            ->toArray();
+        return array_intersect($assignedTo, $myBranches);
 
-        if (! $owner->count()) {
-            return false;
-        }
-        return true;
     }
     
 }

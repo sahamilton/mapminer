@@ -51,11 +51,13 @@ return [
     |
     */
 
-    'support'=>'Sales Operations',
-    'system_contact'=>env('MAPMINER_CONTACT', 'salesoperations@trueblue.com'),
+    'support'=>'Mapminer Support Operations',
+    'system_contact'=>env('MAPMINER_CONTACT', 'support@OKOSPartners.com'),
 
     
     'timeframes'=>[
+        'nextWeek'=>'Next Week',
+        'tomorrow'=>'Tomorrow',
         'today'=>'Today',
         'yesterday'=>'Yesterday',
         'thisWeek'=>'This Week',

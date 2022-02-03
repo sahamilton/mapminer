@@ -85,7 +85,7 @@
                 @can ('manage_opportunities')
                     
                     <a class="dropdown-item" href="{{route('branch.leads')}}">
-                    <i class="fas fa-arrow-right"></i> Branch Leads</a>
+                    <i class="fas fa-arrow-right"></i> Branch Leads / Customers</a>
 
                    <a class="dropdown-item"  href="{{route('opportunity.index')}}">
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
@@ -95,8 +95,7 @@
                     <i class="far fa-address-card"></i> Branch Contacts</a>
                      <a class="dropdown-item" href="{{ route('activity.index') }}">
                     <i class="far fa-calendar-alt"></i> Branch Activities</a>
-                     <a class="dropdown-item" href="{{ route('orders.index') }}">
-                    <i class="far fa-calendar-alt"></i> Branch Accounts</a>
+                     <
                   @endCan
 
                   @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager'))

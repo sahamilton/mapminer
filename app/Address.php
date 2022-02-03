@@ -29,7 +29,8 @@ class Address extends Model
         'customer_id',
         'description',
         'duns',
-        'naic', 
+        'naic',
+        'isCustomer', 
     ];
     
     protected $searchable = [

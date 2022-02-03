@@ -263,6 +263,17 @@ class User extends Authenticatable implements Auditable
 
         return $this->hasMany(User::class, 'id', 'mgrid');
     }
+
+    public function oracleMatch()
+    {
+        return $this->hasOne(Oracle::class, 'person_number', 'employee_id');
+    }
+
+    public function oracleTeam()
+    {
+        
+        return $this->hasMany(Oracle::class, 'manager_email_address', 'email');
+    }
     /**
      * [roles description]
      * 
@@ -307,9 +318,7 @@ class User extends Authenticatable implements Auditable
     public function scopeSearch($query, $search)
     { 
         
-        return  $query->where('users.email', 'like', "%{$search}%")
-            ->orWhere('firstname', 'like', "%{$search}%")
-            ->orWhere('lastname', 'like', "%{$search}%");
+        return  $query->where('users.email', 'like', "%{$search}%");
      
 
     }

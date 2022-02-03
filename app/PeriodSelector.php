@@ -254,7 +254,7 @@ trait PeriodSelector
      */
     private function lastQuarter()
     {
-        $data['from'] =  Carbon::now()->subMonths(3)->firstOfQuarter()->startOfDay();;
+        $data['from'] =  Carbon::now()->subMonths(3)->firstOfQuarter()->startOfDay();
         $data['to'] =  Carbon::now()->subMonths(3)->lastOfQuarter()->endOfDay();;
         $data['period'] = 'lastQuarter';
         return $data;
@@ -299,6 +299,36 @@ trait PeriodSelector
         $data['to'] = Carbon::now()->addYear(6)->endOfYear();
         
         $data['period'] = 'allDates';
+        return $data;
+    }
+
+    private function tomorrow()
+    {
+        $data['from'] = Carbon::tomorrow(); 
+        $data['to'] = Carbon::tomorrow()->endOfDay();
+        
+        $data['period'] = 'tomorrow';
+        return $data;
+    }
+    private function nextWeek()
+    {
+        $data['from'] = Carbon::now()->addWeek(1)->startOfWeek()->startOfDay();
+        $data['to'] = Carbon::now()->addWeek(1)->endOfWeek()->endOfDay();
+        $data['period'] = 'nexttWeek';
+        return $data;
+    }
+    private function nextMonth()
+    {
+        $data['from'] = Carbon::now()->addMonth(1)->startOfMonth()->startOfDay();
+        $data['from'] = Carbon::now()->addMonth(1)->endOfMonth()->endOfDay();
+        $data['period'] = 'nextMonth';
+        return $data;
+    }
+    private function nextQuarter()
+    {
+        $data['from'] = Carbon::now()->addMonth(3)->startOfQuarter()->startOfDay();
+        $data['from'] = Carbon::now()->addMonth(3)->endOfQuarter()->endOfDay();
+        $data['period'] = 'nextMonth';
         return $data;
     }
 

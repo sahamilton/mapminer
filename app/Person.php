@@ -193,7 +193,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @param Array|null $servicelines [description]
      * 
-     * @return [type]                   [description]
+     * @return array                  [description]
      */
     public function getMyBranches(Array $servicelines=null) :array
     {
@@ -508,6 +508,7 @@ class Person extends NodeModel implements Auditable
     {
         
         return $this->belongsToMany(Branch::class)
+            ->where('branch_person.role_id', 9)
             ->withTimestamps()->withPivot('role_id');
     }
     /**

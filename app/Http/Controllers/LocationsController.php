@@ -5,16 +5,21 @@ namespace App\Http\Controllers;
 use App\Address;
 use App\Branch;
 use App\Company;
+use App\AddressBranch;
+use App\Person;
+use App\User;
+use App\Watch;
+
 use App\Http\Requests\LocationFormRequest;
 use App\Http\Requests\LocationImportFormRequest;
 use App\SearchFilter;
 use App\Serviceline;
-use App\User;
-use App\Watch;
+
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use JeroenDesloovere\VCard\VCard;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class LocationsController extends BaseController
 {
@@ -333,9 +338,9 @@ class LocationsController extends BaseController
     public function bulkGeoCodeLocations()
     {
         $locations = $this->location
-        ->where(['lat'=>null, 'geostatus'=>true])
-        ->orWhere(['lat'=>'0', 'geostatus'=>true])
-        ->get();
+            ->where(['lat'=>null, 'geostatus'=>true])
+            ->orWhere(['lat'=>'0', 'geostatus'=>true])
+            ->get();
 
         $n = 0;
         foreach ($locations as $location) {
@@ -369,5 +374,39 @@ class LocationsController extends BaseController
         $vcard->addURL(route('locations.show', $location->id));
 
         $vcard->download();
+    }
+
+    public function markAsCustomer(Address $address)
+    {
+        if ($this->_checkIsMyLead($address)) {
+            $address->isCustomer ?  $address->update(['isCustomer'=>null]) : $address->update(['isCustomer'=>1]);
+            
+        }
+        return redirect()->back();
+    }
+
+    
+    /**
+     * [_checkIsMyLead Check that user can update the address]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return bool          true if logged in user owns lead
+     */
+    private function _checkIsMyLead(Address $address) : array
+    {
+        $myBranches = Person::where('user_id', auth()->user()->id)
+            ->first()
+            ->branchesManaged()
+            ->pluck('id')
+            ->toArray();
+        $address->load('assignedToBranch');
+        $assignedTo = $address->assignedToBranch
+            ->where('pivot.status_id', 2)
+            ->pluck('id')
+            ->toArray();
+        return array_intersect($assignedTo, $myBranches);
+        
+        
     }
 }

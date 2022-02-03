@@ -5,6 +5,9 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$person->fullName()}}</strong></h2>
+			@if(!$person->userdetails->oracleMatch)
+			<p class="text text-danger">Not validated in Oracle</p>
+			@endif
 			<a class="btn btn-primary float-right" href="{{route('users.edit',$person->user_id)}}">
 
 				<i class="far fa-edit text-white"></i>
@@ -98,8 +101,18 @@
 						@if($person->directReports->count()>0)
 							<li>Team:</li>
 							@foreach ($person->directReports as $reports)
-						
-								<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
+								
+								<li>
+									@if($reports->userdetails->oracleMatch)
+										<i class="far fa-check-circle text-success"title="In Oracle"></i>
+									@else
+										<i class="far fa-times-circle text-danger"
+										title="Not in Oracle"></i>
+									@endif
+									<a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}
+									</a>
+									
+								</li>
 							
 							@endforeach
 						

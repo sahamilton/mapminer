@@ -268,10 +268,9 @@ class AdminUsersController extends BaseController
      */
     public function update(UserFormRequest $request, User $user)
     {
-        // note no update of address / geocoding!
-        //$user->load('person');
-        //$oldUser = clone($user);
-
+        
+        
+        
         if ($user->update(request()->except('password'))) {
             $user = $this->_checkIsConfirmed($user, $request);
             $user->load('person');
@@ -512,8 +511,8 @@ class AdminUsersController extends BaseController
         }
         if ($user->person->directReports()->count() >0) {
             
-            $person = $user->person->load('directReports', 'reportsTo');
-            
+            $person = $user->person->load('directReports', 'reportsTo.directReports');
+  
             return response()->view('admin.users.hasreports', compact('person'));
         }
      

@@ -12,6 +12,7 @@ class Imports extends Model
     public $importfilename;
     public $additionaldata;
     public $nullFields;
+    public $requiredFields;
     public $contactFields = ['fullname','firstname','lastname','title','contactphone','email'];
     /**
      * [setFields description]
@@ -22,6 +23,7 @@ class Imports extends Model
      */
     public function setFields($data)
     {
+        
         if (isset($data['additionaldata'])) {
 
             $this->additionaldata = $data['additionaldata'];
@@ -39,12 +41,16 @@ class Imports extends Model
        
         $this->table = $data['table'];
         
-        
-        if (! $data['dontCreateTemp']) {
-            $this->tempTable = $this->table . "_import";
-        } else {
-            $this->tempTable = $data['tempTable'];
+        if (isset($data['dontCreateTemp'])) {
+            if (! $data['dontCreateTemp']) {
+                $this->tempTable = $this->table . "_import";
+            } else {
+                $this->tempTable = $data['tempTable'];
+            }
+        }else{
+            $this->tempTable = 'oracle';
         }
+ 
         
 
             
@@ -60,6 +66,7 @@ class Imports extends Model
     public function validateImport($fields)
     {
 
+  
         return array_diff($this->requiredFields, array_values($fields));
     }
     /**
@@ -99,7 +106,7 @@ class Imports extends Model
             $this->importfilename = str_replace("\\", "/", LeadSource::findOrFail(request('lead_source_id'))->filename);
         }
         
-        
+       
         if (! $this->dontCreateTemp) {
             $this->tempTable = "temp_".$this->table;
            
