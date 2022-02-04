@@ -8,13 +8,13 @@
                 </a>
             </th>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('firstname')" role="button" href="#">
+                <a wire:click.prevent="sortBy('first_name')" role="button" href="#">
                     First Name
                     @include('includes._sort-icon', ['field' => 'first_name'])
                 </a>
             </th>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('lastname')" role="button" href="#">
+                <a wire:click.prevent="sortBy('last_name')" role="button" href="#">
                     Last Name
                     @include('includes._sort-icon', ['field' => 'last_name'])
                 </a>
