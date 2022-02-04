@@ -26,7 +26,8 @@
                     @include('includes._sort-icon', ['field' => 'primary_email'])
                 </a>
             </th>
-            <th class="col-md-2">Role</th>
+            <th class="col-md-2">Oracle Role</th>
+            <th class="col-md-2">Mapminer Role</th>
             <th class="col-md-2">Location</th>
             <th class="col-md-2">Manager</th>
         
@@ -57,25 +58,36 @@
                 <a href="{{route('oracle.show', $user->id)}}">
                     {{$user->last_name}}
                 </a>
+
+                @if(! $user->mapminerUser && isset($user->oracleManager->mapminerUser))  
+                        <a href=""
+                            wire:click.prevent="addUser({{$user->id}})"
+                            title="Add {{$user->fullName()}} to Mapminer">
+                            <i class="fas fa-user-plus text-success"></i>
+                        </a>
+                @endif
             </td>
             <td class="col-md-2">{{$user->primary_email }}</td>
             <td class="col-md-2">{{$user->job_profile}}</td>
+            <td class="col-md-2">
+                 @if($user->mapminerUser)
+                    @foreach ($user->mapminerUser->roles as $role)
+                        {{$role->display_name}}
+                    @endforeach
+                 @endif
+
+            </td>
             <td class="col-md-2">{{$user->location_name}}</td>
             
             <td>
                 @if(isset($user->oracleManager->mapminerUser))
-                <a href="{{route('users.show', $user->oracleManager->mapminerUser->id)}}">
+                <a class="txt-success" href="{{route('users.show', $user->oracleManager->mapminerUser->id)}}" title="{{$user->manager_name}} is in Mapminer">
                     {{$user->manager_name}}
                 </a>
-                @if(! $user->mapminerUser)  
-                    <a href=""
-                        wire:click.prevent="addUser({{$user->id}})"
-                        title="Add User">
-                        <i class="fas fa-user-plus text-success"></i>
-                    </a>
-                @endif
+                    
                 @else
-                    {{$user->manager_name}}
+                    <span class="txt-danger"
+                    title="{{$user->manager_name}} is NOT in Mapminer">{{$user->manager_name}}</span>
                 @endif
                     @if(isset($user->oracleManager->mapminerUser->person) 
                     && isset($user->mapminerUser->person)
