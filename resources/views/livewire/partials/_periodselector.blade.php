@@ -1,4 +1,5 @@
-<div class="col form-inline" title="Select time period"> 
+<div class="col form-inline" 
+    title="Select time period"> 
         @if(isset($title))
             {{$title}}
         @endif
@@ -7,7 +8,7 @@
         </div>
         <select wire:model="setPeriod" class="form-control">
             @if (isset($all)) <option
-                value="All">All</option>
+                value="allDates">All</option>
             @endif
             @foreach (config('mapminer.timeframes') as $key=>$per)
                 <option
