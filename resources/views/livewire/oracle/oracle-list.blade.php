@@ -1,12 +1,29 @@
 <div>
-    <h3>Employees in Oracle {{$links[$linked]}}</h3>
+    <h2>Comparing Oracle HR data to Mapminer </h2>
+      <h5>  
+        @if($selectRole != 'All')
+        
+           Oracle {{$roles->where('job_code', $selectRole)->first()->job_profile}}'s
+    
+        @else
+        All Oracle Employees
+        @endif
+         @if($linked !='All') {{$links[$linked]}}@endif
+    </h5>
+    <p><a href="{{route('oracle.unmatched')}}">Compare Mapminer data to Oracle data</a></p>
     <p>
         <a href="{{route('oracle.index')}}"
         title="Return to Oracle">
             See all Oracle  Data
         </a>
     </p>
-
+    <p>
+        
+        <a href="" wire:click.prevent="export">
+            <i class="fas fa-file-excel txt-success"></i>
+            Export Selection to Excel
+        </a>
+    </p>
     <div class="row mb-4">
         <div class="col form-inline">
             @include('livewire.partials._perpage')

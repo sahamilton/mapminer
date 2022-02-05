@@ -5,9 +5,9 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 
 use Livewire\WithPagination;
-use App\Exports\ExportOracleData;
+use App\Exports\ExportOracleListData;
 use App\Oracle;
-
+use Excel;
 
 
 class OracleList extends Component
@@ -23,6 +23,7 @@ class OracleList extends Component
     public $selectRole = 'All';
     public $showConfirmation=false;
     public $linked = 'yes';
+    public $export = false;
 
     public function updatingSearch()
     {
@@ -48,27 +49,7 @@ class OracleList extends Component
         return view(
             'livewire.oracle.oracle-list', 
             [
-                'users'=>Oracle::query()
-                    ->with('mapminerUser', 'mapminerManager.person')
-                    ->when(
-                        $this->selectRole != 'All', function ($q) {
-                            $q->where('job_code', $this->selectRole);
-                        }
-                    )
-                    ->when(
-                        $this->linked != 'All', function ($q) {
-                            $q->when(
-                                $this->linked == 'yes', function ($q) {
-                                    $q->has('mapminerUser');
-                                }, function ($q) {
-                                    $q->doesntHave('mapminerUser');
-                                }
-                            );  
-                        }
-                    )
-                    ->search($this->search)
-                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                    ->paginate($this->perPage),
+                'users'=>$this->_getUsers()->paginate($this->perPage),
                 'roles'=>Oracle::distinct()->orderBy('job_profile')->get(['job_code', 'job_profile']),
                 'links'=>['All'=>'All', 'no'=>'Not In Mapminer', 'yes'=>'In Mapminer'],
                  
@@ -76,7 +57,38 @@ class OracleList extends Component
          );
     
     }
-
+    
+    private function _getUsers()
+    {
+        return Oracle::query()
+            ->with('mapminerUser.roles', 'mapminerManager.person')
+            ->when(
+                $this->selectRole != 'All', function ($q) {
+                    $q->where('job_code', $this->selectRole);
+                }
+            )
+            ->when(
+                $this->linked != 'All', function ($q) {
+                    $q->when(
+                        $this->linked == 'yes', function ($q) {
+                            $q->has('mapminerUser');
+                        }, function ($q) {
+                            $q->doesntHave('mapminerUser');
+                        }
+                    );  
+                }
+            )
+            ->search($this->search)
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
+            
+            /*->when(
+                $this->export, function ($q) {
+                    $q->get();
+                }, function ($q) {
+                    $q->paginate($this->perPage);
+                }
+            );*/
+    }
     public function addUser(Oracle $oracle)
     {
         $oracle->load('oracleManager.mapminerUser.person');
@@ -106,12 +118,11 @@ class OracleList extends Component
 
     public function export()
     {
-               
+        
+        $users = $this->_getUsers()->get();
+       
         return Excel::download(
-            new ExportOracleData(
-                $this->linked, 
-                $this->selectRole
-            ), 'oraclemapminerdata.csv'
+            new ExportOracleListData($users), 'oraclemapminerdata.csv'
         );
     }
 };

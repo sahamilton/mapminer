@@ -46,7 +46,14 @@
         <tbody>
             @foreach ($users as $user)
     <tr>
-        <td class="col-md-2">{{ $user->employee_id }}</td>
+        <td class="col-md-2">{{ $user->employee_id }}
+            @if(! $user->oracleMatch)  
+                <i class="fas fa-not-equal text-danger" title="Not in Mapminer"></i>
+                @else
+                <i class="fas fa-equals text-success" title="In Mapminer"></i>
+                 @endif
+
+        </td>
         <td class="col-md-2">
             <a href="{{route('users.show',$user->id)}}">
                 {{$user->person->firstname}}

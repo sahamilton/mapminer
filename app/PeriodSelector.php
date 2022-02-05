@@ -73,7 +73,7 @@ trait PeriodSelector
                 
         }
         session()->put('period', $this->period);
-        
+      
         return $this->period;
     }
 

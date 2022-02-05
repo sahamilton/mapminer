@@ -1,18 +1,23 @@
 <div>
-    
-    <h3>
+    <h2>Comparing Mapminer Data to Oracle HR Data</h2>
+      <h5>  
+        @if($selectRole != 'All')
         
-        @if($selectRole != 'All')) 
-        
-           {{$roles->where('id', $selectRole)->first()->display_name}}'s
+          Mapminer {{$roles->where('id', $selectRole)->first()->display_name}}'s
     
         @else
-        All Users
+        All Mapminer Users
         @endif
-         in Mapminer {{$links[$linked]}}
-    </h3>
+          @if($linked !='All') {{$links[$linked]}}@endif
+    </h5>
+    <p><a href="{{route('oracle.list')}}">Compare Oracle data to Mapminer data</a>
     <p><a href="{{route('oracle.index')}}">See all Oracle Data</a></p>
-    <p><button wire:click="export">Export Selection to Excel</button></p>
+    <p>
+        
+        <a href="" wire:click.prevent="export">
+            <i class="far fa-file-excel txt-success"></i>Export Selection to Excel
+        </a>
+    </p>
      <div>
         @if (session()->has('message'))
             <div class="alert alert-success">
