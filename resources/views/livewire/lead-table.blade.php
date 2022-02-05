@@ -1,8 +1,9 @@
 <div>
     
-    <h1>{{$branch->branchname . ($type=='Customers' ? ' Customers' : ' Leads')}}</h1>
+    <h1>{{$branch->branchname}}</h1>
 
     <h4>
+        {{($type=='Customers' ? ' Customers ' : ' Leads ')}}
         @if ($campaign_id != 'All')
             Included in the  {{$campaigns[$campaign_id]}} Campaign
         @elseif($lead_source_id != 'All') 
@@ -21,6 +22,9 @@
         @case('Only Open')
         With {{$withOps}} Opportunities
         @break
+        @case('Top 25')
+        With {{$withOps}} Opportunities
+        @break
         @case('Any')
         With {{$withOps}} Opportunities
         @break
@@ -30,7 +34,7 @@
     @if (! in_array($this->setPeriod, ["All" ,'allDates']))
     <p class="bg-warning">Created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
     @else
-    <p>created in all time periods</p>
+    <p>Created in all time periods</p>
     @endif
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
     <div class="row" style="margin-bottom:10px">
@@ -166,6 +170,17 @@
                         <a href="{{route('address.show',$lead->id)}}">
                             {{$lead->businessname}}
                         </a>
+                        @if(! $lead->isCustomer)
+                            <a wire:click="changeCustomer({{ $lead->id }})"
+                                title= "Mark lead as customer">
+                                <i class="far fa-check-circle text-success"></i>
+                            </a>
+                        @else 
+                            <a wire:click="changeCustomer({{ $lead->id }})" 
+                                title= "Revert customer to lead">
+                                <i class="far fa-times-circle text-danger"></i>
+                            </a>
+                        @endif
                         
                     </td>
 
@@ -219,8 +234,8 @@
         </td>
         @if(in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
         <td>
-       
             
+            @if($lead->opportunities->count() ==0)
             <a 
                 data-href="{{route('branchleads.destroy',$lead->assignedToBranch->where('id', $branch->id)->first()->pivot->id)}}" 
                 data-toggle="modal" 
@@ -229,17 +244,16 @@
                 href="#"
                 title="Delete lead from your branch"><i class="fas fa-trash-alt text-danger"></i>
             </a>
-            @if(! $lead->isCustomer)
-                <a wire:click="changeCustomer({{ $lead->id }})"
-                    title= "Mark lead as customer">
-                    <i class="far fa-check-circle text-success"></i>
-                </a>
-            @else 
-                <a wire:click="changeCustomer({{ $lead->id }})" 
-                    title= "Mark customer as lead">
-                    <i class="far fa-times-circle text-danger"></i>
-                </a>
             @endif
+            
+           
+
+            @if($lead->opportunities->where('closed', 0)->whereNotNull('Top25')->count()>0)
+                
+                    <i class="fab fa-hotjar text-danger" title="Top25 Opportunity"></i>
+
+            @endif
+            
         </td>
        @endif
     </tr>
