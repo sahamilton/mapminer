@@ -7,7 +7,7 @@
         </div>
         <select wire:model="setPeriod" class="form-control">
             @if (isset($all)) <option
-                value="All">All</option>
+                value="allDates">All</option>
             @endif
             @foreach (config('mapminer.timeframes') as $key=>$per)
                 <option

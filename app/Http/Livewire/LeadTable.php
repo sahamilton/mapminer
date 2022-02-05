@@ -110,7 +110,7 @@ class LeadTable extends Component
                     $this->withOps != 'All', function ($q) {
                         $q->when(
                             $this->withOps == 'Without', function ($q) {
-                                $q->whereDoesntHave('opportunities');
+                                $q->doesntHave('opportunities');
                             }
                         )
                         ->when(
@@ -123,7 +123,17 @@ class LeadTable extends Component
                                 
                             }
                         )
-                        
+                        ->when(
+                            $this->withOps == 'Top 25', function ($q) {
+                                $q->whereHas(
+                                    'opportunities', function ($q) {
+                                        $q->where('closed', 0)
+                                            ->where('Top25', 1);
+                                    }
+                                );
+                                
+                            }
+                        )
                         ->when(
                             $this->withOps == 'Any', function ($q) {
                                 $q->has('opportunities');
@@ -166,9 +176,10 @@ class LeadTable extends Component
                 ->dateAdded()
                 ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-                'branch'=>Branch::query()->with('manager', 'currentcampaigns', 'currentopencampaigns')->findOrFail($this->branch_id),
+                'branch'=>Branch::query()
+                    ->with('manager', 'currentcampaigns', 'currentopencampaigns')->findOrFail($this->branch_id),
                 'types'=>['Either', 'Leads', 'Customers'],
-                'opstatus'=>['All', 'Without', 'Only Open', 'Any'],
+                'opstatus'=>['All', 'Without', 'Only Open', 'Top 25', 'Any'],
                 'activities'=>ActivityType::pluck('activity', 'id')->toArray(),
                 'leadsources' => $this->_getLeadSources(),
                 'campaigns'=> Campaign::active()
@@ -219,6 +230,13 @@ class LeadTable extends Component
             $address->update(['isCustomer'=>1]);
         }
     }
-
+    public function changeTop50(AddressBranch $address)
+    {
+        if ($address->top50) {
+            $address->update(['top50'=>null]);
+        } else {
+            $address->update(['top50'=>1]);
+        }
+    }
     
 }
