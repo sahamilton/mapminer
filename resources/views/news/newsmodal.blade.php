@@ -1,4 +1,4 @@
-    <div class="modal fade" 
+    <div class="modal fade " 
         id="flashNews" 
         tabindex="-1" 
         role="dialog" 
@@ -6,8 +6,8 @@
         aria-hidden="true" 
         style = "margin:auto;
           max-width:100%;">
-    <div class="modal-dialog modal-lg">">
-        <div class="modal-content modal-lg">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modal-lg bg-">
             <div class="modal-header">
             
             <h4 class="modal-title" 
@@ -29,7 +29,10 @@
             </div>
             <div class="modal-footer">
             <div class='pull-left'>
-            <input type='checkbox' id='nonews' name='noNews' />
+            <input 
+            type='checkbox' 
+            id='nonews' 
+            name='noNews' />
             Check if you don't want to see any more old news!</div>
             <button type="button" 
                 class="btn btn-success" 
