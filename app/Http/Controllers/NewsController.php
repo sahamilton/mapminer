@@ -133,11 +133,10 @@ class NewsController extends BaseController
      * 
      * @return [type]       [description]
      */
-    public function show($slug)
+    public function show(News $slug)
     {
-
-        $news = $this->news->with('relatedRoles')
-            ->where('slug', '=', $slug)->first();
+  
+        $news = $slug->load('relatedRoles');
         
         if (! $news) {
             return redirect()->route('currentnews')

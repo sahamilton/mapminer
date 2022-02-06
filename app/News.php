@@ -3,9 +3,33 @@
 namespace App;
 
 use Carbon\Carbon;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
+
 
 class News extends Model
 {
+    use HasSlug;
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     // Don't forget to fill this array
     protected $fillable = ['title', 'news', 'datefrom', 'dateto', 'slug', 'user_id'];
     public $dates = ['created_at', 'updated_at', 'datefrom', 'dateto'];
