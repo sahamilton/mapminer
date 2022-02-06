@@ -1,4 +1,5 @@
-<div class="col form-inline" title="Select time period"> 
+<div class="col form-inline" 
+    title="Select time period"> 
         @if(isset($title))
             {{$title}}
         @endif
