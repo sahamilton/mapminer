@@ -23,6 +23,7 @@
                @foreach ($news as $new)
                 
                     <h4>{{$new->title}}</h4>
+                    <p>{!!$new->news!!}</p>
                     
                 @endforeach
             </div>
@@ -31,7 +32,7 @@
             <input type='checkbox' id='nonews' name='noNews' />
             Check if you don't want to see any more old news!</div>
             <button type="button" 
-                class="btn btn-default" 
+                class="btn btn-success" 
                 data-dismiss="modal">
                 Close
             </button>
