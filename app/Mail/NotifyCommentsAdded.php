@@ -31,7 +31,7 @@ class NotifyCommentsAdded extends Mailable
     public function build()
     {
         return $this->markdown('emails.newcomment')
-            ->to('tbsupport@crescentcreative.com')
+            ->to('support@OKOSPartners.com')
             ->subject('New Comment Added');
     }
 }

@@ -60,12 +60,6 @@
                 data-toggle="modal" 
                 data-target="#add-feedback" >
                     <i class="fas fa-bullhorn" style="color:red"> </i> Feedback</a>
-
-              
-
-
-
-
               <a class="dropdown-item" href="{{route('about')}}">
               <i class="fas fa-info-circle" aria-hidden="true">
               </i> About Mapminer</a>
