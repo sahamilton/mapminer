@@ -68,9 +68,9 @@
 					<a href="{{route('news.show', $post->slug)}}#comments"> {{$post->comments()->exists()}}</a>
 
 					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('admin'))
-<a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
+<a href="{{route('news.edit',$post->slug)}}" title="Edit this news item"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
 
-<a data-href="{{route('news.destroy',$post->id)}}" 
+<a data-href="{{route('news.destroy',$post->slug)}}" 
             data-toggle="modal" 
             data-target="#confirm-delete" 
             data-title = "news item"  

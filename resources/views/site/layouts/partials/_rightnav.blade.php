@@ -1,13 +1,7 @@
 
       <ul class="navbar-nav ml-auto justify-content-end" style="margin-right:60px"> 
               
-               <li class="nav-item">
-                <a  class="nav-link" href="#"
-                data-href="" 
-                data-toggle="modal" 
-                data-target="#add-feedback" >
-                    <i class="fas fa-bullhorn" style="color:red"> </i> Feedback</a>
-                </li>
+               
                 @php $news = new \App\News;@endphp
                 <li class="nav-item">
                   
@@ -60,10 +54,21 @@
               <a class="dropdown-item" href="{{{ route('user.show',auth()->user()->id) }}}">
               <i class="far fa-user" aria-hidden="true"> </i> 
             Your Profile</a>
+
+                <a  class="dropdown-item" href="#"
+                data-href="" 
+                data-toggle="modal" 
+                data-target="#add-feedback" >
+                    <i class="fas fa-bullhorn" style="color:red"> </i> Feedback</a>
+
+              
+
+
+
+
               <a class="dropdown-item" href="{{route('about')}}">
               <i class="fas fa-info-circle" aria-hidden="true">
-              </i>  
-            About Mapminer</a>
+              </i> About Mapminer</a>
               
               <a class="dropdown-item" href="{{ route('logout') }}" 
                  onclick="event.preventDefault();
