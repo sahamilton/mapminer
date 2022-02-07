@@ -30,9 +30,10 @@ class UsersController extends Controller
        
         $user->load(
             'person',
+            'oracleMatch.teamMembers',
             'serviceline',
             'person.branchesServiced',
-            'person.directReports',
+            'person.directReports.userdetails.oracleMatch',
             'manager',
             'person.industryfocus',
             'roles',

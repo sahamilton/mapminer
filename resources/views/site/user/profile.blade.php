@@ -118,7 +118,19 @@
 							<li>Team:</li>
 							@foreach ($user->person->directReports as $reports)
 						
-								<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
+								<li>
+									<a href="{{route('person.details',$reports->id)}}">
+										@if(! $reports->userdetails->oracleMatch)
+											<i class="fas fa-times-circle text-danger"
+											title="No match with Oracle"></i>
+										@else
+											<i class="far fa-check-circle text-success"
+											title="Matched to Oracle"></i>
+										@endif
+
+										{{$reports->fullName()}}
+									</a>
+								</li>
 							
 							@endforeach
 						

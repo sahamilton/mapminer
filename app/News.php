@@ -3,9 +3,33 @@
 namespace App;
 
 use Carbon\Carbon;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
+
 
 class News extends Model
 {
+    use HasSlug;
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     // Don't forget to fill this array
     protected $fillable = ['title', 'news', 'datefrom', 'dateto', 'slug', 'user_id'];
     public $dates = ['created_at', 'updated_at', 'datefrom', 'dateto'];
@@ -93,50 +117,12 @@ class News extends Model
      */
     public function reach()
     {
-        $roles = Role::withCount('assignedRoles')->whereIn('id', $this->relatedRoles->pluck('id')->toArray())->get();
+        $roles = Role::withCount('assignedRoles')
+            ->whereIn('id', $this->relatedRoles->pluck('id')->toArray())->get();
 
         return $roles->sum('assigned_roles_count');
-    }
-
-    /**
-     * [audience description].
-     *
-     * @param [type] $id [description]
-     *
-     * @return [type]     [description]
-     */
-    public function audience($id)
-    {
         
-
-        // find all people by role
-        $audience = [];
-        $news = $this->with('relatedRoles', 'relatedRoles.assignedRoles', 'relatedIndustries', 'relatedIndustries.people')->find($id);
-
-        // Get roles
-        foreach ($news->relatedRoles as $role) {
-            $roleaudience[] = $role->assignedRoles->pluck('id')->toArray();
-        }
-        if (isset($roleaudience)) {
-            foreach ($roleaudience as $group) {
-                $audience = array_merge($group, $audience);
-            }
-        }
-        // Get industry verticals
-        foreach ($news->relatedIndustries as $vertical) {
-            $industryaudience[] = $vertical->people->pluck('user_id')->toArray();
-        }
-
-        if (isset($industryaudience)) {
-            foreach ($industryaudience as $group) {
-                $audience = array_merge($group, $audience);
-            }
-        }
-
-        return $audience;
-
-        // find all people by vertical
-        //
-        // get unique number
     }
+
+
 }

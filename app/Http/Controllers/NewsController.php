@@ -133,11 +133,10 @@ class NewsController extends BaseController
      * 
      * @return [type]       [description]
      */
-    public function show($slug)
+    public function show(News $slug)
     {
-
-        $news = $this->news->with('relatedRoles')
-            ->where('slug', '=', $slug)->first();
+  
+        $news = $slug->load('relatedRoles');
         
         if (! $news) {
             return redirect()->route('currentnews')
@@ -221,13 +220,27 @@ class NewsController extends BaseController
      * 
      * @return [type]     [description]
      */
-    public function audience(News $news)
+    public function audience($id)
     {
         
-        $people = $news->load('audience')->audience;
-        $audience = User::whereIn('id', $people)
-            ->with('person', 'person.industryfocus', 'roles')
-            ->get();
+        $news = News::with('relatedRoles', 'relatedIndustries','serviceline')
+            ->findOrFail($id);
+        $audience = User::with('person')
+        ->whereHas('roles', function ($q) use($news){
+          $q->whereIn('roles.id', $news->relatedRoles()->pluck('id')->toArray());
+        })->whereHas('serviceline', function ($q) use($news) {
+          
+         $q->whereIn('servicelines.id', $news->serviceline()->pluck('servicelines.id')->toArray());
+          
+        })
+        ->when($news->relatedIndustries()->count()>0, function ($q) use($news){
+          $q->whereHas('person.industryfocus', function ($q) use($news){
+            
+            $q->whereIn('searchFilter.id', $news->relatedIndustries->pluck('id')->toArray());
+          });
+        })
+        ->get();
+        
         return response()->view('news.audience', compact('news', 'audience'));
     }
     /**
