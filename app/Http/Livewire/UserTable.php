@@ -19,6 +19,12 @@ class UserTable extends Component
     public $selectRole = false;
     public $status = 'current';
     public $showConfirmation=false;
+    public $linked = 'All';
+    public $links = [
+        'All'=>'All', 
+        'no'=>'Not In Oracle', 
+        'yes'=>'In Oracle'
+    ];
 
     
 
@@ -45,8 +51,9 @@ class UserTable extends Component
             [
                 'users' => User::query()
                     ->select('users.*', 'persons.firstname', 'persons.lastname')
+                    
                     ->join('persons', 'user_id', '=', 'users.id')
-                    ->with('usage',  'serviceline', 'roles')
+                    ->with('usage',  'serviceline', 'roles','oracleMatch')
                     ->when(
                         $this->serviceline != 'All', function ($q) {
                             $q->whereHas(
@@ -75,6 +82,17 @@ class UserTable extends Component
                                     );
                                 }
                             );
+                        }
+                    )
+                    ->when(
+                        $this->linked != 'All', function ($q) {
+                            $q->when(
+                                $this->linked == 'yes', function ($q) {
+                                    $q->has('oracleMatch');
+                                }, function ($q) {
+                                    $q->doesntHave('oracleMatch');
+                                }
+                            );  
                         }
                     )
                     ->search($this->search)
