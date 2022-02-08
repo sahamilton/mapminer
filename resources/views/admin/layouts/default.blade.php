@@ -48,19 +48,8 @@
         <script src="//twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
 <!--- Charts --->
         <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" ></script>   
-@livewireStyles
-        <style>
-        body {
-            padding: 0  0;
-
-            min-height:100vh;
-        }
-
-
-        @section('styles')
-        @show
-        </style>
-@livewireStyles
+       
+        @livewireStyles
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
         <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -80,32 +69,32 @@
 <body>
 
     <!-- To make sticky footer need to wrap in a div -->
-<div id="app">
-    @include ('admin.partials._navbar')
+        <div id="app">
+            @include ('admin.partials._navbar')
 
-    <!-- Container -->
-    <div class="container" style="margin-bottom:0px">
-        <main class="py-4 flex-grow" >
-            
+            <!-- Container -->
+            <div class="container" style="margin-bottom:0px">
+                <main class="py-4 flex-grow" >
+                    
 
-            <!-- Notifications -->
-            @include('notifications')
-            <!-- ./ notifications -->
+                    <!-- Notifications -->
+                    @include('notifications')
+                    <!-- ./ notifications -->
 
-            <!-- Content -->
-            @yield('content')
-            <!-- ./ content -->
-        </main> 
-        <div class="clear" style="margin-bottom:80px"></div>
+                    <!-- Content -->
+                    @yield('content')
+                    <!-- ./ content -->
+                </main> 
+                <div class="clear" style="margin-bottom:80px"></div>
 
-       @include('site.layouts.footer')     
-       @include('admin.partials._scripts')
-      </div>    
+               @include('site.layouts.footer')     
+               @include('admin.partials._scripts')
+              </div>    
 
-</div>
+        </div>
     
-@livewireScripts
-@include('partials.besnappy')
+        @livewireScripts
+        @include('partials.besnappy')
         @yield('scripts')
     </body>
 </html>

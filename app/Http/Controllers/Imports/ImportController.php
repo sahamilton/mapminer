@@ -66,7 +66,7 @@ class ImportController extends BaseController
         }
         for ($i = 0; $i < $data['skip']; $i++) {
             array_shift($fields);
-            echo $i;
+            
         }
         return $fields;
     }
