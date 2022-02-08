@@ -67,7 +67,6 @@ class PersonObserver
      */
     public function deleted(Person $person)
     {
-        //RebuildPeople::dispatch();
-        // return Mail::queue(new PersonNotification($person));
+        RebuildPeople::dispatch();
     }
 }
