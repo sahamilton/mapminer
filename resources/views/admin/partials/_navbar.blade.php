@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
-        
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon" style="color:green"></span>
     </button>
