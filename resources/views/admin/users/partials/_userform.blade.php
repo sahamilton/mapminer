@@ -1,5 +1,20 @@
 <!-- Email -->
 <div class="form-group {!! $errors->has('email') ? 'has-error' : '' !!}">
+
+	@if(auth()->user()->hasRole(['admin']))
+		<label class="col-md-2 control-label" for="email">Oracle Validation</label>
+		<div class="col-md-10">
+			<input
+			class="form-control" 
+			type="checkbox"
+			checked 
+			name="oracle" 
+			value =1>
+			{!! $errors->first('email', '<span class="help-inline">:message</span>') !!}
+		</div>
+	@else
+		<input hidden name="oracle" value=1/>
+	@endif
 	<label class="col-md-2 control-label" for="email">Email</label>
 	<div class="col-md-10">
 		<input

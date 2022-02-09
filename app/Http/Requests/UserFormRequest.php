@@ -29,14 +29,13 @@ class UserFormRequest extends FormRequest
     {
         $salesrules = [];
         $branchrules = [];
-
+        $oracle = [];
         $rules = [
             'roles'=>'required',
             'business_title'=>'required',
             'firstname'=>'required',
             'lastname'=>'required',
-            'email' => 'required|email|unique:users,email,'.request()->segment(3),
-            'employee_id' => 'required|unique:users,employee_id,'.request()->segment(3),
+            
             'password'=>'confirmed',
             'serviceline'=>'required',
             'address'=>'required',
@@ -49,8 +48,19 @@ class UserFormRequest extends FormRequest
             $branchrules = ['branches'=>'required_without:branchstring',
                         'branchstring'=>'required_without:branches', ];
         }
+        if (request('oracle')==1) {
+            $oracle =[
+                'email' => 'required|email|exists:oracle,primary_email|unique:users,email,'.request()->segment(3),
+                'employee_id' => 'exists:oracle,person_number|required|unique:users,employee_id,'.request()->segment(3),
+            ];
+        } else {
+            $oracle =[
+                'email' => 'required|email|unique:users,email,'.request()->segment(3),
+                'employee_id' => 'required|unique:users,employee_id,'.request()->segment(3),
+            ];
+        }
 
-        return array_merge($salesrules, $branchrules, $rules);
+        return array_merge($salesrules, $branchrules, $oracle, $rules);
     }
 
     /**
@@ -64,6 +74,8 @@ class UserFormRequest extends FormRequest
             'reports_to.required' => 'Reports to is required for sales roles',
             'branches.required_without' =>'Branches or Branchstring required for branchmanagers',
             'branchstring.required_without' =>'Branches or Branchstring required for branchmanagers',
+            'email.exists' =>'Email is not in Oracle data',
+            'employee_id' => 'Employee ID is not in Oracle',
         ];
     }
 

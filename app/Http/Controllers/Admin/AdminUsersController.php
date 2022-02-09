@@ -5,6 +5,8 @@ use App\User;
 use App\Role;
 use App\Person;
 use App\Company;
+use Mail;
+use App\Mail\ManagerNotification;
 use App\Permission;
 use App\Http\Requests\UserFormRequest;
 use App\Http\Requests\UserBulkImportForm;
@@ -181,7 +183,7 @@ class AdminUsersController extends BaseController
      */
     public function store(UserFormRequest $request)
     {
-       
+        
         $user = $this->user->create(request()->all());
         $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
@@ -198,6 +200,7 @@ class AdminUsersController extends BaseController
             $this->_updateIndustryVertical($request, $person);
             $this->_associateBranchesWithPerson($request, $person);
             $track=Track::create(['user_id'=>$user->id]);
+            Mail::queue(new ManagerNotification($user));
             return redirect()->route('person.details', $person->id)
                 ->with('success', 'User created succesfully');
         } else {
@@ -501,25 +504,28 @@ class AdminUsersController extends BaseController
      */
     public function destroy(User $user)
     {
-
+        $user->load('person');
 
         // Check if we are not trying to delete ourselves
         if ($user->id === auth()->user()->id) {
-            // Redirect to the user management page
+
             return redirect()->to('admin/users')
                 ->with('error', 'You cannot delete yourself');
         }
+        // Make sure that the user doesn't have direct reports
         if ($user->person->directReports()->count() >0) {
-            
+           
             $person = $user->person->load('directReports', 'reportsTo.directReports');
   
             return response()->view('admin.users.hasreports', compact('person'));
         }
-     
+      
         $user->person->delete();
+        
         $user->delete();
-        return redirect()->to('admin/users')
-            ->with('success', 'User deleted succesfully');
+
+        return redirect()->route('users.index')->withMessage('User deleted succesfully');
+
     }
       
     /**
