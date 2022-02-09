@@ -1,6 +1,8 @@
 <div>
     <h3>{{ucwords($status)}} User / People Management</h3>
-
+    @if($linked !='All')
+        <div class="alert alert-warning"> {{$links[$linked]}}</div>
+    @endif
     <div class="float-right">
         <a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">        
             <i class="fas fa-plus-circle " aria-hidden="true"></i>
@@ -48,7 +50,15 @@
                     </option>
                 @endforeach
             </select>
-     
+            <label>&nbsp;In Oracle:&nbsp;</label>
+            <select name="linked"
+                wire:model="linked"
+                class="form-control">
+                
+                @foreach($links as $id=>$text)
+                    <option value='{{$id}}'>{{$text}}</option>
+                @endforeach
+            </select>
             
         </div>
 

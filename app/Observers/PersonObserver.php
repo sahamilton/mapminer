@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Jobs\RebuildPeople;
 use App\Mail\PersonNotification;
+use App\Mail\NotifyManagerOfDeletedReport;
 use App\Person;
 use Mail;
 
@@ -52,7 +53,11 @@ class PersonObserver
         //RebuildPeople::dispatch();
         // return Mail::queue(new PersonNotification($person));
     }
+    public function deleting(Person $person)
+    {
 
+        Mail::queue(new NotifyManagerOfDeletedReport($person));
+    }
     /**
      * [deleting description].
      *
@@ -62,7 +67,6 @@ class PersonObserver
      */
     public function deleted(Person $person)
     {
-        //RebuildPeople::dispatch();
-        // return Mail::queue(new PersonNotification($person));
+        RebuildPeople::dispatch();
     }
 }

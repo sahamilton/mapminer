@@ -12,7 +12,7 @@
 
 
 
-<form name="editnews" method="post" action = "{{route('news.update',$news->id)}}" >
+<form name="editnews" method="post" action = "{{route('news.update',$news->slug)}}" >
 {{csrf_field()}}
 <input type="hidden" name="_method" value="patch" />
 @include('news.partials.newsform')
