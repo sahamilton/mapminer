@@ -621,4 +621,24 @@ class AdminUsersController extends BaseController
         $this->user->whereIn('id', request('user_id'))->delete();
         return redirect()->route('users.index')->withMessage('Users deleted');
     }
+    /**
+     * [bulkPermDelete description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function bulkPermDelete(Request $request) : \Illuminate\Http\RedirectResponse
+    {
+        
+        $user = User::onlyTrashed()
+            ->with('deletedperson')
+            ->doesntHave('oracleMatch')
+            ->where('deleted_at', '<', request('deleted_before'))
+            ->forceDelete();
+        $person = Person::onlyTrashed()
+            ->doesntHave('userdetails')
+            ->where('deleted_at', '<', request('deleted_before'))
+            ->forceDelete();
+        return redirect()->route('users.index')
+            ->withMessage("Users deleted prior to " . Carbon::parse(request('deleted_before'))->format('Y-m-d'). " and not in Oracle have been permanently deleted");
+    }
 }

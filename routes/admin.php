@@ -16,8 +16,6 @@ use Illuminate\Http\Request;
         Route::get('branch/manage/export/{type?}', ['as'=>'branches.manage.export', 'uses'=>'Admin\BranchManagementController@export']);
         Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'BranchAssignmentController@checkBranchReporting']);
         
-
-        // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
         
         //   Campaigns (email)
         Route::get('campaigns/{campaign}/track', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@show']);
@@ -55,15 +53,21 @@ use Illuminate\Http\Request;
         //   User Management
 
         Route::get('cleanse', ['as'=>'users.cleanse', 'uses'=>'Admin\AdminUsersController@cleanse']);
+        
         Route::get('users/import', ['as'=>'users.importfile', 'uses'=>'Imports\UsersImportController@getFile']);
         Route::get('usersimport', ['as'=>'usersimport.index', 'uses'=>'Imports\UsersImportController@index']);
 
         Route::post('users/bulkimport', ['as'=>'admin.users.bulkimport', 'uses'=>'Imports\UsersImportController@import']);
         Route::post('users/import', ['as'=>'users.mapfields', 'uses'=>'Imports\UsersImportController@mapfields']);
+        
         Route::get('users/deleted', ['as'=>'deleted.users', 'uses'=>'Admin\AdminUsersController@deleted']);
         Route::get('users/{id}/restore', ['as'=>'users.restore', 'uses'=>'Admin\AdminUsersController@restore']);
 
         Route::delete('users/{id}/purge', ['as'=>'users.permdestroy', 'uses'=>'Admin\AdminUsersController@permdeleted']);
+
+        Route::post('users/purge', ['as'=>'users.bulkPermDestroy', 'uses'=>'Admin\AdminUsersController@bulkPermDelete']);
+
+
 
         Route::post('user/usererrors', ['as'=>'fixusercreateerrors', 'uses'=>'Imports\UsersImportController@fixUserErrors']);
         Route::post('user/importcleanse/delete', ['as'=>'user.importdelete', 'uses'=>'Imports\UserImportCleanseController@bulkdestroy']);

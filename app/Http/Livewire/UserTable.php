@@ -53,7 +53,7 @@ class UserTable extends Component
                     ->select('users.*', 'persons.firstname', 'persons.lastname')
                     
                     ->join('persons', 'user_id', '=', 'users.id')
-                    ->with('usage',  'serviceline', 'roles','oracleMatch')
+                    ->with('usage',  'serviceline', 'roles', 'oracleMatch')
                     ->when(
                         $this->serviceline != 'All', function ($q) {
                             $q->whereHas(
