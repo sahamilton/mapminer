@@ -72,7 +72,7 @@ class Oracle extends Model
     }
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'location_name', 'oracle_location');
     }
     public function fullName()
     {
