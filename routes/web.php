@@ -243,7 +243,7 @@ Route::group(
         Route::get('geocode/people', ['as'=>'person.geocode', 'uses'=>'PersonsController@geoCodePersons']);
         Route::get('person/{vertical}/vertical', ['as'=>'person.vertical', 'uses'=>'PersonsController@vertical']);
         Route::resource('person', 'PersonsController', ['only' => ['index', 'show']]);
-        
+        Route::get('adduser/{oracle}', ['as'=>'oracle.useradd','uses'=>'OracleController@addUser']);
         //   Projects
         Route::get('api/mylocalprojects/{distance}/{latLng}', ['as' => 'map.myprojects', 'uses' => 'ProjectsController@findNearbyProjects']);
         Route::get('projects/{id}/claim', ['as'=>'projects.claim', 'uses'=>'ProjectsController@claimProject']);

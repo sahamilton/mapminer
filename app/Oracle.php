@@ -70,6 +70,10 @@ class Oracle extends Model
         return $this->hasOne(User::class,  'email', 'manager_email_address');
         
     }
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
     public function fullName()
     {
         return $this->first_name . " " . $this->last_name;

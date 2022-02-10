@@ -97,29 +97,33 @@
 							{{$person->reportsTo->fullName()}}
 						@endif
 							</li>
+						<li>Team:</li>
 						
-						@if($person->directReports->count()>0)
-							<li>Team:</li>
-							@foreach ($person->directReports as $reports)
+						@if($person->userdetails->oracleMatch->teamMembers->count()>0)
+							
+							@foreach ($person->userdetails->oraclematch->teamMembers as $reports)
 								
 								<li>
-									@if($reports->userdetails->oracleMatch)
+									@if($reports->mapminerUser)
 										<i class="far fa-check-circle text-success"title="In Oracle"></i>
+										<a href="{{route('person.details',$reports->mapminerUser->person->id)}}">{{$reports->fullName()}}
+										</a>
 									@else
 										<i class="far fa-times-circle text-danger"
 										title="Not in Oracle"></i>
-									@endif
-									<a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}
+										<a href="{{route('oracle.useradd', $reports->id)}}"
+										title="Add to Mapminer">
+										{{$reports->fullName()}} <em>{{$reports->job_profile}}</em>
 									</a>
+									@endif
+									
 									
 								</li>
 							
 							@endforeach
+						@endif
 						
 						
-
-					@endif
-
 					</ul>
 				</div>
 				<div class="col-sm-8">

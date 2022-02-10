@@ -44,8 +44,7 @@ class PersonSearchController extends Controller
         //note remove manages & manages.servicedby
         $person
             ->load(
-                'directReports.userdetails.roles',
-                'directReports.userdetails.oracleMatch',
+                'userdetails.oracleMatch.teamMembers.mapminerUser.roles',
                 'managesAccount.countlocations',
                 'managesAccount.industryVertical',
                 'industryfocus'
@@ -57,7 +56,11 @@ class PersonSearchController extends Controller
         if (count($person->directReports)>0) {
             $salesrepmarkers = $this->person->jsonify($person->directReports);
         }
-
-        return response()->view('persons.details', compact('person','branches', 'branchmarkers',  'user'));
+        if ($person->userdetails->oracleMatch && $person->userdetails->oracleMatch->teamMembers) {
+            $addToMapminer = $person->userdetails->oracleMatch->teamMembers->whereNull('mapminerUser');
+        } else {
+            $addToMapminer = null;
+        }
+        return response()->view('persons.details', compact('person', 'branches', 'branchmarkers',  'user', 'addToMapminer'));
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Oracle;
-
+use App\User;
 
 class OracleController extends Controller
 {
@@ -68,7 +68,41 @@ class OracleController extends Controller
         $oracle->load('teamMembers.mapminerUser.person', 'oracleManager', 'mapminerUser.person', 'mapminerManager.person');
         return response()->view('oracle.show', compact('oracle'));
     }
+    public function addUser(Oracle $oracle)
+    {
+        $oracle->load('branch', 'oracleManager.mapminerUser.person');
+        // create user
+        //  employee_id
+        //  email
+        $data = [
+            'user'=>[
+                'employee_id'=>$oracle->person_number,
+                'email'=>$oracle->primary_email,
+            ],
+            'person'=>[
 
+                'firstname' =>$oracle->first_name,
+                'lastname'  =>$oracle->last_name,
+                'address' =>$oracle->branch->fullAddress(),
+                'lat' =>$oracle->branch->lat,
+                'lng' =>$oracle->branch->lng,
+                'lng' =>$oracle->branch->lng,
+                'position' =>$oracle->branch->position,
+                'title' => $oracle->job_profile,
+                'reports_to' =>$oracle->oracleManager->mapminerUser->person->id,
+
+            ], 
+            'branch'=>$oracle->branch,
+            
+        ];
+        $user = User::create($data['user']);
+        $user->roles()->attach([9]);
+        $person = $user->person()->create($data['person']);
+        $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>9]);
+        
+        // 
+        return redirect()->back()->withMessage('UserAdded');
+    }
     /**
      * [unmatched description]
      * @return [type] [description]

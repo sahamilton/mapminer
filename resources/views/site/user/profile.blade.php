@@ -65,7 +65,7 @@
 								
 							</ul>
 						<a class="btn btn-primary float-right" href="">
-						<i class="far fa-edit text-info""></i>
+						<i class="far fa-edit text-info"></i>
 						Edit</a>				
 					</div>
 					<div class="col-sm-offset-8">
@@ -133,7 +133,11 @@
 								</li>
 							
 							@endforeach
-						
+							@if(isset($addToMapminer))
+								@foreach($addToMapminer as $teammember)
+									<li>{{$teammember->fullName()}}</li>
+								@endforeach
+							@endif
 						
 
 					@endif

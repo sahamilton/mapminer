@@ -51,9 +51,16 @@ class UsersController extends Controller
         if ($user->person->lat && $user->person->lng) {
             $branches = $this->branch->nearby($user->person, 100, 5)->get();
         }
+        if ($user->oracleMatch) {
+            $addToMapminer = $user->oracleMatch->teamMembers->whereNull('mapminerUser');
+        } else {
+            $addToMapminer = null;
+        }
+        
+  
         return response()->view(
             'site.user.profile', 
-            compact('user', 'branchmarkers', 'salesrepmarkers', 'branches')
+            compact('user', 'branchmarkers', 'salesrepmarkers', 'branches', 'addToMapminer')
         );
     }
     /**
