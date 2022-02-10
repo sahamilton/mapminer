@@ -61,7 +61,16 @@
             </select>
             
         </div>
-
+        <div class="float-right">
+            @if($status == 'deleted')
+                <form action="{{route('users.bulkPermDestroy')}}"
+                    method="post">
+                    @csrf
+                    <input type="submit" class="btn btn-small btn-danger" value="Purge Deleted" />
+                    <input type="hidden" name="deleted_before" value="{{now()->subYear(1)}}" />
+                </form>
+            @endif
+        </div>
     </div>
     <table class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
