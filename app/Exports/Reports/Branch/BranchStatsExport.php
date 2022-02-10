@@ -31,6 +31,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'Top25'=>'# Open Top 25 Opportunities',
         'open'=>'# All Open Opportunities Count',
         'openvalue'=>'Sum All Open Opportunities Value',
+
         'lost'=>'# Opportunities Lost',
         'won'=>'# Opportunities Won',
         'wonvalue'=>'Sum of Won Value',
@@ -41,11 +42,12 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     ];
 
     
-    public function __construct(Report $report, array $period, array $branches = null)
+    public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
-        $this->report = $report;
+        $this->report = Report::where('export', 'BranchStatsExport')->first();
+        
     }
 
     public function headings(): array
