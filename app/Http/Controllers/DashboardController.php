@@ -84,7 +84,8 @@ class DashboardController extends Controller
             return redirect()->route('namdashboard.index');
             break;
         
-        case 'branch_manager';
+        case 'branch_manager':
+        case 'staffing_specialist';
             return redirect()->route('branchdashboard.index');
             break;
 

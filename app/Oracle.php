@@ -70,6 +70,10 @@ class Oracle extends Model
         return $this->hasOne(User::class,  'email', 'manager_email_address');
         
     }
+    public function mapminerRole()
+    {
+        return $this->hasOne(OracleJobs::class, 'job_code', 'job_code');
+    }
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'location_name', 'oracle_location');

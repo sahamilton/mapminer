@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Oracle;
 use App\User;
+use App\Person;
 
 class OracleController extends Controller
 {
@@ -70,38 +71,56 @@ class OracleController extends Controller
     }
     public function addUser(Oracle $oracle)
     {
-        $oracle->load('branch', 'oracleManager.mapminerUser.person');
+        $oracle->load('branch', 'oracleManager.mapminerUser.person', 'mapminerRole');
         // create user
         //  employee_id
         //  email
-        $data = [
-            'user'=>[
-                'employee_id'=>$oracle->person_number,
-                'email'=>$oracle->primary_email,
-            ],
-            'person'=>[
-
-                'firstname' =>$oracle->first_name,
-                'lastname'  =>$oracle->last_name,
-                'address' =>$oracle->branch->fullAddress(),
-                'lat' =>$oracle->branch->lat,
-                'lng' =>$oracle->branch->lng,
-                'lng' =>$oracle->branch->lng,
-                'position' =>$oracle->branch->position,
-                'title' => $oracle->job_profile,
-                'reports_to' =>$oracle->oracleManager->mapminerUser->person->id,
-
-            ], 
-            'branch'=>$oracle->branch,
-            
-        ];
-        $user = User::create($data['user']);
-        $user->roles()->attach([9]);
-        $person = $user->person()->create($data['person']);
-        $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>9]);
+        if ($oracle->mapminerRole) {
         
-        // 
-        return redirect()->back()->withMessage('UserAdded');
+            $data = [
+                'user'=>[
+                    'employee_id'=>$oracle->person_number,
+                    'email'=>$oracle->primary_email,
+                    'confirmed'=>1,
+                ],
+                'person'=>[
+
+                    'firstname' =>$oracle->first_name,
+                    'lastname'  =>$oracle->last_name,
+                    'address' =>$oracle->branch->fullAddress(),
+                    'lat' =>$oracle->branch->lat,
+                    'lng' =>$oracle->branch->lng,
+                    'lng' =>$oracle->branch->lng,
+                    'position' =>$oracle->branch->position,
+                    'title' => $oracle->job_profile,
+                    'reports_to' =>$oracle->oracleManager->mapminerUser->person->id,
+
+                ], 
+                'branch'=>$oracle->branch,
+                
+                ];
+                // Check if the new user was previously deleted.
+            if ($olduser = User::withTrashed()
+                ->where('employee_id', $oracle->person_number)
+                ->first()
+            ) {
+                
+                $oldperson = Person::withTrashed()
+                    ->where('user_id', $olduser->id)
+                    ->forceDelete();
+                $olduser->forceDelete();
+            }
+
+            $user = User::create($data['user']);
+            $user->roles()->attach($oracle->mapminerRole->role_id);
+            $person = $user->person()->create($data['person']);
+            $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>9]);
+        
+
+            return redirect()->back()->withMessage($person->fullName() . ' has been added to Mapminer');
+        } else {
+            return redirect()->back()->withError('Cannot map '. $oracle->job_profile . " to any Mapminer Role");
+        }
     }
     /**
      * [unmatched description]
@@ -121,5 +140,11 @@ class OracleController extends Controller
     public function matchManager()
     {
         return response()->view('oracle.matchingManagers');
+    }
+
+    public function reassign(Person $person, Oracle $oracle)
+    {
+        $person->update(['reports_to'=>$oracle->mapminerUser->person->id]);
+        return redirect()->back()->withMessage($person->fullName() . ' manager changed to ' . $oracle->fullName());
     }
 }

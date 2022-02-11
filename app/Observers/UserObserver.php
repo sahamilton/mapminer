@@ -30,7 +30,7 @@ class UserObserver
 
     public function created(User $user)
     {
-        RebuildPeople::dispatch();
+        //RebuildPeople::dispatch();
       
         if ($user->confirmed == 1) {
             Mail::queue(new UserNotification($user));
@@ -47,7 +47,7 @@ class UserObserver
 
     public function deleted(User $user)
     {
-        RebuildPeople::dispatch();
+        //RebuildPeople::dispatch();
         Log::info($user->id . " Deleted: People rebuilt");
     }
     

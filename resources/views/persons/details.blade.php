@@ -90,16 +90,27 @@
 						<p><strong>Reporting Structure</strong></p>
 						<ul style="list-style-type: none;">
 						@if($person->reportsTo->id)
-							<li>Reports To:
+							Reports To:
 		
 							<a href="{{route('person.details',$person->reportsTo->id)}}">{{$person->reportsTo->fullName()}}</a>
 						@else
 							{{$person->reportsTo->fullName()}}
 						@endif
-							</li>
+						@if($person->userdetails->oracleMatch 
+							&& $person->userdetails->oracleMatch->oracleManager
+							&& $person->userdetails->oracleMatch->oracleManager->mapminerUser
+							&& $person->userdetails->oracleMatch->oracleManager->mapminerUser->person->id != $person->reports_to)
+						<p>
+							<i class="fa-solid fa-user-plus txt-danger"></i>
+							<a href="{{route('oracle.reassign',[$person->id, $person->userdetails->oracleMatch->oracleManager->id])}}"
+								title="Change {{$person->fullName()}}'s manager to {{$person->userdetails->oracleMatch->oracleManager->mapminerUser->person->fullName()}}">
+							{{$user->oracleMatch->manager_name}}</a>
+						</p>
+							
+						@endif
 						<li>Team:</li>
 						
-						@if($person->userdetails->oracleMatch->teamMembers->count()>0)
+						@if($person->userdetails->oracleMatch && $person->userdetails->oracleMatch->teamMembers->count()>0)
 							
 							@foreach ($person->userdetails->oraclematch->teamMembers as $reports)
 								

@@ -14,6 +14,7 @@ class PersonNotification extends Mailable
     public $person;
     public $action;
     public $changes;
+    public $user;
 
     /**
      * Create a new message instance.
@@ -23,6 +24,7 @@ class PersonNotification extends Mailable
     public function __construct(Person $person)
     {
         $this->person = $person;
+        $this->user = $person->userdetails;
     }
 
     /**
@@ -32,8 +34,9 @@ class PersonNotification extends Mailable
      */
     public function build()
     {
+        
         if ($this->person->userdetails->confirmed) {
-            return $this->markdown('emails.usernotification')
+            return $this->markdown('emails.personnotification')
                 ->subject('Welcome to Mapminer')
                 ->to($this->person->userdetails->email);
         }

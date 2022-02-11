@@ -37,8 +37,12 @@ class PersonObserver
      */
     public function created(Person $person)
     {
-        RebuildPeople::dispatch();
-        // return Mail::queue(new PersonNotification($person));
+        $person->load('userdetails');
+        if ($person->userdetails->confirmed == 1) {
+            return Mail::queue(new PersonNotification($person));
+        }
+        //RebuildPeople::dispatch()->delay(now()->addMinutes(2));;
+        
     }
 
     /**

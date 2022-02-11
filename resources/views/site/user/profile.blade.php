@@ -140,11 +140,11 @@
 					@endif
 					@if(isset($addToMapminer))
 						@foreach($addToMapminer as $teammember)
-							<i class="far fa-times-circle text-danger"
+							<li><i class="far fa-times-circle text-danger"
 							title="Not in Mapminer"></i>
 							<a href="{{route('oracle.useradd', $teammember->id)}}"
 							title="Add to Mapminer">
-							{{$teammember->fullName()}} <em>{{$teammember->job_profile}}</em>
+							{{$teammember->fullName()}} <em>{{$teammember->job_profile}}</em></a>
 						@endforeach
 					@endif
 					</ul>
