@@ -114,6 +114,18 @@
 								No Manager
 							@endif
 						@endif
+						@if($user->oracleMatch 
+							&& $user->oracleMatch->oracleManager
+							&& $user->oracleMatch->oracleManager->mapminerUser
+							&& $user->oracleMatch->oracleManager->mapminerUser->person->id != $user->person->reports_to)
+						<p>
+							<i class="fa-solid fa-user-plus txt-danger"></i>
+							<a href="{{route('oracle.reassign',[$user->person->id, $user->oracleMatch->oracleManager->id])}}"
+								title="Change {{$user->fullName()}}'s manager to {{$user->oracleMatch->oracleManager->mapminerUser->fullName()}}">
+							{{$user->oracleMatch->manager_name}}</a>
+						</p>
+							
+						@endif
 						<li>Team:</li>
 						@if($user->person->directReports->count()>0)
 							

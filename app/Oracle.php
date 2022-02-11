@@ -87,8 +87,9 @@ class Oracle extends Model
         
         return  $query->where('primary_email', 'like', "%{$search}%")
             ->orWhere('person_number', 'like', "%{$search}%")
-            ->orWhere('first_name', 'like', "%{$search}%")
+            ->orWhere('first_name', 'like',  "%{$search}%")
             ->orWhere('last_name', 'like', "%{$search}%")
+            ->orwhereRaw("concat_ws(' ', first_name, last_name) like ?", "%{$search}%")
             ->orWhere('manager_name', 'like', "%{$search}%")
             ->orWhere('manager_email_address', 'like', "%{$search}%")
             ->orWhere('location_name', 'like', "%{$search}%");

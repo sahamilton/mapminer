@@ -7,11 +7,14 @@
 <h2>{{$branch->branchname}} Dashboard</h2>
 
 @include('branches.partials._periodselector')
-
+<div class="m-2">
 	@foreach ($branch->manager as $manager)
 		<p><strong>Manager:</strong>{{$manager->fullName()}}</p>
+		@foreach ($manager->directReports as $teammember)
+			<li>{{$teammember->fullName()}}</li>
+		@endforeach
 	@endforeach
-
+</div>
 @if(isset($data['mybranches']) && $data['mybranches']->count() >1)
 
 	@include('dashboards.partials._branchnewdashboardselector')
@@ -72,33 +75,34 @@
 
 		<div id="calendar"  class="card-body" ></div>
 	</div>
-	 
+	
 	<div class="row" style="margin-bottom:100px">
-	<div class="col-sm-6 float-left" style="margin-top:10px">
-		<div class="card-header">
-			<h4>Sales Pipeline</h4>
-		</div>
-		<div class="card-body">
-			<canvas id="ctpipe" width="450" height="400" ></canvas>
-			@include('charts._pipechart')
-		</div>
-	</div>
-	<div class="col-sm-6 float-right" style="margin-top:10px">
-		<div class="card-header">
-			<h4>Activities</h4>
 
-		</div>@if(count($data['charts']['activitychart']) >0)
-		<div class="card-body">
-				  <canvas id="ctb" width="450" height="400" ></canvas>
-				 
-					@include('charts._branchactivitiestype')
+		<div style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
+			<div class="card-header">
+				<h4>Team Activities</h4>
+			</div>
+			<div class="card-body">
+				<canvas id="ctp" width="300" height="300" style="float-right"></canvas>
+				@include('charts._personactivitiesstackedchart')
+			</div>
 
 		</div>
-		@else
-			<p class="text-warning">No Activities in this period</p>
-		@endif
+	
+		<div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
+			<div class="card-header">
+				<h4>Branch Activities</h4>
+
+			</div>
+			
+			<div class="card-body">
+					  <canvas id="ctb" width="300" height="300" style="float-right"></canvas>
+					 
+						@include('charts._branchactivitiestype')
+
+			</div>
+		</div>
 	</div>
-</div>
 </div>
 @include('partials._scripts')
 @include('partials._calendarscript')

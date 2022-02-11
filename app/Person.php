@@ -10,8 +10,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Person extends NodeModel implements Auditable
 {
     use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch, \OwenIt\Auditing\Auditable;
-    public $salesroles = ['5','9'];
-    public $branchroles = ['9'];
+    public $salesroles = ['5','9', '17'];
+    public $branchroles = ['9', '17'];
        
     
     protected $table ='persons';
@@ -202,7 +202,7 @@ class Person extends NodeModel implements Auditable
         if ($this->userdetails->hasRole(['admin', 'sales_operations'])) {
             return $this->_getAllBranches($servicelines);
         }        
-        $branchMgrs = $this->descendantsAndSelf()->withRoles([9]);
+        $branchMgrs = $this->descendantsAndSelf()->withRoles([9, 17]);
         
         $branches = $branchMgrs->with('branchesServiced')
             ->when(

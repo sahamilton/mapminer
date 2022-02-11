@@ -92,7 +92,7 @@ class OracleController extends Controller
                     'lng' =>$oracle->branch->lng,
                     'lng' =>$oracle->branch->lng,
                     'position' =>$oracle->branch->position,
-                    'title' => $oracle->job_profile,
+                    'business_title' => $oracle->job_profile,
                     'reports_to' =>$oracle->oracleManager->mapminerUser->person->id,
 
                 ], 
@@ -101,8 +101,8 @@ class OracleController extends Controller
                 ];
                 // Check if the new user was previously deleted.
             if ($olduser = User::withTrashed()
-                ->where('employee_id', $oracle->person_number)
-                ->first()
+                    ->where('employee_id', $oracle->person_number)
+                    ->first()
             ) {
                 
                 $oldperson = Person::withTrashed()
@@ -114,7 +114,7 @@ class OracleController extends Controller
             $user = User::create($data['user']);
             $user->roles()->attach($oracle->mapminerRole->role_id);
             $person = $user->person()->create($data['person']);
-            $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>9]);
+            $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>$oracle->mapminerRole->role_id]);
         
 
             return redirect()->back()->withMessage($person->fullName() . ' has been added to Mapminer');

@@ -60,8 +60,7 @@
                 </a>
 
                 @if(! $user->mapminerUser && isset($user->oracleManager->mapminerUser))  
-                        <a href=""
-                            wire:click.prevent="addUser({{$user->id}})"
+                        <a href="{{route('oracle.useradd', $user->id)}}"
                             title="Add {{$user->fullName()}} to Mapminer">
                             <i class="fas fa-user-plus text-success"></i>
                         </a>

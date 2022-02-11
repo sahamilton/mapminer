@@ -46,6 +46,7 @@ var activityTypeChart = new Chart(ctb,
           yAxes: [{ 
             stacked: true, 
              ticks: {
+                  precision: 0,
                   autoSkip:false,
                   beginAtZero: true ,  // minimum value will be 0.
             

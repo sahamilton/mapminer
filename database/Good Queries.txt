@@ -1269,3 +1269,9 @@ $users = App\Oracle::has('mapminerUser')->with('oracleManager', 'mapminerUser.pe
   ->whereHas('oracleManager', function ($q) {
     $q->doesntHave('mapminerUser');
   })->get();
+/**************************************************
+  Temp update table users / activities fk
+/**************************************************
+USE mapminer;
+update `activities` set user_id = null where activities.id in (select * from (select `activities`.`id` FROM `activities` left join users on user_id = users.id where activities.user_id is not null and users.id is null) a)
+ALTER TABLE `activities` ADD CONSTRAINT `activity_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

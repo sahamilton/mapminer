@@ -12,10 +12,13 @@
             @include('livewire.partials._perpage')
             @include('livewire.partials._branchselector')
             @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+            <div  wire:loading>
+                <div class="col spinner-border text-danger"></div>
+            </div>
         </div>
     </div>
 
-    <div class="row mb-4 ">
+    <div class="row mb-4">
        <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
         @include('livewire.partials._periodselector')
         <div class="col form-inline">
@@ -23,11 +26,26 @@
             <select wire:model="status" 
             class="form-control">
                 @foreach ($statuses as $key=>$value)
-                    <option value="{{$key}}">{{$value}}</options>
+                    <option value="{{$key}}">{{$value}}</option>
                 @endforeach
                 
             </select>
-        
+        </div>
+        @if(count($team) >1)
+        <div class="col form-inline">
+            <label for="selectuser">Team:</label>
+            <select wire:model="selectuser" 
+            class="form-control">
+                <option value="All">All</option>
+                @foreach ($team as $key=>$type)
+                    <option value="{{$key}}">{{$type}}</option>
+                @endforeach
+            </select>
+
+            
+        </div>
+        @endif
+        <div class="col form-inline">
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 
             class="form-control">
@@ -37,9 +55,7 @@
                 @endforeach
             </select>
         </div>
-        <div wire:loading>
-            <div class="spinner-border text-danger"></div>
-        </div>
+        
     </div>
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
@@ -55,6 +71,7 @@
             <th>Activity</th>
             <th>Status</th>
             <th>Type</th>
+            <th>Created By</th>
         </thead>
         <tbody>
         @foreach ($activities as $activity)
@@ -62,7 +79,7 @@
             <tr>
                <td><a href="{{route('address.show', $activity->address_id)}}">{{$activity->relatesToAddress->businessname}}</a></td> 
                <td>{{$activity->activity_date->format('Y-m-d')}}</td> 
-               <td>{{max($activity->created_at,$activity->updated_at)->format('Y-m-d')}}</td> 
+               <td>{{max($activity->created_at, $activity->updated_at)->format('Y-m-d')}}</td> 
                <td>{{$activity->note}}</td> 
                <td> 
                     {{$activity->completed ==1 ? 'Completed' : 'Planned'}}
@@ -71,6 +88,7 @@
                     @endif
                </td> 
                <td>{{$activity->type->activity}}</td>
+               <td>{{$activity->user->person->firstname}}</td>
             </tr>
         @endforeach
         </tbody>

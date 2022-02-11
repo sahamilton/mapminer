@@ -24,9 +24,10 @@ class ActivitiesTable extends Component
 
     public $branch_id;
     public $myBranches;
- 
+    public $team;
     public $status='All';
     public $user;
+    public $selectuser = 'All';
     public $paginationTheme = 'bootstrap';
 
 
@@ -52,7 +53,8 @@ class ActivitiesTable extends Component
         if ($branch) {
             $this->branch_id = $branch;
         }
-
+        $this->team = auth()->user()->person->myTeam()->pluck('firstname', 'user_id')->toArray();
+        @ray($this->team);
         if ($status) {
             $this->status = $status;
         }
@@ -85,6 +87,11 @@ class ActivitiesTable extends Component
                 'activities'=>Activity::query()
                     ->where('branch_id', $this->branch_id)
                     ->periodActivities($this->period)
+                    ->when(
+                        $this->selectuser != 'All', function ($q) {
+                            $q->where('user_id', $this->selectuser);
+                        }
+                    )
                     ->with('relatesToAddress', 'type')
                     ->search($this->search)
                     ->when(

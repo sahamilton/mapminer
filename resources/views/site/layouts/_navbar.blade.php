@@ -111,7 +111,7 @@
               
             </li> 
              
-              @if(auth()->user()->hasRole('branch_manager'))
+              @if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist']))
               
                 @include('branchleads.partials._searchbar')
               
