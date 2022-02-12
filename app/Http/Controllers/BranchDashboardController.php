@@ -166,7 +166,7 @@ class BranchDashboardController extends DashboardController
         
         $this->period = $this->activity->getPeriod();
 
-        $branch->load('manager');
+        $branch->load('manager.directReports');
 
         if ($branch->manager->count() > 1 
             && $branch->manager->where(
@@ -190,7 +190,7 @@ class BranchDashboardController extends DashboardController
         $campaigns = Campaign::currentOpen([$branch->id])->get();;
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-
+        
         $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
      
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
@@ -237,7 +237,6 @@ class BranchDashboardController extends DashboardController
         $charts['openleadschart'] = $this->chart->getBranchChart($data, $field='leads_count');
         $charts['newleadschart'] = $this->chart->getBranchChart($data, $field='newbranchleads');
         $charts['activeleadschart'] = $this->chart->getBranchChart($data, $field='active_leads');
-        
         $charts['personactivitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
         return $charts;
     }
@@ -279,7 +278,9 @@ class BranchDashboardController extends DashboardController
             $mgrBranches = $report->getMyBranches();
 
             foreach ($fields as $field) {
-                $data['teamdata'][$report->fullName()][$field] = $data['branches']->whereIn('id', $mgrBranches)->sum($field);
+                $data['teamdata'][$report->fullName()][$field] = $data['branches']
+                ->whereIn('id', $mgrBranches)
+                ->sum($field);
 
             }
         }
@@ -287,13 +288,15 @@ class BranchDashboardController extends DashboardController
         $this->reports = $data['me']->getDescendantsAndSelf()->pluck('user_id')->toArray();
 
         $data['activities'] = $this->getSummaryTeamData($this->period, $this->activityFields);
-
+       
         $directReports = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
         foreach ($directReports as $report) {
 
             foreach ($this->activityFields as $field) {
                
-                $data['teamdata'][$report->fullName()][$field] = $data['activities']->where('lft', '>=', $report->lft)->where('rgt', '<=', $report->rgt)->sum($field);
+                $data['teamdata'][$report->fullName()][$field] = $data['activities']
+                    ->where('id', $report->id)
+                    ->sum($field);
             }
         }
 

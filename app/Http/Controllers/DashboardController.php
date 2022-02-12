@@ -69,14 +69,16 @@ class DashboardController extends Controller
      */
     public function index()
     {
-       
+        
         $myTeam = auth()->user()->person->myTeam()->get()->pluck('user_id')->toArray();
-       
+        
         if (! session('manager') or ! in_array(session('manager'), $myTeam)) {
             session(['manager'=>auth()->user()->id]);
         }
         
-        $myRoles = $this->user->findOrFail(session('manager'))->roles->pluck('name')->toArray();
+        $myRoles = $this->user->findOrFail(session('manager'))
+            ->roles->pluck('name')
+            ->toArray();
         
         switch ($myRoles[0]) {
 
@@ -235,7 +237,7 @@ class DashboardController extends Controller
      */
     protected function getSummaryTeamData() 
     {
-       
+        
         return $this->person->selectRaw('persons.id, concat_ws(" ",firstname, lastname) as manager, lft, rgt')
             
             ->SummaryActivities($this->period, $this->activityFields)
