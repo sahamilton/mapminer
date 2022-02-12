@@ -10,6 +10,7 @@ var activityTypeChart = new Chart(ctb,
     resize:true,
 
     data:{
+      
       labels: ['{!!  reset($data['charts']['activitychart'])['labels'] !!}'],
       datasets: [
        @foreach ($data['charts']['activitychart'] as $key=>$value) 

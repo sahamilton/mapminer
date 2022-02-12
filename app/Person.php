@@ -1158,6 +1158,7 @@ class Person extends NodeModel implements Auditable
     public function scopeSearch($query, $search)
     {
         return  $query->where('firstname', 'like', "%{$search}%")
+            ->orWhereRaw("concat_ws(' ', firstname, lastname) like ?", "%{$search}%")
             ->Orwhere('lastname', 'like', "%{$search}%");
     }
     /**

@@ -77,18 +77,20 @@
 	</div>
 	
 	<div class="row" style="margin-bottom:100px">
+		@if($data['team']->count()>1)
+			<div style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
+				<div class="card-header">
+					<h4>Team Activities</h4>
+				</div>
+				<div class="card-body">
+					<canvas id="ctp" width="300" height="300" style="float-right"></canvas>
+					@include('charts._personactivitiesstackedchart')
+				</div>
 
-		<div style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
-			<div class="card-header">
-				<h4>Team Activities</h4>
 			</div>
-			<div class="card-body">
-				<canvas id="ctp" width="300" height="300" style="float-right"></canvas>
-				@include('charts._personactivitiesstackedchart')
-			</div>
-
-		</div>
-	
+		@endif
+		@ray($data['charts'])
+		
 		<div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
 			<div class="card-header">
 				<h4>Branch Activities</h4>
@@ -96,12 +98,17 @@
 			</div>
 			
 			<div class="card-body">
-					  <canvas id="ctb" width="300" height="300" style="float-right"></canvas>
-					 
+					  
+					 	@if(count($data['charts']['activitychart']))
+					 	<canvas id="ctb" width="300" height="300" style="float-right"></canvas>
 						@include('charts._branchactivitiestype')
+						@else
+							No Activities in this time period
+						@endif
 
 			</div>
 		</div>
+		
 	</div>
 </div>
 @include('partials._scripts')

@@ -31,12 +31,13 @@
                 
             </select>
         </div>
-        @if(count($team) >1)
+        
         <div class="col form-inline">
             <label for="selectuser">Team:</label>
             <select wire:model="selectuser" 
             class="form-control">
                 <option value="All">All</option>
+                
                 @foreach ($team as $key=>$type)
                     <option value="{{$key}}">{{$type}}</option>
                 @endforeach
@@ -44,7 +45,7 @@
 
             
         </div>
-        @endif
+       
         <div class="col form-inline">
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 
