@@ -13,7 +13,7 @@ class OracleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() :\Illuminate\Http\Response
     {
         $actions =[
             1=>['order'=>1, 

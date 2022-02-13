@@ -24,14 +24,14 @@
                 </td>
                 <td>
                     @if(isset($user->mapminerUser->person->reportsTo->id))
-                    <a href="{{route('users.show',$user->mapminerUser->person->reportsTo->id)}}">
+                    <a href="{{route('users.show',$user->mapminerUser->person->reportsTo->user_id)}}">
                         {{$user->mapminerUser->person->reportsTo->fullName()}}
                     </a>
                     @endif
                 </td>
                 <td>
                     @if(isset($user->oracleManager->mapminerUser->person))
-                        <a href="{{route('users.show',$user->oracleManager->mapminerUser->person->reportsTo->id)}}">
+                        <a href="{{route('users.show',$user->oracleManager->mapminerUser->person->user_id)}}">
                             {{$user->oracleManager->mapminerUser->person->fullName()}}
                         </a>
                         
