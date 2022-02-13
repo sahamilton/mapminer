@@ -27,7 +27,7 @@ class OracleController extends Controller
                 'title'=>'Verify Oracle Data', 
                 'icon'=>"fas fa-check-double text-warning", 
                 'route'=>"oracle.verify",
-                'details'=>'Check & fix employee numbers in Mapminer cf Oracle employee number.',
+                'details'=>'Check & fix employee role in Mapminer cf Oracle job profile.',
             ],
             3=>[
                 'order'=>3, 
