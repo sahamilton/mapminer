@@ -105,10 +105,11 @@ trait Geocode
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
         
-        /*$sub = $this->selectSub('id', 'lat', 'lng')
+        /*
+        $sub = $this->selectSub('id', 'lat', 'lng')
             ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
-            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);*/
-
+            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
+        */
         return $query
             ->select()//pick the columns you want here.
             ->selectRaw("{$this->_haversine($location)} AS distance")
