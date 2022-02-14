@@ -80,8 +80,7 @@
             <td>{{$user->profile}}</td>
 
             <td>
-                {{$user->OracleRole}} /
-                {{$user->OracleRoleID}}
+                {{$user->OracleRole}}
                    <a 
                      wire:click="updateEmployeeRole({{$user->userId}},'{{ $user->OracleRoleID}}')" 
                         title="Update {{$user->person}} from {{$user->MMRole}} to {{$user->OracleRole}}">

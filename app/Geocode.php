@@ -104,7 +104,7 @@ trait Geocode
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-        // Removing sub query issue with PHP 7.4
+        
         /*$sub = $this->selectSub('id', 'lat', 'lng')
             ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);*/
