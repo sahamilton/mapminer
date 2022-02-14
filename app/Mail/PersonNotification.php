@@ -38,7 +38,8 @@ class PersonNotification extends Mailable
         if ($this->person->userdetails->confirmed) {
             return $this->markdown('emails.personnotification')
                 ->subject('Welcome to Mapminer')
-                ->to($this->person->userdetails->email);
+                ->to([$this->person->fullEmail()])
+                ->cc([$this->person->reportsTo->fullEmail()]);
         }
 
         return false;

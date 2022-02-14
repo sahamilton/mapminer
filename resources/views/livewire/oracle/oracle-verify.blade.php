@@ -1,6 +1,13 @@
 <div>
     <h2>Oracle HR Data compared to Mapminer</h2>
     <h4>{{$title}}</h4>
+    <div>
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+    </div>
     <p><a href="{{route('oracle.index')}}">Return to Oracle Data</a></p>
     <div class="row mb-4">
         <div class="col form-inline">

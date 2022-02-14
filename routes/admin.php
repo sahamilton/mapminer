@@ -86,7 +86,7 @@ use Illuminate\Http\Request;
         Route::get('oracle/import', ['as'=>'oracle.importfile', 'uses'=>'Imports\OracleImportController@getfile']);
         Route::post('oracle/bulkimport', ['as'=>'oracle.import', 'uses'=>'Imports\OracleImportController@import']);
         Route::post('/oracle/mapfields', ['as'=>'oracle.mapfields', 'uses'=>'Imports\OracleImportController@mapfields']);
-
+        Route::get('oracle/jobs', ['as'=>'oracle.jobs', 'uses'=>'OracleController@jobs']);
         Route::get('oracle/list', ['as'=>'oracle.list', 'uses'=>'OracleController@showOracle']);
         Route::get('oracle/verify', ['as'=>'oracle.verify', 'uses'=>'OracleController@verify']);
         Route::get('oracle/manager', ['as'=>'oracle.manager', 'uses'=>'OracleController@matchManager']);

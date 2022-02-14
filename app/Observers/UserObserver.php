@@ -32,9 +32,9 @@ class UserObserver
     {
         //RebuildPeople::dispatch();
       
-        if ($user->confirmed == 1) {
+        /*if ($user->confirmed == 1) {
             Mail::queue(new UserNotification($user));
-        }
+        }*/
         
     }
 

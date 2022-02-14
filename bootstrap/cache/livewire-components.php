@@ -30,6 +30,7 @@
   'namdetail' => 'App\\Http\\Livewire\\Namdetail',
   'nearby-locations' => 'App\\Http\\Livewire\\NearbyLocations',
   'opportunity-table' => 'App\\Http\\Livewire\\OpportunityTable',
+  'oracle-joblist' => 'App\\Http\\Livewire\\OracleJoblist',
   'oracle-list' => 'App\\Http\\Livewire\\OracleList',
   'oracle-managers' => 'App\\Http\\Livewire\\OracleManagers',
   'oracle-table' => 'App\\Http\\Livewire\\OracleTable',

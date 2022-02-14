@@ -106,7 +106,11 @@ class Person extends NodeModel implements Auditable
             ->orderBy('branchname');
     }
 
-
+    public function fullEmail()
+    {
+        return ['name'=>$this->fullName(), 
+            'email'=>$this->userdetails->email];
+    }
     /**
      * [scopeManagers description]
      * 
