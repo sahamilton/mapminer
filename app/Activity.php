@@ -144,7 +144,7 @@ class Activity extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class)->with('person');
+        return $this->belongsTo(User::class)->withDefault('No longer with the company')->with('person');
     }
     /**
      * [scopeMyActivity description]

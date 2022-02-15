@@ -89,7 +89,11 @@
                     @endif
                </td> 
                <td>{{$activity->type->activity}}</td>
-               <td>{{$activity->user->person->firstname}}</td>
+               <td>
+                   
+                    {{$activity->user->person->fullName()}}
+                   
+                </td>
             </tr>
         @endforeach
         </tbody>
