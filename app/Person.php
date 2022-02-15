@@ -43,7 +43,10 @@ class Person extends NodeModel implements Auditable
         'firstname',
         'lastname'
     ];
-
+    public function getFullNameAttribute()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
     /**
      * [getParentIdName description]
      * 
@@ -123,7 +126,7 @@ class Person extends NodeModel implements Auditable
     {
         
         if (! $roles) {
-            $roles = [14,6,7,3];
+            $roles = [14,9,6,7,3];
         }
         
         return $this->wherehas(
@@ -154,7 +157,7 @@ class Person extends NodeModel implements Auditable
         
         // this sucks .... why are these hard coded?
         if (! $roles) {
-            $roles = [14,6,7,3];
+            $roles = [14,3,6,7,9];
         }
         
         return $this->wherehas(
@@ -251,7 +254,7 @@ class Person extends NodeModel implements Auditable
     public function branchesManaged()
     {
         $team = $this->descendantsAndSelf()
-            ->withRoles([9])
+            ->withRoles([9, 17])
                 
             ->with('branchesServiced.manager')->get();
      

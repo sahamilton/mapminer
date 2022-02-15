@@ -155,7 +155,7 @@ class BranchDashboardController extends DashboardController
     {
         $myBranches = $this->person->myBranches();
 
-         
+        
         if (! array_key_exists($branch->id, $myBranches)) {
              return redirect()->back()
                  ->withWarning("You are not assigned to " .$branch->branchname);
@@ -166,7 +166,7 @@ class BranchDashboardController extends DashboardController
         
         $this->period = $this->activity->getPeriod();
 
-        $branch->load('manager.directReports');
+        $branch->load('manager.directReports','branchTeam');
 
         if ($branch->manager->count() > 1 
             && $branch->manager->where(
@@ -187,8 +187,9 @@ class BranchDashboardController extends DashboardController
                     . ". Notify Sales Opersations"
                 );
         }
-        $campaigns = Campaign::currentOpen([$branch->id])->get();;
+        $campaigns = Campaign::currentOpen([$branch->id])->get();
         $this->myBranches = [$branch->id];
+        
         $data = $this->_getDashBoardData();
         
         $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
@@ -207,13 +208,13 @@ class BranchDashboardController extends DashboardController
     {
         $data['period'] = $this->period;
 
-        $data['me'] = $this->person->findOrFail($this->manager->id);
+        $data['me'] = auth()->user()->person;
         // this might return branch managers with no branches!
-            
-        $data['team'] = $data['me']->getDescendantsAndSelf();
-
+        
+        $data['team'] = $this->branch->with('branchTeam')->whereIn('id', $this->myBranches)->first()->branchTeam;
+        
         $data['branches'] = $this->getSummaryBranchData();
-
+        
         if (! $data['teamdata'] = $this->_myTeamsData($data)) {
             
             return false;
@@ -270,6 +271,7 @@ class BranchDashboardController extends DashboardController
      */
     private function _myTeamsData($data)
     {
+        
         $fields = array_merge($this->leadFields, $this->opportunityFields);
         
         //* gets the associated branch data (opportunities and leads)
@@ -285,13 +287,13 @@ class BranchDashboardController extends DashboardController
             }
         }
         //* gets the associated people data (activities)
-        $this->reports = $data['me']->getDescendantsAndSelf()->pluck('user_id')->toArray();
-
+        //$this->reports = $data['me']->getDescendantsAndSelf()->pluck('user_id')->toArray();
+        $this->reports= $data['team']->pluck('user_id')->toArray();
         $data['activities'] = $this->getSummaryTeamData($this->period, $this->activityFields);
-       
-        $directReports = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
-        foreach ($directReports as $report) {
-
+        
+        //$directReports = $data['me']->descendantsAndSelf()->limitDepth(1)->get();
+        foreach ($data['team'] as $report) {
+          
             foreach ($this->activityFields as $field) {
                
                 $data['teamdata'][$report->fullName()][$field] = $data['activities']

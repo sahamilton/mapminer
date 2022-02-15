@@ -19,7 +19,8 @@ class Branch extends Model implements HasPresenter
     public $incrementing = false;
 
     public $branchManagerRole = 9;
-    public $branchRoles = [3,5,9,11];
+    public $branchRoles = [3,5,9,11,17];
+    public $branchTeamRoles = [9,17];
     public $businessManagerRole = 11;
     public $marketManagerRole = 3;
     // Add your validation rules here
@@ -312,7 +313,14 @@ class Branch extends Model implements HasPresenter
      */
     public function manager()
     {
-        return $this->belongsToMany(Person::class)->wherePivot('role_id', $this->branchManagerRole);
+        return $this->belongsToMany(Person::class)
+            ->wherePivot('role_id', $this->branchManagerRole);
+    }
+
+    public function branchteam()
+    {
+        return $this->belongsToMany(Person::class)
+            ->wherePivotIn('role_id', $this->branchTeamRoles);
     }
     /**
      * [businessmanager description]

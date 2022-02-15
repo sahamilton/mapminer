@@ -53,7 +53,7 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     
               <a class="dropdown-item" 
-                href="{{{ route('dashboard.index') }}}">
+                href="{{{ route('mydashboard') }}}">
                 <i class="fas fa-tachometer-alt"></i> 
                 My Dashboard
               </a>

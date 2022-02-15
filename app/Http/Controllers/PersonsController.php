@@ -208,6 +208,7 @@ class PersonsController extends BaseController
     public function show(Person $person)
     {
         
+        
         $roles = $this->persons->findPersonsRole($person);
 
         $people = $person->load(

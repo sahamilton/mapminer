@@ -42,20 +42,25 @@
             @include('livewire.partials._perpage')
             @include('livewire.partials._branchselector')
             @include('livewire.partials._search', ['placeholder'=>'Search leads'])
+            <label>Lead Created</label>@include('livewire.partials._periodselector', ['all'=>true])
         </div>
     </div>
-    
-    <div class="row" style="margin-bottom:10px">
+    <div class="row mb-4">
+        
+    </div>
+    <div class="row mb-4">
         <div class="col form-inline">
-            <i class="fas fa-filter text-danger"></i>
-            <label>Lead Created</label>
-            @include('livewire.partials._periodselector', ['all'=>true])
+            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
             <label>Customer / Lead: </label>
             <select wire:model="type" class="form-control" title="With or Without Opportunities">
                 @foreach ($types as $key)
                     <option value="{{$key}}">{{$key}}</option>
                 @endforeach
             </select>
+
+            
+
+    
             <label>With / Without Opportunities</label>
              <div class="input-group-prepend">
                 <span class="input-group-text h-38" title="With or Without Opportunities">
@@ -71,6 +76,15 @@
     </div>
     <div class="row" style="margin-bottom:10px">
         <div class="col form-inline">
+            <label for="selectuser">Team:</label>
+            <select wire:model="selectuser" 
+            class="form-control">
+                <option value="All">All</option>
+                
+                @foreach ($team as $key=>$person)
+                    <option value="{{$key}}">{{$person}}</option>
+                @endforeach
+            </select>
             <label>Lead Source </label>
             <select wire:model="lead_source_id" 
             class="form-control" 

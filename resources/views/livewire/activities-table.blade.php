@@ -38,8 +38,8 @@
             class="form-control">
                 <option value="All">All</option>
                 
-                @foreach ($team as $key=>$type)
-                    <option value="{{$key}}">{{$type}}</option>
+                @foreach ($team as $key=>$person)
+                    <option value="{{$key}}">{{$person}}</option>
                 @endforeach
             </select>
 

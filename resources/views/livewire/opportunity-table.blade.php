@@ -28,9 +28,17 @@
             <div wire:loading>
                 <div class="spinner-border text-danger"></div>
             </div>
-        
+            <label for="selectuser">Team:</label>
+            <select wire:model="selectuser" 
+            class="form-control">
+                <option value="All">All</option>
+                
+                @foreach ($team as $key=>$person)
+                    <option value="{{$key}}">{{$person}}</option>
+                @endforeach
+            </select>
+            <label for="filter">Status:</label>
             
-            Status: &nbsp;
             <select wire:model="filter" class="form-control">
                 @foreach ($filters as $key=>$value)
                     <option value="{{$key}}">{{$value}}</option>
