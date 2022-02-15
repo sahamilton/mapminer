@@ -224,7 +224,8 @@ class MgrDashboardController extends DashboardController
     private function _getDashBoardData()
     {
         $data['me'] = $this->person->findOrFail($this->manager->id);
-        $data['team'] = $data['me']
+        $data['manager'] = $this->person->findOrFail($this->manager->id);
+        $data['team'] = $data['manager']
             ->descendants()
             ->limitDepth(1)
             ->orderBy('lastname')
@@ -267,7 +268,7 @@ class MgrDashboardController extends DashboardController
         if ($data['branches']->count() > 1) { 
             $reports = \App\Report::publicReports()->get();
             $managers = $data['team'];
-          
+            
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
           
         } else {

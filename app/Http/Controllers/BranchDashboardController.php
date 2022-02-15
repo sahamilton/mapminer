@@ -166,7 +166,7 @@ class BranchDashboardController extends DashboardController
         
         $this->period = $this->activity->getPeriod();
 
-        $branch->load('manager.directReports','branchTeam');
+        $branch->load('manager.directReports', 'branchTeam');
 
         if ($branch->manager->count() > 1 
             && $branch->manager->where(
@@ -191,9 +191,9 @@ class BranchDashboardController extends DashboardController
         $this->myBranches = [$branch->id];
         
         $data = $this->_getDashBoardData();
-        
+        $data['manager'] =$this->manager; 
         $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
-     
+        
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
 
     }

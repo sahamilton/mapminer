@@ -20,10 +20,8 @@
 	@include('dashboards.partials._branchnewdashboardselector')
 
 @endif
-@if($data['team'])
 
-	@include('opportunities.partials._dashboardselect')
-@endif
+@include('opportunities.partials._dashboardselect')
 
 <div class="col-sm-12">
 	<table id ='responsive6'  class="display responsive no-wrap" width="100%">
@@ -90,7 +88,7 @@
 
 			</div>
 		@endif
-		@ray($data['charts'])
+		
 		
 		<div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
 			<div class="card-header">

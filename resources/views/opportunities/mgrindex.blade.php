@@ -2,7 +2,7 @@
 @section('content')
 @include('partials._newsflash')
 <div class="container">
-  <h2>{{$data['me']->fullName()}}'s  Dashboard</h2>
+  <h2>{{$data['me']->fullName()}}'s Dashboard</h2>
   <p><a href="{{route('manager.dashboard', $data['me'])}}"><i class="fas fa-sync"></i> Refresh</a></p>
 
   @if($data['team']->count()>1)
