@@ -6,7 +6,13 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$user->person->fullName()}}</strong></h2>
-			
+			<h4 class="panel-title pull-left">
+				<strong>
+					{{
+						$user->oracleMatch ? $user->oracleMatch->job_profile : ucwords($user->person->business_title)
+					}}
+				</strong>
+			</h4>
 		</div>
 		<div class="col-sm-3 panel-heading float-right">
 			@include('persons.partials._avatar')
@@ -21,7 +27,7 @@
 
 		@endif
 		<div class="panel-heading clearfix">
-			<h4 class="panel-title pull-left"><strong>{{ucwords($user->person->business_title)}}</strong></h4>
+			
 
 		</div>
 		

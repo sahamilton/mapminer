@@ -32,13 +32,24 @@
 			Login As {{$person->fullName()}}
 		</a>
 		@endCanImpersonate
+
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
+			<p><strong>Mapminer:</strong></p>
 			<ul style="list-style-type: none;">
 			@foreach ($user->roles as $role)
 				<li>{{$role->display_name}}</li>
 			@endforeach
 			</ul>
+			<div class="panel-heading clearfix">
+			<p><strong>Oracle:</strong>
+				
+					{{
+						$user->oracleMatch ? $user->oracleMatch->job_profile : ucwords($user->person->business_title)
+					}}
+			</p>
+
+		</div>
 		</div>
 	<div class="list-group">
 		<div class="list-group-item">
