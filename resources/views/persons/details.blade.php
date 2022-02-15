@@ -110,7 +110,8 @@
 						@endif
 						<li>Team:</li>
 						
-						@if($person->userdetails->oracleMatch && $person->userdetails->oracleMatch->teamMembers->count()>0)
+						@if($person->userdetails->oracleMatch 
+							&& $person->userdetails->oracleMatch->teamMembers->count()>0)
 							
 							@foreach ($person->userdetails->oraclematch->teamMembers as $reports)
 								

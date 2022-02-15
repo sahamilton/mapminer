@@ -23,7 +23,8 @@ class LeadTable extends Component
     public $withOps = 'All';
     //public $updateMode = false;
     public $setPeriod = 'All';
-    
+    public $selectuser = 'All';
+    public $team;
     public $type= 'Either';
     //public $activity_date;
     public $branch_id;
@@ -79,7 +80,10 @@ class LeadTable extends Component
             $this-> _setPeriod();
         } 
         $this->setPeriod = session('period')['period'];
-        
+        $this->team = Branch::with('branchTeam')
+            ->findOrFail($this->branch_id)
+            ->branchTeam->pluck('full_name', 'user_id')
+            ->toArray();
     }
     /**
      * [render description]
@@ -104,6 +108,11 @@ class LeadTable extends Component
                                 $q->whereNull('isCustomer');
                             }
                         );
+                    }
+                )
+                ->when(
+                    $this->selectuser != 'All', function ($q) {
+                        $q->where('addresses.user_id', $this->selectuser);
                     }
                 )
                 ->when(

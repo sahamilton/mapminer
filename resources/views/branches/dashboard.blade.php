@@ -16,11 +16,12 @@
 	@endforeach
 </div>
 @if(isset($data['mybranches']) && $data['mybranches']->count() >1)
-
+	
 	@include('dashboards.partials._branchnewdashboardselector')
 
 @endif
 @if($data['team'])
+
 	@include('opportunities.partials._dashboardselect')
 @endif
 

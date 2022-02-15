@@ -20,6 +20,7 @@ class OpportunityTable extends Component
     public $branch_id;
     public $filter = '0';
     public $myBranches;
+    public $selectuser = 'All';
 
 
     public function updatingSearch()
@@ -60,6 +61,10 @@ class OpportunityTable extends Component
         } else {
             $this->branch_id =$branch_id;
         }
+        $this->team = Branch::with('branchTeam')
+            ->findOrFail($this->branch_id)
+            ->branchTeam->pluck('full_name', 'user_id')
+            ->toArray();
         if (! session()->has('period')) {
             $this-> _setPeriod();
         } 
@@ -83,6 +88,11 @@ class OpportunityTable extends Component
                     ->when(
                         $this->search, function ($q) {
                             $q->search($this->search);
+                        }
+                    )
+                    ->when(
+                        $this->selectuser != 'All', function ($q) {
+                            $q->where('opportunities.user_id', $this->selectuser);
                         }
                     )
                     ->when(

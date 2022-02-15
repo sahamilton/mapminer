@@ -53,7 +53,7 @@ class ActivitiesTable extends Component
         if ($branch) {
             $this->branch_id = $branch;
         }
-        $this->team = auth()->user()->person->myTeam()->pluck('firstname', 'user_id')->toArray();
+        $this->team = Branch::with('branchTeam')->findOrFail($this->branch_id)->branchTeam->pluck('full_name', 'user_id')->toArray();
         @ray($this->team);
         if ($status) {
             $this->status = $status;

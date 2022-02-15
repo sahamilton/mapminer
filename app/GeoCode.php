@@ -104,15 +104,15 @@ trait Geocode
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-        
-        $sub = $this->selectSub('id', 'lat', 'lng')
+        // Removing sub query issue with PHP 7.4
+        /*$sub = $this->selectSub('id', 'lat', 'lng')
             ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
-            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
+            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);*/
 
         return $query
             ->select()//pick the columns you want here.
             ->selectRaw("{$this->_haversine($location)} AS distance")
-            ->mergeBindings($sub->getQuery())
+            //->mergeBindings($sub->getQuery())
             ->whereRaw("{$this->_haversine($location)} < $radius ")
             
             ->when(
