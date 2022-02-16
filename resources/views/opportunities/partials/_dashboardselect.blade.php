@@ -1,5 +1,6 @@
 
-@if($data['manager']->user_id != auth()->user()->id)
+@if($data['manager']->user_id != auth()->user()->id
+&& $data['manager']->id != auth()->user()->person->reports_to)
 
   @if(isset($data['manager']->reportsTo) 
     && $data['manager']->reports_to != auth()->user()->person->id)
