@@ -27,7 +27,7 @@ body.modal-open .activity_date, .followup_date {
                 
         <form method="post" action="{{route('activity.store')}}">
         @csrf
-        @include('activities.partials._activitynewform')
+        @include('activities.partials._activityformcomponent')
           @if($location->assignedToBranch->count()>0) 
             @if($location->assignedToBranch->count()>1)
               <label>Select Branch</label>

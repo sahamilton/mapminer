@@ -129,10 +129,12 @@ class AddressController extends BaseController
             ->branchesManaged()
             ->pluck('id')
             ->toArray();
-        
+        $activityTypes = ActivityType::pluck('activity', 'id')->toArray();
+
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-        
+        $contacts = $location->contacts->pluck('full_name', 'id')->toArray();
+
         $owned = $this->_checkIfOwned($address, $myBranches);
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
         $campaigns = Campaign::currentOpen($myBranches)->select('id', 'title')->get();
@@ -148,7 +150,9 @@ class AddressController extends BaseController
                 'notes', 
                 'owned', 
                 'fields', 
-                'campaigns'
+                'campaigns',
+                'contacts',
+                'activityTypes'
             )
         );
     }
@@ -185,7 +189,7 @@ class AddressController extends BaseController
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
         $data = $this->_setCustomer($request, $data);
         $address->update($data);
-        dd(request()->all(), $data, $address);
+  
         if (request()->filled('campaign') && request('campaign')!=0) {
             $address->campaigns()->attach(request('campaign'));
         } else {

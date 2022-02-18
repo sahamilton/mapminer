@@ -174,7 +174,7 @@
 
         @php $data['opportunities'] = $location->opportunities; 
 
-        $activityTypes = \App\ActivityType::all();
+        
         @endphp
         @include('addresses.partials._tabopportunities2')
 
