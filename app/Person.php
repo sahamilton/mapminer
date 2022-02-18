@@ -47,6 +47,16 @@ class Person extends NodeModel implements Auditable
     {
         return $this->firstname . ' ' . $this->lastname;
     }
+
+    public function getPhoneNumberAttribute()
+    {
+        $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);
+        if (preg_match('/(\d{3})(\d{3})(\d{4})/', $cleaned, $matches)) {
+            return "({$matches[1]}) {$matches[2]}-{$matches[3]}";
+        }
+        return $this->phone;
+        
+    }
     /**
      * [getParentIdName description]
      * 
