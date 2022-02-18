@@ -47,7 +47,8 @@
         "fico7489/laravel-pivot": "^3.0",
         "stechstudio/laravel-ssh-tunnel": "^3.1",
         "protonemedia/laravel-form-components": "^2.5",
-        "spatie/laravel-sluggable": "^2.6"
+        "spatie/laravel-sluggable": "^2.6",
+        "spatie/icalendar-generator": "^2.3"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
