@@ -9,7 +9,7 @@ You have the following activities coming up in the next seven days.
 Company      	| Follow Up Date  |
 | ------------- | --------:|
 @foreach ($activities as $activity)
-| <a href="{{route('address.show',$activity->relatesToAddress->id)}}">{{$activity->relatesToAddress->businessname}} </a>|  @if($activity->followup_date) {{$activity->followup_date->format('D jS M')}} @endif | 
+| <a href="{{route('address.show',$activity->relatesToAddress->id)}}">{{$activity->relatesToAddress->businessname}} </a>|  {{$activity->activity_date->format('D jS M')}} | 
 @endforeach
 
 @endcomponent
@@ -17,6 +17,8 @@ Company      	| Follow Up Date  |
 @component('mail::button', ['url' => route('activity.index'), 'color' => 'blue'])
         Check out your activities.
 @endcomponent
+
+You can click on the attached file to import these activities into Outlook.
 
 Sincerely
         

@@ -49,13 +49,16 @@ class WeeklyActivityReminder implements ShouldQueue
                     ->with('relatesToAddress')
                     ->orderBy('activity_date');
             }]
-        )->with('person')
+        )
+       
+        ->with('person')
         ->get();
-
+        
         foreach ($users as $user) {
+            
             Mail::to([['email'=>$user->email, 'name'=>$user->person->fullName()]])
 
-                ->queue(new SendWeeklyActivityReminder($user, $user->activities));
+                ->queue(new SendWeeklyActivityReminder($user));
         }
     }
 }

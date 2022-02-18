@@ -43,7 +43,7 @@ Route::group(
            //     Activities/
         Route::get('branch/{branch}/activity/{activitytype?}', ['as'=>'branch.activity', 'uses'=>'ActivityController@getBranchActivtiesByType']);
         Route::get('activity/{activity}/complete', ['as'=>'activity.complete', 'uses'=>'ActivityController@complete']);
-        
+        Route::get('ical/{user}', ['as'=>'ical', 'uses'=>'iCalController@getEventsICalObject']);
 
         Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityController@export']);
 
