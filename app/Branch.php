@@ -107,6 +107,18 @@ class Branch extends Model implements HasPresenter
 
     protected $guarded = [];
     public $errors;
+
+    public function getPhoneNumberAttribute()
+    {
+        $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);
+        if (preg_match('/(\d{3})(\d{3})(\d{4})/', $cleaned, $matches)) {
+            return "({$matches[1]}) {$matches[2]}-{$matches[3]}";
+        }
+        return $this->phone;
+        
+    }
+
+
     /**
      * [_setActivityFields Description D]
      *

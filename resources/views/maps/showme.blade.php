@@ -10,7 +10,8 @@
         height: 600px;
       
       }
-    </style><div style="margin-top:20px">
+    </style>
+    <div style="margin-top:20px">
    @include('maps.partials._form')
 
    @include('partials.advancedsearch')

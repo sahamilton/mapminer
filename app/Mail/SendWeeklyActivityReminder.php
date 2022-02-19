@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\User;
+use App\Ical;
 
 class SendWeeklyActivityReminder extends Mailable implements ShouldQueue
 {
@@ -13,16 +15,21 @@ class SendWeeklyActivityReminder extends Mailable implements ShouldQueue
 
     public $user;
     public $activities;
-
+    public $ical;
+    
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $activities)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->activities = $activities;
+        $this->activities = $user->activities;
+        $ical = new Ical;
+        $this->ical = $ical->createIcs($this->activities);
+               
+       
     }
 
     /**
@@ -32,7 +39,15 @@ class SendWeeklyActivityReminder extends Mailable implements ShouldQueue
      */
     public function build()
     {
+    
         return $this->markdown('emails.upcomingactivities')
-            ->subject('Upcoming Activities');
+            ->subject('Upcoming Activities')
+            ->attachData(
+                $this->ical->get(), 'upcomingactivities.ics', [
+                'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
+                ]
+            );
+
+            
     }
 }

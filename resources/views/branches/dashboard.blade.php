@@ -69,12 +69,25 @@
 	<div class="col-sm-10 offset-1">
 		<div class="card-header">
 			<h4>Activities Calendar</h4>
-			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">Upcoming Activities</a></p>
+			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">Upcoming Activities</a>
+
+			<i class="fa-solid fa-calendar-check txt-success"></i>
+			<a href="{{route('ical', auth()->user()->id)}}">
+				Download this weeks upcoming events to your Outlook calendar
+			</a>
+
+	</p>
 		</div>
 
 		<div id="calendar"  class="card-body" ></div>
 	</div>
-	
+	<p>
+		<i class="fa-solid fa-calendar-check txt-success"></i>
+		<a href="{{route('ical', auth()->user()->id)}}">
+			Download this weeks upcoming events to your Outlook calendar
+		</a>
+
+	</p>
 	<div class="row" style="margin-bottom:100px">
 		@if($data['team']->count()>1)
 			<div style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
