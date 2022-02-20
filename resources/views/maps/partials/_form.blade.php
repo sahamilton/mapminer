@@ -88,7 +88,7 @@ method = 'post' name="mapselector">
         type="text" 
         name="search" 
         title="Enter an address, zip code, or state code to search from"
-        value="{{isset($data['fulladdress']) ? str_replace('+','', str_replace('  ',' ',$data['fulladdress'])) : $user->person->fullAddress()}}"
+        value="{{isset($data['fulladdress']) ? str_replace('+','', str_replace('  ',' ',$data['fulladdress'])) : auth()->user()->person->fullAddress()}}"
         id="search"
         required
         style='width:300px'

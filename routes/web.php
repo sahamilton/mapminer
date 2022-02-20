@@ -384,6 +384,8 @@ Route::group(
             
             }
         );
+
+        Route::get('newmap', ['as'=>'newmaps', 'uses'=>'MapsController@new']);
         Route::get('mobile/{address}/show', ['as'=>'mobile.show', 'uses'=>'MobileController@show']);
         Route::get('mobile/{address}/check', ['as'=>'mobile.checkaddress','uses'=>'MobileController@check']);
         Route::get('mobile/searchaddress', ['as'=>'mobile.searchaddress', 'uses'=>'MobileController@searchaddress']);

@@ -56,7 +56,7 @@ class MapsController extends BaseController
 
         $filtered = $this->location->isFiltered(['companies'], ['vertical']);
 
-        return view()->make('maps.showme', compact( 'filtered', 'user'));
+        return view()->make('maps.showme', compact('filtered', 'user'));
     }
 
     public function getLocationsPosition($id)
@@ -162,8 +162,7 @@ class MapsController extends BaseController
      */
     public function findMyLeads(Person $person, $distance = null, $latlng = null)
     {
-        dd('Maps Controller 173', 'hrerere');
-
+        
         $location = $this->getLocationLatLng($latlng);
 
         $leads = $this->lead->myLeads([1, 2], $all = true);
@@ -171,5 +170,10 @@ class MapsController extends BaseController
         $result = $leads->nearby($location, $distance)->get();
 
         return response()->view('myleads.xml', compact('result'))->header('Content-Type', 'text/xml');
+    }
+
+    public function new()
+    {
+        return response()->view('maps.newmap');
     }
 }

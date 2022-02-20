@@ -80,8 +80,9 @@ class Project extends Model
     public function ownersProjects($id)
     {
         return $this->belongsToMany(Person::class, 'person_project', 'related_id')
-        ->withPivot('status')
-        ->where('person_id', '=', $id)->get();
+            ->withPivot('status')
+            ->where('person_id', '=', $id)
+            ->get();
     }
 
     public function relatedNotes()

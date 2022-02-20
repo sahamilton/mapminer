@@ -95,7 +95,7 @@ return [
     
     'mysql_data_loc'=>app_path() .'/storage/uploads/',
     
-    'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
+    'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyBtoJDOdhDa2HyIwlEihEIJUhfzd-6SNBE'),
     
     'location_limit'=>env('LOCATION_LIMIT', 2000),
 

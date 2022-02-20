@@ -83,13 +83,15 @@ class ProjectsController extends BaseController
         $statuses = $this->project->getStatusOptions;
 
         $project = $this->project
-        ->with('companies', 'owner', 'relatedNotes', 'source')
-        ->findOrFail($id);
+            ->with('companies', 'owner', 'relatedNotes', 'source')
+            ->findOrFail($id);
 
         $branches = $this->branch
-            ->whereHas('servicelines', function ($q) {
-                $q->whereIn('servicelines.id', $this->userServiceLines);
-            })
+            ->whereHas(
+                'servicelines', function ($q) {
+                    $q->whereIn('servicelines.id', $this->userServiceLines);
+                }
+            )
             ->nearby($project, '100')
             ->limit(5)
             ->get();
@@ -134,9 +136,11 @@ class ProjectsController extends BaseController
     public function transfer(ProjectTransferRequest $request)
     {
         $project = $this->project->findOrFail(request('project_id'));
-        $person = $this->person->whereHas('userdetails', function ($q) use ($request) {
-            $q->where('email', '=', request('email'));
-        })->first();
+        $person = $this->person->whereHas(
+            'userdetails', function ($q) use ($request) {
+                $q->where('email', '=', request('email'));
+            }
+        )->first();
         $transferor = $this->person->where('user_id', '=', auth()->user()->id)->first();
         $project->owner()->wherePivot('person_id', '=', auth()->user()->person->id)->detach();
         $project->owner()->attach($person, ['status'=>'Claimed', 'type'=>'project']);

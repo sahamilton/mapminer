@@ -26,6 +26,7 @@
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
   'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
   'manager-table' => 'App\\Http\\Livewire\\ManagerTable',
+  'maps-template' => 'App\\Http\\Livewire\\MapsTemplate',
   'nam-dashboard' => 'App\\Http\\Livewire\\Namdashboard',
   'namdetail' => 'App\\Http\\Livewire\\Namdetail',
   'nearby-locations' => 'App\\Http\\Livewire\\NearbyLocations',
