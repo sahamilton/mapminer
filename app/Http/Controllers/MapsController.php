@@ -174,6 +174,7 @@ class MapsController extends BaseController
 
     public function new()
     {
-        return response()->view('maps.newmap');
+  
+        return response()->view('maps.livewiremap');
     }
 }

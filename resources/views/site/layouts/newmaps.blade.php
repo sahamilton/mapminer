@@ -3,10 +3,15 @@
   <head>
     @include('site.layouts.partials._meta')
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="storelocator/assets/css/storelocator.css" />
     <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}" />
-
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	  <script src="https://kit.fontawesome.com/cf4e43f4c0.js" crossorigin="anonymous"></script>
+    <script src="storelocatorassets/js/libs/handlebars.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyC5GUlsLwW3cH2vuXeQfpagQgSOcnp8Nbo"></script>
+    <script src="storelocatorassets/js/plugins/storeLocator/jquery.storelocator.js"></script>
     @livewireStyles
   </head>
 
@@ -44,29 +49,8 @@
 
 	@livewireScripts
 	@include('partials.besnappy')
-	  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	  <script src="https://kit.fontawesome.com/cf4e43f4c0.js" crossorigin="anonymous"></script>
-    <script src="storelocatorassets/js/libs/handlebars.min.js"></script>
-    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyC5GUlsLwW3cH2vuXeQfpagQgSOcnp8Nbo"></script>
-    <script src="storelocatorassets/js/plugins/storeLocator/jquery.storelocator.js"></script>
-    <script>
-		$(function() {
-			$('#bh-sl-map-container').storeLocator({
-				
-				
-				autoGeocode: true,
-				slideMap : false,
-				defaultLoc: true,
-				defaultLat: '38.232470',
-				defaultLng : '-122.63',
-				pagination: true,
-				nameSearch: true,
-				
-
-			});
-		});
-	</script>
+	 
+    
 
 
 	</body>
