@@ -98,10 +98,10 @@
         'sortID'                     : 'bh-sl-sort',
         'taxonomyFiltersContainer'   : 'bh-sl-filters-container',
         // Templates
-        'infowindowTemplatePath'     : 'assets/js/plugins/storeLocator/templates/infowindow-description.html',
-        'listTemplatePath'           : 'assets/js/plugins/storeLocator/templates/location-list-description.html',
-        'KMLinfowindowTemplatePath'  : 'assets/js/plugins/storeLocator/templates/kml-infowindow-description.html',
-        'KMLlistTemplatePath'        : 'assets/js/plugins/storeLocator/templates/kml-location-list-description.html',
+        'infowindowTemplatePath'     : 'storelocatorassets/js/plugins/storeLocator/templates/infowindow-description.html',
+        'listTemplatePath'           : 'storelocatorassets/js/plugins/storeLocator/templates/location-list-description.html',
+        'KMLinfowindowTemplatePath'  : 'storelocatorassets/js/plugins/storeLocator/templates/kml-infowindow-description.html',
+        'KMLlistTemplatePath'        : 'storelocatorassets/js/plugins/storeLocator/templates/kml-location-list-description.html',
         'listTemplateID'             : null,
         'infowindowTemplateID'       : null,
         // Callbacks
@@ -1313,7 +1313,7 @@
 			this.writeDebug('listSetup',arguments);
 			// Define the location data
 			var locations = this._defineLocationData(marker, storeStart, page);
-
+			console.log(locations);
 			// Set up the list template with the location data
 			var listHtml = listTemplate(locations);
 			$('.' + this.settings.locationList + ' > ul').append(listHtml);
