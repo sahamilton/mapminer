@@ -32,8 +32,7 @@ class ICalController extends Controller
             ->whereBetween('activity_date',  [now()->startOfWeek(), now()->endOfWeek()])
             ->get();
         
-        
-        if ($calendar = $this->ical->createIcs($events)) {
+        if ($events->count() && $calendar = $this->ical->createIcs($events)) {
             return response(
                 $calendar->get(), 200, [
                    'Content-Type' => 'text/calendar; charset=utf-8',
