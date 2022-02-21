@@ -4,10 +4,16 @@
   <div class="bh-sl-form-container">
     <form id="bh-sl-user-location" 
       class="form-inline" 
-      method="post" action="#" role="form">
+      method="post" 
+      action="#" 
+      role="form">
       <div class="form-input form-group">
         <label for="bh-sl-address">Enter Address or Zip Code:</label>
-        <input class="form-control" type="text" id="bh-sl-address" name="bh-sl-address" />
+        <input class="form-control" 
+        wire:model="address"
+        type="text" 
+        id="bh-sl-address" 
+        name="bh-sl-address" />
       </div>
 
       <button id="bh-sl-submit" class="btn btn-primary" type="submit" role="button">Submit</button>

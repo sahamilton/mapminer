@@ -8,10 +8,11 @@ use Livewire\Component;
 class MapsTemplate extends Component
 {
     public Person $person;
-    public string $address;
+    public string $address ='';
     public $radius = 5;
     public $limit = 100;
     public $type= 'Leads';
+    public array $range=[5=>5,10=>10,25=>25];
     public $perPage=10;
     public function mount()
     {
@@ -23,12 +24,15 @@ class MapsTemplate extends Component
             'livewire.maps-template',
             [
                 'data'=>$this->_getData(),
-                'range'=>[5=>5,10=>10,25=>25],
+                
             ]
         );
     }
     public function _getData()
     {
-        return Address::nearby($this->person, $this->radius)->orderBy('distance')->get()->toJson();
+        return Address::nearby($this->person, $this->radius)
+        ->orderBy('distance')
+        ->get()
+        ->toJson();
     }
 }

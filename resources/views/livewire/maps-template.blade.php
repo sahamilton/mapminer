@@ -1,7 +1,7 @@
 <div>
     <h2>Search for {{$type}}</h2>
     {{$radius}} {{count(json_decode($data, true))}}
-
+Address is {{$address}}
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             <x-form-select 
