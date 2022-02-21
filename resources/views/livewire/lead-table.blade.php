@@ -181,9 +181,6 @@
 
                 <tr>
                     <td>
-                        <a href="{{route('address.show',$lead->id)}}">
-                            {{$lead->businessname}}
-                        </a>
                         @if(! $lead->isCustomer)
                             <a wire:click="changeCustomer({{ $lead->id }})"
                                 title= "Mark lead as customer">
