@@ -295,7 +295,7 @@ class MyLeadsController extends BaseController
      * 
      * @return [type]           [description]
      */
-    private function _cleanseInput(Request $request) : array|bool
+    private function _cleanseInput(Request $request) 
     {
         $address = $this->_getAddress($request); 
         $geocode = app('geocoder')->geocode($address)->get();
