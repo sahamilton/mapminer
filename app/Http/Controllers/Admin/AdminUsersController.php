@@ -538,20 +538,16 @@ class AdminUsersController extends BaseController
 
         $managerroles=['1','3','4','6','7','8','9','11','13','14'];
         
-        return $this->person->select(
-            \DB::raw("CONCAT(lastname ,', ',firstname) as fullname"),
-            'id'
-        )
+        $managers = $this->person
             ->with('userdetails')
             ->whereHas(
                 'userdetails.roles', function ($q) use ($managerroles) {
                     $q->whereIn('role_id', $managerroles);
                 }
             )
-            ->orderBy('fullname')
-
-            ->pluck('fullname', 'id')
-            ->toArray();
+            ->orderBy('lastname')
+            ->get();
+        return $managers->pluck('post_name', 'id')->toArray();
     }
 
 
