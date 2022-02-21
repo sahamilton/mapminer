@@ -47,7 +47,10 @@ class Person extends NodeModel implements Auditable
     {
         return $this->firstname . ' ' . $this->lastname;
     }
-
+    public function getPostNameAttribute()
+    {
+        return $this->lastname . ', ' . $this->firstname;
+    }
     public function getPhoneNumberAttribute()
     {
         $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);

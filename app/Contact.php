@@ -26,10 +26,7 @@ class Contact extends Model
     {
         return $this->belongsTo(Address::class, 'address_id', 'id');
     }
-    public function getFullNameAttribute()
-    {
-        return $this->firstname . ' ' . $this->lastname;
-    }
+    
     public function user()
     {
         return $this->belongsTo(User::class);

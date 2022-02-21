@@ -295,16 +295,16 @@ class MyLeadsController extends BaseController
      * 
      * @return [type]           [description]
      */
-    private function _cleanseInput(Request $request) : array
+    private function _cleanseInput(Request $request) : array|bool
     {
         $address = $this->_getAddress($request); 
         $geocode = app('geocoder')->geocode($address)->get();
-
-        if ($geocode->count()==0) {
+       
+        if ($geocode->count()===0) {
             
             return false;
         }
-        
+       
         $data['lead'] = $this->lead->getGeoCode($geocode);
        
         $data['lead'] = $this->_fillAddress($request, $data['lead']);
