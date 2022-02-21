@@ -23,7 +23,7 @@ class ICalController extends Controller
     *
     * @return void
     */
-    public function getEventsICalObject(User $user)
+    public function create(User $user)
     {
         
         $events = Activity::where('user_id', $user->id)
