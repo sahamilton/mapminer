@@ -65,4 +65,13 @@ class Contact extends Model
         return $this->phone;
         
     }
+
+    public function getCompleteNameAttribute()
+    {
+        if (! $this->fullname) {
+            return $this->firstname . ' ' .$this->lastname;
+        } else {
+            return $this->fullname;
+        }
+    }
 }

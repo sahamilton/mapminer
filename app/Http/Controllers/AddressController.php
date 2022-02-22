@@ -133,8 +133,8 @@ class AddressController extends BaseController
 
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-        $contacts = $location->contacts->pluck('full_name', 'id')->toArray();
-
+        $contacts = $location->contacts->pluck('complete_name', 'id')->toArray();
+       
         $owned = $this->_checkIfOwned($address, $myBranches);
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
         $campaigns = Campaign::currentOpen($myBranches)->select('id', 'title')->get();
