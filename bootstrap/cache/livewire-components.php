@@ -24,6 +24,7 @@
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
   'leadsource-show' => 'App\\Http\\Livewire\\LeadsourceShow',
   'location-contacts' => 'App\\Http\\Livewire\\LocationContacts',
+  'manage-team' => 'App\\Http\\Livewire\\ManageTeam',
   'manager-summary' => 'App\\Http\\Livewire\\ManagerSummary',
   'manager-table' => 'App\\Http\\Livewire\\ManagerTable',
   'maps-template' => 'App\\Http\\Livewire\\MapsTemplate',

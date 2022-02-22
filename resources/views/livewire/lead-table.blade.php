@@ -181,9 +181,6 @@
 
                 <tr>
                     <td>
-                        <a href="{{route('address.show',$lead->id)}}">
-                            {{$lead->businessname}}
-                        </a>
                         @if(! $lead->isCustomer)
                             <a wire:click="changeCustomer({{ $lead->id }})"
                                 title= "Mark lead as customer">
@@ -195,6 +192,10 @@
                                 <i class="far fa-times-circle text-danger"></i>
                             </a>
                         @endif
+                        <a href="{{route('address.show',$lead->id)}}">
+                            {{$lead->businessname}}
+                        </a>
+                        
                         
                     </td>
 

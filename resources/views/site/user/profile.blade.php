@@ -102,7 +102,7 @@
 			</div>
 
 			@endif
-			@if(isset($user->person->reportsTo->id))
+		
 				<div class="list-group-item">
 					<div class="row">
 
@@ -133,6 +133,7 @@
 							
 						@endif
 						<li>Team:</li>
+					
 						@if($user->person->directReports->count()>0)
 							
 							@foreach ($user->person->directReports as $reports)
@@ -152,68 +153,65 @@
 								</li>
 							
 							@endforeach
-								
+
 						
+					@endif
+					@if($user->oracleMatch && $user->oracleMatch->teamMembers->count())
 
-					@endif
-					@if(isset($addToMapminer))
-						@foreach($addToMapminer as $teammember)
-							<li><i class="far fa-times-circle text-danger"
-							title="Not in Mapminer"></i>
-							<a href="{{route('oracle.useradd', $teammember->id)}}"
-							title="Add to Mapminer">
-							{{$teammember->fullName()}} <em>{{$teammember->job_profile}}</em></a>
-						@endforeach
-					@endif
-					</ul>
-				</div>
-				<div class="col-sm-8">
-					@if(isset($user->person->directReports->id))
-						@include('site.user._teammap')
+						<a href="{{route('team.manage', $user->id)}}" class="btn btn-info">Manage Team</a>
+						
 						@endif
-					</div>
-					<div style="clear:both"></div> 
-				</div>
-
+				</ul>
+				
+					
 			</div>
-			@endif
+			<div class="col-sm-8">
+				@if(isset($user->person->directReports->id))
+					@include('site.user._teammap')
+					@endif
+				</div>
+				<div style="clear:both"></div> 
+			</div>
+
+		</div>
+		
 				
 			
-				<div class="list-group-item">
-					<div class="row">
-					<div class="list-group-item-text col-sm-4">
-						<p><strong>Branches Serviced</strong></p>
-						@if($user->person->branchesServiced->count()==0)
-						<div class="alert alert-warning">
-							<p>{{$user->person->firstname}} is not assigned to any branches</p>
-						</div>
-						@else
-
-					<ul style="list-style-type: none;">
-						@foreach ($user->person->branchesServiced as $branch)
-							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> </li>
-						@endforeach
-					</ul>
-
-					@endif
-					@if($user->id == auth()->user()->id)
+			<div class="list-group-item">
+				<div class="row">
+				<div class="list-group-item-text col-sm-4">
+					<p><strong>Branches Serviced</strong></p>
+					@if($user->person->branchesServiced->count()==0)
 					<div class="alert alert-warning">
-					<p class="">If your branch associations are incorrect or incomplete you should contact <a href="mailto: {{config('mapminer.system_contact')}}">
-							<i class="far fa-envelope" aria-hidden="true"> </i>
-							 {{config('mapminer.system_contact')}}
-						</a>.</p> 
+						<p>{{$user->person->firstname}} is not assigned to any branches</p>
 					</div>
-					@endif
+					@else
+
+				<ul style="list-style-type: none;">
+					@foreach ($user->person->branchesServiced as $branch)
+						<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> </li>
+					@endforeach
+				</ul>
+
+				@endif
+				@if($user->id == auth()->user()->id)
+				<div class="alert alert-warning">
+				<p class="">If your branch associations are incorrect or incomplete you should contact <a href="mailto: {{config('mapminer.system_contact')}}">
+						<i class="far fa-envelope" aria-hidden="true"> </i>
+						 {{config('mapminer.system_contact')}}
+					</a>.</p> 
 				</div>
-				<div class="col-sm-8">
-					@include('site.user._branchmap')
-				</div>
-				<div style="clear:both"></div>  
-				</div>
-				
-						
-							 
-						
+				@endif
+			</div>
+			<div class="col-sm-8">
+				@include('site.user._branchmap')
+			</div>
+			<div style="clear:both"></div>  
+			</div>
+			
+					
+						 
+					
 							
 				
 				</div>

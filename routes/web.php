@@ -43,7 +43,7 @@ Route::group(
            //     Activities/
         Route::get('branch/{branch}/activity/{activitytype?}', ['as'=>'branch.activity', 'uses'=>'ActivityController@getBranchActivtiesByType']);
         Route::get('activity/{activity}/complete', ['as'=>'activity.complete', 'uses'=>'ActivityController@complete']);
-        Route::get('ical/{user}', ['as'=>'ical', 'uses'=>'iCalController@getEventsICalObject']);
+        Route::get('ical/{user}', ['as'=>'ical', 'uses'=>'iCalController@create']);
 
         Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityController@export']);
 
@@ -313,6 +313,9 @@ Route::group(
         //   Search
         //   
         //   Team
+        //   
+        //   
+        Route::get('team/manage/{user?}', ['as'=>'team.manage', 'uses'=>'TeamController@index']);
         Route::get('team/{team}/export', ['as'=>'team.export', 'uses'=>'TeamActivityController@export']);
         Route::resource('team', 'TeamActivityController');
         

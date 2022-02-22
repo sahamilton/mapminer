@@ -98,7 +98,7 @@
 		{!! $errors->first('phone', '<span class="help-inline">:message</span>') !!}
 	</div>
 </div>
-<!-- Bsuiness Title -->
+<!-- Business Title -->
 <div class="form-group {!! $errors->has('business_title') ? 'has-error' : '' !!}">
 	<label class="col-md-3 control-label" for="address">Business Title</label>
 	<div class="input-group input-group-lg">
@@ -123,7 +123,7 @@
 			@else
 				<option selected value=''>N/A</option>
 			@endif
-				
+			
             @foreach ($managers as $key=>$value))
             <option 
                 @if(isset($user->person->reports_to) && $user->person->reports_to == $key)

@@ -25,7 +25,7 @@ class ICalController extends Controller
     *
     * @return void
     */
-    public function getEventsICalObject(User $user, $type=null)
+    public function create(User $user)
     {
         
         $events = Activity::where('user_id', $user->id)
@@ -34,26 +34,13 @@ class ICalController extends Controller
             ->whereBetween('activity_date',  [now(), now()->addDays(2)])
             ->get();
         
-        
-        if ($calendar = $this->ical->createIcs($events)) {
-           
-            switch($type) {
-            case 'email':
-                
-                Mail::to([['email'=>$user->email, 'name'=>$user->fullName()]])
-                    ->send(new SendActivityIcal($calendar, $events));
-                break;
-            
-            default:
-                return response(
-                    $calendar->get(), 200, [
-                       'Content-Type' => 'text/calendar; charset=utf-8',
-                       'Content-Disposition' => 'attachment; filename="Upcoming activities.ics"',
-                    ]
-                );
-                break;
-            }
-            return redirect()->back()->withMessage("Your iCal file is available");
+        if ($events->count() && $calendar = $this->ical->createIcs($events)) {
+            return response(
+                $calendar->get(), 200, [
+                   'Content-Type' => 'text/calendar; charset=utf-8',
+                   'Content-Disposition' => 'attachment; filename="Upcoming activities.ics"',
+                ]
+            );
             //filename = user_id_date_to_
         } else {
             return redirect()->back()->withMessage("No upcoming activities this week");
