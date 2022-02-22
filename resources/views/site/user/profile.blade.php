@@ -156,7 +156,7 @@
 
 						
 					@endif
-					@if($user->oraclematch->teamMembers->count())
+					@if($user->oracleMatch && $user->oracleMatch->teamMembers->count())
 
 						<a href="{{route('team.manage', $user->id)}}" class="btn btn-info">Manage Team</a>
 						
