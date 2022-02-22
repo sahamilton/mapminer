@@ -27,7 +27,7 @@
         
             <tr>
                 <td>
-                    {{$contact->fullname}}
+                    {{$contact->complete_name}}
                     @if($owned)
                         @if($location->primaryContact->count() && $location->primaryContact->first()->id == $contact->id)
                         <i class="fas fa-user-check text-danger" title="primary contact"></i>

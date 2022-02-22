@@ -42,7 +42,7 @@
                     @endif
                 </td>
                 <td>@foreach($activity->relatedContact as $contact)
-                    <li>{{$contact->fullname}}</li>
+                    <li>{{$contact->complete_name}}</li>
                     @endforeach
                     
                 </td>
