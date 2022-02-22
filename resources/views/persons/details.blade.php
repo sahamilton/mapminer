@@ -131,19 +131,19 @@
 										<i class="far fa-check-circle text-success"title="In Oracle"></i>
 										<a href="{{route('person.details',$reports->mapminerUser->person->id)}}">{{$reports->fullName()}}
 										</a>
-									@else
-										<i class="far fa-times-circle text-danger"
-										title="Not in Mapminer"></i>
-										<a href="{{route('oracle.useradd', $reports->id)}}"
-										title="Add to Mapminer">
-										{{$reports->fullName()}} <em>{{$reports->job_profile}}</em>
-									</a>
 									@endif
+									
+									
 									
 									
 								</li>
 							
 							@endforeach
+							@if(isset($addToMapminer))
+
+								<a href="{{route('team.manage', $person->user_id)}}" class="btn btn-info">Manage Team</a>
+										
+							@endif
 						@endif
 						
 						
