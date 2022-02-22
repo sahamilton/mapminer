@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\User;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -11,9 +11,12 @@ class TeamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user = null)
+    public function index(User $user = null)
     {
-        
+        if (! $user) {
+            $user = auth()->user();
+        }
+        $user = $this->_getValidUser($user);
         return response()->view('managers.manageteam', compact('user'));
     }
 
@@ -81,5 +84,18 @@ class TeamController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function _getValidUser(User $user)
+    {
+        $myTeam = auth()->user()->person->descendants()->pluck('user_id')->toArray();
+        if ($user && auth()->user()->hasRole(['admin'])) {
+            return $user->load('person.reportsTo');
+        } elseif (in_array($user->id, $myTeam)) {
+            return $user->load('person.reportsTo');   
+        } else {
+            return auth()->user()
+                ->load('person.reportsTo');
+        }
     }
 }

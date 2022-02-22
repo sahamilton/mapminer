@@ -3,9 +3,12 @@
     <h4>Based on Oracle HRMS</h4>
 
     <p>
-        <a href="{{route('team.manage', $user->person->reportsTo->user_id)}}">
-            Reports to {{$user->person->reportsTo->full_name}}
+        <a href=""
+            wire:click.prevent = changeUser({{$user->person->reportsTo->user_id}})
+             title= "See {{$user->person->reportsTo->full_name}}'s team">
+             Reports to {{$user->person->reportsTo->full_name}}
         </a>
+        
     </p>
     <div class="row mb4" style="padding-bottom: 10px">
         <div class="col form-inline">
@@ -31,6 +34,7 @@
                     @include('includes._sort-icon', ['field' => 'last_name'])
                 </a>
             </th>
+            <th># Reports</th>
             <th>Mapminer Role</th>
             <th>Mapminer Branches</th>
             <th>
@@ -62,7 +66,8 @@
                         class="fa-solid fa-circle-check  text-success"
                         title= "{{$member->fullName()}} is registered in Mapminer">
                     </i>
-                    <a href="{{route('team.manage', $member->mapminerUser->id)}}"
+                    <a href=""
+                        wire:click.prevent = changeUser({{$member->mapminerUser->id}})
                          title= "See {{$member->fullName()}}'s team">
                         {{$member->first_name}}
                     </a>
@@ -79,8 +84,9 @@
                 <td>
                     @if($member->mapminerUser)
                     
-                    <a href="{{route('team.manage', $member->mapminerUser->id)}}"
-                        title= "See {{$member->fullName()}}'s team">
+                    <a href=""
+                        wire:click.prevent = changeUser({{$member->mapminerUser->id}})
+                         title= "See {{$member->fullName()}}'s team">
                         {{$member->last_name}}
                     </a>
                     @else
@@ -89,6 +95,7 @@
                         
                     @endif
                 </td>
+                <td>{{$member->teamMembers->count()}}</td>
                 <td>
                     {{$member->mapminerUser ? $member->mapminerUser->roles->first()->display_name : ''}}
                 </td>

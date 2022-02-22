@@ -11,7 +11,7 @@ class ManageTeam extends Component
 {
     
     use WithPagination;
-    
+    public $user_id;
     public User $user;
     public $perPage = 10;
     public $sortField = 'last_name';
@@ -39,12 +39,9 @@ class ManageTeam extends Component
     }
     public function mount($user=null)
     {
-        if ($user && auth()->user()->hasRole(['admin'])) {
-            $this->user = $user->load('person.reportsTo');
-        } else {
-            $this->user = auth()->user()->load('person.reportsTo');
-        }
-      
+        
+        $this->user = $user;
+        
     }
 
     public function render()
@@ -65,5 +62,23 @@ class ManageTeam extends Component
 
             ]
         );
+    }
+
+    public function changeUser(User $user)
+    {
+        $this->user = $this->_validateUser($user);
+    }
+
+    private function _validateUser(User $user)
+    {
+        $myTeam = auth()->user()->person->descendants()->pluck('user_id')->toArray();
+        if ($user && auth()->user()->hasRole(['admin'])) {
+            return $user->load('person.reportsTo');
+        } elseif (in_array($user->id, $myTeam)) {
+            return $user->load('person.reportsTo');   
+        } else {
+            return auth()->user()
+                ->load('person.reportsTo');
+        }
     }
 }
