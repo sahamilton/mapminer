@@ -23,7 +23,8 @@
         <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 <!-- FontAwesome -->        
-        <script src="https://kit.fontawesome.com/cf4e43f4c0.js" crossorigin="anonymous"></script>       
+        <script src="https://kit.fontawesome.com/3ee85bf938.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/3ee85bf938.js" crossorigin="anonymous"></script>       
         <!-- Javascript
         =====================================================- -->
 
