@@ -86,8 +86,90 @@ class AddressController extends BaseController
     public function show(Address $address)
     {
         
+        $view = 'new';
+        switch ($view) {
+            case 'old':
+                $location = $address->load(
+            'contacts.relatedActivities',
+            'primaryContact',
+            'activities.type',
+            'activities.relatedContact',
+            'activities.user.person',
+            'company.salesnotes',
+            'opportunities',
+            'industryVertical',
+            'relatedNotes',
+            'currentcampaigns',
+            'orders.branch',
+            'watchedBy.person',
+            'ranking',
+            'leadsource',
+            'createdBy',
+            'assignedToBranch',
+            'duplicates'
+        );
         
-        $location = $address->load(
+        if ($address->addressable_type) {
+            $location->load($address->addressable_type);
+        }
+       
+        if ($location->lat && $location->lng) {
+
+            $branches = $this->branch->nearby($location, 25, 5)->orderBy('distance')->get();
+            
+            $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 25, 5)->get();
+
+        } else {
+            $people = [];
+            $branches = [];
+        }
+      
+        $rankingstatuses = $this->address->getStatusOptions;
+        $myBranches = $this->person
+            ->where('user_id', auth()->user()->id)
+            ->first()
+            ->branchesManaged()
+            ->pluck('id')
+            ->toArray();
+        $activityTypes = ActivityType::pluck('activity', 'id')->toArray();
+
+        $ranked = $this->address->getMyRanking($location->ranking);
+        $notes = $this->notes->locationNotes($location->id)->get();
+        $contacts = $location->contacts->pluck('complete_name', 'id')->toArray();
+       
+        $owned = $this->_checkIfOwned($address, $myBranches);
+        $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
+        $campaigns = Campaign::currentOpen($myBranches)->select('id', 'title')->get();
+   
+        return response()->view(
+            'addresses.oldshow', compact(
+                'location', 
+                'branches', 
+                'rankingstatuses', 
+                'people', 
+                'myBranches', 
+                'ranked', 
+                'notes', 
+                'owned', 
+                'fields', 
+                'campaigns',
+                'contacts',
+                'activityTypes'
+            )
+        );
+        
+
+
+            break;
+
+            case 'new':
+
+                return response()->view('addresses.show', compact('address'));
+            break;
+
+
+        }
+       /* $location = $address->load(
             'contacts.relatedActivities',
             'primaryContact',
             'activities.type',
@@ -154,7 +236,8 @@ class AddressController extends BaseController
                 'contacts',
                 'activityTypes'
             )
-        );
+        );*/
+        
     }
 
     /**
