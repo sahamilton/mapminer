@@ -139,7 +139,7 @@
 							@foreach ($user->person->directReports as $reports)
 						
 								<li>
-									<a href="{{route('person.details',$reports->id)}}">
+									<a href="{{route('user.show',$reports->user_id)}}">
 										@if(! $reports->userdetails->oracleMatch)
 											<i class="fas fa-times-circle text-danger"
 											title="No match with Oracle"></i>
@@ -181,14 +181,14 @@
 				<div class="row">
 				<div class="list-group-item-text col-sm-4">
 					<p><strong>Branches Serviced</strong></p>
-					@if($user->person->branchesServiced->count()==0)
+					@if(! $branchesServiced)
 					<div class="alert alert-warning">
 						<p>{{$user->person->firstname}} is not assigned to any branches</p>
 					</div>
 					@else
 
 				<ul style="list-style-type: none;">
-					@foreach ($user->person->branchesServiced as $branch)
+					@foreach ($branchesServiced as $branch)
 						<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> </li>
 					@endforeach
 				</ul>
@@ -204,7 +204,9 @@
 				@endif
 			</div>
 			<div class="col-sm-8">
+				
 				@include('site.user._branchmap')
+
 			</div>
 			<div style="clear:both"></div>  
 			</div>

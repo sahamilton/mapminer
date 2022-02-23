@@ -27,46 +27,52 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
+        
         if (auth()->user()->hasRole(['admin']) 
-            or auth()->user()->id== $user->id
+            or auth()->user()->id == $user->id
+            or in_array($user->id, auth()->user()->person->directReports->pluck('user_id')->toArray())
         ) {
 
     
             $user->load(
                 'person',
-                'oracleMatch.teamMembers',
                 'serviceline',
-                'person.branchesServiced',
                 'person.directReports.userdetails.oracleMatch',
                 'manager',
                 'person.industryfocus',
                 'roles',
                 'scheduledReports' 
             )->loadCount('usage');
-         
-            if ($user->person->has('branchesServiced')) {
-                $branchmarkers = $user->person->branchesServiced->toJson();
+            $branchmarkers = null;
+            $branchesServiced =null;
+            if (count(array_intersect($user->currentRoleIds(), [3,6,7,9,14,17]))>0) {
+                $branchesServiced = Branch::whereIn('id', $user->person->getMyBranches())->get();
+                
+                if ($branchesServiced->count()) {
+                    $branchmarkers = $branchesServiced->toJson();
+                }
             }
             if ($user->person->has('directReports')) {
                 $salesrepmarkers = $user->person->jsonify($user->person->directReports);
             }
 
             if ($user->person->lat && $user->person->lng) {
-                $branches = $this->branch->nearby($user->person, 100, 5)->get();
+
+                $branches = $this->branch->nearby($user->person, 100, 5)->orderBy('distance')->get();
+                if (! $branchmarkers) {
+                    $branchmarkers = $branches->toJson();
+
+                }
             }
-            if ($user->oracleMatch) {
-                $addToMapminer = $user->oracleMatch->teamMembers->whereNull('mapminerUser');
-            } else {
-                $addToMapminer = null;
-            }
+            
             
       
             return response()->view(
                 'site.user.profile', 
-                compact('user', 'branchmarkers', 'salesrepmarkers', 'branches', 'addToMapminer')
+                compact('user', 'branchmarkers', 'salesrepmarkers', 'branches',  'branchesServiced')
             );
         } else {
-            return redirect()->back()->withError('You are not authorized to view that profile');
+            return redirect()->back()->withWarning('You are not authorized to view that profile');
         }
     }
     /**

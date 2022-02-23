@@ -1,5 +1,4 @@
-
-@if($user->person->lat && $user->person->lng)
+@if($branchmarkers && $user->person->lat && $user->person->lng)
 <div id="branchmap" class="float-right" style="height:400px;width:600px;border:red solid 1px"/></div> 
  
 <script type="text/javascript">

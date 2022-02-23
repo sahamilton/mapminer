@@ -140,7 +140,7 @@ class BranchDashboardController extends DashboardController
      */
     public function selectBranch(Request $request)
     {
-      
+        
         return redirect()->route('branchdashboard.show', request('branch'));
 
     }
@@ -179,6 +179,7 @@ class BranchDashboardController extends DashboardController
         } else {
             $this->manager = $branch->manager->first();
         } 
+       
         if (! $this->manager) {
             return redirect()->route('dashboard.index')
                 ->withWarning(

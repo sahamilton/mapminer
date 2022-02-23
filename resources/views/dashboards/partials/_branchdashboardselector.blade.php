@@ -1,6 +1,5 @@
 <div class="form">
-
-	<form 
+<form 
 
 	class="inline"
 	 method="post" 
