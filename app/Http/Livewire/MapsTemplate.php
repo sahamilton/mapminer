@@ -14,6 +14,11 @@ class MapsTemplate extends Component
     public $type= 'Leads';
     public array $range=[5=>5,10=>10,25=>25];
     public $perPage=10;
+    public function updatingRadius()
+    {
+        $this->dispatchBrowserEvent('contentChanged');
+    }
+    
     public function mount()
     {
         $this->person = auth()->user()->person;
@@ -23,7 +28,7 @@ class MapsTemplate extends Component
         return view(
             'livewire.maps-template',
             [
-                'data'=>$this->_getData(),
+                
                 
             ]
         );
