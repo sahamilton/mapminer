@@ -102,5 +102,5 @@ return [
     'default_lat'=>'39.8282',
     'default_lng'=>'-98.5795',
 
-
+    'fontawesome'=>env('FONTAWESONME_KIT','cf4e43f4c0'),
 ];
