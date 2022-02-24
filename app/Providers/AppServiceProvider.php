@@ -2,23 +2,29 @@
 
 namespace App\Providers;
 
-use App\Observers\PersonObserver;
-use App\Observers\BranchObserver;
 use App\Observers\ActivityObserver;
+use App\Observers\BranchObserver;
+use App\Observers\FeedbackObserver;
 use App\Observers\OpportunityObserver;
+use App\Observers\PersonObserver;
 use App\Observers\UserObserver;
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Person;
+
+
 use App\Activity;
 use App\Branch;
+use App\Feedback;
+use App\Lead;
 use App\Location;
 use App\Opportunity;
+use App\Person;
 use App\Project;
-use App\Lead;
+
 use App\User;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,18 +39,21 @@ class AppServiceProvider extends ServiceProvider
 
 
         Schema::defaultStringLength(191);
+
         Activity::observe(ActivityObserver::class);
-        Person::observe(PersonObserver::class);
         Branch::observe(BranchObserver::class);
-        User::observe(UserObserver::class);
+        Feedback::observe(FeedbackObserver::class);
         Opportunity::observe(OpportunityObserver::class);
+        Person::observe(PersonObserver::class);
+        User::observe(UserObserver::class);
+        
         Relation::morphMap(
             [
             'branch'  => Branch::class,
-            'location'  => Location::class,
-            'project' =>Project::class,
             'lead' => Lead::class,
+            'location'  => Location::class,
             'person'=>Person::class,
+            'project' =>Project::class,
             ]
         );
         Collection::macro(

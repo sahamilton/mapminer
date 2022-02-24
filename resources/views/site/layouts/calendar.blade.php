@@ -12,7 +12,7 @@
 	
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/r-2.2.2/datatables.min.css"/>
 	<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />    
-	<script src="https://kit.fontawesome.com/3ee85bf938.js" crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/{{config('mapminer.fontawesome')}}.js" crossorigin="anonymous"></script>
 	<link href="{{asset('assets/css/summernote.css')}}" rel="stylesheet" />
 	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" />  
 	<link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}" />
