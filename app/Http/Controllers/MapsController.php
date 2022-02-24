@@ -172,7 +172,7 @@ class MapsController extends BaseController
         return response()->view('myleads.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
 
-    public function new()
+    public function livewire()
     {
   
         return response()->view('maps.livewiremap');

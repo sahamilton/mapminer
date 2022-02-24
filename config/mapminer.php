@@ -95,12 +95,12 @@ return [
     
     'mysql_data_loc'=>app_path() .'/storage/uploads/',
     
-    'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyBtoJDOdhDa2HyIwlEihEIJUhfzd-6SNBE'),
+    'api_key' => env('GOOGLE_MAPS_API_KEY'),
     
     'location_limit'=>env('LOCATION_LIMIT', 2000),
 
     'default_lat'=>'39.8282',
     'default_lng'=>'-98.5795',
 
-    'fontawesome'=>env('FONTAWESONME_KIT','cf4e43f4c0'),
+    'fontawesome'=>env('FONTAWESONME_KIT'),
 ];

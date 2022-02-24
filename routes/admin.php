@@ -48,11 +48,12 @@ use Illuminate\Http\Request;
         //   Database Backups
         Route::resource('database', 'DatabaseBackupManagerController');
 
-        
+        // Maps with Livewire
+
+        Route::get('maps', ['as'=>'livewiremaps', 'uses'=>'MapsController@livewire']);
 
         //   User Management
 
-        Route::get('cleanse', ['as'=>'users.cleanse', 'uses'=>'Admin\AdminUsersController@cleanse']);
         
         Route::get('users/import', ['as'=>'users.importfile', 'uses'=>'Imports\UsersImportController@getFile']);
         Route::get('usersimport', ['as'=>'usersimport.index', 'uses'=>'Imports\UsersImportController@index']);
