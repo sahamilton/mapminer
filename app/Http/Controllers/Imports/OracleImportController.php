@@ -58,7 +58,7 @@ class OracleImportController extends ImportController
         $data['route'] = 'oracle.mapfields';
         $fields = $this->getFileFields($data);
         $columns = $this->import->getTableColumns($data['table']);
-        dd($data);
+
         $skip = ['id','deleted_at','created_at','updated_at',];
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'title', 'requiredFields'));
     }
