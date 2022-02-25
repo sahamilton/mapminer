@@ -29,26 +29,13 @@
 	enctype="multipart/form-data" 
 	name = "importOracle">
     @csrf
-    <div class="form-group{{ $errors->has('truncate') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label" for="truncate" >Import Type</label>
-        <div class="input-group input-group-lg ">
-            <select name="type"
-            class="form-control
-            col-md-4 " >
-                @foreach ($types as $type)
-                    <option value="{{$type}}">{{ucwords($type)}}</option>
 
-                @endforeach
-
-            </select>
-            
-            <span class="help-block">
-                <strong>{{ $errors->has('upload') ? $errors->first('upload') : ''}}</strong>
-            </span>
-        </div>
-
-    </div>
-    <x-form-input class="input-group input-group-lg" type='number' step='all' label="Offset: " name='offset' value=3 />
+    <x-form-select 
+        class="input-group input-group-lg" 
+        name="type" 
+        :options="$types" 
+        label="Import Type:" /> 
+    <x-form-input class="input-group input-group-lg" type='number' step='all' label="Offset: " name='offset' value=2 />
    
 <div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label" for="field" >Upload File Location</label>
