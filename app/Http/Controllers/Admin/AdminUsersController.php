@@ -129,49 +129,53 @@ class AdminUsersController extends BaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
         // All roles
+        if(! request()->has('view') || request('view') != 'new') {
+            $roles = $this->role->orderBy('display_name')->get();
+
+            // Get all the available permissions
+            $permissions = $this->permission->orderBy('display_name')->get();
+
+            // Selected groups
+            $selectedRoles = [];
+
+            // Selected permissions
+            $selectedPermissions = [];
+
+            // Title
+            $title = 'Create New User';
+
+            // Mode
+            $mode = 'create';
+
+            // Service lines
+
+            $servicelines = auth()->user()->currentServiceLineIds();
+            // get all branches of this serviceline
+           
+            $branches =$this->branch->wherehas(
+                'servicelines', function ($q) use ($servicelines) {
+                    $q->whereIn('servicelines.id', array_keys($servicelines));
+                }
+            )
+            ->pluck('branchname', 'id')
+            ->toArray();
+
+            $branches[0] = 'none';
+                ksort($branches);
+            $verticals = $this->searchfilter->industrysegments();
+
+
+            $managers = $this->_getManagerList();
+            // Show the page
+
+            return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals', 'selectedRoles', 'selectedPermissions', 'title', 'mode', 'managers', 'servicelines', 'branches'));
+        } else {
+            return response()->view('admin.users.newcreate');
+        }
         
-        $roles = $this->role->orderBy('display_name')->get();
-
-        // Get all the available permissions
-        $permissions = $this->permission->orderBy('display_name')->get();
-
-        // Selected groups
-        $selectedRoles = [];
-
-        // Selected permissions
-        $selectedPermissions = [];
-
-        // Title
-        $title = 'Create New User';
-
-        // Mode
-        $mode = 'create';
-
-        // Service lines
-
-        $servicelines = auth()->user()->currentServiceLineIds();
-        // get all branches of this serviceline
-       
-        $branches =$this->branch->wherehas(
-            'servicelines', function ($q) use ($servicelines) {
-                $q->whereIn('servicelines.id', array_keys($servicelines));
-            }
-        )
-        ->pluck('branchname', 'id')
-        ->toArray();
-
-        $branches[0] = 'none';
-            ksort($branches);
-        $verticals = $this->searchfilter->industrysegments();
-
-
-        $managers = $this->_getManagerList();
-        // Show the page
-
-        return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals', 'selectedRoles', 'selectedPermissions', 'title', 'mode', 'managers', 'servicelines', 'branches'));
     }
 
     /**

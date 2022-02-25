@@ -48,6 +48,7 @@
         </div>
 
     </div>
+    <x-form-input class="input-group input-group-lg" type='number' step='all' label="Offset: " name='offset' value=3 />
    
 <div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label" for="field" >Upload File Location</label>

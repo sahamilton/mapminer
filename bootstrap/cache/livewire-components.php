@@ -39,6 +39,8 @@
   'oracle-table' => 'App\\Http\\Livewire\\OracleTable',
   'oracle-verify' => 'App\\Http\\Livewire\\OracleVerify',
   'sales-org' => 'App\\Http\\Livewire\\SalesOrg',
+  'user-autocomplete' => 'App\\Http\\Livewire\\UserAutocomplete',
+  'user-create' => 'App\\Http\\Livewire\\UserCreate',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',
   'usertrack-detail' => 'App\\Http\\Livewire\\UsertrackDetail',

@@ -46,6 +46,11 @@ class Oracle extends Model
 
     public $dates = ['current_hire_date'];
 
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     public function source()
     {
         return $this->belongsTo(OracleSource::class);

@@ -31,6 +31,7 @@ class OracleImportController extends ImportController
     public function getFile(Request $request)
     {
 
+        
         $requiredFields = $this->oracle->requiredfields;
         $types = $this->import->types;
 
@@ -53,11 +54,11 @@ class OracleImportController extends ImportController
         $requiredFields = $this->oracle->requiredfields;
         $data['type'] = request('type');
         $data['table']='oracle';
-        $data['skip'] = 2;
+        $data['skip'] = request('offset');
         $data['route'] = 'oracle.mapfields';
         $fields = $this->getFileFields($data);
         $columns = $this->import->getTableColumns($data['table']);
-    
+        dd($data);
         $skip = ['id','deleted_at','created_at','updated_at',];
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'title', 'requiredFields'));
     }
