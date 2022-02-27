@@ -16,6 +16,7 @@ class SendWeeklyActivityReminder extends Mailable implements ShouldQueue
     public $user;
     public $activities;
     public $ical;
+    public $timeout = 600;
     
     /**
      * Create a new message instance.

@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
             $schedule->job(new WeeklyActivityReminder($period))
                 ->weekly()
                 ->sundays()
-                ->at('20:45');
+                ->at('16:45');
 
             $schedule->command('monitor:check-uptime')->everyMinute();
             
