@@ -55,7 +55,6 @@ class ActivityController extends Controller
                 ->withError('You are not assigned to any branches');
         }
         
-        
         if (session('branch')) {
             $branch = $this->branch->findOrFail(session('branch'));
 
@@ -64,10 +63,6 @@ class ActivityController extends Controller
             $branch = $this->branch->findOrFail(reset($myBranches));
             session(['branch'=>$branch->id]);
         }
-    
-      
-        //$data = $this->_getBranchActivities($branch);
-        
         
         
         return response()->view(
@@ -75,6 +70,22 @@ class ActivityController extends Controller
             compact('branch', 'myBranches')
         );
        
+    }
+
+    public function branch(Branch $branch)
+    {
+        $this->person = auth()->user()->person;
+        if (! $myBranches = $this->person->getMyBranches()) {
+            return redirect()->back()
+                ->withError('You are not assigned to any branches');
+        } elseif (! in_array($branch->id, $myBranches)) {
+             return redirect()->back()
+                ->withError($branch->branchname. ' is not one of your branches');
+        } else {
+            return response()->view(
+            'activities.newindex', 
+            compact('branch', 'myBranches'));
+        }
     }
 
     public function show(Activity $activity)
@@ -412,17 +423,19 @@ class ActivityController extends Controller
      * 
      * @return [type]               [description]
      */
-    public function getBranchActivtiesByType($branch, $activitytype = null)
+    public function getBranchActivtiesByType(Branch $branch, $activitytype = null)
     {
 
+       
         if ($activitytype) {
             $activitytype = ActivityType::findOrFail($activitytype);
         }
-        $branch = $branch->getActivitiesByType($activitytype)
+        $period = session('period');
+        $branch = $branch->getActivitiesByType($period, $activitytype)
             ->findOrFail($branch->id);
    
         return response()->view(
-            'opportunities.showactivities', compact('branch', 'activitytype')
+            'branch.showactivities', compact('branch', 'activitytype')
         );
     }
 

@@ -67,6 +67,7 @@ class Branch extends Model implements HasPresenter
             'newbranchleads',
             'stale_leads',
             'active_leads',
+            'customer'
 
             
         ];
@@ -137,6 +138,8 @@ class Branch extends Model implements HasPresenter
     {
         return $this->belongsToMany(Address::class);
     }
+
+   
     /**
      * [region description]
      * 
@@ -1394,17 +1397,13 @@ class Branch extends Model implements HasPresenter
      */
     public function scopeSummaryLeadStats($query, Array $period, Array $fields = null)
     {
+        
         $this->period = $period;
         if (! $fields) {
             $fields = $this->leadFields;
         }
         $this->fields = $fields;
-        /*
-            'leads',
-            'stale_leads'
-            'active_leads',
-           
-         */
+
         
         return $query
             ->when(
@@ -1444,10 +1443,43 @@ class Branch extends Model implements HasPresenter
                 }
             )
             ->when(
+                in_array('customer', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                           'addresses as customer'=>function($q) {
+                                $q->whereNotNull('isCustomer')
+                                ->where('address_branch.created_at', '<=', $this->period['to']);
+                                
+                           }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('active_customer', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                           'addresses as active_customer'=>function($q) {
+                                $q->whereNotNull('isCustomer')
+                                ->where('address_branch.created_at', '<=', $this->period['to'])
+                                ->wherehas(
+                                    'activities', function ($q) {
+                                        $q->where('completed', 1)
+                                            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                                    }
+                                )
+                                ->where('address_branch.created_at', '<=', $this->period['to']);
+                                
+                           }
+                        ]
+                    );
+                }
+            )
+            ->when(
                 in_array('stale_leads', $this->fields), function ($q) {
                     $q->withCount( 
                         [
-                           'addresses as active_leads'=>function ($q) {
+                           'addresses as stale_leads'=>function ($q) {
                                 $q->whereDoesntHave(
                                     'activities',function ($q) {
                                         $q->where('completed', 1)
@@ -1473,6 +1505,21 @@ class Branch extends Model implements HasPresenter
                                     }
                                 )
                                 ->where('address_branch.created_at', '<=', $this->period['to']);
+                            }
+
+
+                        ]
+                    );
+
+                }
+            )->when(
+                in_array('nearby', $this->fields), function ($q) {
+                    $q->withCount(
+                        [
+                            'addresses as nearby'=>function ($q) {
+                                $q->nearby($this->radius)
+                                ->whereDoesntHave('assignedToBranch')
+                                ->where('address.created_at', '<=', $this->period['to']);
                             }
 
 

@@ -40,13 +40,13 @@ Route::group(
         //     About
         Route::get('about', ['as'=>'about', 'uses'=>'AdminAboutController@getInfo']);
         
-           //     Activities/
-        Route::get('branch/{branch}/activity/{activitytype?}', ['as'=>'branch.activity', 'uses'=>'ActivityController@getBranchActivtiesByType']);
+           //     Activities
+        //Route::get('branch/{branch}/activity', ['as'=>'branch.activity', 'uses'=>'ActivityController@getBranchActivtiesByType']);
         Route::get('activity/{activity}/complete', ['as'=>'activity.complete', 'uses'=>'ActivityController@complete']);
         Route::get('ical/{user}', ['as'=>'ical', 'uses'=>'iCalController@create']);
 
         Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityController@export']);
-
+        Route::get('activity/branch/{branch}', ['as'=>'branch.activity', 'uses'=>'ActivityController@branch']);
         //Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
         Route::resource('activity', 'ActivityController');
         //Route::get('activity', [App\Http\Controllers\ActivityController::class, 'index'])->name('activity.index');
@@ -95,7 +95,9 @@ Route::group(
             'branchassignment/{user}/change', ['as'=>'branchassignment.change', 'uses'=>'BranchManagementController@change']
         );
         Route::resource('branchassignments', 'BranchManagementController', ['only'=>['index', 'show', 'edit', 'update']]);
+
         //     Branch Dashboard
+        Route::get('summary', ['as'=>'branch.summary', 'uses'=>'BranchDashboardController@summary']);
         Route::post('branches/period', ['as'=>'period.setperiod', 'uses'=>'BranchDashboardController@setPeriod']);
         Route::post('branches/dashboard', ['as'=>'branches.dashboard', 'uses'=>'BranchDashboardController@selectBranch']);
         Route::get('manager/{person}/dashboard', ['as'=>'manager.dashboard', 'uses'=>'MgrDashboardController@manager']);

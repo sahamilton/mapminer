@@ -56,6 +56,7 @@ return [
 
     
     'timeframes'=>[
+        'future'=>'Future',
         'nextWeek'=>'Next Week',
         'tomorrow'=>'Tomorrow',
         'today'=>'Today',

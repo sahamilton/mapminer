@@ -49,7 +49,7 @@ class ICalController extends Controller
 
     }
 
-    private function _createMapminerEvents(Activity $event)
+    /*private function _createMapminerEvents(Activity $event)
     {
         
         $description = $event->priorActivity ? $event->priorActivity->note . chr(10) : ''  . route('address.show', $event->address_id);
@@ -60,8 +60,8 @@ class ICalController extends Controller
             ->uniqueIdentifier($event->id)
             ->url(route('activity.show', $event->id))
             ->address($event->relatesToAddress->fulladdress() ." / ".$event->relatesToAddress->phoneNumber)
-            ->startsAt($event->activity_date);
+            ->startsAt($event->activity_date->startOfDay());
             
-    }
+    }*/
       
 }

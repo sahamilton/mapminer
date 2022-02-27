@@ -88,20 +88,20 @@ class OpportunityController extends BaseController
         
         $period = $this->period;
 
-        if (count($myBranches) == 1 ) {
+        
        
             $branch_id = reset($myBranches);
             return redirect()->route('opportunities.branch', $branch_id);
 
-        } else {
+      
            
-            $managers = $person->load('directReports')->directReports;
+            /*$managers = $person->load('directReports')->directReports;
            
             return response()->view(
                 'opportunities.summary', 
                 compact('managers', 'person', 'period')
             );
-        }
+        }*/
              
         
     }

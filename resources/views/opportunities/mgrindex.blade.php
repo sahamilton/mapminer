@@ -52,7 +52,7 @@
       @include('branches.partials._dashboard')
     </div>
     <div id="summary" class="tab-pane fade">
-      @include('opportunities.partials._summary')
+      @livewire('mgr-summary')
     </div>
 
     <div id="reports" class="tab-pane fade">

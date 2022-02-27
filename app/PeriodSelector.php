@@ -88,7 +88,20 @@ trait PeriodSelector
     }
 
 
+    /**
+     * Future
+     * returns begining and end of today
+     * 
+     * @return array of from & to  Carbon instance
+     */
+    private function future()
+    {
+        $data['from'] = Carbon::today()->startOfDay();
+        $data['to'] = Carbon::now()->addYear(5)->endOfDay();
+        $data['period'] = 'future';
+        return $data;
 
+    }
     /**
      * Today
      * returns begining and end of today

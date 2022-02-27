@@ -39,7 +39,7 @@ class Ical extends Model
             ->uniqueIdentifier($event->id)
             ->url(route('activity.show', $event->id))
             ->address($event->relatesToAddress->fulladdress() ." / ".$event->relatesToAddress->phoneNumber)
-            ->startsAt($event->activity_date);
+            ->startsAt($event->activity_date->startOfDay());
             
     }
 }

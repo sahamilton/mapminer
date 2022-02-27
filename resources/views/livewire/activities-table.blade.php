@@ -6,7 +6,7 @@
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">
     <i class="fas fa-tachometer-alt"></i>
      Return To Branch {{$branch->id}} Dashboard</a></p>
-    
+   
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')

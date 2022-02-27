@@ -79,26 +79,26 @@
                 <a class="dropdown-item" href="{{route('salesorg.index')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                   Sales Organization</a>
-                  
-                
-                  
+                @if(count(auth()->user()->person->getMyBranches()) > 1)  
+                 <a class="dropdown-item" href="{{route('branch.summary')}}">
+                    <i class="fa-solid fa-table-list"></i> Branch Summary</a>
+                @endif 
                 @can ('manage_opportunities')
                     
                     <a class="dropdown-item" href="{{route('branch.leads')}}">
-                    <i class="fas fa-arrow-right"></i> Branch Leads / Customers</a>
+                    <i class="far fa-envelope" aria-hidden="true"></i> Branch Leads / Customers</a>
 
-                   <a class="dropdown-item"  href="{{route('opportunity.index')}}">
-                    <i class="far fa-envelope" aria-hidden="true"> </i> 
-                    Branch Opportunities</a>
+                    <a class="dropdown-item"  href="{{route('opportunity.index')}}">
+                    <i class="fa-solid fa-money-check-dollar" aria-hidden="true"></i> Branch Opportunities</a>
                     
                     <a class="dropdown-item" href="{{route('contacts.index')}}">
-                    <i class="far fa-address-card"></i> Branch Contacts</a>
+                    <i class="far fa-address-card" aria-hidden="true"></i> Branch Contacts</a>
                      <a class="dropdown-item" href="{{ route('activity.index') }}">
                     <i class="far fa-calendar-alt"></i> Branch Activities</a>
 
                   @endCan
 
-                  @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager'))
+                  @if (auth()->user()->hasRole(['admin','sales_ops', 'national_account_manager']))
                     
                     <a class="dropdown-item" href="{{route('managers.view')}}">
                     <i class="far fa-eye" aria-hidden="true"> </i> 
