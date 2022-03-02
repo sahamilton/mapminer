@@ -51,7 +51,7 @@ class WeeklyActivityReminder implements ShouldQueue
         ->get();
         
         foreach ($users as $user) {
-            @ray($user);
+          
             SendActivityReminderJob::dispatch($user, $this->period);
         }
     }

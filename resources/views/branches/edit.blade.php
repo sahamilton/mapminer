@@ -53,7 +53,7 @@ $buttonLabel = 'Edit Branch';?>
     id="team" 
     role="tabpanel" 
     aria-labelledby="contact-tab">
-      @include('branches/partials/_team')
+      @include('branches.partials._team')
   </div>
 	
 </div>

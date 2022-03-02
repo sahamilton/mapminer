@@ -16,7 +16,7 @@ class OpportunityTable extends Component
     public $sortField = 'opportunities.created_at';
     public $sortAsc = true;
     public $search = '';
-    public $setPeriod;
+    public $setPeriod = "All";
     public $branch_id;
     public $filter = '0';
     public $myBranches;
@@ -65,10 +65,7 @@ class OpportunityTable extends Component
             ->findOrFail($this->branch_id)
             ->branchTeam->pluck('full_name', 'user_id')
             ->toArray();
-        if (! session()->has('period')) {
-            $this-> _setPeriod();
-        } 
-        $this->setPeriod = session('period')['period'];
+       
     }
     /**
      * [render description]
