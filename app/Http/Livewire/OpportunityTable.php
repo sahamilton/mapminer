@@ -65,7 +65,7 @@ class OpportunityTable extends Component
             ->findOrFail($this->branch_id)
             ->branchTeam->pluck('full_name', 'user_id')
             ->toArray();
-       
+        $this->setPeriod = 'All';
     }
     /**
      * [render description]
