@@ -16,7 +16,7 @@ class OpportunityTable extends Component
     public $sortField = 'opportunities.created_at';
     public $sortAsc = true;
     public $search = '';
-    public $setPeriod = "All";
+    public $setPeriod = "allDates";
     public $branch_id;
     public $filter = '0';
     public $myBranches;
@@ -65,7 +65,7 @@ class OpportunityTable extends Component
             ->findOrFail($this->branch_id)
             ->branchTeam->pluck('full_name', 'user_id')
             ->toArray();
-        $this->setPeriod = 'All';
+        //$this->setPeriod = 'All';
     }
     /**
      * [render description]
@@ -117,6 +117,7 @@ class OpportunityTable extends Component
     private function _setPeriod()
     {
         $this->livewirePeriod($this->setPeriod);
+      
         
     }
 }
