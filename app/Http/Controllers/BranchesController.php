@@ -311,10 +311,11 @@ class BranchesController extends BaseController
     {
         
 
-        $branchRoles = \App\Role::whereIn('id', $this->branch->branchRoles)
+        $branchRoles = \App\Role::whereIn('id', $this->branch->branchTeamRoles)
             ->pluck('display_name', 'id');
 
-        $team = $this->person->personroles($this->branch->branchRoles);
+        $team = $this->person->personroles($this->branch->branchTeamRoles);
+
         //$branch = $this->branch->find($branch->id);    
         $branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();
         $servicelines = $this->serviceline->whereIn(
@@ -323,7 +324,7 @@ class BranchesController extends BaseController
         $branchservicelines = $branch->servicelines()
             ->pluck('servicelines.id')->toArray();
 
-
+        
         return response()->view(
             'branches.edit', 
             compact('branch', 'servicelines', 'branchRoles', 'team', 'branchteam', 'branchservicelines')

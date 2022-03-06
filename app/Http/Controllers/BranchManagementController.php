@@ -56,7 +56,7 @@ class BranchManagementController extends Controller
     public function index()
     {
         $id = auth()->user()->id;
-
+     
         return redirect()->route('branchassignments.show', $id);
     }
 

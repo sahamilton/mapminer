@@ -45,10 +45,10 @@
             @endif
             </td>
             <td>
-                @if($company->locations_count>0)
+                @if($company->locations->count() >0)
                 <a href="{{route('company.show',$company->id)}}"
                 title = 'See all {{$company->companyname}} locations'>
-                    {{number_format($company->locations_count,0)}}
+                    {{number_format($company->locations->count(),0)}}
                 </a>
                 @endif
         </td>

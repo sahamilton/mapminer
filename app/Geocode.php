@@ -99,43 +99,39 @@ trait Geocode
      */
     public function scopeNearby($query, $location, $radius = 100, $limit = null)
     {
-    
         
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
         
-        /*
-        $sub = $this->selectSub('id', 'lat', 'lng')
-            ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
-            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
-        */
+        
         return $query
             ->select()//pick the columns you want here.
             ->selectRaw("{$this->_haversine($location)} AS distance")
-            //->mergeBindings($sub->getQuery())
-            ->whereRaw("{$this->_haversine($location)} < $radius ")
             
+            ->whereRaw("{$this->_haversine($location)} < $radius ")
+            ->orderBy('distance', 'ASC')
             ->when(
                 $limit, function ($q) use ($limit) {
-                    $query = $q->limit($limit);
+                   $q->limit($limit);
                 }
             );
     }
 
-    public function scopeCountNearby($query, array $latlng, $radius = 100, $limit = null)
+    public function scopeCountNearby($query, $location,  $radius = 100, $limit = null)
     {
-        $location = new Address;
-        $location->lat = $latlng['lat'];
-        $location->lng= $latlng['lng'];
+        
 
         return  $query
             ->selectRaw("count('id')")//pick the columns you want here.
             
             ->whereRaw("{$this->_haversine($location)} < $radius ")
-            ->orderBy('distance', 'ASC')->when(
+
+
+            ->when(
                 $limit, function ($q) use ($limit) {
-                    $query = $q->limit($limit);
+                
+                    $q->limit($limit);
                 }
             );
     }

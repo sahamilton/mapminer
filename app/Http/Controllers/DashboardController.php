@@ -162,7 +162,7 @@ class DashboardController extends Controller
      */
     public function show(Branch $branch)
     {
-        
+       
         $this->manager = $this->person->with('manages')
             ->findOrFail(auth()->user()->person->id);
        

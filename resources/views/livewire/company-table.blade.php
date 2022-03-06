@@ -1,20 +1,22 @@
 <div>
+    <h2>Companies</h2>
+    <h4>with locations within {{$distance}} miles</h4>
+    <x-form-input name="address" wire:model="address" class="form-control" /> {{$address}}
     <div class="row mb-4">
         
          <div class="col form-inline">
             @include('livewire.partials._perpage')
-            
+            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col form-inline">
             <i class="fas fa-filter text-danger"></i> Type:
-            <select wire:model="accounttype" 
-            class="form-control">
-                <option>All</options>
-                @foreach ($types as $type)
-                    <option value="{{$type->id}}">{{$type->type}}</option>
-                @endforeach
-            </select>
+            <x-form-select wire:model='accounttype' class="form-control" name="accounttype" label='Account Type:' :options='$types' />
+            <x-form-select wire:model='distance' class="form-control" name="distance" label='Distance' :options='$distances' />
         </div>
 
-        @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+        
     </div>
     <table class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
@@ -44,12 +46,13 @@
 
     </table>
     <div class="row">
-        
         <div class="col">
             {{ $companies->links() }}
         </div>
 
-       
+        <div class="col text-right text-muted">
+            Showing {{ $companies->firstItem() }} to {{ $companies->lastItem() }} out of {{ $companies->total() }} results
+        </div>
     </div>
 
 </div>

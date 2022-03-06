@@ -9,6 +9,7 @@
   'branch-locations-table' => 'App\\Http\\Livewire\\BranchLocationsTable',
   'branch-opportunity-table' => 'App\\Http\\Livewire\\BranchOpportunityTable',
   'branch-table' => 'App\\Http\\Livewire\\BranchTable',
+  'branch-team' => 'App\\Http\\Livewire\\BranchTeam',
   'campaign-summary' => 'App\\Http\\Livewire\\CampaignSummary',
   'campaign-table' => 'App\\Http\\Livewire\\CampaignTable',
   'campaign-tracking' => 'App\\Http\\Livewire\\CampaignTracking',

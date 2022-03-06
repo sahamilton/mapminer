@@ -158,6 +158,7 @@ class BranchDashboardController extends DashboardController
      */
     public function show(Branch $branch)
     {
+       
         $myBranches = $this->person->myBranches();
 
         
