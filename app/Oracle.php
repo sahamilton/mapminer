@@ -96,6 +96,24 @@ class Oracle extends Model
      
 
     }
+    /**
+     * UserBranches Determine locations / branches
+     * of users team members.
+     * 
+     * @return Array users branches per Oracle
+     */
+    public function userBranches() :array
+    {
+        return $branches = $this->teamMembers->map(
+            function ($person) {
+                return $person->branch;
+            }
+        )
+        ->unique()
+        ->sortBy('id')
+        ->pluck('branchname', 'id')
+        ->toArray();
+    }
 
 
 }

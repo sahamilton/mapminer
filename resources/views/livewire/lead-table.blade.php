@@ -85,15 +85,7 @@
                     <option value="{{$key}}">{{$person}}</option>
                 @endforeach
             </select>
-            <label>Lead Source </label>
-            <select wire:model="lead_source_id" 
-            class="form-control" 
-            title="Lead Source">
-                <option value="All">All</option>
-                @foreach ($leadsources as $key=>$source)
-                    <option value="{{$key}}">{{$source}}</option>
-                @endforeach
-            </select>
+            
         </div>
         @if(count($campaigns)> 0)
             <div class="col form-inline">

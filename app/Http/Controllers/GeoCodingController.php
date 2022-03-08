@@ -56,7 +56,7 @@ class GeoCodingController extends BaseController
     public function findMe(FindMeFormRequest $request)
     {
         $geocode = app('geocoder')->geocode(request('search'))->get();
-        
+    
         if (request()->filled('search')) {
             $address = trim(request('search'));
         }
@@ -76,7 +76,7 @@ class GeoCodingController extends BaseController
         }
 
         if (! request()->has('addressType') or count(request('addressType'))==0) {
-            $data['addressType'] = ['customer','project','lead','location'];
+            $data['addressType'] = ['customer', 'lead', 'opportunity', 'branchlocation'];
         }
 
         session()->put('geo', $data);
@@ -85,7 +85,7 @@ class GeoCodingController extends BaseController
         $data['vertical'] = null;
        
         $data = $this->_getViewData($data);
-
+        @ray($data);
         $filtered = $this->location->isFiltered(['companies','locations'], ['vertical','business','segment'], null);
         if (isset($data['company'])) {
             $company = $data['company'];

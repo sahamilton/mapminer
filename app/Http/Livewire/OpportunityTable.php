@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 use App\Opportunity;
 use App\Branch;
 use App\Person;
+use App\Campaign;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\PeriodSelector;
@@ -16,6 +17,7 @@ class OpportunityTable extends Component
     public $sortField = 'opportunities.created_at';
     public $sortAsc = true;
     public $search = '';
+    public $campaign_id = 'all';
     public $setPeriod = "All";
     public $branch_id;
     public $filter = '0';
@@ -51,15 +53,14 @@ class OpportunityTable extends Component
      */
     public function mount($branch_id=null)
     {
-        
-        
+                
         //$this->period = session('period');
         $person = new Person();
         $this->myBranches = $person->myBranches();
-        if (! $branch_id) {
-            $this->branch_id = array_key_first($this->myBranches);
-        } else {
+        if ($branch_id) {
             $this->branch_id =$branch_id;
+        } else {
+            $this->branch_id = array_key_first($this->myBranches);
         }
         $this->team = Branch::with('branchTeam')
             ->findOrFail($this->branch_id)
@@ -81,10 +82,24 @@ class OpportunityTable extends Component
                 'opportunities' => Opportunity::query()
                     ->select('opportunities.*', 'businessname')
                     ->join('addresses', 'addresses.id', '=', 'opportunities.address_id')
+
                     ->withLastactivity()
                     ->when(
                         $this->search, function ($q) {
                             $q->search($this->search);
+                        }
+                    )
+                    ->when(
+                        $this->campaign_id != 'all', function ($q) {
+                            $q->whereHas(
+                                'location', function ($q) {
+                                    $q->whereHas(
+                                        'campaigns', function ($q) {
+                                            $q->whereIn('campaigns.id', [$this->campaign_id]);
+                                        }
+                                    );
+                                }
+                            );
                         }
                     )
                     ->when(
@@ -108,6 +123,11 @@ class OpportunityTable extends Component
                     ->paginate($this->perPage),
                 'branch'=>Branch::query()->findOrFail($this->branch_id),
                 'filters' => ['All'=>'All', 0=>'Open', '1'=>'Closed Won', '2'=>'Closed Lost'],
+                'campaigns'=> Campaign::active()
+                    ->current([$this->branch_id])
+                    ->pluck('title', 'id')
+                    ->toArray(),
+                           
 
                 
             ]

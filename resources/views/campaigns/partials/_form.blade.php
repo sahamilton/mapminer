@@ -77,8 +77,24 @@
                 <strong>{{$errors->has('type') ? $errors->first('type')  : ''}}</strong>
             </span>
 </div> 
+<div class="form-group{{ $errors->has('companies') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="companies">Companies</label>
+    <select 
+    multiple 
+    required 
+    name="companies[]"
+    class="form-control"
+    >
+        @foreach ($companies as $id=>$name)
+            <option value="{{$id}}">{{$name}}</option>
+        @endforeach
+    </select>
 
-@livewire('company-selector')
+         <span class="help-block{{ $errors->has('companies') ? ' has-error' : '' }}">
+                <strong>{{$errors->has('companies') ? $errors->first('companies')  : ''}}</strong>
+            </span>
+</div> 
+
 <!-- Organization Alignment -->
 
 <legend>Organization</legend>

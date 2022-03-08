@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\ActivityType;
 use App\Branch;
+use App\Campaign;
 use App\Activity;
 use App\User;
 use Livewire\WithPagination;
@@ -19,9 +20,9 @@ class ActivitiesTable extends Component
     public $activitytype='All';
     public $sortAsc = false;
     public $search ='';
-
+    public $campaign_id = 'all';
     public $setPeriod;
-
+    public $campaign = ['datefrom'=>null, 'dateto'=>null];
     public $branch_id;
     public $myBranches;
     public $team;
@@ -32,6 +33,25 @@ class ActivitiesTable extends Component
 
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatedCampaignId()
+    {
+       
+        $this->_getCampaign();
+        $this->resetPage();
+    }
+    public function updatingSetPeriod()
+    {
+        $this->resetPage();
+    }
+    public function updatingStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingActivitytype()
     {
         $this->resetPage();
     }
@@ -49,12 +69,13 @@ class ActivitiesTable extends Component
     {
         
         $this->myBranches = auth()->user()->person->myBranches();
-        $this->branch_id = array_key_first($this->myBranches);
         if ($branch) {
             $this->branch_id = $branch;
+        } else {
+            $this->branch_id = array_key_first($this->myBranches);
         }
-        $this->team = Branch::with('branchTeam')->findOrFail($this->branch_id)->branchTeam->pluck('full_name', 'user_id')->toArray();
-        @ray($this->team);
+        $this->team = auth()->user()->person->myTeam()->get()->pluck('full_name', 'user_id')->toArray();
+
         if ($status) {
             $this->status = $status;
         }
@@ -84,6 +105,9 @@ class ActivitiesTable extends Component
         return view(
             'livewire.activities-table',
             [
+                
+                
+                
                 'activities'=>Activity::query()
                     ->where('branch_id', $this->branch_id)
                     ->periodActivities($this->period)
@@ -105,6 +129,20 @@ class ActivitiesTable extends Component
                         }
                     )
                     ->when(
+                        $this->campaign_id != 'all', function ($q) {
+                            $q->whereBetween('activity_date', [$this->campaign['datefrom'], $this->campaign['dateto']])
+                                ->whereHas(
+                                    'relatesToAddress', function ($q) {
+                                        $q->whereHas(
+                                            'campaigns', function ($q) {
+                                                $q->where('campaigns.id', $this->campaign_id);
+                                            }
+                                        );
+                                    }
+                                );
+                        }
+                    )
+                    ->when(
                         $this->activitytype != 'All', function ($q) {
 
                             $q->where('activitytype_id', $this->activitytype);
@@ -115,7 +153,10 @@ class ActivitiesTable extends Component
                 'activitytypes' => ActivityType::orderBy('activity')->pluck('activity', 'id')->toArray(),
                 'branch' => Branch::findOrFail($this->branch_id),
                 'statuses' => ['All'=>'All', '1'=>'Completed', '0'=>'Planned'],
-                
+                'campaigns'=> Campaign::active()
+                    ->current([$this->branch_id])
+                    ->pluck('title', 'id')
+                    ->toArray(),
                            ]
         );
     }
@@ -135,6 +176,20 @@ class ActivitiesTable extends Component
     private function _setBranchSession()
     {
         session(['branch'=>$this->branch_id]);
+    }
+
+    private function _getCampaign()
+    {
+        
+        if ($this->campaign_id == 'all') {
+            $this->campaign = ['datefrom'=>null, 'dateto'=>null];
+        } else {
+            $campaign = Campaign::findOrFail($this->campaign_id);
+        
+            $this->campaign =  ['datefrom'=>$campaign->datefrom, 'dateto'=>$campaign->dateto];
+        }
+        
+        
     }
 
 

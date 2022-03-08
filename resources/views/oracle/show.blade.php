@@ -10,7 +10,7 @@
    <i class="far fa-check-circle text-success" title="Mapminer user"></i></p>
 @else
    Not In Mapminer
-
+   <p><a href="{{route('oracle.useradd', $oracle->id)}}" class="btn btn-success">Add to Mapminer</a></p>
 @endif
 
 <p>{{$oracle->location_name}}</p>

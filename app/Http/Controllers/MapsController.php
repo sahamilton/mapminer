@@ -82,9 +82,11 @@ class MapsController extends BaseController
         $location = $this->getLocationLatLng($latlng);
 
         $branches = $this->branch
-            ->whereHas('servicelines', function ($q) {
-                $q->whereIn('servicelines.id', $this->userServiceLines);
-            })
+            ->whereHas(
+                'servicelines', function ($q) {
+                    $q->whereIn('servicelines.id', $this->userServiceLines);
+                }
+            )
             ->nearby($location, $distance, $limit)
 
             ->get();
