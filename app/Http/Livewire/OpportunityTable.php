@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 use App\Opportunity;
 use App\Branch;
 use App\Person;
+use App\Campaign;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\PeriodSelector;

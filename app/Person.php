@@ -43,7 +43,7 @@ class Person extends NodeModel implements Auditable
         'firstname',
         'lastname'
     ];
-    public function getFullNameAttribute()
+    public function getCompleteNameAttribute()
     {
         return $this->firstname . ' ' . $this->lastname;
     }
@@ -68,6 +68,11 @@ class Person extends NodeModel implements Auditable
     public function getParentIdName()
     {
         return 'reports_to';
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->firstname . ' ' . $this->lastname;
     }
     /**
      * [reportsTo description]
