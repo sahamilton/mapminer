@@ -63,13 +63,13 @@ $(document).ready(function() {
 	
 		
 		function getAddress(latLng) {
-			
-			var geocoder = new google.maps.Geocoder();
+			let address = 'unknown'
+			let geocoder = new google.maps.Geocoder();
 			if (geocoder) {
 				geocoder.geocode({ 'latLng': latLng}, function (results, status) {
 				   if (status == google.maps.GeocoderStatus.OK) {
-					var search = results[0].formatted_address; 
-					$('#search').val(search);
+					var address = results[0].formatted_address; 
+					$('#search').val(address);
 				   }
 				   else {
 					$('#search').val(latLng);;

@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 use App\Opportunity;
 use App\Branch;
 use App\Person;
-use App\Campaign;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\PeriodSelector;
@@ -66,7 +65,7 @@ class OpportunityTable extends Component
             ->findOrFail($this->branch_id)
             ->branchTeam->pluck('full_name', 'user_id')
             ->toArray();
-        $this->setPeriod = 'All';
+        //$this->setPeriod = 'All';
     }
     /**
      * [render description]
@@ -137,6 +136,7 @@ class OpportunityTable extends Component
     private function _setPeriod()
     {
         $this->livewirePeriod($this->setPeriod);
+      
         
     }
 }
