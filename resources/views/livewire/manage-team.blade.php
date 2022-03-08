@@ -1,7 +1,6 @@
 <div>
     <h2>{{$user->fullName()}}'s Team</h2>
     <h4>Based on Oracle HRMS</h4>
-
     <p>
         <a href=""
             wire:click.prevent = changeUser({{$user->person->reportsTo->user_id}})
