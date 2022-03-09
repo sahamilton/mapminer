@@ -35,18 +35,21 @@
 
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
-			<p><strong>Mapminer:</strong></p>
-			<ul style="list-style-type: none;">
-			@foreach ($user->roles as $role)
-				<li>{{$role->display_name}}</li>
-			@endforeach
-			</ul>
+			<p><strong>Mapminer:</strong>
+			
+				@foreach ($user->roles as $role)
+					{{$role->display_name}} @if(! $loop->last), @endif
+				@endforeach
+			</p>
 			<div class="panel-heading clearfix">
 			<p><strong>Oracle:</strong>
 				
-					{{
-						$user->oracleMatch ? $user->oracleMatch->job_profile : ucwords($user->person->business_title)
-					}}
+					@if($user->oracleMatch)
+						<a href="{{route('oracle.show', $user->oracleMatch->id)}}"
+							title="See {{$user->person->fullName()}}'s Oracle details"> {{$user->oracleMatch->job_profile}}</a>
+					@else
+					{{ucwords($user->person->business_title)}}
+					@endif
 			</p>
 
 		</div>
