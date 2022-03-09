@@ -48,12 +48,7 @@
                     @include('includes._sort-icon', ['field' => 'location_name'])
                 </a>
             </th>
-            <th>
-                <a wire:click.prevent="sortBy('lastlogin')" role="button" href="#">
-                    Last Login
-                    @include('includes._sort-icon', ['field' => 'lastlogin'])
-                </a>
-            </th>
+            <th>Last Login</th>
         </thead>
         <tbody>
             @foreach($team as $member)
