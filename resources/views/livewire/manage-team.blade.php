@@ -1,6 +1,7 @@
 <div>
     <h2>{{$user->fullName()}}'s Team</h2>
     <h4>Based on Oracle HRMS</h4>
+
     <p>
         <a href=""
             wire:click.prevent = changeUser({{$user->person->reportsTo->user_id}})
@@ -48,7 +49,12 @@
                     @include('includes._sort-icon', ['field' => 'location_name'])
                 </a>
             </th>
-            <th>Last Login</th>
+            <th>
+                <a wire:click.prevent="sortBy('lastlogin')" role="button" href="#">
+                    Last Login
+                    @include('includes._sort-icon', ['field' => 'lastlogin'])
+                </a>
+            </th>
         </thead>
         <tbody>
             @foreach($team as $member)

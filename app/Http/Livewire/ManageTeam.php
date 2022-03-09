@@ -53,9 +53,9 @@ class ManageTeam extends Component
                     'oracleManager', function ($q) {
                         $q->where('person_number', $this->user->employee_id);
                     }
-                )
-                
+                )->leftJoin('users', 'oracle.person_number', '=', 'users.employee_id')
                 ->with('mapminerUser.roles', 'mapminerUser.person.branchesServiced', 'oracleManager')
+                ->select('oracle.*', 'users.lastlogin') 
                 ->search($this->search)
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
