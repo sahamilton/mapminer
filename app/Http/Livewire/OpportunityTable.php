@@ -18,7 +18,7 @@ class OpportunityTable extends Component
     public $sortAsc = true;
     public $search = '';
     public $campaign_id = 'all';
-    public $setPeriod = "All";
+    public $setPeriod = "allDates";
     public $branch_id;
     public $filter = '0';
     public $myBranches;
@@ -66,7 +66,7 @@ class OpportunityTable extends Component
             ->findOrFail($this->branch_id)
             ->branchTeam->pluck('full_name', 'user_id')
             ->toArray();
-        //$this->setPeriod = 'All';
+        $this->setPeriod = 'allDates';
     }
     /**
      * [render description]
