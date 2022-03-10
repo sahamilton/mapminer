@@ -8,8 +8,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Campaign;
+use App\AddressBranch;
 
-use App\Jobs\InsertLeadsToBranchJob;
 class AssignCampaignLeadsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -37,16 +37,31 @@ class AssignCampaignLeadsJob implements ShouldQueue
     public function handle()
     {
         foreach ($this->campaign->companies as $company) {
-            $newleads = []; 
+            
             $addresses = $company->unassigned->flatten()->pluck('id')->toArray();
             $assignable = $this->campaign->getAssignableLocationsofCampaign($addresses, $count = false);
             $assignable = json_decode(json_encode($assignable), true);
-            foreach ($assignable as $assign) {
-                $newleads[] = array_merge($assign, ['created_at'=>now(), 'status_id'=>2]);
-            }
-            InsertLeadsToBranchJob::dispatch($newleads);
+            $newleads = $this->_addAdditionalModelFields($assignable);
+            AddressBranch::insert($newleads);
         }
         
+    }
+
+    private function _addAdditionalModelFields(array $assignable)
+    {
+        $newleads = []; 
+        
+        foreach ($assignable as $assign) {
+            $newleads[] = array_merge(
+                $assign, 
+                [
+                    'comments'=>'Assigned as part of '.$this->campaign->title .' campaign',
+                    'created_at'=>now(), 
+                    'status_id'=>2
+                ]
+            );
+        }
+        return $newleads;
     }
 
 }

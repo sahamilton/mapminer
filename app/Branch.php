@@ -233,6 +233,7 @@ class Branch extends Model implements HasPresenter
         return $this->hasMany(Oracle::class, 'location_name', 'oracle_location');
     }
 
+    
     /**
      * [opportunities description]
      * 
@@ -374,6 +375,11 @@ class Branch extends Model implements HasPresenter
                 );
             }
         );
+    } 
+    public function scopeInactive($query)
+    {
+        return $query->doesntHave('manager');
+      
     } 
     public function scopeInServiceLines($query, $servicelines=null)
     {
