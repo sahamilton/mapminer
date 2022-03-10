@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Person;
 use App\User;
+use App\Branch;
 use App\Track;
 use Illuminate\Http\Request;
 
@@ -38,9 +39,12 @@ class PersonSearchController extends Controller
                 'oracleMatch'
             )
             ->find($person->user_id);
-
-        $branches = $person->branchesManaged();
-
+        // Modified to accomodate staffing specialists
+        //$branches = $person->branchesManaged();
+        $branches = Branch::whereIn('id', $person->getMyBranches())
+            ->with('manager')
+            ->get();
+        
         //note remove manages & manages.servicedby
         $person
             ->load(
