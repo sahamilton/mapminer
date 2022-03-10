@@ -152,12 +152,17 @@
 	</span>
 <div class="form-group {!! $errors->has('branches') ? 'has-error' : '' !!}">
 	
-
-    <div class="input-group input-group-lg">
-		<select multiple class="form-control" name='branches[]'>
+    <label class="col-md-2 control-label" for="roles">Branches Managed:</label>
+    <div class="col-md-6">
+        <select 
+        required
+        class="form-control" 
+        name="branches[]" 
+        id="branches" 
+        multiple
 	
 			@foreach ($branches as $key=>$value))
-				@if(isset($branchesServiced) && in_array($key,$branchesServiced))
+				@if(isset($branchesServiced) && in_array($key,array_keys($branchesServiced)))
 					<option selected value="{{$key}}">{{$value}}</option>
 				@else
 					<option value="{{$key}}">{{$value}}</option>
