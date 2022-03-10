@@ -8,27 +8,36 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\User;
 use App\Ical;
-
-class SendWeeklyActivityReminder extends Mailable implements ShouldQueue
+use Spatie\IcalendarGenerator\Components\Calendar;
+class SendActivityReminder extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $user;
     public $activities;
     public $ical;
+    public $period;
+    public $timeout = 600;
     
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(
+        User $user, 
+        Calendar $ical, 
+        \Illuminate\Database\Eloquent\Collection $activities,
+        Array $period)
     {
         $this->user = $user;
-        $this->activities = $user->activities;
-        $ical = new Ical;
-        $this->ical = $ical->createIcs($this->activities);
-               
+        
+        $this->ical = $ical;
+
+        $this->activities = $activities;
+
+        $this->period = $period;
+       
        
     }
 
@@ -39,8 +48,9 @@ class SendWeeklyActivityReminder extends Mailable implements ShouldQueue
      */
     public function build()
     {
-    
-        return $this->markdown('emails.upcomingactivities')
+
+        return $this->to([['email'=>$this->user->email, 'name'=>$this->user->person->fullName()]])
+            ->markdown('emails.upcomingactivities')
             ->subject('Upcoming Activities')
             ->attachData(
                 $this->ical->get(), 'upcomingactivities.ics', [

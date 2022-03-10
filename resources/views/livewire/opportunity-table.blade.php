@@ -15,7 +15,9 @@
     <div class="row" style="margin-bottom:10px">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
+            @if(count($myBranches)>1)
             @include('livewire.partials._branchselector')
+            @endif
             @include('livewire.partials._search', ['placeholder'=>'Search opportunities'])
         </div>
     </div>
@@ -28,6 +30,7 @@
             <div wire:loading>
                 <div class="spinner-border text-danger"></div>
             </div>
+            @if(count($team)>1)
             <label for="selectuser">Team:</label>
             <select wire:model="selectuser" 
             class="form-control">
@@ -37,6 +40,22 @@
                     <option value="{{$key}}">{{$person}}</option>
                 @endforeach
             </select>
+            @endif
+            @if(count($campaigns))
+            <div class="col form-inline">
+                <label for="selectuser">Campaign:</label>
+                <select wire:model="campaign_id" 
+                class="form-control">
+                    
+                    <option value="all">All</option>
+                    @foreach ($campaigns as $key=>$campaign)
+                        <option value="{{$key}}">{{$campaign}}</option>
+                    @endforeach
+                </select>
+
+                
+            </div>
+            @endif
             <label for="filter">Status:</label>
             
             <select wire:model="filter" class="form-control">

@@ -82,9 +82,11 @@ class MapsController extends BaseController
         $location = $this->getLocationLatLng($latlng);
 
         $branches = $this->branch
-            ->whereHas('servicelines', function ($q) {
-                $q->whereIn('servicelines.id', $this->userServiceLines);
-            })
+            ->whereHas(
+                'servicelines', function ($q) {
+                    $q->whereIn('servicelines.id', $this->userServiceLines);
+                }
+            )
             ->nearby($location, $distance, $limit)
 
             ->get();
@@ -172,7 +174,7 @@ class MapsController extends BaseController
         return response()->view('myleads.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
 
-    public function new()
+    public function livewire()
     {
   
         return response()->view('maps.livewiremap');

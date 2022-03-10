@@ -97,9 +97,9 @@ class CampaignController extends Controller
             ->with('userdetails.roles')
             ->orderBy('lastname')
             ->orderBy('firstname')->get();
-        
+        $companies = Company::orderBy('companyname')->pluck('companyname', 'id')->toArray();
        
-        return response()->view('campaigns.create', compact('managers', 'servicelines'));
+        return response()->view('campaigns.create', compact('managers', 'servicelines', 'companies'));
     }
     /**
      * [store description]

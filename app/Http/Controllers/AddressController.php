@@ -173,74 +173,7 @@ class AddressController extends BaseController
 
 
         }
-       /* $location = $address->load(
-            'contacts.relatedActivities',
-            'primaryContact',
-            'activities.type',
-            'activities.relatedContact',
-            'activities.user.person',
-            'company.salesnotes',
-            'opportunities',
-            'industryVertical',
-            'relatedNotes',
-            'currentcampaigns',
-            'orders.branch',
-            'watchedBy.person',
-            'ranking',
-            'leadsource',
-            'createdBy',
-            'assignedToBranch',
-            'duplicates'
-        );
-        
-        if ($address->addressable_type) {
-            $location->load($address->addressable_type);
-        }
        
-        if ($location->lat && $location->lng) {
-
-            $branches = $this->branch->nearby($location, 25, 5)->orderBy('distance')->get();
-            
-            $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 25, 5)->get();
-
-        } else {
-            $people = [];
-            $branches = [];
-        }
-      
-        $rankingstatuses = $this->address->getStatusOptions;
-        $myBranches = $this->person
-            ->where('user_id', auth()->user()->id)
-            ->first()
-            ->branchesManaged()
-            ->pluck('id')
-            ->toArray();
-        $activityTypes = ActivityType::pluck('activity', 'id')->toArray();
-
-        $ranked = $this->address->getMyRanking($location->ranking);
-        $notes = $this->notes->locationNotes($location->id)->get();
-        $contacts = $location->contacts->pluck('complete_name', 'id')->toArray();
-       
-        $owned = $this->_checkIfOwned($address, $myBranches);
-        $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
-        $campaigns = Campaign::currentOpen($myBranches)->select('id', 'title')->get();
-   
-        return response()->view(
-            'addresses.show', compact(
-                'location', 
-                'branches', 
-                'rankingstatuses', 
-                'people', 
-                'myBranches', 
-                'ranked', 
-                'notes', 
-                'owned', 
-                'fields', 
-                'campaigns',
-                'contacts',
-                'activityTypes'
-            )
-        );*/
         
     }
 
@@ -304,6 +237,7 @@ class AddressController extends BaseController
      */
     private function _setCustomer(Request $request, array $data) :array
     {
+        
         if (request()->has('customer_id')) {
             $data['customer_id'] = request('customer_id');
             $data['addressable_type'] = 'customer';
@@ -318,16 +252,30 @@ class AddressController extends BaseController
      * 
      * @return [type]           [description]
      */
-    public function findLocations($distance = null, $latlng = null)
+    public function findLocations(Request $request, $distance = null, $latlng = null)
     {
+        $types = explode(",", request('types'));
        
         $location = $this->getLocationLatLng($latlng);
         $myBranches = auth()->user()->person->getMyBranches();
         $myLeads = $this->address
-            ->filtered()
+            ->nearby($location, $distance, 5)
             ->myLeads()
-            ->nearby($location, $distance)
-            ->withCount('assignedToBranch', 'openOpportunities')
+            ->where(
+                function ($q) use ($types) {
+                    $q->when(
+                        in_array(1, $types), function ($q) {
+                            $q->has('openOpportunities');
+                        }             
+                    )->when(
+                        in_array(2, $types), function ($q) {
+                            $q->where('isCustomer', 1);
+                        }             
+                    );
+                }  
+            )
+            ->withCount('openOpportunities')
+            
             ->get();
 
         $unassignedLeads = $this->address

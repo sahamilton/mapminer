@@ -2,7 +2,7 @@
 @section('content')
 
 <h2>Use the Search Options</h2>
-@include('companies.partials._searchbar')
+
 <div id="message" style="color:#F00">{{\Session::get('message')}}</div>
     <style>
       #map_canvas {

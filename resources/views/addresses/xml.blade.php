@@ -1,5 +1,6 @@
 <markers>
-@foreach($result as $row)		
+@foreach($result as $row)
+
 <marker
 	locationweb="{{route('address.show', $row->id)}}" 
 	name="{{trim($row->businessname)}}"
@@ -8,6 +9,8 @@
 	type="opportunity"
     @elseif (isset($row->assigned_to_branch_count))
     type="branchlead"
+    @elseif (isset($row->isCustomer))
+    type="customer"
     @else
     type="lead"
     @endif

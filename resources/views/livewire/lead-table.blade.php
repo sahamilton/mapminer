@@ -75,26 +75,21 @@
         </div>
     </div>
     <div class="row" style="margin-bottom:10px">
-        <div class="col form-inline">
-            <label for="selectuser">Team:</label>
-            <select wire:model="selectuser" 
-            class="form-control">
-                <option value="All">All</option>
+      
+        @if(count($team)> 1)
+            <div class="col form-inline">
+                <label for="selectuser">Team:</label>
+                <select wire:model="selectuser" 
+                class="form-control">
+                    <option value="All">All</option>
+                    
+                    @foreach ($team as $key=>$person)
+                        <option value="{{$key}}">{{$person}}</option>
+                    @endforeach
+                </select>
                 
-                @foreach ($team as $key=>$person)
-                    <option value="{{$key}}">{{$person}}</option>
-                @endforeach
-            </select>
-            <label>Lead Source </label>
-            <select wire:model="lead_source_id" 
-            class="form-control" 
-            title="Lead Source">
-                <option value="All">All</option>
-                @foreach ($leadsources as $key=>$source)
-                    <option value="{{$key}}">{{$source}}</option>
-                @endforeach
-            </select>
-        </div>
+            </div>
+        @endif
         @if(count($campaigns)> 0)
             <div class="col form-inline">
                 <label>Sales Campaign </label>

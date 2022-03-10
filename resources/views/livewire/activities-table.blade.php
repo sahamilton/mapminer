@@ -20,7 +20,7 @@
 
     <div class="row mb-4">
        <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
-        @include('livewire.partials._periodselector')
+        @include('livewire.partials._periodselector',['all'=>true])
         <div class="col form-inline">
             <label for="status">Status:</label>
             <select wire:model="status" 
@@ -31,7 +31,7 @@
                 
             </select>
         </div>
-        
+       @if(count($team)>1)
         <div class="col form-inline">
             <label for="selectuser">Team:</label>
             <select wire:model="selectuser" 
@@ -45,7 +45,22 @@
 
             
         </div>
-       
+       @endif
+       @if(count($campaigns))
+       <div class="col form-inline">
+            <label for="selectuser">Campaign:</label>
+            <select wire:model="campaign_id" 
+            class="form-control">
+                
+                <option value="all">All</option>
+                @foreach ($campaigns as $key=>$campaign)
+                    <option value="{{$key}}">{{$campaign}}</option>
+                @endforeach
+            </select>
+
+            
+        </div>
+        @endif
         <div class="col form-inline">
             <label for="activitytype">Type:</label>
             <select wire:model="activitytype" 

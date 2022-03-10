@@ -52,11 +52,12 @@ class AddressCard extends Component
         $this->address = $address->load(
             'company', 
             'leadsource', 
-            'assignedToBranch')
-            ->loadCount(
-                'contacts', 
-                'activities', 
-                'opportunities');
+            'assignedToBranch',
+            'contacts'
+        )->loadCount(
+            'activities', 
+            'opportunities'
+        );
         $this->myBranches = $this->_getMyBranches();
         $this->owned = $this->_checkIfOwned();
         $this->activityTypes = ActivityType::pluck('activity', 'id')->toArray();
@@ -90,6 +91,7 @@ class AddressCard extends Component
                 break;
             case 'activities':
                 return Activity::where('address_id', $this->address->id)
+                    ->with('relatesToAddress.contacts')
                     ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage);
