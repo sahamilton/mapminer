@@ -29,11 +29,14 @@
 
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
-            <th><a wire:click.prevent="sortBy('id')" 
+            <th>
+                <a wire:click.prevent="sortBy('id')" 
                 role="button" href="#">
                     Branch
                     @include('includes._sort-icon', ['field' => 'id'])
                 </a>
+            </th>
+            <th>Manager</th>
             </th>
             @foreach($fields as $key=>$value)
             <th>
@@ -55,11 +58,16 @@
         
             <tr>
                <td>
-                <a href="{{route($route, $branch->id)}}">
-                    {{$branch->branchname}}
-                </a>
-            </td>
-               
+                    <a href="{{route($route, $branch->id)}}">
+                        {{$branch->branchname}}
+                    </a>
+                </td>
+                <td>
+                    @foreach ($branch->manager as $manager)
+                    {{$manager->fullName}}{{! $loop->last ? ", " :''}}
+
+                    @endforeach
+               </td>
                 @foreach($fields as $value)
                     @if(isset($value) && strpos($value, 'value'))
                         <td align='right'>${{number_format($branch->$value,0)}}</th>
