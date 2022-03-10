@@ -9,10 +9,17 @@
         });
  
         var calendar = $('#calendar').fullCalendar({
+                headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            
+            },
             eventLimit: true,
             events: "{{route('calendar.index',$data['period']['period'])}}",
             displayEventTime: false,
             editable: false,
+            droppable: true,
             eventRender: function (event, element, view) {
                 if (event.allDay === 'true') {
                     element.allDay = true;

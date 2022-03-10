@@ -160,7 +160,7 @@
 
 						<a href="{{route('team.manage', $user->id)}}" class="btn btn-info">Manage Team</a>
 						
-						@endif
+					@endif
 				</ul>
 				
 					

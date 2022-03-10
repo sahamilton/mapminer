@@ -60,6 +60,7 @@
         
         <div id="branches" class="tab-pane fade ">
             <h4>Branches Serviced:</h4>
+         
             @foreach ($user->person->manages()->get() as $branch)
 
                 <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> {{$roles[$branch->pivot->role_id]}}</li>
