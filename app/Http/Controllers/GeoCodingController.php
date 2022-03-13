@@ -55,8 +55,9 @@ class GeoCodingController extends BaseController
      */
     public function findMe(FindMeFormRequest $request)
     {
+        
         $geocode = app('geocoder')->geocode(request('search'))->get();
-    
+        
         if (request()->filled('search')) {
             $address = trim(request('search'));
         }
@@ -66,7 +67,13 @@ class GeoCodingController extends BaseController
         } else {
             $data = request()->all();
         }
+       
+        /// New Livewire search list
+        if($data['view'] === 'list' && $data['type'] === 'location') {
 
+           
+            return response()->view('leads.searchlist', compact('data'));
+        }
         
         // get position from address
         if (! $data = $this->_getPostionFromAddress($data) ) {
@@ -74,7 +81,7 @@ class GeoCodingController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('search'));
         
         }
-
+        
         if (! request()->has('addressType') or count(request('addressType'))==0) {
             $data['addressType'] = ['customer', 'lead', 'opportunity', 'branchlocation'];
         }

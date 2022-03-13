@@ -13,6 +13,8 @@ use App\Person;
 use App\Howtofield;
 use App\ActivityType;
 use App\Campaign;
+use \Fractal;
+use App\Transformers\AddressMapTransformer;
 use App\Http\Requests\MergeAddressFormRequest;
 
 
@@ -254,39 +256,22 @@ class AddressController extends BaseController
      */
     public function findLocations(Request $request, $distance = null, $latlng = null)
     {
+       
         $types = explode(",", request('types'));
        
         $location = $this->getLocationLatLng($latlng);
         $myBranches = auth()->user()->person->getMyBranches();
-        $myLeads = $this->address
+        $result = $this->address
             ->nearby($location, $distance, 5)
-            ->myLeads()
-            ->where(
-                function ($q) use ($types) {
-                    $q->when(
-                        in_array(1, $types), function ($q) {
-                            $q->has('openOpportunities');
-                        }             
-                    )->when(
-                        in_array(2, $types), function ($q) {
-                            $q->where('isCustomer', 1);
-                        }             
-                    );
-                }  
-            )
+            ->withCountAssignedToMyBranch()
+            ->withCountAssignedToBranch()
             ->withCount('openOpportunities')
-            
             ->get();
 
-        $unassignedLeads = $this->address
-            ->filtered()
-            ->unassigned()
-            ->nearby($location, $distance)
-            ->get();
-        
-        $result = $myLeads->merge($unassignedLeads);
-        
-        return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
+       $markers = \Fractal::create()->collection($result)->transformWith(AddressMapTransformer::class)->toArray();
+       
+       // return json_encode($markers['data']);
+        return response()->view('addresses.xml', compact('markers'))->header('Content-Type', 'text/xml');
     }
     /**
      * [rating description]

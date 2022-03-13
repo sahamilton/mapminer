@@ -311,7 +311,11 @@ class Address extends Model
             return $query;
         }
     }
-
+    public function assignedToMyBranch()
+    {
+        return $this->assignedToBranch->whereIn('branches.id', auth()->user()->person->getMyBranches());
+      
+    }
     /**
      * [assignedToBranch description]
      * 
@@ -413,6 +417,7 @@ class Address extends Model
         );
 
     }
+    
     /**
      * Return addresses assigned to users branch(es)
      * 
