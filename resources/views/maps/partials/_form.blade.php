@@ -98,7 +98,7 @@ method = 'post' name="mapselector">
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success ">
 
-<i class="fas fa-search" aria-hidden="true"></i> Search!</button>
+<i class="fas fa-search" aria-hidden="true"></i> Search</button>
 @include('maps.partials._keys')
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
@@ -106,14 +106,10 @@ class= "btn btn-success ">
 <input type="hidden" name="lat" id ="lat" value="{{isset($data['lat']) ? $data['lat'] : '39.8282'}}" />
 </form>
 
-
+ @include('partials.scripts._autofill')
 
 <script>
 
-$("#search").change(function() {
-  $('#lat:first').val('');
-  $('#lng:first').val('');
-});
 
 
 $("select[id^='select']").change(function() {

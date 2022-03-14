@@ -95,6 +95,7 @@
 			<div class="clear"></div>
 			@include('site.layouts.footer')
 		</div>	
+		
 	</div>
 
 	@livewireScripts

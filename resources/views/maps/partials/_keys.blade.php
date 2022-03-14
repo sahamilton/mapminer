@@ -12,7 +12,7 @@
 
   @php 
     $addressKeys = [
-    'customer'=>'red',
+    'customer'=>'blue',
     'lead'=>'yellow',
     'branchlead'=>'darkgreen',
     'opportunity'=>'purple',
