@@ -27,10 +27,59 @@
                 
             </select>
         </div>
-       <div class="col form-inline">
-            <label for="searchaddress:">Address:</label>
-            <input type="text" value="{{$searchaddress}}" wire:model="searchaddress" />
+       
+        <div class="col form-inline">
+            <input class="form-control" type="text" name="searchaddress" wire:model.lazy="searchaddress" value="{{$searchaddress}}" />
+
+            <button wire:click="updateSearch()" class="btn btn-success">Update</button>
         </div>
+
     </div>
-    {{$leads->total()}}
+    <table  class='table table-striped table-bordered table-condensed table-hover'>
+        <thead>
+            <th>  
+                <a wire:click.prevent="sortBy('businessname')" role="button" href="#">
+                    Company
+                    @include('includes._sort-icon', ['field' => 'businessname'])
+                </a>
+                   
+            </th>
+            <th>Address</th>
+
+            <th>Account</th>
+            <th>Type</th>
+            </th>
+            <th>  
+               <a wire:click.prevent="sortBy('distance')" role="button" href="#">
+                    Distance
+                     @include('includes._sort-icon', ['field' => 'distance'])
+                </a>
+                   
+            </th>
+            
+        </thead>
+        <tbody>
+            @foreach ($leads as $lead)
+            <tr>
+                <td>
+                    <a href="{{route('address.show', $lead->id)}}">{{$lead->businessname}}</a>
+                </td>
+                <td>{{$lead->fullAddress()}}</td>
+                <td>{{$lead->company ? $lead->company->companyname : ''}}</td>
+                <td>{{$lead->type}}</td>
+                <td>{{number_format($lead->distance,1)}} miles</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col">
+            {{ $leads->links() }}
+        </div>
+
+        
+    </div>
+
+@include('partials.scripts._autofill')
 </div>
