@@ -1,12 +1,11 @@
 <markers>
 @foreach($markers['data'] as $row)
-
 <marker
-	locationweb ="{{route('address.show', $row['id'])}}" 
+	locationweb ="{{$row['locationsweb']}}" 
 	name ="{{$row['name']}}"
 	account ="{{$row['account']}}"
     type="{{$row['type']}}"
-	
+	distance="{{$row['distance']}}"
 	address="{{ $row['address']}}"
 	lat="{{ $row['lat']}}"
 	lng="{{ $row['lng']}}"

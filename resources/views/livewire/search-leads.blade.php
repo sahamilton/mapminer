@@ -1,5 +1,6 @@
 <div>
-    <h2>{{$myBranches[$branch_id]}}</h2>
+    <h2>{{$branch->branchname}}</h2>
+    <h4>Unclaimed leads within {{$distance}} miles of {{$searchaddress}}</h4>
     <p><a href="{{route('branchdashboard.show', $branch_id)}}">
     <i class="fas fa-tachometer-alt"></i>
      Return To Branch {{$myBranches[$branch_id]}} Dashboard</a></p>
@@ -31,7 +32,7 @@
         <div class="col form-inline">
             <input class="form-control" type="text" name="searchaddress" wire:model.lazy="searchaddress" value="{{$searchaddress}}" />
 
-            <button wire:click="updateSearch()" class="btn btn-success">Update</button>
+            <button wire:click="updateSearchAddress()" class="btn btn-success">Update</button>
         </div>
 
     </div>
@@ -56,7 +57,7 @@
                 </a>
                    
             </th>
-            
+            <th>Added to Mapminer</th>
         </thead>
         <tbody>
             @foreach ($leads as $lead)
@@ -65,9 +66,16 @@
                     <a href="{{route('address.show', $lead->id)}}">{{$lead->businessname}}</a>
                 </td>
                 <td>{{$lead->fullAddress()}}</td>
-                <td>{{$lead->company ? $lead->company->companyname : ''}}</td>
+                <td>
+                    @if($lead->company)
+                        <a href="{{route('company.show', $lead->company->id)}}">
+                            {{$lead->company->companyname}}
+                        </a>
+                    @endif
+                </td>
                 <td>{{$lead->type}}</td>
                 <td>{{number_format($lead->distance,1)}} miles</td>
+                <td>{{$lead->created_at ? $lead->created_at->format('Y-m-d') : ''}}</td>
             </tr>
             @endforeach
         </tbody>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 use App\Address;
+use App\Branch;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Transformers\AddressMapTransformer;
@@ -18,6 +19,7 @@ class SearchLeads extends Component
     public $perPage=10;
     public $branch_id;
     public $myBranches;
+    public $branch;
     public $lat;
     public $lng;
     public $myinfo;
@@ -25,21 +27,38 @@ class SearchLeads extends Component
     public Address $address;
     protected $paginationTheme = 'bootstrap';
 
-    public function updatedLat()
+    public function updatingLat()
     {
         $this->resetPage();
     }
     public function updatedBranchId()
     {
+        
+        $this->_getBranch();
+        $this->searchaddress = $this->branch->fullAddress();
+
         $this->resetPage();
     }
-    public function updatedSearch()
+    public function updatingSearch()
     {
         $this->resetPage();
     }
-    public function updatedDistance()
+    public function updateSearch()
     {
         $this->resetPage();
+    }
+    public function updatingDistance()
+    {
+        $this->resetPage();
+    }
+    public function updateSearchAddress()
+    {
+        
+        $geoCode =$this->_geoCodeAddress();
+        $this->lat = $geoCode->first()->getCoordinates()->getLatitude();
+        $this->lng = $geoCode->first()->getCoordinates()->getLongitude();
+        $this->searchaddress  = $geoCode->first()->getFormattedAddress();
+        
     }
     public function sortBy($field)
     {
@@ -62,6 +81,7 @@ class SearchLeads extends Component
         $this->myBranches = auth()->user()->person->myBranches();
         $this->branch_id = array_keys($this->myBranches)[0];
         $this->_initializeAddress();
+        $this->_getBranch();
     }
 
 
@@ -79,15 +99,7 @@ class SearchLeads extends Component
             
         );
     }
-    public function updateSearchaddress()
-    {
-        
-        $geoCode =$this->_geoCodeAddress();
-        $this->lat = $geoCode->first()->getCoordinates()->getLatitude();
-        $this->lng = $geoCode->first()->getCoordinates()->getLongitude();
-        $this->searchaddress  = $geoCode->first()->getFormattedAddress();
-        
-    }
+    
     private function _initializeAddress()
     {
 
@@ -113,12 +125,8 @@ class SearchLeads extends Component
         $addresses = Address::nearby($address, $this->distance)
             ->with('company')
             ->where(function ($q) {
-                $q->doesntHave('assignedToBranch')
-                        ->orWhereHas('assignedToBranch', function ($q) {
-                            $q->where('branches.id', $this->branch_id);
-                        }
-                    );
-                }
+                $q->doesntHave('assignedToBranch');
+                }        
             )
             ->withCount('assignedToBranch')
             ->withCount('openOpportunities')
@@ -139,14 +147,19 @@ class SearchLeads extends Component
         
         if($address->open_opportunities_count > 0) {
             return "opportunity";
-        } elseif ($address->assigned_to_branch_count > 0){
+        } elseif ($address->assigned_to_branch_count > 0) {
              return "branchlead";
         } elseif (isset($address->isCustomer)){
             return "customer";
-        } elseif ($address->assigned_to_branch_count === 0){
+        } elseif ($address->assigned_to_branch_count === 0) {
             return "lead";
         } else {
             return "lead";
         }
+    }
+
+    private  function _getbranch()
+    {
+        $this->branch = Branch::findOrFail($this->branch_id);
     }
 }

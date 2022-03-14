@@ -1,4 +1,4 @@
-@extends('site.layouts.maps')
+@extends('site.layouts.default')
 @section('content')
 
 <h2>Use the Search Options</h2>

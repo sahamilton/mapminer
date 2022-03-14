@@ -261,14 +261,22 @@ class AddressController extends BaseController
        
         $location = $this->getLocationLatLng($latlng);
         $myBranches = auth()->user()->person->getMyBranches();
-        $result = $this->address
-            ->nearby($location, $distance, 5)
-            ->withCountAssignedToMyBranch()
-            ->withCountAssignedToBranch()
+        $addresses = Address::nearby($location, $distance)
+            ->with('company')
+            ->where(function ($q) use($myBranches) {
+                $q->doesntHave('assignedToBranch')
+                        ->orWhereHas('assignedToBranch', function ($q) use($myBranches) {
+                            $q->whereIn('branches.id', $myBranches);
+                        }
+                    );
+                }
+            )
+            ->withCount('assignedToBranch')
             ->withCount('openOpportunities')
+
             ->get();
 
-       $markers = \Fractal::create()->collection($result)->transformWith(AddressMapTransformer::class)->toArray();
+       $markers = \Fractal::create()->collection($addresses)->transformWith(AddressMapTransformer::class)->toArray();
        
        // return json_encode($markers['data']);
         return response()->view('addresses.xml', compact('markers'))->header('Content-Type', 'text/xml');

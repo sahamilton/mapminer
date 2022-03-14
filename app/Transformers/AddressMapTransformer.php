@@ -31,8 +31,20 @@ class AddressMapTransformer extends TransformerAbstract
      */
     public function transform(Address $address)
     {
-        $address->leadtype = $this->_getType($address);
-        return $address;
+        $type = $this->_getType($address);
+        return [
+
+            'id'=>$address->id,
+            'account'=>$address->company ? $address->company->companyname : '',
+            'name'=>$address->businessname,
+            'type'=>$address->type,
+            'lat'=>$address->lat,
+            'lng'=>$address->lng,
+            'address'=>$address->fullAddress(),
+            'locationsweb'=>route('address.show', $address->id),
+            'distance' => $address->distance,
+
+        ];
     }
     private function _getType(Address $address) :string
     {
