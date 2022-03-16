@@ -7,7 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Campaign extends Model 
 {
     use Geocode;
-    public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status', 'type'];
+    public $fillable = [
+        'title', 
+        'description', 
+        'datefrom', 'dateto', 
+        'created_by', 
+        'manager_id', 
+        'status', 
+        'type',
+        'campaignmanager_id'
+    ];
     
     public $dates =['datefrom', 'dateto'];
     // Methods for Calendar
@@ -407,6 +416,15 @@ class Campaign extends Model
     public function manager()
     {
         return $this->belongsTo(Person::class, 'manager_id', 'id');
+    }
+    /**
+     * [campaignManager description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaignManager()
+    {
+        return $this->belongsTo(Person::class, 'campaignmanager_id', 'id');
     }
     /**
      * [branches description]

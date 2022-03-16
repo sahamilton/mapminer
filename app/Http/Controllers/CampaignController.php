@@ -97,9 +97,16 @@ class CampaignController extends Controller
             ->with('userdetails.roles')
             ->orderBy('lastname')
             ->orderBy('firstname')->get();
+        $campaignmanagers = $this->person
+            ->selectRaw("id, concat_ws(' ',firstname, lastname) as name")
+            ->withRoles([4])
+            ->orderBy('lastname')
+            ->orderBy('firstname')
+            ->pluck('name', 'id')
+            ->toArray();
         $companies = Company::orderBy('companyname')->pluck('companyname', 'id')->toArray();
        
-        return response()->view('campaigns.create', compact('managers', 'servicelines', 'companies'));
+        return response()->view('campaigns.create', compact('managers', 'servicelines', 'companies', 'campaignmanagers'));
     }
     /**
      * [store description]
@@ -112,6 +119,7 @@ class CampaignController extends Controller
     {
     
         $data = $this->_transformRequest($request);
+
         $campaign = $this->campaign->create($data);
         $campaign->servicelines()->sync($data['serviceline']);
         $campaign->companies()->sync($data['companies']);
@@ -209,7 +217,7 @@ class CampaignController extends Controller
             [
                 new AssignAddressesToCampaignJob($campaign),
                 new AssignBranchesToCampaignJob($campaign),
-                new SendCampaignLaunched(auth()->user(), $campaign),
+                new SendCampaignLaunched($campaign),
             ]
         )->dispatch($campaign->id);
        
@@ -478,6 +486,7 @@ class CampaignController extends Controller
         } else {
             $data['companies'] = request('companies');
         }
+
         $data['created_by'] = auth()->user()->id;
         if (! $data['manager_id']) {
             
