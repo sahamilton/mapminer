@@ -433,6 +433,11 @@ class Address extends Model
             }
         );
     }
+
+    public function scopeInactive($query)
+    {
+        return $query->whereDoesntHave('activities')->whereDoesntHave('opportunities');
+    }
     /**
      * [opportunities description]
      * 
