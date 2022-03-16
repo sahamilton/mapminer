@@ -60,7 +60,7 @@
               <a class="dropdown-item" 
                   href="{{{ route('branchcampaigns.index') }}}">
                  <i class="fas fa-chart-line"></i>
-                  My Sales Initiatives</a> 
+                  My Sales Campaigns</a> 
               
               <a class="dropdown-item" href="{{{ route('training.index') }}}">
               <i class="fas fa-graduation-cap" aria-hidden="true"></i>
