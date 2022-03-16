@@ -24,8 +24,9 @@
         {!! $errors->first('description', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
+<x-form-select name="campaignmanager_id" label="Campaign Manager:" :options="$campaignmanagers" />
 
-<legend>Dates Available</legend>
+ <legend>Dates Available</legend>
 <!--- Date From -->
 
 <div id="datepicker" class="form-group @if ($errors->has('datefrom')) has-error @endif">
