@@ -5,6 +5,9 @@
         @endif
 
     </h2>
+    @if($company->salesnotes->count() >0)
+    <p><i>See how to sell to <a href="{{route('salesnotes.show', $company->id)}}">{{$company->companyname}}"</a></i></p>
+    @endif
     @if($claimed != 'All')
         <p>{{ucwords($claimed)}} by Branches</p>
 
@@ -13,8 +16,11 @@
     <div class="row" style="margin-top:5px">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
-            
-        
+             @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
+        </div>
+    </div>
+    <div class="row" style="margin-top:5px">
+        <div class="col form-inline">
             <i class="fas fa-filter text-danger"></i>
             State: &nbsp;
             <select wire:model="state" class="form-control">
