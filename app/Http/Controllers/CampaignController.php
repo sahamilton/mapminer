@@ -150,11 +150,7 @@ class CampaignController extends Controller
     public function edit(Campaign $campaign)
     {
         $verticals = $this->vertical->industrysegments();
-        $companies = $this->company
-            ->whereIn('accounttypes_id', [1,4])
-            ->whereHas('locations')
-            ->orderBy('companyname')
-            ->get();
+        $companies = Company::orderBy('companyname')->pluck('companyname', 'id')->toArray();
         $servicelines = $this->serviceline->all();
         $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
         $managers = $this->person
