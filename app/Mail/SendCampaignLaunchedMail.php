@@ -19,9 +19,9 @@ class SendCampaignLaunchedMail extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, Campaign $campaign)
+    public function __construct(Campaign $campaign)
     {
-        $this->user = $user;
+       
         $this->campaign = $campaign;
     }
 
