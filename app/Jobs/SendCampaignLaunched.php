@@ -16,18 +16,18 @@ class SendCampaignLaunched implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $user;
     public $campaign;
-
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Campaign $campaign)
+    public function __construct(User $user, Campaign $campaign)
     {
-        $this->campaign = $campaign->load('campaignmanager', 'author');
-
+        $this->campaign = $campaign;
+        $this->user = $user;
     }
 
     /**
@@ -38,18 +38,8 @@ class SendCampaignLaunched implements ShouldQueue
     public function handle()
     {
         $this->campaign->update(['status'=> 'launched']);
-            Mail::to($this->_getDistribution())
-                ->send(new SendCampaignLaunchedMail($this->campaign));
-    }
+        Mail::to([['email'=>$this->user->email, 'name'=>$this->user->person->fullName()]])
 
-    private function _getDistribution()
-    {
-        @ray($this->campaign);
-        $distribution[] =$this->campaign->author->person->fullEmail();
-        if ($this->campaign->campaignmanager) {
-            $distribution[] = $this->campaign->campaignmanager->fullEmail();  
-        }
-        @ray($distribution);
-        return $distribution;
+                ->send(new SendCampaignLaunchedMail($this->user, $this->campaign));
     }
 }
