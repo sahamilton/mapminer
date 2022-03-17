@@ -8,7 +8,9 @@
 <p>
     @if($location->company)
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
-     
+     @if($location->company->salesnotes->count() >0)
+        <p><i>See how to sell to <a href="{{route('salesnotes.show', $location->company->id)}}">{{$location->company->companyname}}</a></p>
+     @endif
     @endif
 </p>
 @if($owned && $location->leadsource->id !=4)
