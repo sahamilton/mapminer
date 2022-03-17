@@ -191,8 +191,7 @@ use Illuminate\Http\Request;
         Route::get('leadsource/{leadsource}/flushleads', ['as'=>'leadsource.flushleads', 'uses'=>'LeadSourceController@flushLeads']);
         Route::resource('leadsource', 'LeadSourceController');
         
-        //     Salesnotes
-        Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
+
         // Persons Data
         Route::get('persondata', ['as'=>'persons.data.export', 'uses'=>'Exports\ExportController@index']);
         Route::post('persondata/export', ['as'=>'exports.store', 'uses'=>'Exports\ExportController@store']);
