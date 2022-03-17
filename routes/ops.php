@@ -203,9 +203,9 @@ use Illuminate\Http\Request;
         Route::post('salesactivity/updateteam', ['as'=>'salesactivity.modifyteam', 'uses'=>'SalesActivityController@updateteam']);
         Route::resource('salesactivity', 'Admin\SalesActivityManagementController');
 
-        Route::get('campaigndocs/{id}', ['as'=>'salesdocuments.index', 'uses'=>'SalesActivityController@campaignDocuments']);
-        Route::get('campaign/{id}/announce', ['as'=>'campaign.announce', 'uses'=>'CampaignEmailController@announceCampaign']);
-        Route::post('campaign/{id}/message', ['as'=>'sendcampaign.message', 'uses'=>'CampaignEmailController@email']);
+        Route::get('campaigndocs/{campaign}', ['as'=>'salesdocuments.index', 'uses'=>'SalesActivityController@campaignDocuments']);
+        Route::get('campaign/{campaign}/announce', ['as'=>'campaign.announce', 'uses'=>'CampaignEmailController@announceCampaign']);
+        Route::post('campaign/{campaign}/message', ['as'=>'sendcampaign.message', 'uses'=>'CampaignEmailController@email']);
 
         Route::get('salesteam', ['as'=>'teamupdate', 'uses'=>'SalesActivityController@changeTeam']);
 

@@ -4,6 +4,5 @@
 {{csrf_field()}}
 @include('salesactivity.partials._verticals')
 <input type="submit" class="btn btn-success" value="Update Participants" />
-<input type="hidden" name="campaign_id" value="{{$activity->id}}" />
+<input type="hidden" name="campaign_id" value="{{$campaign->id}}" />
 </form>
-@include('partials._verticalsscript')

@@ -1,6 +1,6 @@
 
   <div class="message">{!! $message !!}</div>
-  <form id="campaignmessage" action="{{route('sendcampaign.message',$activity->id)}}" method="post">
+  <form id="campaignmessage" action="{{route('sendcampaign.message',$campaign->id)}}" method="post">
   {{csrf_field()}}
   <button class='disabled' >Edit Text</button>
 	<div id='message' style="display:none" class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
