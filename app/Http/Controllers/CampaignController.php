@@ -159,8 +159,15 @@ class CampaignController extends Controller
             ->orderBy('lastname')
             ->orderBy('firstname')
             ->get();
+        $campaignmanagers = $this->person
+            ->selectRaw("id, concat_ws(' ',firstname, lastname) as name")
+            ->withRoles([4])
+            ->orderBy('lastname')
+            ->orderBy('firstname')
+            ->pluck('name', 'id')
+            ->toArray();
         $campaign->load('vertical', 'servicelines',  'manager'); 
-        return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines'));
+        return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines', 'campaignmanagers'));
     }
     /**
      * [update description]

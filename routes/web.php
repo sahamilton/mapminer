@@ -275,7 +275,7 @@ Route::group(
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
 
         Route::post('branchcampaigns/{campaign}/setmgr', ['as'=>'branchcampaign.manager','uses'=>'BranchCampaignController@setManager']);
-        Route::get('campaigns/{campaign}/track', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@track']);
+        Route::get('campaigns/{campaign}', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@show']);
         Route::resource('branchcampaigns', 'BranchCampaignController', ['except'=>['destroy']]);
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
