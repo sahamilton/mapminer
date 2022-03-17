@@ -153,7 +153,7 @@ class CampaignTracking extends Component
         
         $this->campaign = Campaign::with('campaignmanager', 'branches')->findOrFail($this->campaign_id);
 
-        if (auth()->user()->person->id === $this->campaign->campaignmanager->id) {
+        if ($this->campaign->campaignmanager && auth()->user()->person->id === $this->campaign->campaignmanager->id) {
             $this->branches = $this->campaign->branches->pluck('id')->toArray();
            
         } else {
