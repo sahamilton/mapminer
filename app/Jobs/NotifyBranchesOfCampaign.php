@@ -39,7 +39,7 @@ class NotifyBranchesOfCampaign implements ShouldQueue
         foreach ($this->campaign->branches as $branch) {
 
             $branch = $this->_getBranchData($branch);
-            if ($branch->campaign_leads > 0) {
+            if ($branch->leads_campaign > 0) {
                 foreach ($branch->manager as $manager) {
 
                     Mail::queue(new SendCampaignMail($branch, $this->campaign, $manager));
@@ -54,7 +54,7 @@ class NotifyBranchesOfCampaign implements ShouldQueue
     {
         return $branch->loadCount(
             [
-                'locations as campaign_leads'=>function ($q) {
+                'locations as leads_campaign'=>function ($q) {
                     $q->whereHas(
                         'campaigns', function ($q) {
                             $q->where('campaigns.id', $this->campaign->id);

@@ -6,7 +6,7 @@
 
 The {{$campaign->title}} has been launched.  This campaign runs from {{$campaign->datefrom->format('M j, Y')}} until {{$campaign->dateto->format('M j, Y')}}.
 
-Branch {{$branch->branchname}} has {{$branch->campaignleads}} leads available for the this campaign. 
+Branch {{$branch->branchname}} has {{$branch->leads_campaign}} leads available for the this campaign. 
 @component('mail::button', ['url' => route('branchcampaign.show',[$campaign->id, $branch->id]), 'color' => 'blue'])
         Check out the {{$campaign->title}} campaign leads.
 @endcomponent
