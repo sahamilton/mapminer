@@ -37,7 +37,7 @@
 			</p>
 			
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
-		 </fieldset>
+		
 
 		@if($owned)
 			<a class="text text-info" href="{{route('address.edit',$location->id)}}" 
@@ -52,14 +52,17 @@
 				<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
 			Delete Locaton</a>
 	
-		
-		@elseif ($location->createdBy)
+@endif
+			<p><strong>Location Source:</strong> {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
+			{{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 
-			<p>Lead Created by: <a href="{{route('user.show',$location->createdBy->id)}}">{{$location->createdBy->postName()}}</a></p>
+	
+<p><strong>Date Added:</strong> {{$location->created_at->format('Y-m-d')}}</p>
+			
 
-		@endif
+	 </fieldset>
 		
 	</div>
-	 <div id="map" style="height:300px;width:500px;border:red solid 1px">
+	 <div id="map" style="height:350px;width:600px;border:red solid 1px">
 	</div>
 </div>

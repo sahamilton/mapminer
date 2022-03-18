@@ -14,7 +14,7 @@
     @endif
 </p>
 @if($owned && $location->leadsource->id !=4)
-
+<!--- insert livewire addressbranch here ---->
 @include('addresses.partials._ranking')
 @endif
 <p><strong>Type:</strong>
@@ -33,11 +33,7 @@
   
   @endif
 </p>
-<p><strong>Location Source:</strong> {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
-{{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 
-
-<p><strong>Date Added:</strong> {{$location->created_at->format('Y-m-d')}}</p>
 
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
@@ -138,16 +134,15 @@
   </a>
   @endif
   @if($location->currentRating())
-<a class="nav-item nav-link"  
+    <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#rating"
         id="rating-tab"
         role="tab"
         aria-controls="rating"
         aria-selected="false">
-
-    <strong> Ratings ({{number_format($location->currentRating(),1)}})</strong>
-  </a>
+      <strong> Ratings ({{number_format($location->currentRating(),1)}})</strong>
+    </a>
   @endif
  
   @if($location->company && $location->company->salesnotes)

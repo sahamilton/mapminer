@@ -132,9 +132,7 @@ class AddressController extends BaseController
             $myBranches = $this->person
                 ->where('user_id', auth()->user()->id)
                 ->first()
-                ->branchesManaged()
-                ->pluck('id')
-                ->toArray();
+                ->getMyBranches();
             $activityTypes = ActivityType::pluck('activity', 'id')->toArray();
 
             $ranked = $this->address->getMyRanking($location->ranking);
@@ -482,9 +480,9 @@ class AddressController extends BaseController
     {
         
         $assignedTo = $address->assignedToBranch
-            ->where('pivot.status_id', 2)
             ->pluck('id')
             ->toArray();
+        
         return array_intersect($assignedTo, $myBranches);
 
     }
