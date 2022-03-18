@@ -13,26 +13,14 @@
      @endif
     @endif
 </p>
-@if($owned && $location->leadsource->id !=4)
+@if($owned)
 <!--- insert livewire addressbranch here ---->
-@include('addresses.partials._ranking')
+
+  <livewire:address-branch :address="$location->id" />
+
+
 @endif
-<p><strong>Type:</strong>
-  @if(! $location->isCustomer)
-      Lead
-      @if($owned)
-      <p><a href="{{route('mark.customer', $location->id)}}" class="btn btn-success">Mark as Customer</a></p>
-      @endif
-  @else
-    Customer 
-    @if($owned)
-      <a href="{{route('mark.customer', $location->id)}}" title="Change to lead">
-        <i class="fas fa-times text-danger"></i>
-      </a>
-    @endif
-  
-  @endif
-</p>
+
 
 
 @if($location->assignedToBranch)
@@ -54,6 +42,25 @@
       aria-selected="true">
     <strong>  Details</strong>
   </a>
+  <a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#contacts"
+        id="contact-tab"
+        role="tab"
+        aria-controls="contacts"
+        aria-selected="false">
+
+    <strong>Contacts ({{$location->contacts->count()}})</strong>
+  </a>
+  <a class="nav-item nav-link" 
+        data-toggle="tab" 
+        href="#activities"
+        id="activities-tab"
+        role="tab"
+        aria-controls="activities"
+        aria-selected="false">
+          <strong>Activities ({{$location->activities->count()}})</strong>
+    </a>
 @if(isset($owned))
 <a class="nav-item nav-link"  
         data-toggle="tab" 
@@ -71,26 +78,9 @@
 
 
 
-    <a class="nav-item nav-link"  
-        data-toggle="tab" 
-        href="#contacts"
-        id="contact-tab"
-        role="tab"
-        aria-controls="contacts"
-        aria-selected="false">
-
-    <strong>Contacts</strong>
-  </a>
+    
  
-    <a class="nav-item nav-link" 
-        data-toggle="tab" 
-        href="#activities"
-        id="activities-tab"
-        role="tab"
-        aria-controls="activities"
-        aria-selected="false">
-          <strong>Activities</strong>
-    </a>
+    
   
   <a class="nav-item nav-link" 
       data-toggle="tab" 
@@ -166,15 +156,15 @@
      @include('addresses.partials._tabdetails')
     </div>
     @if(isset($owned))
-    <div id="opportunities" class="tab-pane fade">
+      <div id="opportunities" class="tab-pane fade">
 
-        @php $data['opportunities'] = $location->opportunities; 
+          @php $data['opportunities'] = $location->opportunities; 
 
-        
-        @endphp
-        @include('addresses.partials._tabopportunities2')
+          
+          @endphp
+          @include('addresses.partials._tabopportunities2')
 
-    </div>
+      </div>
     @endif
     @if($location->addressable_type == 'weblead')
     <div id="weblead" class="tab-pane fade">

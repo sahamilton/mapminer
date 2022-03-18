@@ -6,6 +6,7 @@
         <th>City</th>
         <th>State</th>
         <th>ZIP</th>
+        <th>Last activity</th>
     </thead>
     <tbody>
        
@@ -20,6 +21,7 @@
             <td>{{$lead->city}}</td>
             <td>{{$lead->state}}</td>
             <td>{{$lead->zip}}</td>
+            <td>{{$lead->lastactivity ? $lead->lastactivity->activity_date->format('Y-m-d') : ''}}</td>
         </tr>
         @endforeach
     </tbody>
