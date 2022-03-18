@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Campaign;
 use App\Branch;
+use App\Person;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -20,11 +21,13 @@ class SendCampaignMail extends Mailable
      *
      * @return void
      */
-    public function __construct(Branch $branch, Campaign $campaign)
+    public function __construct(Branch $branch, Campaign $campaign, Person $manager)
     {
         $this->branch = $branch;
 
         $this->campaign = $campaign;
+
+        $this->manager = $manager;
 
     }
 
@@ -35,25 +38,9 @@ class SendCampaignMail extends Mailable
      */
     public function build()
     {
-        
-        $this->branch->loadCount(
-            [
-                'locations as campaignleads'=>function ($q) {
-                    $q->whereHas(
-                        'campaigns', function ($q) {
-                            $q->where('campaigns.id', $this->campaign->id);
-                        }
-                    );
-                }
-            ]
-        )->load('manager');
-        if ($this->branch->campaignleads > 0) {
-            foreach ($this->branch->manager as $manager) {
-                $this->manager = $manager;
-                return $this->markdown('salesactivity.campaignemail')
-                    ->subject('Campaign ' . $this->campaign->title . ' launched')
-                    ->to([$manager->fullEmail()]);
-            }
-        }
+        return $this->markdown('salesactivity.campaignemail')
+            ->subject('Campaign ' . $this->campaign->title . ' launched')
+            ->to([$this->manager->fullEmail()]);
+            
     }
 }
