@@ -1,6 +1,14 @@
 
 @php $statuses = ['open','closed - won','closed - lost']; @endphp
+@if($owned)
+<div class="float-right">
+<button class="btn btn-success" 
+      data-toggle="modal" 
+      data-target="#createopportunity">New Opportunity</button>
+      @include('opportunities.partials._createmodal')
 
+</div>
+@endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
       <th>Title</th>

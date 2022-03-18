@@ -37,20 +37,15 @@
             </p>
           @endforeach
         </div>
-        <button class="btn btn-success" 
-    
-          data-toggle="modal" 
-          data-target="#createopportunity">New Opportunity</button>
-
-          @include('opportunities.partials._createmodal')
+       
             
-              <button type="submit"
-                 class="btn btn-warning"
-                   data-toggle="modal" 
-                   data-target="#reassign"
-                   href="#">
-                   <i class="fas fa-random "></i> Reassign</button>
-            
+        <button type="submit"
+           class="btn btn-warning"
+             data-toggle="modal" 
+             data-target="#reassign"
+             href="#">
+             <i class="fas fa-random "></i> Reassign</button>
+      
       @include('addresses.partials._reassignlead')
   @else
     @foreach ($location->assignedToBranch as $branch)
