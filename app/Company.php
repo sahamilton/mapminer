@@ -516,7 +516,7 @@ class Company extends NodeModel
             $this->branches = auth()->user()->person->getMyBranches();
         }
         
-        @ray('company', count($this->branches));
+      
         if (! $fields) {
             $fields = $this->summaryFields;
         }
