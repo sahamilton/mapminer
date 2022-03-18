@@ -35,6 +35,7 @@ class CampaignEmailController extends Controller
     {
         
         NotifyBranchesOfCampaign::dispatch($campaign);
+        return response()->back()->withMessage("Announcement emails are being sent");
     }
     /**
      * [email description]
