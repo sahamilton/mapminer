@@ -37,13 +37,20 @@
                 <option value="unclaimed">Unclaimed</option>    
                 
             </select>
-        </div>
+            My Leads: &nbsp;
+            <select wire:model="myBranch" class="form-control">
+                <option value=false>All</option>
+                <option value=true>My Leads</option>
+                 
+                
+            </select>
+        
         <div wire:loading>
-        <div class="spinner-border text-danger"></div>
+            <div class="spinner-border text-danger"></div>
+        </div>
+
     </div>
-        @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
-    </div>
-    <div class="row">
+    <div class="row" style="margin-top:5px">
         <table 
             class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
@@ -72,7 +79,8 @@
                 <th>
                     <a wire:click.prevent="sortBy('distance')" role="button" href="#">
                         Distance from you
-                    @include('includes._sort-icon', ['field' => 'distance'])
+                        @include('includes._sort-icon', ['field' => 'distance'])
+                    </a>
                 </th>
                
             </thead>
