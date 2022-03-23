@@ -194,13 +194,19 @@
 				</ul>
 
 				@endif
-				@if($user->id == auth()->user()->id)
-				<div class="alert alert-warning">
-				<p class="">If your branch associations are incorrect or incomplete you should contact <a href="mailto: {{config('mapminer.system_contact')}}">
-						<i class="far fa-envelope" aria-hidden="true"> </i>
-						 {{config('mapminer.system_contact')}}
-					</a>.</p> 
-				</div>
+				@if($user->id === auth()->user()->id)
+					@if(auth()->user()->hasRole(['market_manager']))
+						<a href="{{route('branchassignments.show', auth()->user()->id)}}"
+						title="Update your branch assignments"
+						class="btn btn-info" >Update Your branch Associations</a>
+					@else
+					<div class="alert alert-warning">
+					<p class="">If your branch associations are incorrect or incomplete you should contact <a href="mailto: {{config('mapminer.system_contact')}}">
+							<i class="far fa-envelope" aria-hidden="true"> </i>
+							 {{config('mapminer.system_contact')}}
+						</a>.</p> 
+					</div>
+					@endif
 				@endif
 			</div>
 			<div class="col-sm-8">

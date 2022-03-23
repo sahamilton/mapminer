@@ -17,7 +17,7 @@ class User extends Authenticatable implements Auditable
     use Notifiable,HasRoles, Geocode, SearchableTrait, SoftDeletes, \OwenIt\Auditing\Auditable;
 
 
-    protected $expiration = '2880';
+    const EXPIRATION = 2880;
 
     protected $searchable = [
         /**
@@ -72,7 +72,7 @@ class User extends Authenticatable implements Auditable
         return $data;
     }
 
-
+    
 
     /**
      * [canImpersonate description]
@@ -356,16 +356,23 @@ class User extends Authenticatable implements Auditable
      * 
      * @return [type]     [description]
      */
-    public function getAccess($id)
+    public function getAccess($token)
     {
-        if (Crypt::decrypt(substr($id, strpos($id, 'tbmm')+4, strlen($id)))->diffInMinutes() < $this->expiration) {
+        
+        if (Crypt::decrypt(substr($token, strpos($token, 'tbmm')+4, strlen($token)))->diffInMinutes() < self::EXPIRATION) {
 
-            return $this->where('api_token', '=', substr($id, 0, strpos($id, 'tbmm')))->first();
+            return $this->where('api_token', '=', substr($token, 0, strpos($token, 'tbmm')))->first();
         } else {
             return false;
         }
     }
 
+
+    public function getExpiration($token)
+    {
+        return Crypt::decrypt(substr($token, strpos($token, 'tbmm')+4, strlen($token)))->addMinutes(self::EXPIRATION);
+
+    }
     /**
      * Get the date the user was created.
      *

@@ -85,7 +85,8 @@ class AddressController extends BaseController
      */
     public function show(Address $address, Request $request)
     {
-        
+       
+       
         if (request()->has('view')) {
             $view = request('view');
         } else {

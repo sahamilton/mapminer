@@ -18,44 +18,43 @@
 @csrf
 <div class="card-body">
     
+@if($branches->count() >0)
+  <h5 class="card-title alert alert-info"><strong>Update Current Assignments</strong></h5>
+      <p class="card-text">If your branch assignments are incomplete or incorrect, simply uncheck the appropriate branches in the list and / or add any missing in box below. </p>
+  <h6>Last Updated: {{$branches->first()->branchteam->first()->pivot->updated_at}}</h6>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <th>Branch</th>
+      <th>Branch #</th>
+      <th>Address</th>
+      <th>Manager(s)</th>
+      <th>Distance</th>
+      <th>Assigned</th>
 
-@if($details->branchesServiced()->exists())
-<h5 class="card-title alert alert-info"><strong>Update Current Assignments</strong></h5>
-    <p class="card-text">If your branch assignments are incomplete or incorrect, simply uncheck the appropriate branches in the list and / or add any missing in box below. </p>
-<h6>Last Updated: {{$details->branchesServiced[0]->pivot->updated_at}}</h6>
-<table class="table table-bordered table-condensed">
-<thead>
-<th>Branch</th>
-<th>Branch #</th>
-<th>Address</th>
-<th>City</th>
-<th>State</th>
-<th>Distance</th>
-<th></th>
-</thead>
-<tbody>
+    </thead>
+  <tbody>
 
-@foreach($branches as $branch)
-@include('branchassignments.partials._selectbranch')
- @endforeach
-</tbody>
- </table>
+  @foreach($branches as $branch)
+  @include('branchassignments.partials._selectbranch')
+   @endforeach
+  </tbody>
+   </table>
 @else
-<div class="alert alert-warning">
-  <p>You currently are not assigned to any branches in Mapminer. Check / uncheck any of the nearby branches to assign yourself.</p>
-</div>
-<div class="list-group-item">
-  <p><strong>Closest Branches to your location</strong></p>
-  <div class="row">
-    <div class="list-group-item-text col-sm-12">
-      <table class="table">
-      @foreach($branches as $branch)
-        @include('branchassignments.partials._selectbranch')
-      @endforeach
-      </table>
+  <div class="alert alert-warning">
+    <p>You currently are not assigned to any branches in Mapminer. Check / uncheck any of the nearby branches to assign yourself.</p>
+  </div>
+  <div class="list-group-item">
+    
+    <div class="row">
+      <div class="list-group-item-text col-sm-12">
+        <table class="table">
+        @foreach($branches as $branch)
+          @include('branchassignments.partials._selectbranch')
+        @endforeach
+        </table>
+      </div>
     </div>
   </div>
-</div>
 @endif
 <div class="alert alert-info">
   <p>Add missing branches by entering the correct branch numbers <em>(4 characters each)</em>, separated by commas and then click update.</p></div>

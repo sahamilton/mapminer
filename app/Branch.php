@@ -157,11 +157,13 @@ class Branch extends Model implements HasPresenter
     {
         if ($role) {
             return $this->belongsToMany(Person::class)
-                ->wherePivot('role_id', '=', $role)->withDefault(['firstname'=>'No Person in this role at this branch']);
+                ->wherePivot('role_id', '=', $role)
+                ->withPivot('role_id', 'created_at', 'updated_at')
+                ->withDefault(['firstname'=>'No Person in this role at this branch']);
         } else {
             return $this->belongsToMany(Person::class)
                 ->withTimestamps()
-                ->withPivot('role_id');
+                ->withPivot('role_id', 'created_at', 'updated_at');
         }
     }
     /**
@@ -333,7 +335,8 @@ class Branch extends Model implements HasPresenter
     public function branchteam()
     {
         return $this->belongsToMany(Person::class)
-            ->wherePivotIn('role_id', $this->branchTeamRoles);
+            ->wherePivotIn('role_id', $this->branchTeamRoles)
+            ->withPivot('role_id', 'created_at', 'updated_at');
     }
     /**
      * [businessmanager description]
