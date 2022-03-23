@@ -199,7 +199,17 @@ class BranchManagementController extends Controller
                 ->attach([request('id')=>['role_id'=>$role->id]]);
         }
     }
-
+    /**
+     * _checkIfBranchesDontBelongToUser 
+     * 
+     * Validate the branches offered to ensure that they either have no 
+     * current manager or are managed by part of the persons team.
+     * 
+     * @param Array  $branches List of branches requested to sync
+     * @param Person $person   Manager requesting update to branch assignments.
+     * 
+     * @return Array  if empty the branches are validated else return managers not in team
+     */
     private function _checkIfBranchesDontBelongToUser(Array $branches, Person $person) :array
     {
       
