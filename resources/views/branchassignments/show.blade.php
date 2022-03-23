@@ -20,7 +20,7 @@
     
 @if($branches->count() >0)
   <h5 class="card-title alert alert-info"><strong>Update Current Assignments</strong></h5>
-      <p class="card-text">If your branch assignments are incomplete or incorrect, simply uncheck the appropriate branches in the list and / or add any missing in box below. </p>
+      <p class="card-text">If your branch assignments are incomplete or incorrect, simply uncheck the appropriate branches in the list and / or add any missing in box below. Note that you cannot remove a branch if the current branch manager is part of your team.</p>
   <h6>Last Updated: {{$branches->first()->branchteam->first()->pivot->updated_at}}</h6>
   <table class="table table-bordered table-condensed">
     <thead>

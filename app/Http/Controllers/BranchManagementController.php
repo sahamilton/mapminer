@@ -77,7 +77,6 @@ class BranchManagementController extends Controller
         $person = $user->person;
            
         $branches = Branch::whereIn('id', $person->getMyBranches())
-        
             ->with('manager', 'branchteam')
             ->nearby($person, 3000)
             ->get();
