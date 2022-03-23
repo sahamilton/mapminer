@@ -204,17 +204,17 @@ class BranchManagementController extends Controller
     {
       
         $branches = Branch::whereIn('branches.id', array_keys($branches))
-            ->has('manager')
-            ->with('manager')
+            ->has('relatedPeople')
+            ->with('relatedPeople')
             ->get();
        
         $managers = $branches->map(
             function ($branch) {
                 
-                return $branch->manager->pluck('reports_to')->toArray();
+                return $branch->relatedPeople->pluck('reports_to')->toArray();
             }
         );
-        $team =$person->getDescendantsAndSelf()->pluck('reports_to')->toArray();
-        return array_diff($managers->flatten()->toArray(), $team);
+        $team =$person->getDescendantsAnd()->pluck('reports_to')->unique()->toArray();
+        return array_diff($managers->flatten()->unique()->toArray(), $team);
     }   
 }
