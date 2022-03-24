@@ -75,6 +75,12 @@ class UsersController extends Controller
             return redirect()->back()->withWarning('You are not authorized to view that profile');
         }
     }
+
+    public function profile()
+    {
+        $user = auth()->user()->id;
+        return redirect()->route('user.show', $user);
+    }
     /**
      * [edit description]
      * 
