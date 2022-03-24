@@ -1,17 +1,18 @@
 @component('mail::message')
 
-## {{$data['activity']->title}}
+## {{$campaign->title}}
 
-{{$data['sales']->firstname}}, 
+{{$manager->firstname}},
 
-{!! $data['message'] !!}
+The {{$campaign->title}} has been launched.  This campaign runs from {{$campaign->datefrom->format('M j, Y')}} until {{$campaign->dateto->format('M j, Y')}}.
 
-@component('mail::button', ['url' => route('salesactivity.show',$data['activity']->id), 'color' => 'blue'])
-        Check out the {{$data['activity']->title}} campaign resources.
+Branch {{$branch->branchname}} has {{$branch->leads_campaign}} leads available for the this campaign. 
+@component('mail::button', ['url' => route('branchcampaign.show',[$campaign->id, $branch->id]), 'color' => 'blue'])
+        Check out the {{$campaign->title}} campaign leads.
 @endcomponent
 
 <em> If you’re having trouble clicking the  button, copy and paste the URL below
-into your web browser: [{{ route('salesactivity.show',$data['activity']->id)}}]({{ route('salesactivity.show',$data['activity']->id)}}) </em>
+into your web browser: [{{ route('branchcampaign.show',[$campaign->id, $branch->id])}}]({{ route('branchcampaign.show',[$campaign->id, $branch->id])}}) </em>
 
 Sincerely
         

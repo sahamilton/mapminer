@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\SendCampaignMail;
 use App\Mail\SendManagersCampaignMail;
 use App\Mail\SendSenderCampaignMail;
+
+use App\Jobs\NotifyBranchesOfCampaign;
 use App\Person;
 use App\Salesactivity;
 use App\SearchFilter;
@@ -32,16 +34,8 @@ class CampaignEmailController extends Controller
     public function announceCampaign(Campaign $campaign)
     {
         
-        /*$activity = $this->activity->with('campaignparticipants')->findOrFail($campaign->id);
-        $verticals = $this->searchfilter->industrysegments();
-        $salesteam = $activity->campaignparticipants;
-        */
-        $branches = $campaign->load('branches.managers');
-        $campaignverticals = array_unique($activity->vertical()->pluck('filter')->toArray());
-        $message = $this->_constructMessage($activity, $campaignverticals);
-     
-       
-        return response()->view('salesactivity.salesteam', compact('salesteam', 'activity', 'message', 'verticals'));
+        NotifyBranchesOfCampaign::dispatch($campaign);
+        return response()->route('home')->withMessage("Announcement emails are being sent");
     }
     /**
      * [email description]
@@ -139,20 +133,25 @@ class CampaignEmailController extends Controller
      * 
      * @return [type]            [description]
      */
-    private function _constructMessage($activity, $verticals)
+    private function _constructMessage(Campaign $campaign)
     {
-        $message = "";
-        $activity->title.' campaign runs from '.$activity->datefrom->format('M j, Y').' until '.$activity->dateto->format('M j, Y').
-        '. '.$activity->description.'</p>';
-        $message .= 'This campaign focuses on: <ul>';
-        $message .= '<li>'.implode('</li><li>', array_unique($activity->salesprocess()->pluck('step')->toArray())).'</li>';
-        $message .= '</ul> for the following sales verticals:';
-        $message .= '<ul>';
-        $message .= '<li>'.implode('</li><li>', $verticals).'</li>';
-        $message .= '</ul></p>';
-        $message .= '<p>Check out <strong><a href="'.route('salesactivity.show', $activity->id).'">MapMiner</a></strong> for resources, including nearby locations, to help you with this campaign.</p>';
+        
+        $message = $campaign->title.' campaign runs from '.$campaign->datefrom->format('M j, Y').' until '.$campaign->dateto->format('M j, Y').
+        '. '.$campaign->description.'</p>';
+        $message .= 'This campaign focuses on ';
+        $campaign->vertical->count() >0 ? $message .= "these verticals:" : '';
+        foreach ($campaign->vertical as $vertical) {
+            $message .= '<li>'.$vertical->filter . "</li>";
+        }
+        isset($campaign->companies) ? $message .= "these companies:" : '';
+        foreach ($campaign->companies as $company) {
+            $message .= '<li>'.$company->companyname . "</li>";
+        }
+
+       
 
         return $message;
+
     }
     
 }

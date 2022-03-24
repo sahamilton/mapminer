@@ -3,6 +3,8 @@
 namespace App\Mail;
 
 use App\Campaign;
+use App\Branch;
+use App\Person;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,17 +13,22 @@ use Illuminate\Queue\SerializesModels;
 class SendCampaignMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $data;
     public $campaign;
-
+    public $branch;
+    public $manager;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, Campaign $campaign)
+    public function __construct(Branch $branch, Campaign $campaign, Person $manager)
     {
-        $this->data = $data;
+        $this->branch = $branch;
+
+        $this->campaign = $campaign;
+
+        $this->manager = $manager;
+
     }
 
     /**
@@ -32,7 +39,8 @@ class SendCampaignMail extends Mailable
     public function build()
     {
         return $this->markdown('salesactivity.campaignemail')
-            ->subject($this->data['activity']->title)
-            ->to($this->data['sales']->userdetails->email, $this->data['sales']->firstname.' '.$this->data['sales']->lastname);
+            ->subject('Campaign ' . $this->campaign->title . ' launched')
+            ->to([$this->manager->fullEmail()]);
+            
     }
 }

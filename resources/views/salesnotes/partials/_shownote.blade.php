@@ -17,6 +17,7 @@
 
             </div>
         </nav>
+
         <div class="tab-content" id="nav-tabContent"> 
 
             @foreach ($fields->where('depth', 1) as $tab)
@@ -24,16 +25,18 @@
                   class="tab-pane  @if($loop->first) show active @else fade @endif" >
                   
                     @foreach ($tab->getDescendants() as $field)
-                 
+                
                     
                         <p>
                           <strong>{{$field->fieldname}}</strong>
                         </p>
-                        @php $notelets = $salesnote->where('howtofield_id', $field->id); @endphp
+                        @php 
+
+                        $notelets = $company->salesnotes->where('id', $field->id); @endphp
                          
                              @foreach($notelets as $notelet)
-                           
-                                <p>{!! $notelet->fieldvalue !!}</p>
+                              
+                                <p>{!! $notelet->pivot->fieldvalue !!}</p>
                               @endforeach
                         
                     @endforeach

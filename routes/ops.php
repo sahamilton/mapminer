@@ -191,8 +191,7 @@ use Illuminate\Http\Request;
         Route::get('leadsource/{leadsource}/flushleads', ['as'=>'leadsource.flushleads', 'uses'=>'LeadSourceController@flushLeads']);
         Route::resource('leadsource', 'LeadSourceController');
         
-        //     Salesnotes
-        Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
+
         // Persons Data
         Route::get('persondata', ['as'=>'persons.data.export', 'uses'=>'Exports\ExportController@index']);
         Route::post('persondata/export', ['as'=>'exports.store', 'uses'=>'Exports\ExportController@store']);
@@ -203,9 +202,9 @@ use Illuminate\Http\Request;
         Route::post('salesactivity/updateteam', ['as'=>'salesactivity.modifyteam', 'uses'=>'SalesActivityController@updateteam']);
         Route::resource('salesactivity', 'Admin\SalesActivityManagementController');
 
-        Route::get('campaigndocs/{id}', ['as'=>'salesdocuments.index', 'uses'=>'SalesActivityController@campaignDocuments']);
-        Route::get('campaign/{id}/announce', ['as'=>'campaign.announce', 'uses'=>'CampaignEmailController@announceCampaign']);
-        Route::post('campaign/{id}/message', ['as'=>'sendcampaign.message', 'uses'=>'CampaignEmailController@email']);
+        Route::get('campaigndocs/{campaign}', ['as'=>'salesdocuments.index', 'uses'=>'SalesActivityController@campaignDocuments']);
+        Route::get('campaign/{campaign}/announce', ['as'=>'campaign.announce', 'uses'=>'CampaignEmailController@announceCampaign']);
+        Route::post('campaign/{campaign}/message', ['as'=>'sendcampaign.message', 'uses'=>'CampaignEmailController@email']);
 
         Route::get('salesteam', ['as'=>'teamupdate', 'uses'=>'SalesActivityController@changeTeam']);
 

@@ -14,7 +14,7 @@ use App\Http\Requests\BranchAssignmentRequest;
 use Mail;
 use Excel;
 use App\Exports\BranchManagementSheet;
-
+use App\Jobs\ConfirmBranchAssignments;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -144,19 +144,20 @@ class BranchManagementController extends BaseController
      */
     public function emailAssignments(Request $request)
     {
-
+        
         $emails = 0;
            
         if (request('id')) {
-            $campaign = $this->campaign->findOrFail(request('campaign_id'));
+            //$campaign = $this->campaign->findOrFail(request('campaign_id'));
             $recipients = $this->branchmanagement->getConfirmedRecipients($request);
-            $this->_addRecipients($campaign, $recipients);
-            $campaign->update(['expiration' => Carbon::now()->addDays(request('days'))]);
-                
+
+            //$this->_addRecipients($campaign, $recipients);
+            //$campaign->update(['expiration' => Carbon::now()->addDays(request('days'))]);
+            ConfirmBranchAssignments::dispatch($recipients);  
             //$campaign = $this->createCampaign($recipients,$request);
-            $emails = $this->branchmanagement->sendEmails($recipients, $request, $campaign);
+            //$emails = $this->branchmanagement->sendEmails($recipients, $request);
                  
-            return redirect()->route('branchassignment.check')->withMessage($emails . ' emails sent.');
+            return redirect()->route('branchassignment.check')->withMessage($recipients->count() . ' emails sent.');
         }
             return redirect()->route('branchassignment.check')->withMessage('No emails sent.');
     }

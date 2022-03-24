@@ -67,29 +67,22 @@ class BranchManagementController extends Controller
      * 
      * @return [type]     [description]
      */
-    public function show($id)
+    public function show(User $user)
     {
 
         if (! auth()->user()->hasRole('admin')) {
-            $id = auth()->user()->id;
+            $user = auth()->user();
         }
 
-        $details = $this->person->whereUser_id($id)
-
-            ->with('userdetails.roles')
-            ->with('branchesServiced')
-            ->firstOrFail();
-    
-        $branches = [];
+        $person = $user->person;
            
-        if ($details->geostatus == 1) {
-            $branches = $this->branch->nearby($details, 100, 5)->get();
-        }
- 
-        $branches = $details->branchesServiced->merge($branches);
-
+        $branches = Branch::whereIn('id', $person->getMyBranches())
+            ->with('manager', 'branchteam')
+            ->nearby($person, 3000)
+            ->get();
+         
         return response()->view(
-            'branchassignments.show', ['details'=>$details,'branches'=>$branches]
+            'branchassignments.show', ['details'=>$person,'branches'=>$branches]
         );
     }
 
@@ -101,20 +94,25 @@ class BranchManagementController extends Controller
      * 
      * @return [type]                           [description]
      */
-    public function update(BranchManagementRequest $request, $id)
+    public function update(BranchManagementRequest $request, $user)
     {
-
+        
         if (! auth()->user()->hasRole('admin')) {
-            $id = auth()->user()->id;
+            $user = auth()->user()->id;
         }
 
-        $person = $this->person->whereUser_id($id)->firstorFail();
+        $person = $this->person->whereUser_id($user)->firstorFail();
         $role = $person->findRole();
         $branches = $this->branchmanagement->getBranches($request, $role[0]);
-        $person->branchesServiced()->sync($branches);
-
-        return redirect()->route('user.show', $id)
-            ->withMessage("Thank You. Your branch associations have been updated. Check out the rest of your profile.");
+        $validate = $this->_checkIfBranchesDontBelongToUser($branches, $person);
+        if (count($validate) > 0) {
+            return redirect()->back()->withError(count($validate) . ' branch(es) already has a manager who reports to someone who is not in your team. Try again');
+        } else {
+            $person->branchesServiced()->sync($branches);
+            return redirect()->route('user.show', $user)
+                ->withMessage("Thank You. Your branch associations have been updated. Check out the rest of your profile.");
+        }
+        
     }
     /**
      * [correct description]
@@ -173,11 +171,6 @@ class BranchManagementController extends Controller
             // update token - single useauth()->login($user);
             $user->update(['apitoken' => $user->setApiToken()]);
 
-            if ($cid) {
-                $campaign = $this->campaign->findOrFail($cid);
-                $campaign->participants()->attach($person, ['activity'=>'confirm']);
-            }
-            // insert activity_person_cid
             return redirect()->route('branchassignments.show', $user->id);
         } else {
             return redirect()->route('welcome')
@@ -206,4 +199,32 @@ class BranchManagementController extends Controller
                 ->attach([request('id')=>['role_id'=>$role->id]]);
         }
     }
+    /**
+     * _checkIfBranchesDontBelongToUser 
+     * 
+     * Validate the branches offered to ensure that they either have no 
+     * current manager or are managed by part of the persons team.
+     * 
+     * @param Array  $branches List of branches requested to sync
+     * @param Person $person   Manager requesting update to branch assignments.
+     * 
+     * @return Array  if empty the branches are validated else return managers not in team
+     */
+    private function _checkIfBranchesDontBelongToUser(Array $branches, Person $person) :array
+    {
+      
+        $branches = Branch::whereIn('branches.id', array_keys($branches))
+            ->has('relatedPeople')
+            ->with('relatedPeople')
+            ->get();
+       
+        $managers = $branches->map(
+            function ($branch) {
+                
+                return $branch->relatedPeople->pluck('reports_to')->toArray();
+            }
+        );
+        $team =$person->getDescendantsAnd()->pluck('reports_to')->unique()->toArray();
+        return array_diff($managers->flatten()->unique()->toArray(), $team);
+    }   
 }

@@ -8,34 +8,20 @@
 <p>
     @if($location->company)
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
-     
+     @if($location->company->salesnotes->count() >0)
+        <p><i>See how to sell to <a href="{{route('salesnotes.show', $location->company->id)}}">{{$location->company->companyname}}</a></p>
+     @endif
     @endif
 </p>
-@if($owned && $location->leadsource->id !=4)
+@if($owned)
+<!--- insert livewire addressbranch here ---->
 
-@include('addresses.partials._ranking')
+  <livewire:address-branch :address="$location->id" />
+
+
 @endif
-<p><strong>Type:</strong>
-  @if(! $location->isCustomer)
-      Lead
-      @if($owned)
-      <p><a href="{{route('mark.customer', $location->id)}}" class="btn btn-success">Mark as Customer</a></p>
-      @endif
-  @else
-    Customer 
-    @if($owned)
-      <a href="{{route('mark.customer', $location->id)}}" title="Change to lead">
-        <i class="fas fa-times text-danger"></i>
-      </a>
-    @endif
-  
-  @endif
-</p>
-<p><strong>Location Source:</strong> {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
-{{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 
 
-<p><strong>Date Added:</strong> {{$location->created_at->format('Y-m-d')}}</p>
 
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
@@ -56,6 +42,25 @@
       aria-selected="true">
     <strong>  Details</strong>
   </a>
+  <a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#contacts"
+        id="contact-tab"
+        role="tab"
+        aria-controls="contacts"
+        aria-selected="false">
+
+    <strong>Contacts ({{$location->contacts->count()}})</strong>
+  </a>
+  <a class="nav-item nav-link" 
+        data-toggle="tab" 
+        href="#activities"
+        id="activities-tab"
+        role="tab"
+        aria-controls="activities"
+        aria-selected="false">
+          <strong>Activities ({{$location->activities->count()}})</strong>
+    </a>
 @if(isset($owned))
 <a class="nav-item nav-link"  
         data-toggle="tab" 
@@ -73,26 +78,9 @@
 
 
 
-    <a class="nav-item nav-link"  
-        data-toggle="tab" 
-        href="#contacts"
-        id="contact-tab"
-        role="tab"
-        aria-controls="contacts"
-        aria-selected="false">
-
-    <strong>Contacts</strong>
-  </a>
+    
  
-    <a class="nav-item nav-link" 
-        data-toggle="tab" 
-        href="#activities"
-        id="activities-tab"
-        role="tab"
-        aria-controls="activities"
-        aria-selected="false">
-          <strong>Activities</strong>
-    </a>
+    
   
   <a class="nav-item nav-link" 
       data-toggle="tab" 
@@ -136,16 +124,15 @@
   </a>
   @endif
   @if($location->currentRating())
-<a class="nav-item nav-link"  
+    <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#rating"
         id="rating-tab"
         role="tab"
         aria-controls="rating"
         aria-selected="false">
-
-    <strong> Ratings ({{number_format($location->currentRating(),1)}})</strong>
-  </a>
+      <strong> Ratings ({{number_format($location->currentRating(),1)}})</strong>
+    </a>
   @endif
  
   @if($location->company && $location->company->salesnotes)
@@ -169,15 +156,15 @@
      @include('addresses.partials._tabdetails')
     </div>
     @if(isset($owned))
-    <div id="opportunities" class="tab-pane fade">
+      <div id="opportunities" class="tab-pane fade">
 
-        @php $data['opportunities'] = $location->opportunities; 
+          @php $data['opportunities'] = $location->opportunities; 
 
-        
-        @endphp
-        @include('addresses.partials._tabopportunities2')
+          
+          @endphp
+          @include('addresses.partials._tabopportunities2')
 
-    </div>
+      </div>
     @endif
     @if($location->addressable_type == 'weblead')
     <div id="weblead" class="tab-pane fade">

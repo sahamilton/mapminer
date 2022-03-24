@@ -98,11 +98,10 @@ class SalesNotesController extends BaseController
     {
         $company->load('managedBy', 'salesnotes', 'managedBy.userdetails');
     
-        $salesnote = $this->salesnote->where('company_id', $company->id)->get();
         
         $fields = $this->howtofield->where('active', 1)->orderBy('sequence', 'asc')->get();
 
-        return response()->view('salesnotes.shownote', compact('salesnote', 'company', 'fields'));
+        return response()->view('salesnotes.shownote', compact('company', 'fields'));
            
     }
 
@@ -116,9 +115,9 @@ class SalesNotesController extends BaseController
      */
     public function edit(Company $company)
     {
-        $company->load('salesnotes');
+        $company->load('managedBy', 'salesnotes', 'managedBy.userdetails');
         $fields = $this->howtofield->where('depth', 1)->where('active', 1)->orderBy('sequence', 'asc')->get();
-         
+
         return response()->view('salesnotes.edit', compact('company', 'fields'));
     }
 
@@ -274,19 +273,15 @@ class SalesNotesController extends BaseController
      * 
      * @return [type]     [description]
      */
-    public function printSalesNotes($id)
+    public function printSalesNotes(Company $company)
     {
 
         
-        $company = $this->company->with('managedBy')->get();
-        $company = $company->find($id);
+        $company->load('managedBy', 'salesnotes');
         
-        $data = Salesnote::where('company_id', $id)->with('fields')->get();
-        //$data = $this->getSalesNotes($id);
-        $fields = Howtofield::orderBy('group', 'asc')
-            ->orderBy('sequence', 'asc')->get();
+        $fields = Howtofield::where('depth', ">", 0)->orderBy('fieldgroup')->orderBy('sequence', 'asc')->get();
 
-        return response()->view('salesnotes.printnote', compact('data', 'fields', 'company'));
+        return response()->view('salesnotes.printnote', compact('fields', 'company'));
         
     }
     /**

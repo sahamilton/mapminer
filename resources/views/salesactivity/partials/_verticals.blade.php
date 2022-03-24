@@ -1,4 +1,5 @@
-@foreach($verticals as $descendant)
+@if($campaign->verticals) 
+@foreach($campaign->verticals as $descendant)
 
 	@if($descendant->type == 'group'  )
 		@if(! $loop->first)
@@ -37,5 +38,6 @@
 	<?php  $n = $descendant->depth;?>
 
 @endforeach
+@endif
  </li></ul></fieldset>
 		

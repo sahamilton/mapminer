@@ -2,9 +2,9 @@
 @section('content')
 <div class="container">
   <h2>Campaign Sales Team</h2>
-  <h3>for the {{$activity->title}} campaign</h3>
+  <h3>for the {{$campaign->title}} campaign</h3>
 
-  <h4>from {{$activity->datefrom->format('M j, Y')}} to {{$activity->dateto->format('M j, Y')}}</h4>
+  <h4>from {{$campaign->datefrom->format('M j, Y')}} to {{$campaign->dateto->format('M j, Y')}}</h4>
   <!---- Tab message -->
   <ul class="nav nav-tabs">
 
@@ -12,7 +12,7 @@
       <a class="nav-link active" data-toggle="tab" href="#home">Message</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link"  data-toggle="tab" href="#menu1">Sales Team ({{$salesteam->count()}})</a>
+      <a class="nav-link"  data-toggle="tab" href="#menu1">Branches ({{$campaign->branches->count()}})</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#menu2">Modify Team</a>

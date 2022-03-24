@@ -150,11 +150,7 @@ class CampaignController extends Controller
     public function edit(Campaign $campaign)
     {
         $verticals = $this->vertical->industrysegments();
-        $companies = $this->company
-            ->whereIn('accounttypes_id', [1,4])
-            ->whereHas('locations')
-            ->orderBy('companyname')
-            ->get();
+        $companies = Company::orderBy('companyname')->pluck('companyname', 'id')->toArray();
         $servicelines = $this->serviceline->all();
         $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
         $managers = $this->person
@@ -163,8 +159,15 @@ class CampaignController extends Controller
             ->orderBy('lastname')
             ->orderBy('firstname')
             ->get();
+        $campaignmanagers = $this->person
+            ->selectRaw("id, concat_ws(' ',firstname, lastname) as name")
+            ->withRoles([4])
+            ->orderBy('lastname')
+            ->orderBy('firstname')
+            ->pluck('name', 'id')
+            ->toArray();
         $campaign->load('vertical', 'servicelines',  'manager'); 
-        return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines'));
+        return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines', 'campaignmanagers'));
     }
     /**
      * [update description]
