@@ -10,6 +10,7 @@
   'branch-opportunity-table' => 'App\\Http\\Livewire\\BranchOpportunityTable',
   'branch-table' => 'App\\Http\\Livewire\\BranchTable',
   'branch-team' => 'App\\Http\\Livewire\\BranchTeam',
+  'calendar' => 'App\\Http\\Livewire\\Calendar',
   'campaign-summary' => 'App\\Http\\Livewire\\CampaignSummary',
   'campaign-table' => 'App\\Http\\Livewire\\CampaignTable',
   'campaign-tracking' => 'App\\Http\\Livewire\\CampaignTracking',
