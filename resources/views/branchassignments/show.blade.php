@@ -9,7 +9,7 @@
 	{{$role->display_name}}
 	@endforeach
 </h4>
-
+<p><a href="{{route('user.show', $details->user_id)}}">Return to Profile</a></p>
 <form class="form" 
     action="{{route('branchassignments.update',$details->user_id)}}" 
     method="post" 

@@ -14,17 +14,29 @@
           method="POST"
         >
         @csrf
-       
-        <div class="md-form mb-4">
-          <i class="fa-solid fa-location-dot prefix grey-text"></i>
-          <input type="text" name="address" id="address" class="form-control" value="{{$user->person->fullAddress()}}">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Your Address:</label>
-        </div>
 
-        <div class="md-form mb-4">
-          <i class="fa-solid fa-phone-rotary prefix grey-text"></i>
-          <input type="text" id="phone" name="phone" class="form-control" value="{{$user->person->phoneNumber}}">
-          <label data-error="wrong" data-success="right" for="defaultForm-pass">Your Phone:</label>
+       
+        <div class="form-group">
+          <label class="control-label" for="address">Address:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                 <i class="fa-solid fa-location-dot prefix grey-text"></i>
+               </div>
+            </div>
+             <input type="text" id="address" name="address" class="form-control" value="{{$user->person->fullAddress()}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="phone">Your Phone:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                 <i class= "fa-solid fa-phone-rotary prefix grey-text"></i>
+               </div>
+            </div>
+             <input type="text" id="phone" name="phone" class="form-control" value="{{$user->person->phoneNumber}}">
+          </div>
         </div>
 
       </div>
