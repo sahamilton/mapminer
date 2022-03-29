@@ -70,9 +70,9 @@
 								</li>
 								
 							</ul>
-						<a class="btn btn-primary float-right" href="">
+						<button class="btn btn-primary float-right"  data-toggle="modal" data-target="#modalUpdateProfile">
 						<i class="far fa-edit text-info"></i>
-						Edit</a>				
+						Edit</button>				
 					</div>
 					<div class="col-sm-offset-8">
 						@if(! empty($user->person->lat))
@@ -303,4 +303,6 @@
 		</div>
 	</div>
 </div>
+
+@include('site.user._modalupdateprofile')
 @endsection

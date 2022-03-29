@@ -375,6 +375,7 @@ Route::group(
         
 
         //     User (Profile) settings
+        Route::post('profile/update', ['as'=>'update.profile', 'uses'=>'UsersController@updateProfile']);
         Route::get('profile', ['as'=>'myProfile', 'uses'=>'UsersController@profile']);
         Route::resource('user', 'UsersController', ['only' => ['show', 'update']]);;
         
