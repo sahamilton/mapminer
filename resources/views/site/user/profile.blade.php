@@ -63,9 +63,9 @@
 					<div class="col-sm-4">
 						<p><strong>Contact Details</strong></p>
 							<ul style="list-style-type: none;">
-								<li>Address:{{$user->person->fullAddress()}}
-								<li>Phone: {{$user->person->phone}}</li>
-								<li>Email: 
+								<li><strong>Address:</strong>{{$user->person->fullAddress()}}
+								<li><strong>Phone:</strong> {{$user->person->phoneNumber}}</li>
+								<li><strong>Email: </strong>
 									<a href="mailto:{{$user->person->userdetails->email}}">{{$user->person->userdetails->email}}</a>
 								</li>
 								
