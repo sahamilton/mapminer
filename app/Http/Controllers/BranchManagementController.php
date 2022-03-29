@@ -224,7 +224,7 @@ class BranchManagementController extends Controller
                 return $branch->relatedPeople->pluck('reports_to')->toArray();
             }
         );
-        $team =$person->getDescendantsAnd()->pluck('reports_to')->unique()->toArray();
+        $team =$person->getDescendantsAndSelf()->pluck('reports_to')->unique()->toArray();
         return array_diff($managers->flatten()->unique()->toArray(), $team);
     }   
 }
