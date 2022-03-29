@@ -24,7 +24,8 @@ class CompanyLocationTable extends Component
     //public Branch $branch;
     public Person $person;
     public $claimed='All';
-    
+    public $myBranch = false;
+    public $myBranches;
 
 
     public function updatingSearch()
@@ -52,8 +53,9 @@ class CompanyLocationTable extends Component
     {
         
         $this->company_id = $company_id;
-        $this->company = Company::findOrFail($company_id);
+        $this->company = Company::with('salesnotes')->findOrFail($company_id);
         $this->person = Person::where('user_id', auth()->user()->id)->first();
+        $this->myBranches = auth()->user()->person->getMyBranches();
         
     }
     /**
@@ -82,6 +84,14 @@ class CompanyLocationTable extends Component
                                 }, function ($q) {
                                     $q->doesntHave('assignedToBranch');
                                
+                                }
+                            );
+                        }
+                    )->when(
+                        $this->myBranch, function ($q) {
+                            $q->whereHas(
+                                'assignedToBranch', function ($q) {
+                                    $q->whereIn('branches.id', $this->myBranches);
                                 }
                             );
                         }

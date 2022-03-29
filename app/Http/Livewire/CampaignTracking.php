@@ -66,6 +66,7 @@ class CampaignTracking extends Component
         $sort = $this->_setSort();
         $this->fields = $this->_getTypeFields();
         $this->_getCurrentCampaign();
+
         return view(
             'livewire.campaign-tracking',
             ['data'=>$this->_getData()
@@ -73,7 +74,7 @@ class CampaignTracking extends Component
                 ->orderBy($sort, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
                 'summarycount'=>$this->_summaryCounts(),
-                //'assignable'=>$this->_assignable(),
+                
             ]
         );
     }
@@ -150,7 +151,15 @@ class CampaignTracking extends Component
     private function _getCurrentCampaign()
     {
         
-        $this->campaign = Campaign::findOrFail($this->campaign_id);
-        $this->branches = array_intersect(auth()->user()->person->getMyBranches(), $this->campaign->branches->pluck('id')->toArray());
+        $this->campaign = Campaign::with('campaignmanager', 'branches')->findOrFail($this->campaign_id);
+
+        if ($this->campaign->campaignmanager && auth()->user()->person->id === $this->campaign->campaignmanager->id) {
+            $this->branches = $this->campaign->branches->pluck('id')->toArray();
+           
+        } else {
+            $this->branches = array_intersect(auth()->user()->person->getMyBranches(), $this->campaign->branches->pluck('id')->toArray()); 
+        }
+
+        
     }
 }

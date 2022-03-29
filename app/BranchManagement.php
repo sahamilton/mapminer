@@ -54,7 +54,7 @@ class BranchManagement extends Model
      **/
     public function getBranches(Request $request, $role)
     {
-        $branches = explode(',', request('branches'));
+        $branches = explode(",", request('branches'));
 
         if ($branches[0] == '') {
             $branches = [];
@@ -73,7 +73,7 @@ class BranchManagement extends Model
                 $data[$branch] = ['role_id' => $role];
             }
         }
-
+       
         return $data;
     }
 
@@ -101,9 +101,9 @@ class BranchManagement extends Model
     public function getConfirmedRecipients(Request $request)
     {
         return $this->person
-                ->whereIn('id', request('id'))
-                ->with('userdetails', 'branchesServiced', 'userdetails.roles')
-                ->get();
+            ->whereIn('id', request('id'))
+            ->with('userdetails', 'branchesServiced', 'userdetails.roles')
+            ->get();
     }
 
     public function getCampaignId()

@@ -5,6 +5,9 @@
         @endif
 
     </h2>
+    @if($company->salesnotes->count() >0)
+    <p><i>See how to sell to <a href="{{route('salesnotes.show', $company->id)}}">{{$company->companyname}}"</a></i></p>
+    @endif
     @if($claimed != 'All')
         <p>{{ucwords($claimed)}} by Branches</p>
 
@@ -13,8 +16,11 @@
     <div class="row" style="margin-top:5px">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
-            
-        
+             @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
+        </div>
+    </div>
+    <div class="row" style="margin-top:5px">
+        <div class="col form-inline">
             <i class="fas fa-filter text-danger"></i>
             State: &nbsp;
             <select wire:model="state" class="form-control">
@@ -31,13 +37,20 @@
                 <option value="unclaimed">Unclaimed</option>    
                 
             </select>
-        </div>
+            My Leads: &nbsp;
+            <select wire:model="myBranch" class="form-control">
+                <option value=false>All</option>
+                <option value=true>My Leads</option>
+                 
+                
+            </select>
+        
         <div wire:loading>
-        <div class="spinner-border text-danger"></div>
+            <div class="spinner-border text-danger"></div>
+        </div>
+
     </div>
-        @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
-    </div>
-    <div class="row">
+    <div class="row" style="margin-top:5px">
         <table 
             class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
@@ -66,7 +79,8 @@
                 <th>
                     <a wire:click.prevent="sortBy('distance')" role="button" href="#">
                         Distance from you
-                    @include('includes._sort-icon', ['field' => 'distance'])
+                        @include('includes._sort-icon', ['field' => 'distance'])
+                    </a>
                 </th>
                
             </thead>

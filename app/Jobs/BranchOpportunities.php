@@ -51,7 +51,7 @@ class BranchOpportunities implements ShouldQueue
     public function handle()
     {
         foreach ($this->distribution as $recipient) {
-            dd($recipient);
+            
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient); 

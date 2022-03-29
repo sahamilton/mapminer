@@ -29,6 +29,7 @@ class CampaignSummaryExport implements FromQuery, WithHeadings,WithColumnFormatt
         'state'=>'State',
         'country'=>'Country',
         'manager'=>'Branch Manager',
+        'email'=>'BM Email',
         'reportsto'=>'Reports To',
         'campaign_leads'=>'Campaign Leads',
         'touched_leads'=>'Touched Leads',
@@ -96,6 +97,10 @@ class CampaignSummaryExport implements FromQuery, WithHeadings,WithColumnFormatt
                 } else {
                         $detail[] = 'No direct reporting manager';
                 }
+                break;
+            
+            case 'email':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->email :'No Branch Manager';
                 break;
             default:
                 $detail[]=$branch->$key;

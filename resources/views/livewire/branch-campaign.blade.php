@@ -28,20 +28,22 @@
                 </select>
             </div>
         </div>
-        <div class="col form-inline">
-            
+        @if($campaign->companies->count()>1)
             <div class="col form-inline">
-                <label for="view">Company:</label>
-                <select wire:model="company_id" 
-                class="form-control">
-                <option value="All">All</option>
-                    @foreach ($companies as $key=>$value)
-                        <option value="{{$key}}">{{ucwords($value)}}</option>
-                    @endforeach
-                    
-                </select>
+                
+                <div class="col form-inline">
+                    <label for="view">Company:</label>
+                    <select wire:model="company_id" 
+                    class="form-control">
+                    <option value="All">All</option>
+                        @foreach ($companies as $key=>$value)
+                            <option value="{{$key}}">{{ucwords($value)}}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
             </div>
-        </div>
+        @endif
     </div>
         @if($data->count() > 0)
             @switch($view)

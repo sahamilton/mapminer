@@ -109,7 +109,8 @@ class BranchCampaign extends Component
 
             $this->sortField='businessname';
             
-            return Address::with('company')
+            return Address::withLastActivityId()
+                ->with('company', 'lastActivity')
                 ->whereIn(
                     'company_id', 
                     Campaign::active()

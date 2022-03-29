@@ -211,7 +211,7 @@ and address_branch.address_id = activities.address_id
 
 /**************************************************************************************/
 
-SELECT addresses.id, businessname, addresses.street,addresses.city,addresses.state,branches.id as branchid,branchname, ST_Distance_Sphere(branches.position,addresses.position, 40233) * 000623  as distance
+SELECT addresses.id, businessname, addresses.street,addresses.city,addresses.state,branches.id as branchid,branchname, ST_Distance_Sphere(branches.position,addresses.position, 40233) *.000623  as distance
 FROM `addresses`,address_branch,branches
 where addresses.id = address_branch.address_id 
 and address_branch.branch_id = branches.id
@@ -1186,6 +1186,7 @@ App\Address::whereNull('created_at')->update(['created_at'=>now()]);
 
 /*************************************************************************
 get unassigned campaign leads for branches in campaign
+/*************************************************************************
 select
     b.branchname, a.id as address_id
 FROM

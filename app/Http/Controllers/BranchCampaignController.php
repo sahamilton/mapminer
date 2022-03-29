@@ -169,37 +169,7 @@ class BranchCampaignController extends Controller
     public function show(Campaign $campaign, Branch $branch)
     {
         
-        /*$person = $this->person->findOrFail(auth()->user()->person->id);
-           
-
-        $myBranches = $this->person->myBranches($person);
-    
-        if (! in_array($branch->id, array_keys($myBranches))) {
-           
-            return redirect()->back()->withError('That is not one of your branches');
-        }
-
-        $campaigns = $this->campaign->active()->whereHas(
-            'branches', function ($q) use ($myBranches) {
-                $q->whereIn('branch_id', array_keys($myBranches));
-            }
-        )
-        ->current([$branch->id])->get();// else return not valid
-  
-        $campaign->load('companies', 'branches');
-                
-        $branch = $this->branch
-            ->when(
-                $campaign->type === 'open', function ($q) use($campaign) {
-                    $q->openCampaignDetail($campaign);
-                }, function ($q) use($campaign) {
-                    $q->campaignDetail($campaign);
-                }
-            )->findOrFail($branch->id);
        
-        $views = $this->_getCampaignViews($campaign);
-       
-        return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));*/
          return response()->view('campaigns.branch', compact('campaign', 'branch'));
         
     }

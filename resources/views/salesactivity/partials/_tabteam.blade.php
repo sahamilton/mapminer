@@ -1,4 +1,4 @@
-<p><a href="{{route('campaign.announce',$activity->id)}}">Refresh list</a></p>
+<p><a href="{{route('campaign.announce',$campaign->id)}}">Refresh list</a></p>
 <!---- Tab team -->
 <table id="sorttable" class="table table-striped">
 <thead>
@@ -13,7 +13,8 @@
 </thead>
 
 <tbody>
-@foreach ($salesteam as $team)
+@foreach ($campaign->branches as $branch)
+@foreach($branch->manager as $team)
 <tr>
 <td><input type="checkbox" class='teamMember' checked name="rep[]" value="{{$team->id}}"></td>
 <td>{{$team->fullName()}}</td>
@@ -33,6 +34,7 @@
 <td>{{$team->userdetails->email}}</td>
 
 </tr>
+@endforeach
 @endforeach
 </tbody>
 </table>
