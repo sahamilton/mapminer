@@ -75,6 +75,32 @@ class UsersController extends Controller
             return redirect()->back()->withWarning('You are not authorized to view that profile');
         }
     }
+
+    public function profile()
+    {
+        $user = auth()->user()->id;
+        return redirect()->route('user.show', $user);
+    }
+
+    public function updateProfile(Request $request)
+    {
+       
+
+        /// get the person
+        $person = auth()->user()->person;
+        /// geocode address
+        $data = $person->getGeoCode(
+            app('geocoder')->geocode(request('address'))->get()
+        );
+        
+       
+        $data['phone'] = request()->filled('phone') ? request('phone') : null;
+       
+        /// update person
+        $person->update($data); 
+        /// return back
+        return redirect()->back()->withSuccess('Profile updated');
+    }
     /**
      * [edit description]
      * 

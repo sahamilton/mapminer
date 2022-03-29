@@ -13,7 +13,7 @@ class OracleImport extends Imports
     public $table = 'oracle';
     public $tempTable = 'oracle_temp';
     public $additionalFields;
-    public $types = ['refresh', 'adds', 'deletes'];
+    public $types = ['refresh'=>"Refresh", 'adds'=>"Adds", 'deletes'=>"Deletes"];
 
     public $dontCreateTemp= true;
 
@@ -61,6 +61,7 @@ class OracleImport extends Imports
    
     public function import($request = null)
     {
+     
         $this->tempTable = $this->table ."_temp";
         $this->importfilename = request('file');
         $this->_createSource($request);
