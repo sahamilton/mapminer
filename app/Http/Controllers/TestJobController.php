@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Campaign;
 class TestJobController extends Controller
 {
     /**
@@ -17,7 +18,12 @@ class TestJobController extends Controller
     {
         // get all jobs
         $jobs = $this->_getJobs();
-        $managers = auth()->user()->person->managers();
+        $mgrs = auth()->user()->person->managers();
+        $managers[0] = 'All Managers';
+        foreach ($mgrs as $mgr) {
+            $managers[$mgr->id] = $mgr->fullName();
+        } 
+    
         return response()->view('testjob.index', compact('jobs', 'managers'));
     }
 
@@ -39,15 +45,30 @@ class TestJobController extends Controller
      */
     public function store(Request $request)
     {
-        
+  
         $job = request('job');
         $job = "\App\Jobs\\" . $job;
-        if (request()->has('fromdate')) {
+
+        $reflection = new \ReflectionClass($job);
+        $constructor =  $reflection->getConstructor();
+        if ($constructor) {
+            @ray($constructor);
+            $params = $constructor->getParameters();
+            foreach ($params as $param) {
+
+
+                $data[$job][] =  $param->name;
+            }
+        }
+        dd($data);
+        if (request()->filled('fromdate')) {
             $period = $this->_setPeriod($request);
-            
+           
             $job::dispatch($period); 
         } else {
-            $job::dispatch(); 
+            $campaign = Campaign::findOrFail(19);
+           
+            $job::dispatch($campaign); 
         }
         
         
@@ -98,23 +119,43 @@ class TestJobController extends Controller
     {
         //
     }
-    private function _getJobs(): Collection
+    private function _getJobs(): Array
     {
-        return collect(File::allFiles(app_path('Jobs')))
+        $jobs = collect(File::allFiles(app_path('Jobs')))
             ->map(
                 function ($item) {
                     $path = $item->getRelativePathName();
-                    $class = sprintf(
-                        '\%s%s',
-                        \Illuminate\Container\Container::getInstance()->getNamespace(),
-                        strtr(substr($path, 0, strrpos($path, '.')), '/', '\\')
-                    );
+                   
+                    $class = strtr(substr($path, 0, strrpos($path, '.')), '/', '\\');
 
                     return $class;
                 }
             );
+        foreach ($jobs as $job) {
+            $data[$job] = $job;
+        }
+       
+        return $data;
     }
+    private function _getJobDependencies(Array $jobs)
+    {
+        foreach ($jobs as $job) {
+            $data[$job] =[];
+            $reflection = new \ReflectionClass("App\Jobs\\".$job);
+            $constructor =  $reflection->getConstructor();
+            if ($constructor) {
+                @ray($constructor);
+                $params = $constructor->getParameters();
+                foreach ($params as $param) {
 
+
+                    $data[$job][] =  $param->name;
+                }
+            }
+             
+        }
+        return $jobs;
+    }
     private function _setPeriod(Request $request)
     {
         return ['from'=>Carbon::parse(request('fromdate')), 'to'=>Carbon::parse(request('todate'))];

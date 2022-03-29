@@ -51,20 +51,8 @@ class BranchActivitiesDetail implements ShouldQueue
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient); 
             
-            (new BranchActivitiesDetailExport($this->report, $this->period, $branches))
-                ->store($this->file, 'reports')
-                ->chain(
-                    [
-                        new ReportReadyJob(
-                            $recipient, 
-                            $this->period, 
-                            $this->file, 
-                            $this->report
-                        )
-                    ]
-                );
             
-        }
+            
     }
    
     /**

@@ -161,13 +161,9 @@ class CampaignTrackingController extends Controller
     public function export(Campaign $campaign)
     {
         
-        /*$campaign->load('companies', 'branches');
-        $branches = $this->_getBranchesInCampaign($campaign);
-        $fields = $this->fields;
-        //dd($branches);
-        //$branches= $this->_getAllBranchesInCampaign($campaign);
-        //dd($branches);
-        //return Excel::download(new CampaignSummaryExport($campaign, $branches, $fields), $campaign->title.time().'Export.csv');*/
+        
+        
+        
         CampaignSummary::dispatch($campaign);
         return redirect()->back()->withMessage("Job has been dispatched and the report will be emailed to you");
 

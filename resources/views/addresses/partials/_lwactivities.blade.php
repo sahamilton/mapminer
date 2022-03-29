@@ -16,9 +16,9 @@
     @include('livewire.partials._perpage')
    
     @include('livewire.partials._search', ['placeholder'=>'Search activities'])
-    <div  wire:loading>
-        <div class="col spinner-border text-danger"></div>
-    </div>
+
+
+    
 </div>
  <table  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -58,4 +58,7 @@
 
     </tbody>
 </table>
-
+@php $contacts = $address->contacts->pluck('fullname', 'id')->toArray(); 
+$location = $address;
+@endphp
+@include('addresses.partials._activities')

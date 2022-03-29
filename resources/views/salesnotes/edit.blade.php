@@ -10,7 +10,7 @@
     >
     @csrf
     @method('put')
-      @include('salesnotes.partials._form')
+      @include('salesnotes.partials._shownote')
     <div style="margin-top:20px">
       <div class="controls">
 
@@ -19,11 +19,8 @@
     </div>
    
   </form>
+  @include('partials._scripts')
  </div>
- <script>
-    $(document).ready(function() 
-    {
-        $('.summernote').summernote();
-    });
-</script>
+ 
+ 
 @endsection
