@@ -147,11 +147,11 @@ class UsersController extends Controller
             $user->save();
             $user->timestamps = true;
         }
-        $user->person()->update(
-            $request->only(
-                ['firstname','lastname','address','phone']
-            )
-        );
+        $data = $request->only(['firstname','lastname','address','phone']);
+        if ($data['phone']) {
+            $data['phone'] = preg_replace('/[\D]/m', '', $data['phone']);
+        }
+        $user->person()->update($data);
 
         if (request()->filled('address')) {
             $data = $user->getGeoCode(
@@ -203,6 +203,5 @@ class UsersController extends Controller
     public function export()
     {
         return Excel::download(new UsersExport, 'UsersExport.csv');
-//return Excel::download(new UsersExport($interval), $title.'.csv');
     }
 }
