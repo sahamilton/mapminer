@@ -75,26 +75,34 @@ class UsersController extends Controller
             return redirect()->back()->withWarning('You are not authorized to view that profile');
         }
     }
-
+    /**
+     * Show logged in users profile
+     * 
+     * @return Route Shows Users profile
+     */
     public function profile()
     {
         $user = auth()->user()->id;
         return redirect()->route('user.show', $user);
     }
-
+    /**
+     * Update profile from user input
+     * 
+     * @param Request $request [description]
+     * 
+     * @return redirect back to user profile
+     */
     public function updateProfile(Request $request)
     {
-       
 
-        /// get the person
+        /// get the logged in user / person
         $person = auth()->user()->person;
         /// geocode address
         $data = $person->getGeoCode(
             app('geocoder')->geocode(request('address'))->get()
         );
-        
-       
-        $data['phone'] = request()->filled('phone') ? request('phone') : null;
+
+        $data['phone'] = request()->filled('phone') ? preg_replace('/[\D]/m', '', request('phone')) : null;
        
         /// update person
         $person->update($data); 
