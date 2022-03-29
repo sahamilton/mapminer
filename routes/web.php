@@ -375,7 +375,10 @@ Route::group(
         Route::get('usertracking/{person}/show', ['as'=>'usertracking.show', 'uses'=>'UserTrackingController@show']);
         Route::get('usertracking/{model}/detail', ['as'=>'usertracking.detail', 'uses'=>'UserTrackingController@detail']);
         
+
         //     User (Profile) settings
+        Route::post('profile/update', ['as'=>'update.profile', 'uses'=>'UsersController@updateProfile']);
+        Route::get('profile', ['as'=>'myProfile', 'uses'=>'UsersController@profile']);
         Route::resource('user', 'UsersController', ['only' => ['show', 'update']]);;
         
         Route::get('resetpassword', ['as'=>'reset.password', 'uses'=>'Auth\\ResetPasswordController@showResetForm']);

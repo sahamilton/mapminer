@@ -63,16 +63,16 @@
 					<div class="col-sm-4">
 						<p><strong>Contact Details</strong></p>
 							<ul style="list-style-type: none;">
-								<li>Address:{{$user->person->fullAddress()}}
-								<li>Phone: {{$user->person->phone}}</li>
-								<li>Email: 
+								<li><strong>Address:</strong>{{$user->person->fullAddress()}}
+								<li><strong>Phone:</strong> {{$user->person->phoneNumber}}</li>
+								<li><strong>Email: </strong>
 									<a href="mailto:{{$user->person->userdetails->email}}">{{$user->person->userdetails->email}}</a>
 								</li>
 								
 							</ul>
-						<a class="btn btn-primary float-right" href="">
+						<button class="btn btn-primary float-right"  data-toggle="modal" data-target="#modalUpdateProfile">
 						<i class="far fa-edit text-info"></i>
-						Edit</a>				
+						Edit</button>				
 					</div>
 					<div class="col-sm-offset-8">
 						@if(! empty($user->person->lat))
@@ -303,4 +303,6 @@
 		</div>
 	</div>
 </div>
+
+@include('site.user._modalupdateprofile')
 @endsection
