@@ -92,7 +92,7 @@ class CampaignSummaryExport implements FromQuery, WithHeadings,WithColumnFormatt
                 break;
 
             case 'reportsto':
-                if (! is_null($branch->manager) && ! is_null($branch->manager->first()->reportsTo)) {
+                if ($branch->manager->count()< 0 && ! is_null($branch->manager->first()->reportsTo)) {
                         $detail[] =  $branch->manager->first()->reportsTo->fullName();
                 } else {
                         $detail[] = 'No direct reporting manager';

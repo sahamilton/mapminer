@@ -19,14 +19,9 @@ function initialize() {
 	  title: name,
 	  clickable: true
 	});
-	 bindInfoWindow(marker, map, infoWindow, html);
+	 
 }
-function bindInfoWindow(marker, map, infoWindow, html) {
-      google.maps.event.addListener(marker, 'click', function() {
-        infoWindow.setContent(html);
-        infoWindow.open(map, marker);
-      });
-    }
+
 google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>

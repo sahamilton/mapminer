@@ -28,7 +28,7 @@ class AccountActivities implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Company $companies, array $period)
+    public function __construct(array $period, Company $companies )
     {
         $this->companies = $companies;
         $this->period = $period;

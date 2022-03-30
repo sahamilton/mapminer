@@ -9,12 +9,12 @@
 <div class='content'>
 <?php 
 $currentvalues =array();
-foreach ($data as $element){
-
-    if($element->fields->type == 'checkbox'){
-        $currentvalues[$element['howtofield_id']] = unserialize(urldecode($element->value));
+foreach ($company->salesnotes as $element){
+    
+    if($element->type == 'checkbox'){
+        $currentvalues[$element['id']] = unserialize(urldecode($element->pivot->fieldvalue));
     }else{
-        $currentvalues[$element['howtofield_id']] =     $element['value'];
+        $currentvalues[$element['id']] =     $element->pivot->fieldvalue;
     }
     
 }
@@ -22,8 +22,8 @@ foreach ($data as $element){
 
 $group = "";
     foreach ($fields as $field) {
-        if($field->group != $group){
-            $group = $field->group;
+        if($field->fieldgroup != $group){
+            $group = $field->fieldgroup;
             echo "</fieldset>";
             echo "<fieldset><legend>". $group."</legend>";
         }

@@ -10,6 +10,7 @@
         </a>
         
     </p>
+    <p><a href="{{route('user.show', $user->id)}}">Return to Profile</a></p>
     <div class="row mb4" style="padding-bottom: 10px">
         <div class="col form-inline">
             @include('livewire.partials._perpage')

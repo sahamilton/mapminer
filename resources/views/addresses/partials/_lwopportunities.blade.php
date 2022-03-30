@@ -1,12 +1,24 @@
 
 @php $statuses = ['open','closed - won','closed - lost']; @endphp
-<button class="btn btn-success" 
-        
-              data-toggle="modal" 
-              data-target="#createopportunity">New Opportunity</button>
 
-            
-                
+<div class="float-right">
+        <a class="btn btn-info" 
+            title="Add Opportunity"
+             
+            data-toggle="modal" 
+            data-target="#createopportunity" 
+            data-title = "Create New Opportunity at {{$address->businessname}}" 
+            href="#">
+            <i class="fas fa-pencil-alt"></i>
+            New Opportunity
+            </a>
+    </div>
+   <div class="col form-inline">
+    @include('livewire.partials._perpage')
+   
+    @include('livewire.partials._search', ['placeholder'=>'Search activities'])
+    
+</div>           
                   
 <table class='table table-striped table-bordered table-condensed table-hover'>
     <thead>

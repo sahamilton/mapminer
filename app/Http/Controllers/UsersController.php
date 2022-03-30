@@ -76,6 +76,40 @@ class UsersController extends Controller
         }
     }
     /**
+     * Show logged in users profile
+     * 
+     * @return Route Shows Users profile
+     */
+    public function profile()
+    {
+        $user = auth()->user()->id;
+        return redirect()->route('user.show', $user);
+    }
+    /**
+     * Update profile from user input
+     * 
+     * @param Request $request [description]
+     * 
+     * @return redirect back to user profile
+     */
+    public function updateProfile(Request $request)
+    {
+
+        /// get the logged in user / person
+        $person = auth()->user()->person;
+        /// geocode address
+        $data = $person->getGeoCode(
+            app('geocoder')->geocode(request('address'))->get()
+        );
+
+        $data['phone'] = request()->filled('phone') ? preg_replace('/[\D]/m', '', request('phone')) : null;
+       
+        /// update person
+        $person->update($data); 
+        /// return back
+        return redirect()->back()->withSuccess('Profile updated');
+    }
+    /**
      * [edit description]
      * 
      * @param [type] $user [description]
@@ -113,11 +147,11 @@ class UsersController extends Controller
             $user->save();
             $user->timestamps = true;
         }
-        $user->person()->update(
-            $request->only(
-                ['firstname','lastname','address','phone']
-            )
-        );
+        $data = $request->only(['firstname','lastname','address','phone']);
+        if ($data['phone']) {
+            $data['phone'] = preg_replace('/[\D]/m', '', $data['phone']);
+        }
+        $user->person()->update($data);
 
         if (request()->filled('address')) {
             $data = $user->getGeoCode(
@@ -169,6 +203,5 @@ class UsersController extends Controller
     public function export()
     {
         return Excel::download(new UsersExport, 'UsersExport.csv');
-//return Excel::download(new UsersExport($interval), $title.'.csv');
     }
 }

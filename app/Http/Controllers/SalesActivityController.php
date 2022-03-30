@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Address;
 use App\Company;
+use App\Campaign;
 use App\Document;
 use App\Http\Requests\SalesActivityFormRequest;
 use App\Lead;
@@ -262,12 +263,12 @@ class SalesActivityController extends BaseController
      *
      * @return [type]     [description]
      */
-    public function campaignDocuments($id)
+    public function campaignDocuments(Campaign $campaign)
     {
-        $activity = $this->activity->findOrFail($id);
-        $documents = $activity->relatedDocuments();
+        
+        $documents = $campaign->relatedDocuments();
 
-        return response()->view('salesactivity.campaigndocuments', compact('activity', 'documents'));
+        return response()->view('salesactivity.campaigndocuments', compact('campaign', 'documents'));
     }
 
     /**

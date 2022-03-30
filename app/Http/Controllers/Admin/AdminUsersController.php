@@ -330,7 +330,11 @@ class AdminUsersController extends BaseController
 
     private function _createPersonData(Request $request, User $user)
     {
+        
         $personName = request(['firstname','lastname','phone','business_title', 'reports_to']);
+        if ($personName['phone']) {
+            $personName['phone'] = preg_replace('/[\D]/m', '', $personName['phone']);
+        }
         $personGeo = $this->person->updatePersonsAddress($request);
         return array_merge($personGeo, $personName, ['user_id'=>$user->id]);
         

@@ -13,7 +13,7 @@
      @endif
     @endif
 </p>
-@if($owned)
+@if($owned && $location->user_id != auth()->user()->id)
 <!--- insert livewire addressbranch here ---->
 
   <livewire:address-branch :address="$location->id" />

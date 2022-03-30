@@ -101,8 +101,8 @@ class OracleController extends Controller
                 ];
                 // Check if the new user was previously deleted.
             if ($olduser = User::withTrashed()
-                    ->where('employee_id', $oracle->person_number)
-                    ->first()
+                ->where('employee_id', $oracle->person_number)
+                ->first()
             ) {
                 
                 $oldperson = Person::withTrashed()

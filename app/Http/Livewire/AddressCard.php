@@ -64,7 +64,8 @@ class AddressCard extends Component
     }
     public function render()
     {
-        return view('livewire.address-card',
+        return view(
+            'livewire.address-card',
             [
 
                 

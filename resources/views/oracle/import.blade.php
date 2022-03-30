@@ -30,33 +30,11 @@
 	name = "importOracle">
     @csrf
 
-    <x-form-select 
-        class="input-group input-group-lg" 
-        name="type" 
-        :options="$types" 
-        label="Import Type:" /> 
-    <x-form-input class="input-group input-group-lg" type='number' step='all' label="Offset: " name='offset' value=2 />
-   
-<div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label" for="field" >Upload File Location</label>
-        <div class="input-group input-group-lg ">
-            <input type="file" 
-            class="form-control" 
-            required
-            name='upload' id='upload' 
-            description="upload" 
-            value="{{  old('upload')}}">
-            <span class="help-block">
-                <strong>{{ $errors->has('upload') ? $errors->first('upload') : ''}}</strong>
-            </span>
-        </div>
-
-    </div>
-		
-
-
-
-
+    <x-form-select class="input-group input-group-lg" name="type" :options='$types'
+label="Import type:" />
+     <x-form-input class="input-group input-group-lg" type='number' step='all' label="Offset: " name='offset' value=2 /> 
+     <x-form-input type="file" name="upload" label="Upload CSV file:" class="input-group input-group-lg" />
+    
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Import Oracle HR" />
 
