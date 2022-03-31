@@ -194,7 +194,6 @@ class BranchDashboardController extends DashboardController
         $data = $this->_getDashBoardData();
         $data['manager'] = $this->manager; 
         $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
-        
         return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
 
     }
