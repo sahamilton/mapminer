@@ -14,7 +14,7 @@ use App\Howtofield;
 use App\ActivityType;
 use App\Campaign;
 use App\Http\Requests\MergeAddressFormRequest;
-
+use App\Transformers\AddressMapTransformer;
 
 class AddressController extends BaseController
 {
@@ -253,39 +253,43 @@ class AddressController extends BaseController
      */
     public function findLocations(Request $request, $distance = null, $latlng = null)
     {
+        
         $types = explode(",", request('types'));
-       
+        /*
+            0 => "customer"
+            1 => "lead"
+            2 => "branchlead"
+            3 => "opportunity"
+        */
+
         $location = $this->getLocationLatLng($latlng);
-        $myBranches = auth()->user()->person->getMyBranches();
-        $myLeads = $this->address
-            ->nearby($location, $distance, 5)
-            ->myLeads()
+        $addresses = Address::nearby($location, $distance)
+            ->with('company')
             ->where(
                 function ($q) use ($types) {
                     $q->when(
-                        in_array(1, $types), function ($q) {
-                            $q->has('openOpportunities');
-                        }             
+                        in_array('customer', $types), function ($q) {
+                            $q->orWhereNotNull('isCustomer');
+                        }
                     )->when(
-                        in_array(2, $types), function ($q) {
-                            $q->where('isCustomer', 1);
-                        }             
+                        in_array('opportunity', $types), function ($q) {
+                            $q->orHas('openOpportunities');
+                        }
+                    )->when(
+                        in_array('branchlead', $types), function ($q) {
+                            $q->orHas('assignedToMyBranch');
+                        }   
+                    )->when(
+                        in_array('lead', $types), function ($q) {
+                            $q->orDoesntHave('assignedTobranch');
+                        }   
                     );
-                }  
+                }
             )
-            ->withCount('openOpportunities')
-            
             ->get();
+        $markers = \Fractal::create()->collection($addresses)->transformWith(AddressMapTransformer::class)->toArray();
 
-        $unassignedLeads = $this->address
-            ->filtered()
-            ->unassigned()
-            ->nearby($location, $distance)
-            ->get();
-        
-        $result = $myLeads->merge($unassignedLeads);
-        
-        return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
+        return response()->view('addresses.xml', compact('markers'))->header('Content-Type', 'text/xml');
     }
     /**
      * [rating description]

@@ -8,14 +8,14 @@
 
 
   @endforeach
-@elseif(isset($data['type']) &&  $data['type'] == 'location')
+@elseif(isset($data['type']) &&  $data['type'] === 'location')
 
   @php 
     $addressKeys = [
-    'customer'=>'red',
-    'lead'=>'yellow',
-    'branchlead'=>'darkgreen',
-    'opportunity'=>'purple',
+      'opportunity'=>'purple',
+      'customer'=>'blue',
+      'branchlead'=>'darkgreen',
+      'lead'=>'yellow',
     ];
   @endphp
   @foreach ($addressKeys as $key=>$color)

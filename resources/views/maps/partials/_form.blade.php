@@ -29,8 +29,7 @@ foreach ($session as $key=>$value) {
 $types = [
     'location'=>'All locations',
     'branch'=>'Branches',
-    'people'=>'People', 'myleads'=>'Leads', 
-    'opportunities'=>'Opportunities'];
+    'people'=>'People'];
 
 if (isset($data['type']) && $data['type'] == 'company' && isset($company)) {
     $types['company'] = $company->companyname .' locations';
