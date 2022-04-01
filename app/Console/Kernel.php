@@ -134,7 +134,7 @@ class Kernel extends ConsoleKernel
             $schedule->job(new BranchActivitiesDetail($period))
                 ->weekly()
                 ->wednesdays()
-                ->at('08:59');
+                ->at('09:59');
 
         }   
     }
