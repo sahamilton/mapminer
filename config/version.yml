@@ -3,21 +3,19 @@ blade-directive: version
 current:
   label: v
   major: 3
-  minor: 11
-  patch: 61
-  prerelease: 4-gfa3cd86c
-  buildmetadata: ''
-  commit: '100002'
+  minor: 5
+  patch: 80
+  commit: 5f4dee
   timestamp:
-    year: 2021
-    month: 2
-    day: 3
-    hour: 10
-    minute: 50
-    second: 28
+    year: 2022
+    month: 3
+    day: 31
+    hour: 14
+    minute: 1
+    second: 49
     timezone: America/Los_Angeles
 commit:
-  mode: git-local
+  mode: absorb
   length: 6
   increment-by: 1
 git:
@@ -30,7 +28,7 @@ git:
   version:
     local: 'git describe'
     remote: 'git ls-remote {$repository} | grep tags/ | grep -v {} | cut -d / -f 3 | sort --version-sort | tail -1'
-    matcher: '/^(?P<label>[v|V]*[er]*[sion]*)[\.|\s]*(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/'
+    matcher: '/^(?P<label>[v|V]*[er]*[sion]*)[\.|\s]*(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)/m'
   timestamp:
     local: 'git show -s --format=%ci'
     remote: 'git show -s --format=%ci origin/master'
@@ -41,13 +39,10 @@ format:
   major: '{$major}'
   minor: '{$minor}'
   patch: '{$patch}'
-  prerelease: '{$prerelease}'
-  buildmetadata: '{$buildmetadata}'
   commit: '{$commit}'
-  version_source: git
-  version: 'v{$major}.{$minor}-{$patch}-(commit {$commit})'
-  version-only: 'v{$major}.{$minor}-{$patch}'
-  full: '{$version-only}[.?={$prerelease}][+?={$buildmetadata}] (commit {$commit})'
+  version: 'version {$major}.{$minor}.{$patch} (commit {$commit})'
+  version-only: 'version {$major}.{$minor}.{$patch}'
+  full: '{$version-only} (commit {$commit})'
   compact: 'v{$major}.{$minor}.{$patch}-{$commit}'
   timestamp-year: '{$timestamp.year}'
   timestamp-month: '{$timestamp.month}'
@@ -58,3 +53,8 @@ format:
   timestamp-timezone: '{$timestamp.timezone}'
   timestamp-datetime: '{$timestamp.year}-{$timestamp.month}-{$timestamp.day} {$timestamp.hour}:{$timestamp.minute}:{$timestamp.second}'
   timestamp-full: '{$timestamp.year}-{$timestamp.month}-{$timestamp.day} {$timestamp.hour}:{$timestamp.minute}:{$timestamp.second} {$timestamp.timezone}'
+branch: Master
+tag: v3.5.80
+date: 2022-03-31T11:56:56-07:00
+hash: 5f4dee899
+string: 'v3.5.80-5f4dee899 (31/03/22 11:56)'
