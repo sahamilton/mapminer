@@ -8,7 +8,7 @@ class AddressMapTransformer extends TransformerAbstract
 {
     /**
      * List of resources to automatically include
-     *
+     *  Must remove Array type whren moving to php 8
      * var array
      */
     protected  array $defaultIncludes = [
