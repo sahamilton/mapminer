@@ -23,7 +23,8 @@ class BranchCampaign extends Component
     public $campaignid;
     public $view = 'leads';
     public $branch_id;
-    public $myBranches;
+    public $myBranchIds;
+    public $branchLimit = 200;
     public $period;
     public $campaign;
 
@@ -32,6 +33,9 @@ class BranchCampaign extends Component
     {
         $this->resetPage();
     }
+
+
+
 
     public function updatingBranchId()
     {
@@ -69,8 +73,9 @@ class BranchCampaign extends Component
     {
         
         $this->campaignid = $campaign_id;
-        $this->myBranches = auth()->user()->person->getMyBranches();
-        $this->myBranches = Branch::whereIn('id', $this->myBranches)->pluck('branchname', 'id')->toArray();
+        $this->myBranchIds = auth()->user()->person->getMyBranches();
+       
+        
         if (! $branch_id) {            
             $branch_id = reset($this->myBranches);
         }
@@ -95,6 +100,7 @@ class BranchCampaign extends Component
                 'campaigns'=>Campaign::active()->pluck('title', 'id')
                     ->toArray(),
                 'branch' => Branch::findOrFail($this->branch_id),
+                'myBranches' => $this->_getMyBranches(),
                 'views'=>['leads','activities', 'opportunities'] ,
                 
             ]
@@ -180,7 +186,24 @@ class BranchCampaign extends Component
 
         $this->period = ['from'=>$this->campaign->datefrom, 'to'=>$this->campaign->dateto];
     }
+    private function _getMyBranches()
+    {
 
+        return Branch::whereIn('id', $this->myBranchIds)
+            ->whereHas(
+                'servicelines', function ($q) {
+                    $q->whereIn('servicelines.id', [5]);
+                }
+            )
+            ->wherehas(
+                'campaigns', function ($q) {
+                    $q->whereIn('campaigns.id', [$this->campaignid]);
+                }
+            )
+            ->orderBy('id')
+            ->paginate($this->branchLimit, ['*'], 'branchList');
+
+    }
     private function _test()
     {
         dd($this->view, $this->_getData()->count());
