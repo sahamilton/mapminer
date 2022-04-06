@@ -8,10 +8,10 @@ class AddressMapTransformer extends TransformerAbstract
 {
     /**
      * List of resources to automatically include
-     *
+     *  Must remove Array type whren moving to php 8
      * var array
      */
-    protected $defaultIncludes = [
+    protected  array $defaultIncludes = [
         //
     ];
     
@@ -20,7 +20,7 @@ class AddressMapTransformer extends TransformerAbstract
      *
      * var array
      */
-    protected $availableIncludes = [
+    protected  array $availableIncludes = [
         //
     ];
     
@@ -37,7 +37,7 @@ class AddressMapTransformer extends TransformerAbstract
             'id'=>$address->id,
             'account'=>$address->company ? $address->company->companyname : '',
             'name'=>$address->businessname,
-            'type'=>$address->type,
+            'type'=>$type,
             'lat'=>$address->lat,
             'lng'=>$address->lng,
             'address'=>$address->fullAddress(),
@@ -49,16 +49,17 @@ class AddressMapTransformer extends TransformerAbstract
     private function _getType(Address $address) :string
     {
         
-        if($address->open_opportunities_count > 0) {
-            return "opportunity";
-        } elseif ($address->assigned_to_branch_count > 0){
-             return "branchlead";
-        } elseif (isset($address->isCustomer)){
-            return "customer";
-        } elseif ($address->assigned_to_branch_count === 0){
-            return "lead";
+        if ($address->openOpportunities->count() > 0) {
+            $type = "opportunity";
+        } elseif ($address->isCustomer) {
+            $type =  "customer";
+        } elseif ($address->assignedToBranch->count() > 0) {
+             $type =  "branchlead";
+        } elseif (! $address->assignedToBranch) {
+            $type =  "lead";
         } else {
-            return "lead";
+            $type =  "lead";
         }
+        return $type;
     }
 }

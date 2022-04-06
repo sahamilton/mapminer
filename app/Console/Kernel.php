@@ -46,7 +46,11 @@ class Kernel extends ConsoleKernel
     {
         
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
+        
+
         if (config('app.env') == 'production') {
+            $schedule->command('quicksand:run')->daily();
             $period['from'] = Carbon::now();
             $period['to'] = Carbon::now()->addWeek();
             
@@ -129,8 +133,8 @@ class Kernel extends ConsoleKernel
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchActivitiesDetail($period))
                 ->weekly()
-                ->tuesdays()
-                ->at('01:59');
+                ->wednesdays()
+                ->at('09:59');
 
         }   
     }

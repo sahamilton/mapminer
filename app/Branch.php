@@ -775,7 +775,7 @@ class Branch extends Model implements HasPresenter
      */
     public function makeNearbyBranchXML($result)
     {
-        
+        /// move this to  transformer
         $dom = new \DOMDocument("1.0");
         $node = $dom->createElement("markers");
         $parnode = $dom->appendChild($node);

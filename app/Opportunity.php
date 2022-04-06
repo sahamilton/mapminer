@@ -49,6 +49,11 @@ class Opportunity extends Model
     {
         return $this->belongsTo(AddressBranch::class, 'address_branch_id')->with('address');
     }
+
+    public function assignedBranch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id', 'id');
+    }
     /**
      * [daysOpen description]
      * 

@@ -1,15 +1,16 @@
 <markers>
-@foreach($markers['data'] as $row)
+@foreach($markers['data'] as $marker)
+
 <marker
-	locationweb ="{{$row['locationsweb']}}" 
-	name ="{{$row['name']}}"
-	account ="{{$row['account']}}"
-    type="{{$row['type']}}"
-	distance="{{$row['distance']}}"
-	address="{{ $row['address']}}"
-	lat="{{ $row['lat']}}"
-	lng="{{ $row['lng']}}"
-	id="{{ $row['id']}}"
+	locationweb="{{route('address.show', $marker['id'])}}" 
+	name="{{trim($marker['name'])}}"
+	account="{{trim($marker['account'])}}"
+  	type = "{{$marker['type']}}"
+    distance = "{{$marker['distance']}}"
+	address="{{ $marker['address']}}"
+	lat="{{$marker['lat']}}"
+	lng="{{$marker['lng']}}"
+	id="{{$marker['id']}}"
 />
 @endforeach
 </markers>

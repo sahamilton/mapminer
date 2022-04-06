@@ -69,12 +69,10 @@ class GeoCodingController extends BaseController
         }
        
         /// New Livewire search list
-        if($data['view'] === 'list' && $data['type'] === 'location') {
+        if ($data['view'] === 'list' && $data['type'] === 'location') {
 
-           
-            return response()->view('leads.searchlist', compact('data'));
+            return response()->view('companies.nearby');
         }
-        
         // get position from address
         if (! $data = $this->_getPostionFromAddress($data) ) {
 
@@ -92,7 +90,7 @@ class GeoCodingController extends BaseController
         $data['vertical'] = null;
        
         $data = $this->_getViewData($data);
-        @ray($data);
+   
         $filtered = $this->location->isFiltered(['companies','locations'], ['vertical','business','segment'], null);
         if (isset($data['company'])) {
             $company = $data['company'];
@@ -133,10 +131,12 @@ class GeoCodingController extends BaseController
         } else {
             // map view
             $data = $this->_setZoomLevel($data);
-    
+          
             return response()->view('maps.map', compact('data', 'filtered', 'servicelines', 'company'));
         }
+
     }
+
     /**
      * [_getPostionFromAddress description]
      * 
@@ -199,7 +199,7 @@ class GeoCodingController extends BaseController
             $data= $this->_getLocationMapData($data);
         }
  
-        $data['datalocation']=$data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'];
+        $data['datalocation']=$data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng']."?types=". implode(",", $data['addressType']);
         if ($data['company']) {
             $data['datalocation'].="/".$data['company']->id;
         }

@@ -233,6 +233,13 @@
       0 => 'STS\\Tunneler\\TunnelerServiceProvider',
     ),
   ),
+  'tightenco/quicksand' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Tightenco\\Quicksand\\QuicksandServiceProvider',
+    ),
+  ),
   'toin0u/geocoder-laravel' => 
   array (
     'providers' => 
