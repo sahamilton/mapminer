@@ -16,7 +16,7 @@ use App\Campaign;
 use \Fractal;
 use App\Transformers\AddressMapTransformer;
 use App\Http\Requests\MergeAddressFormRequest;
-use App\Transformers\AddressMapTransformer;
+
 
 class AddressController extends BaseController
 {
