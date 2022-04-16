@@ -66,7 +66,7 @@ class BranchCampaignController extends Controller
     public function index()
     {
 
-  
+       
         
         if (! session('manager')) {
             $manager = $this->person->where('user_id', auth()->user()->id)->first();
@@ -74,9 +74,10 @@ class BranchCampaignController extends Controller
         } 
         $manager = $this->person->where('user_id', session('manager'))->first();
     
-        $myBranches = $manager->getMyBranches();
+        $myBranchIds = $manager->getMyBranches();
+        $myBranches = Branch::whereIn('id', $myBranchIds)->pluck('branchname', 'id')->toArray();
 
-        if (! $campaign = $this->campaign->active()->current($myBranches)->with('branches')->first()) {
+        if (! $campaign = $this->campaign->active()->current($myBranchIds)->with('branches')->first()) {
             return redirect()->back()
                 ->withMessage('There are no leads in this campaign currently assigned to your branches');
         }
@@ -102,8 +103,8 @@ class BranchCampaignController extends Controller
         } 
         $branch = $branches->first();
         
-      
-        return response()->view('campaigns.branch', compact('campaign', 'branch'));
+
+        return response()->view('campaigns.branch', compact('campaign', 'branch', 'myBranches'));
     }
 
     public function store(Request $request)
@@ -111,16 +112,16 @@ class BranchCampaignController extends Controller
         $existing = $this->addresscampaign->where('address_id', request('address_id'))->pluck('campaign_id')->toArray();
         $count=0;
         foreach (request('campaign') as $campaign_id) {
-            if(! in_array($campaign_id, $existing)) {
+            if (! in_array($campaign_id, $existing)) {
                 $count++;
-               $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+                $ac[] = $this->addresscampaign->create(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
             } 
         }
 
         foreach ($existing as $campaign) {
-            if(! in_array($campaign, request('campaign'))) {
-               $count--;
-               $ac[] = $this->addresscampaign->delete(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
+            if (! in_array($campaign, request('campaign'))) {
+                $count--;
+                $ac[] = $this->addresscampaign->delete(['address_id'=>request('address_id'), 'campaign_id'=>$campaign_id]);
             } 
         }
             // check if this address is already part of the campaign
@@ -152,9 +153,9 @@ class BranchCampaignController extends Controller
     public function delete(Request $request)
     {
         $ac = $this->addresscampaign
-        ->where('address_id',request('address_id'))
-        ->where('campaign_id',request('campaign_id'))
-        ->first();
+            ->where('address_id', request('address_id'))
+            ->where('campaign_id', request('campaign_id'))
+            ->first();
         $ac->delete();
             
         return back()->withMessage('Lead removed from campaign');
@@ -169,11 +170,22 @@ class BranchCampaignController extends Controller
     public function show(Campaign $campaign, Branch $branch)
     {
         
-       
-         return response()->view('campaigns.branch', compact('campaign', 'branch'));
+        $myBranchIds = auth()->user()->person->getMybranches();
+        $myBranches = Branch::whereIn('id', $myBranchIds)->pluck('branchname', 'id')->toArray();
+        if (in_array($branch->id, $myBranchIds)) {
+            return response()->view('campaigns.branch', compact('campaign', 'branch', 'myBranches'));
+        }
+        return redirect()->back()->withError('Branch ' . $branch->branchname . " is not one of your branches");
         
     }
-
+    /**
+     * [setManager description]
+     * 
+     * @param Campaign $campaign [description]
+     * @param Request  $request  [description]
+     *
+     * @return index route
+     */
     public function setManager(Campaign $campaign, Request $request)
     {
         
@@ -181,7 +193,7 @@ class BranchCampaignController extends Controller
             session()->forget('manager');
             return $this->index();
         }
-        if(! auth()->user()->hasRole(['admin'])) {
+        if (! auth()->user()->hasRole(['admin'])) {
             $myTeam = $this->person->myTeam()->get()->pluck('id')->toArray();
             if (! in_array(request('manager_id'), $myTeam)) {
                 return redirect()->back()->withError('That is not one of your team members');

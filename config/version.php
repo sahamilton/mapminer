@@ -14,6 +14,6 @@ return [
     'tag' => $tag,
     'date' => $date,
     'hash' => $hash,
-    'string' => sprintf('%s-%s (%s)',$tag, $hash, $date->format('d/m/y H:i')),
+    'string' => sprintf('%s-%s (%s)', $tag, $hash, $date->format('d/m/y H:i')),
     
 ];
