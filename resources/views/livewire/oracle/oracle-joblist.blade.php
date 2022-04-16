@@ -1,5 +1,5 @@
 <div>
-   <h2>Oracle JOb Profiles Matched to Mapminer Roles</h2>
+   <h2>Oracle Job Profiles Matched to Mapminer Roles</h2>
     <h4></h4>
     <div>
         @if (session()->has('message'))

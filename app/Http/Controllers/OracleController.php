@@ -131,10 +131,7 @@ class OracleController extends Controller
         return response()->view('oracle.matched');
     }
     
-    public function jobs()
-    {
-        return response()->view('oracle.jobs');
-    }
+    
 
     public function verify()
     {

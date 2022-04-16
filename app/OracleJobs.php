@@ -19,6 +19,7 @@ class OracleJobs extends Model
     {
         return $this->belongsTo(Oracle::class, 'job_code', 'job_code');
     }
+    
     public function scopeSearch($query, $search)
     {
         return $query->where('job_profile', 'like', "%{$search}%");
