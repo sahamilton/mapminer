@@ -49,6 +49,13 @@ class OracleController extends Controller
                 'details'=>'Review all Oracle data.',
             ],
 
+            6=>['order'=>6, 
+                'title'=>'Summary of Oracle jobs', 
+                'icon'=>"fa-solid fa-person-circle-question text-success", 
+                'route'=>'oraclejobs.index',
+                'details'=>'Review Summary of Oracle Jobs.',
+            ],
+
         ];
 
         return response()->view('oracle.index', compact('actions'));
