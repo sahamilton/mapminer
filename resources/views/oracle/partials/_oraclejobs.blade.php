@@ -20,13 +20,13 @@
                 </a>
             </th>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('oracle_job_count')" role="button" href="#">
+                <a wire:click.prevent="sortBy('MapminerUser')" role="button" href="#">
                     # Mapminer User
                     @include('includes._sort-icon', ['field' => 'MapminerUser'])
                 </a>
             </th>
             <th class="col-md-2">
-                <a wire:click.prevent="sortBy('oracle_job_count')" role="button" href="#">
+                <a wire:click.prevent="sortBy('NotMapminerUser')" role="button" href="#">
                     # Not Mapminer User
                     @include('includes._sort-icon', ['field' => 'NotMapminerUser'])
                 </a>
