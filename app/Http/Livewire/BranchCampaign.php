@@ -71,13 +71,13 @@ class BranchCampaign extends Component
         $this->campaignid = $campaign_id;
         $myBranches = auth()->user()->person->getMyBranches();
        
-        $this->myBranches = Branch::whereIn('id', $myBranches)->pluck('branchname', 'id')->toArray();
+        $this->myBranches = Branch::whereIn('id', $myBranches)->get();
        
         if (! $branch_id) {            
-            $branch_id = reset($myBranches);
+            $branch_id = $this->myBranches->first()->id;
         }
         $this->branch_id  =$branch_id;
-
+      
     }
 
     public function render()
@@ -105,7 +105,7 @@ class BranchCampaign extends Component
 
     private function _getData()
     {
-        
+       
         switch($this->view) {
         case 'leads':
 

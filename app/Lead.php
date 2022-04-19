@@ -2,11 +2,11 @@
 
 namespace App;
 
-use App\Presenters\LocationPresenter;
+
 use Carbon\Carbon;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use McCool\LaravelAutoPresenter\HasPresenter;
+
 
 class Lead extends Model
 {
