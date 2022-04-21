@@ -1,13 +1,12 @@
 <?php
 namespace App;
 
-use App\Presenters\LocationPresenter;
-use McCool\LaravelAutoPresenter\HasPresenter;
+
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Branch extends Model implements HasPresenter
+class Branch extends Model
 {
     use Geocode, PeriodSelector, SoftDeletes, \Awobaz\Compoships\Compoships;
     public $table ='branches';

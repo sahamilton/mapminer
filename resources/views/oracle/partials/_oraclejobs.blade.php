@@ -19,7 +19,19 @@
                     @include('includes._sort-icon', ['field' => 'oracle_job_count'])
                 </a>
             </th>
-
+            <th class="col-md-2">
+                <a wire:click.prevent="sortBy('MapminerUser')" role="button" href="#">
+                    # Mapminer User
+                    @include('includes._sort-icon', ['field' => 'MapminerUser'])
+                </a>
+            </th>
+            <th class="col-md-2">
+                <a wire:click.prevent="sortBy('NotMapminerUser')" role="button" href="#">
+                    # Not Mapminer User
+                    @include('includes._sort-icon', ['field' => 'NotMapminerUser'])
+                </a>
+            </th>
+            <th>Percentage</th>
         
         
         </tr>
@@ -30,7 +42,11 @@
    
         <tr> 
             <td class="col-md-2">
-                {{$job->job_profile}}
+                <a href="{{route('oraclejobs.show', $job->id)}}"
+                    title="Show details of {{$job->profile}} employees"
+                    >
+                    {{$job->job_profile}}
+                </a>
             </td>
             <td class="col-md-2">
                 @if($job->mapminerRole)
@@ -40,8 +56,16 @@
             <td class="col-md-2">
                 {{$job->oracle_job_count}}
             </td>
-            
-          
+            <td class="col-md-2">
+                {{$job->MapminerUser}}
+            </td>
+            <td class="col-md-2">
+                {{$job->NotMapminerUser}}
+            </td>
+            <td class="col-md-2">
+                {{$job->oracle_job_count ? number_format($job->MapminerUser / $job->oracle_job_count * 100, 2). '%': 'na'}}
+            </td>
+
                
         </tr>
     @endforeach

@@ -43,7 +43,14 @@ class OracleList extends Component
 
         $this->sortField = $field;
     }
-
+    public function mount($role = null)
+    {
+        
+        if($role) {
+            $this->selectRole = $role;
+            $this->linked = 'All';
+        }
+    }
     public function render()
     {
         return view(
@@ -113,7 +120,7 @@ class OracleList extends Component
                     'role'=>$oracle->job_profile,
                 ],
             ];
-            dd($data);
+        
     }
 
     public function export()

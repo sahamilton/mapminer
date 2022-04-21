@@ -66,6 +66,7 @@ class Address extends Model
             'project'=>'Construction Project', 
             'lead'=>'Web Lead',
             'customer'=>'Customer'];
+    
     public function getPhoneNumberAttribute()
     {
         $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);

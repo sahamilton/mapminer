@@ -6,6 +6,7 @@ use App\Observers\ActivityObserver;
 use App\Observers\BranchObserver;
 use App\Observers\FeedbackObserver;
 use App\Observers\OpportunityObserver;
+use App\Observers\OracleSourceObserver;
 use App\Observers\PersonObserver;
 use App\Observers\UserObserver;
 
@@ -22,6 +23,7 @@ use App\Feedback;
 use App\Lead;
 use App\Location;
 use App\Opportunity;
+use App\OracleSource;
 use App\Person;
 use App\Project;
 
@@ -44,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         Branch::observe(BranchObserver::class);
         Feedback::observe(FeedbackObserver::class);
         Opportunity::observe(OpportunityObserver::class);
+        OracleSource::observe(OracleSourceObserver::class);
         Person::observe(PersonObserver::class);
         User::observe(UserObserver::class);
         

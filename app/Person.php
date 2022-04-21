@@ -1,10 +1,10 @@
 <?php
 namespace App;
 
-use App\Presenters\LocationPresenter;
+
 use App\Http\Requests\UserFormRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
-//use McCool\LaravelAutoPresenter\HasPresenter;
+
 use OwenIt\Auditing\Contracts\Auditable; 
 
 class Person extends NodeModel implements Auditable

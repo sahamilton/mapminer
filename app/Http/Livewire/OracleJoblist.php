@@ -54,6 +54,20 @@ class OracleJoblist extends Component
                         }
                     )
                     ->withCount('oracleJob')
+                    ->withCount(
+                        [
+                            'oracleJob as MapminerUser'=>function ($q) {
+                                $q->has('mapminerUser');
+                            }
+                        ]
+                    )
+                    ->withCount(
+                        [
+                            'oracleJob as NotMapminerUser'=>function ($q) {
+                                $q->doesntHave('mapminerUser');
+                            }
+                        ]
+                    )
                     ->search($this->search)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),

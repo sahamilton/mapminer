@@ -81,19 +81,21 @@ use Illuminate\Http\Request;
         Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
         Route::resource('user/importcleanse', 'Imports\UsersImportController');
          // Oracle
-        
+        Route::resource('oraclejobs','OracleJobsController');
 
         
         Route::get('oracle/import', ['as'=>'oracle.importfile', 'uses'=>'Imports\OracleImportController@getfile']);
         Route::post('oracle/bulkimport', ['as'=>'oracle.import', 'uses'=>'Imports\OracleImportController@import']);
         Route::post('/oracle/mapfields', ['as'=>'oracle.mapfields', 'uses'=>'Imports\OracleImportController@mapfields']);
-        Route::get('oracle/jobs', ['as'=>'oracle.jobs', 'uses'=>'OracleController@jobs']);
         Route::get('oracle/list', ['as'=>'oracle.list', 'uses'=>'OracleController@showOracle']);
         Route::get('oracle/verify', ['as'=>'oracle.verify', 'uses'=>'OracleController@verify']);
         Route::get('oracle/manager', ['as'=>'oracle.manager', 'uses'=>'OracleController@matchManager']);
         Route::get('oracle/unmatched', ['as'=>'oracle.unmatched', 'uses'=>'OracleController@unmatched']);
         Route::get('oracle/reassign/{person}/{oracle}', ['as'=>'oracle.reassign', 'uses'=>'OracleController@reassign']);
         Route::resource('oracle', 'OracleController');
+
+        
+
         //Route::get('users/sync/delete', ['as'=>'users.sync.delete', 'uses'=>'Admin\UserSyncController@delete']);
         
         //Route::post('users/sync/confirm', ['as'=>'users.sync.confirm', 'uses'=>'Admin\UserSyncController@confirm']);
