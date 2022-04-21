@@ -60,7 +60,7 @@ class TestJobController extends Controller
                 $data[$job][] =  $param->name;
             }
         }
-        dd($data);
+        
         if (request()->filled('fromdate')) {
             $period = $this->_setPeriod($request);
            
