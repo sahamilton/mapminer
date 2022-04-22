@@ -73,14 +73,15 @@ class BranchCampaign extends Component
     {
         
         $this->campaignid = $campaign_id;
-        $myBranches = auth()->user()->person->getMyBranches();
-       
-        $this->myBranches = Branch::whereIn('id', $myBranches)->get();
-       
+        //$myBranches = auth()->user()->person->getMyBranches();
+        $this->myBranchIds = auth()->user()->person->getMyBranches();
+        $this->myBranches = Branch::whereIn('id', $this->myBranchIds)->get();
+        
         if (! $branch_id) {            
             $branch_id = $this->myBranches->first()->id;
         }
         $this->branch_id  =$branch_id;
+
       
     }
 
@@ -196,7 +197,7 @@ class BranchCampaign extends Component
                     $q->whereIn('servicelines.id', [5]);
                 }
             )
-            ->wherehas(
+            ->whereHas(
                 'campaigns', function ($q) {
                     $q->whereIn('campaigns.id', [$this->campaignid]);
                 }

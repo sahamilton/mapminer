@@ -101,9 +101,9 @@ class BranchCampaignController extends Controller
 
             return $this->show($campaign, $branches->first());
         } 
-        $branch = $branches->first();
+        //$branch = $branches->first();
      
-        return response()->view('campaigns.branch', compact('campaign', 'branch', 'myBranches'));
+        return response()->view('campaigns.branch', compact('campaign', 'myBranches'));
     }
 
     public function store(Request $request)
