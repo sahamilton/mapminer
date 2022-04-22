@@ -19,6 +19,8 @@ Activate Your Team Members
 
 Alternatively you can contact support@tbmapminer.com and request which team members and branch you would like activated.
 
+For full details on how to manage your team check out the [Mapminer training video]({{route('training.show', 15)}}).
+
 Thanks,<br>
 {{ config('app.name') }}
 @endcomponent
