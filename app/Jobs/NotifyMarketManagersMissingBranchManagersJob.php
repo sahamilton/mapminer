@@ -59,7 +59,8 @@ class NotifyMarketManagersMissingBranchManagersJob implements ShouldQueue
 
                     ->send(
                         new NotifyMarketManagersMissingBranchManagersMail($manager)
-                    );
+                    )
+                    ->subject('Missing Branch Managers');
         }
     }
 
