@@ -81,10 +81,12 @@ class BranchCampaignController extends Controller
             return redirect()->back()
                 ->withMessage('You are not assigned to any branches. Please contact sales operations if this is incorrect');
     
-        }        if (! $campaign = $this->campaign->active()->current($myBranchIds)->with('branches')->first()) {
+        }        
+        if (! $campaign = $this->campaign->active()->current($myBranchIds)->with('branches')->first()) {
             return redirect()->back()
                 ->withMessage('There are no leads in this campaign currently assigned to your branches');
         }
+        
         if (! $branches = $campaign->branches->whereIn('id', $myBranchIds)) {
             return redirect()->back()
                 ->withMessage('There are no current sales campaigns for your branches');
