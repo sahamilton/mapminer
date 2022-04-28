@@ -10,7 +10,11 @@
    <i class="far fa-check-circle text-success" title="Mapminer user"></i></p>
 @else
    Not In Mapminer
-   <p><a href="{{route('oracle.useradd', $oracle->id)}}" class="btn btn-success">Add to Mapminer</a></p>
+   @if($oracle->oracleManager->mapminerUser)
+   <p>
+      <a href="{{route('oracle.useradd', $oracle->id)}}" class="btn btn-success">Add to Mapminer</a>
+   </p>
+   @endif
 @endif
 
 <p>{{$oracle->location_name}}</p>
@@ -44,7 +48,8 @@
 </a>
  <i class="far fa-check-circle text-success" title="Mapminer user"></i>
 @else
-{{$oracle->oracleManager->fullName()}}
+Not In Mapminer:
+<a href="{{route('oracle.show', $oracle->oracleManager->id)}}">{{$oracle->oracleManager->fullName()}}</a>
 @endif
 @endif
 @endsection
