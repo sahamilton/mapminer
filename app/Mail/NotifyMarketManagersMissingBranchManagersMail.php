@@ -30,6 +30,7 @@ class NotifyMarketManagersMissingBranchManagersMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.notify-market-managers-missing-branch-managers-mail');
+        return $this->markdown('mail.notify-market-managers-missing-branch-managers-mail')
+        ->subject('Your Missing Branch Managers');
     }
 }

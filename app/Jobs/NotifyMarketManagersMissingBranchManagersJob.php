@@ -56,11 +56,10 @@ class NotifyMarketManagersMissingBranchManagersJob implements ShouldQueue
             ->get();
         foreach ($managers as $manager) {
             Mail::to([$manager->mapminerUser->getFormattedEmail()])
-
+                    
                     ->send(
                         new NotifyMarketManagersMissingBranchManagersMail($manager)
-                    )
-                    ->subject('Missing Branch Managers');
+                    );
         }
     }
 
