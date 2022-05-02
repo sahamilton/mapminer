@@ -44,12 +44,19 @@ class CampaignTracking extends Component
     {
         $this->resetPage();
     }
-    public function mount()
+    public function mount($campaign_id = null)
     {
-        
-        $this->campaigns = Campaign::active()->get();
-        $this->campaign = $this->campaigns->first();
+
+        if(! $campaign_id) {
+            $this->campaigns = Campaign::active()->first();
+            $campaign_id  = $this->campaigns->first();
+            
+        } else {
+            $this->campaign = Campaign::findOrFail($campaign_id);
+        }
         $this->campaign_id = $this->campaign->id;
+        
+        
     }
     public function sortBy($field)
     {
