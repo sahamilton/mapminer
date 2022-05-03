@@ -645,4 +645,16 @@ class AdminUsersController extends BaseController
         return redirect()->route('users.index')
             ->withMessage("Users deleted prior to " . Carbon::parse(request('deleted_before'))->format('Y-m-d'). " and not in Oracle have been permanently deleted");
     }
+
+    public function geocodePeople()
+    {
+        $people = Person::whereNull('state')->get();
+        foreach ($people as $person) {
+            $geocode = app('geocoder')->geocode($person->address)->get();
+            $data = $person->getGeoCode($geocode);
+            $person->update($data);
+
+        }
+        return redirect()->back()->withSuccess("All people have been re-geocoded")
+    }
 }
