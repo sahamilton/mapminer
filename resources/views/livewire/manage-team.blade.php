@@ -63,21 +63,23 @@
             <tr>
                 <td>
                     @if($member->mapminerUser)
-                    <i 
-                        class="fa-solid fa-circle-check  text-success"
-                        title= "{{$member->fullName()}} is registered in Mapminer">
-                    </i>
-                    <a href=""
-                        wire:click.prevent = changeUser({{$member->mapminerUser->id}})
-                         title= "See {{$member->fullName()}}'s team">
-                        {{$member->first_name}}
-                    </a>
+                        <i 
+                            class="fa-solid fa-circle-check  text-success"
+                            title= "{{$member->fullName()}} is registered in Mapminer">
+                        </i>
+                        <a href=""
+                            wire:click.prevent = changeUser({{$member->mapminerUser->id}})
+                             title= "See {{$member->fullName()}}'s team">
+                            {{$member->first_name}}
+                        </a>
                     @else
+                        
+                        <span title= "{{$member->fullName()}} is not registered in Mapminer">
+
+                        {{$member->first_name}} </span>
                         <a href="{{route('oracle.useradd', $member->id)}}"
                           title="Add {{$member->fullName()}} to Mapminer">
-                          <i class="fa-solid fa-circle-plus text-danger"></i>
-                        </a>
-                            <span title= "{{$member->fullName()}} is not registered in Mapminer">{{$member->first_name}}</span>
+                          <i class="fa-solid fa-circle-plus text-danger"></i> Add </a>
                         
                         
                     @endif

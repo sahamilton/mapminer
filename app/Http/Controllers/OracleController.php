@@ -92,9 +92,13 @@ class OracleController extends Controller
                 ],
                 'person'=>[
 
-                    'firstname' =>$oracle->first_name,
-                    'lastname'  =>$oracle->last_name,
-                    'address' =>$oracle->branch->fullAddress(),
+                    'firstname' => $oracle->first_name,
+                    'lastname'  => $oracle->last_name,
+                    'address' => $oracle->branch->address,
+                    'city' => $oracle->branch->city,
+                    'state' => $oracle->branch->state,
+                    'zip' => $oracle->branch->zip,
+                    'country' => $oracle->branch->country,
                     'lat' =>$oracle->branch->lat,
                     'lng' =>$oracle->branch->lng,
                     'lng' =>$oracle->branch->lng,
@@ -106,16 +110,21 @@ class OracleController extends Controller
                 'branch'=>$oracle->branch,
                 
                 ];
-                // Check if the new user was previously deleted.
+            // Check if the new user was previously deleted.
+            // we should also check if the email belongs to a deleted user
             if ($olduser = User::withTrashed()
                 ->where('employee_id', $oracle->person_number)
-                ->first()
+                ->orWhere('email', $oracle->primary_email)
+                ->get()
             ) {
-                
-                $oldperson = Person::withTrashed()
-                    ->where('user_id', $olduser->id)
+                foreach ($olduser as $old) {
+                     $oldperson = Person::withTrashed()
+                    ->where('user_id', $old->id)
                     ->forceDelete();
-                $olduser->forceDelete();
+                    $old->where('id', $oldid)->forceDelete();
+                }
+               
+                
             }
 
             $user = User::create($data['user']);
