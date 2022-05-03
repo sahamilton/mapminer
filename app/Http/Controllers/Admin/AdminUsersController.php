@@ -655,6 +655,6 @@ class AdminUsersController extends BaseController
             $person->update($data);
 
         }
-        return redirect()->back()->withSuccess("All people have been re-geocoded")
+        return redirect()->back()->withSuccess("All people have been re-geocoded");
     }
 }
