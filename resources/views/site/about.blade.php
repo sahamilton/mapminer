@@ -10,7 +10,7 @@
 <p>Contact <a href="mailto:{{config('mapminer.system_contact')}}" title="Email {{config('mapminer.support')}}">{{config('mapminer.support')}}</a> for any training or support issues.</p>
 <fieldset><legend>Technical Details</legend>
 <p><strong>Mapminer Version:</strong> @version </p>
-<p><strong>Mapminer Branch:!</strong> @phpecho (exec('git rev-parse --abbrev-ref HEAD'))@endphp </p>
+<p><strong>Mapminer Branch: </strong>  @php echo ucwords(exec('git rev-parse --abbrev-ref HEAD'));@endphp </p>
 <p><a href ="https://pingping.io/PuUkRgfn" target="_blank"><strong>Status</strong></a></p>
 @if(auth()->user()->hasRole('admin'))
 <p><strong>Environment: </strong>
