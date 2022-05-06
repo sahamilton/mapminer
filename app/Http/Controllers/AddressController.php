@@ -239,7 +239,7 @@ class AddressController extends BaseController
     private function _setCustomer(Request $request, array $data) :array
     {
         
-        if (request()->has('customer_id')) {
+        if (request()->filled('customer_id')) {
             $data['customer_id'] = request('customer_id');
             $data['addressable_type'] = 'customer';
         }
