@@ -61,7 +61,8 @@ class OracleImport extends Imports
    
     public function import($request = null)
     {
-     
+        
+        $this->offset = request()->filled('skip') ? request('skip') : 0;
         $this->tempTable = $this->table ."_temp";
         $this->importfilename = request('file');
         $this->_createSource($request);

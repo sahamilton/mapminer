@@ -83,7 +83,8 @@
         'table', 
         'newleadsource', 
         'newleadsourcename', 
-        'description'
+        'description',
+        'skip',
     ]; 
 @endphp
 @foreach ($hidden as $hide)
