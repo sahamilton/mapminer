@@ -409,7 +409,7 @@ class AdminUsersController extends BaseController
         $data = request()->all();
 
         $syncData=[];
-
+        // Branch string take precendence.
         if (request()->filled('branchstring')) {
             $data['branches'] = $this->branch->getBranchIdFromid(request('branchstring'));
         }

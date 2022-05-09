@@ -155,7 +155,7 @@
     <label class="col-md-2 control-label" for="roles">Branches Managed:</label>
     <div class="col-md-6">
         <select 
-        required
+
         class="form-control" 
         name="branches[]" 
         id="branches" 
