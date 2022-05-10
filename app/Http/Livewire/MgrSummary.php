@@ -63,6 +63,9 @@ class MgrSummary extends Component
         $this->myBranches = auth()->user()->person->myBranches();
         $this->branch_id = array_key_first($this->myBranches);
         $this->activity_types = ActivityType::pluck('slug', 'id')->toArray();
+        if (! session()->has('period')) {
+            $this-> _setPeriod();
+        } 
         $this->setPeriod = session('period')['period'];
     }
     
