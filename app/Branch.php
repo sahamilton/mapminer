@@ -1443,7 +1443,7 @@ class Branch extends Model
                         [
                             'leads as newbranchleads'=>function ($query) {
                                 $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
-                                    ->where('lead_source_id', 4);
+                                    ->where('addresses.lead_source_id', 4);
                                         
                             }
                         ]
@@ -1581,7 +1581,7 @@ class Branch extends Model
                     $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
                         ->where(
                             function ($q) {
-                                $q->where('lead_source_id', 4);
+                                $q->where('addresses.lead_source_id', 4);
                             }
                         );
                 },
