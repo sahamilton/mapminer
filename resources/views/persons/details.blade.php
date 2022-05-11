@@ -167,20 +167,35 @@
 					<div class="list-group-item-text col-sm-6">
 						<p><strong>Branches Serviced</strong></p>
 
-					<ul style="list-style-type: none;">
+					<table id='sorttable' class ='table table-bordered table-striped table-hover'>
+						<thead>
+							<th>Branch</th>
+							<th>Manager(s)</th>
+
+						</thead>
+						<tbody>
+
 						@foreach ($branches as $branch)
-							<li><a href="{{route('branches.show',$branch->id)}}"
-								title="Review {{$branch->branchname}} branch">
-								{{$branch->branchname}}</a>
-							@foreach ($branch->manager as $manager)
-								<em><a href="{{route('person.details', $manager->id)}}"
-									title="See {{$manager->fullName()}}'s profile">
-									{{$manager->fullName()}}
-							</a></em>
-							@endforeach
-							</li>
+							<tr>
+								<td>
+									<a href="{{route('branches.show',$branch->id)}}"
+										title="Review {{$branch->branchname}} branch">
+										{{$branch->branchname}}
+									</a>
+								</td>
+								<td>
+									@foreach ($branch->manager as $manager)
+										<a href="{{route('person.details', $manager->id)}}"
+											title="See {{$manager->fullName()}}'s profile">
+											{{$manager->fullName()}}
+										</a>
+										@if (! $loop->last), @endif
+									@endforeach
+								</td>
+							</tr>
 						@endforeach
-					</ul>
+					</tbody>
+				</table>
 					
 				</div>
 				<div class="col-sm-8">

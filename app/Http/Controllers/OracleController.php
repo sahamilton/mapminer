@@ -110,8 +110,9 @@ class OracleController extends Controller
                 'branch'=>$oracle->branch,
                 
                 ];
-            // Check if the new user was previously deleted.
-            // we should also check if the email belongs to a deleted user
+
+            // Check if the new user was previously deleted
+            // or if the email belongs to a deleted user
             if ($olduser = User::withTrashed()
                 ->where('employee_id', $oracle->person_number)
                 ->orWhere('email', $oracle->primary_email)
