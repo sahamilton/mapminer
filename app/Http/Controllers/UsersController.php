@@ -98,9 +98,13 @@ class UsersController extends Controller
         /// get the logged in user / person
         $person = auth()->user()->person;
         /// geocode address
-        $data = $person->getGeoCode(
-            app('geocoder')->geocode(request('address'))->get()
-        );
+        $data = [];
+        if(request()->filled('address')) {
+            $data = $person->getGeoCode(
+                app('geocoder')->geocode(request('address'))->get()
+            );
+        }
+        
 
         $data['phone'] = request()->filled('phone') ? preg_replace('/[\D]/m', '', request('phone')) : null;
        

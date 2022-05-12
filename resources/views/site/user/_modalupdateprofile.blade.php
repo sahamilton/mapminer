@@ -24,7 +24,7 @@
                  <i class="fa-solid fa-location-dot prefix grey-text"></i>
                </div>
             </div>
-             <input type="text" id="address" name="address" class="form-control" value="{{$user->person->fullAddress()}}">
+             <input required type="text" id="address" name="address" class="form-control" value="{{$user->person->fullAddress()}}">
           </div>
         </div>
         <div class="form-group">
