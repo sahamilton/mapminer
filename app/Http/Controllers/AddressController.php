@@ -331,9 +331,13 @@ class AddressController extends BaseController
      * 
      * @return [type]                           [description]
      */
-    public function mergeAddress(MergeAddressFormRequest $request)
+    public function mergeAddress(Request $request)
     {
-       
+        // replaced form request validator.  Throwing error.
+        if (! request()->has('primary') || ! request()->has('address')) {
+            return redirect()->back()->withError('You need to specify both the lead that will receive the merged addresses and at least one address to merge into it.');
+        }
+        //if Ignore selected return to address
         if (request('mergeAddressesBtn') != 'Merge Addresses') {
             return redirect()->route('address.show', request('original'));
         }

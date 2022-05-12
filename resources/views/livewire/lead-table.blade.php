@@ -172,102 +172,111 @@
                 </tr>
             </thead>
             <tbody>
-               @foreach($leads as $lead)
+                @foreach($leads as $lead)
 
-                <tr>
-                    <td>
-                        @if(! $lead->isCustomer)
-                            <a wire:click="changeCustomer({{ $lead->id }})"
-                                title= "Mark lead as customer">
-                                <i class="far fa-check-circle text-success"></i>
+                    <tr>
+                        <td>
+                            @if(! $lead->isCustomer)
+                                <a wire:click="changeCustomer({{ $lead->id }})"
+                                    title= "Mark lead as customer">
+                                    <i class="far fa-check-circle text-success"></i>
+                                </a>
+                            @else 
+                                <a wire:click="changeCustomer({{ $lead->id }})" 
+                                    title= "Revert customer to lead">
+                                    <i class="far fa-times-circle text-danger"></i>
+                                </a>
+                            @endif
+                            <a href="{{route('address.show',$lead->id)}}">
+                                {{$lead->businessname}}
                             </a>
-                        @else 
-                            <a wire:click="changeCustomer({{ $lead->id }})" 
-                                title= "Revert customer to lead">
-                                <i class="far fa-times-circle text-danger"></i>
-                            </a>
-                        @endif
-                        <a href="{{route('address.show',$lead->id)}}">
-                            {{$lead->businessname}}
-                        </a>
-                        
-                        
-                    </td>
+                            
+                            
+                        </td>
 
-                    <td>{{$lead->street}}</td>
-                    <td>{{$lead->city}}</td>
-                    <td>{{$lead->state}}</td>
-                    <td>
-                        @if($lead->leadsource)
-                         {{$lead->leadsource->source}}
-                        @endif
-                    </td>
-        
-       
-        
-            @if($branch->currentcampaigns->count())
-            <td>       
-                @foreach ($lead->currentcampaigns as $campaign)
-                   
-                    <li>
-                        <a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">
-                            {{$campaign->title}}
-                        </a>
-                    </li>
-                   
-                @endforeach 
-            
-            @if ($branch->currentopencampaigns->count() && in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
-                
-                <a 
-                    data-pk="{{$lead->id}}"
-                    data-id="{{$lead->id}}"
-                    data-toggle="modal" 
-                    data-target="#addtocampaign" 
-                    data-title = "" 
-                    href="#">
-                    <i class="text-success fas fa-plus-circle"></i> Add to current campaign
-                </a>
-              
-            @endif
-        </td>
-        @endif
-        <td>
-            @if($lead->lastActivity)
-                {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
-            @endif
-        </td>
-        <td>
-            @if($lead->dateAdded)
-                {{$lead->dateAdded->format('Y-m-d')}}
-            @endif
-        </td>
-        @if(in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
-        <td>
-            
-            @if($lead->opportunities->count() ==0)
-            <a 
-                data-href="{{route('branchleads.destroy',$lead->assignedToBranch->where('id', $branch->id)->first()->pivot->id)}}" 
-                data-toggle="modal" 
-                data-target="#delete-lead" 
-                data-title = "  {{$lead->businessname}} lead from your branch" 
-                href="#"
-                title="Delete lead from your branch"><i class="fas fa-trash-alt text-danger"></i>
-            </a>
-            @endif
+                        <td>{{$lead->street}}</td>
+                        <td>{{$lead->city}}</td>
+                        <td>{{$lead->state}}</td>
+                        <td>
+                            @if($lead->leadsource)
+                             {{$lead->leadsource->source}}
+                            @endif
+                        </td>
             
            
-
-            @if($lead->opportunities->where('closed', 0)->whereNotNull('Top25')->count()>0)
-                
-                    <i class="fab fa-hotjar text-danger" title="Top25 Opportunity"></i>
-
-            @endif
             
-        </td>
-       @endif
-    </tr>
-@endforeach
+                        @if($branch->currentcampaigns->count())
+                            <td>       
+                                @foreach ($lead->currentcampaigns as $campaign)
+                                   
+                                    <li>
+                                        <a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">
+                                            {{$campaign->title}}
+                                        </a>
+                                    </li>
+                                   
+                                @endforeach 
+                            
+                                @if ($branch->currentopencampaigns->count() && in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
+                                    
+                                    <a 
+                                        data-pk="{{$lead->id}}"
+                                        data-id="{{$lead->id}}"
+                                        data-toggle="modal" 
+                                        data-target="#addtocampaign" 
+                                        data-title = "" 
+                                        href="#">
+                                        <i class="text-success fas fa-plus-circle"></i> Add to current campaign
+                                    </a>
+                                  
+                                @endif
+                            </td>
+                        @endif
+                        <td>
+                            @if($lead->lastActivity)
+                                {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
+                            @endif
+                                <a 
+                                    data-pk="{{$lead->id}}"
+                                    data-id="{{$lead->id}}"
+                                    data-toggle="modal" 
+                                    data-target="#add-lwactivity" 
+                                    data-title = "" 
+                                    href="#">
+                                        <i class="text-success fas fa-plus-circle"></i> Add Activity
+                                </a>
+                        </td>
+                        <td>
+                            @if($lead->dateAdded)
+                                {{$lead->dateAdded->format('Y-m-d')}}
+                            @endif
+                        </td>
+                        @if(in_array(auth()->user()->id, $branch->manager->pluck('user_id')->toArray()))
+                            <td>
+                                
+                                @if($lead->opportunities->count() ==0)
+                                <a 
+                                    data-href="{{route('branchleads.destroy',$lead->assignedToBranch->where('id', $branch->id)->first()->pivot->id)}}" 
+                                    data-toggle="modal" 
+                                    data-target="#delete-lead" 
+                                    data-title = "  {{$lead->businessname}} lead from your branch" 
+                                    href="#"
+                                    title="Delete lead from your branch"><i class="fas fa-trash-alt text-danger"></i>
+                                </a>
+                                @endif
+                                
+                               
+
+                                @if($lead->opportunities->where('closed', 0)->whereNotNull('Top25')->count()>0)
+                                    
+                                        <i class="fab fa-hotjar text-danger" title="Top25 Opportunity"></i>
+
+                                @endif
+                                
+                            </td>
+                        @endif
+                    </tr>
+                @endforeach
            
             </tbody>
         </table>
