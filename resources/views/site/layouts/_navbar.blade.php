@@ -111,7 +111,7 @@
               
             </li> 
              
-              @if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist']))
+              @if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist', 'market_manager']))
               
                 @include('branchleads.partials._searchbar')
               
@@ -125,12 +125,10 @@
                       <i class="fas fa-plus" style="color:green"> </i> Add Lead</a>
                   </li>
 
-              @include('branchleads.partials._mylead')
+                @include('branchleads.partials._mylead')
               @endif
 
-              @if(auth()->user()->hasRole('market_manager'))
-                  @include('branchleads.partials._mgrsearchbar')
-              @endif          
+
           </ul>
 
           @include('site.layouts.partials._rightnav')
