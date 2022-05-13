@@ -153,12 +153,12 @@
                         <th>Campaign</th>
                     @endif
                     <th>
-                    <a wire:click.prevent="sortBy('last_activity_id')" role="button" href="#">
+                        <a wire:click.prevent="sortBy('last_activity_id')" role="button" href="#">
                             Last activity
                             @include('includes._sort-icon', ['field' => 'last_activity_id'])
                         </a>
 
-                   
+                        
                 </th>
                 <th>
                     <a wire:click.prevent="sortBy('dateAdded')" role="button" href="#">
@@ -236,15 +236,7 @@
                             @if($lead->lastActivity)
                                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
                             @endif
-                                <a 
-                                    data-pk="{{$lead->id}}"
-                                    data-id="{{$lead->id}}"
-                                    data-toggle="modal" 
-                                    data-target="#add-lwactivity" 
-                                    data-title = "" 
-                                    href="#">
-                                        <i class="text-success fas fa-plus-circle"></i> Add Activity
-                                </a>
+                                
                         </td>
                         <td>
                             @if($lead->dateAdded)
