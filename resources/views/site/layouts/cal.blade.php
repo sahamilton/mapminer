@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<!-- Basic Page Needs
+	<!-- Basic Page Needs site layouts cal
 	================================================== -->
 	@include('site.layouts.partials._meta')
 	<!-- CSS
@@ -41,7 +41,6 @@
 	<script src="{{asset('assets/js/summernote.min.js')}}"></script>
 	<script src="{{asset('assets/js/starrr.js')}}"></script>
 	<script src="{{asset('assets/js/bootstrap-colorpicker.min.js')}}"></script>
-	<script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 
 
