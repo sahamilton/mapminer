@@ -75,9 +75,9 @@ class ExportNearbyLocations implements FromQuery, ShouldQueue, WithHeadings, Wit
     public function headings(): array
     {
         
-        return [[(count($this->companies) > 0 ? 'Selected ' : 'All ') . $this->accounttype->type . ' Companies with Nearby Locations'],
+        return [[($this->companies > 0 ? 'Selected Companies with ' : '') . $this->accounttype->type . '  Nearby Locations'],
             ['within '. $this->distance . ' miles of '. $this->location->address ],
-            [count($this->companies) > 0 ? 'Including ' . implode(' ', $this->companies) . 'locations' : ''],
+            [$this->companies ? 'Including ' . implode(' ', $this->companies) . 'locations' : ''],
             $this->fields
             ];
         
