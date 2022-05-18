@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<!-- Basic Page Needs
+	<!-- Basic Page Needs layouts app
 	================================================== -->
 	@include('site.layouts.partials._meta')
 	<!-- CSS

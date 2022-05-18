@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<!-- Basic Page Needs
+		<!-- Basic Page Needs frontend basic
 		================================================== -->
 		@include('site.layouts.partials._meta')
 

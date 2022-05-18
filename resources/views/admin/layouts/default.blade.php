@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- Basic Page Needs
+        <!-- Basic Page Needs admin layouts default
         ================================================== -->
         @include('site.layouts.partials._meta')
         <!-- CSS

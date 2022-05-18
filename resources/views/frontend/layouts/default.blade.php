@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<!-- Basic Page Needs
+		<!-- Basic Page Needs frontend layouts default
 		================================================== -->
 		@include('site.layouts.partials._meta')
 		<!-- Mobile Specific Metas
