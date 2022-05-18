@@ -322,6 +322,7 @@ class AddressController extends BaseController
     {
         $dupes = $address->load('duplicates', 'assignedToBranch')->duplicates;
         $myBranches = auth()->user()->person->getMyBranches();
+
         return response()->view('addresses.duplicates', compact('address', 'dupes', 'myBranches'));
     }
     /**
@@ -331,14 +332,16 @@ class AddressController extends BaseController
      * 
      * @return [type]                           [description]
      */
-    public function mergeAddress(Request $request)
+    public function mergeAddress(MergeAddressFormRequest $request)
     {
+        
         // replaced form request validator.  Throwing error.
-        if (! request()->has('primary') || ! request()->has('address')) {
-            return redirect()->back()->withError('You need to specify both the lead that will receive the merged addresses and at least one address to merge into it.');
+        if (! request()->has('address')) {
+            return redirect()->back()->withError('You need to specify at least one address to merge into this address.');
         }
         //if Ignore selected return to address
         if (request('mergeAddressesBtn') != 'Merge Addresses') {
+            /// could put the 'ignore merge date here'
             return redirect()->route('address.show', request('original'));
         }
         
@@ -346,14 +349,14 @@ class AddressController extends BaseController
         $addresses = $this->address
             ->with('activities', 'opportunities', 'contacts')
             ->whereIn('id', request('address'))
-            ->where('id', '!=', request('primary'))
+            ->where('id', '!=', request('original'))
             ->orderBy('created_at', 'asc')
             ->get();
         if (! $addresses->count()) {
             return redirect()->back()->withError('You must select more than one address to merge');
         }
         //get primary address
-        $primaryaddress = $this->address->findOrFail(request('primary'));
+        $primaryaddress = $this->address->findOrFail(request('original'));
                 
         //change all opportunities,activities, contacts to primary address
         if (! $this->_updateMergedAddressActivities($addresses, $primaryaddress)) {
