@@ -7,20 +7,20 @@
 <table class ='table table-bordered table-striped table-hover'>
    <thead>
       
-         <th>Oracle Data:  {{$oracle->fullName()}}</th>
-         <th>
-            @if($oracle->mapminerUser)
-               <a href="{{route('person.details', $oracle->mapminerUser->person->id)}}">See Mapminer Profile</a>
-               <i class="far fa-check-circle text-success" title="Mapminer user"></i>
-               @else
-               Not In Mapminer
-                  @if($oracle->oracleManager->mapminerUser)
-                  <p>
-                     <a href="{{route('oracle.useradd', $oracle->id)}}" class="btn btn-success">Add to Mapminer</a>
-                  </p>
-                  @endif
-               @endif
-            </th>
+      <th>Oracle Data:  {{$oracle->fullName()}}</th>
+      <th>
+         @if($oracle->mapminerUser)
+            <a href="{{route('person.details', $oracle->mapminerUser->person->id)}}">See Mapminer Profile</a>
+            <i class="far fa-check-circle text-success" title="Mapminer user"></i>
+         @else
+          
+            @if($oracle->oracleManager->mapminerUser)
+            
+               <a href="{{route('oracle.useradd', $oracle->id)}}" class="btn btn-success">Add to Mapminer</a>
+            
+            @endif
+          @endif
+      </th>
    </thead>
    <tbody>
       <tr><td>Employee ID</td><td>{{$oracle->person_number}}</td></tr>
