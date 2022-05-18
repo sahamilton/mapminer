@@ -1,5 +1,5 @@
 @error($name, $bag)
-    <div {!! $attributes->merge(['class' => 'invalid-feedback']) !!}>
+    <div {!! $attributes->merge(['class' => 'text-danger']) !!}>
         {{ $message }}
     </div>
 @enderror
