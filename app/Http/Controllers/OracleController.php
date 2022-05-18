@@ -107,6 +107,7 @@ class OracleController extends Controller
                     'position' =>$oracle->branch ? $oracle->branch->position : null,
                     'business_title' => $oracle->job_profile,
                     'reports_to' =>$oracle->oracleManager->mapminerUser->person->id,
+                    'hiredate' => $oracle->current_hire_date,
 
                 ], 
                 'branch'=>$oracle->branch ? $oracle->branch : null,
