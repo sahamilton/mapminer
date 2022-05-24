@@ -11,6 +11,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\AddressBranch;
 use App\PeriodSelector;
+use Carbon\Carbon;
+
 class LeadTable extends Component
 {
     use WithPagination, PeriodSelector;
@@ -26,11 +28,27 @@ class LeadTable extends Component
     public $selectuser = 'All';
     public $team;
     public $type= 'Either';
-    //public $activity_date;
+    
+    
     public $branch_id;
     public $lead_source_id = 'All';
     public $campaign_id = 'All';
     public $myBranches;
+    
+    //activities
+
+    public $addActivityModal = true;
+    public array $activityTypes;
+    public Address $address;
+    public $address_id;
+    public $activitytype_id;
+    public $activity_date;
+    public $note;
+    public $completed;
+    public $followup_date;
+    public $followup_activity;
+    public $show =false;
+   
 
  
     public function updatingSearch()
@@ -75,7 +93,7 @@ class LeadTable extends Component
         $person = new Person();
         $this->myBranches = $person->myBranches();
         $this->search = $search;
-        $this->branch_id = array_keys($this->myBranches)[0];
+        $this->branch_id = $branch;
         if (! session()->has('period')) {
             $this-> _setPeriod();
         } 
@@ -84,6 +102,8 @@ class LeadTable extends Component
             ->findOrFail($this->branch_id)
             ->branchTeam->pluck('full_name', 'user_id')
             ->toArray();
+        $this->activityTypes = ActivityType::pluck('activity', 'id')->toArray();
+            
     }
     /**
      * [render description]
@@ -189,7 +209,7 @@ class LeadTable extends Component
                     ->with('manager', 'currentcampaigns', 'currentopencampaigns')->findOrFail($this->branch_id),
                 'types'=>['Either', 'Leads', 'Customers'],
                 'opstatus'=>['All', 'Without', 'Only Open', 'Top 25', 'Any'],
-                'activities'=>ActivityType::pluck('activity', 'id')->toArray(),
+                
                 'leadsources' => $this->_getLeadSources(),
                 'campaigns'=> Campaign::active()
                     ->current([$this->branch_id])
@@ -247,5 +267,125 @@ class LeadTable extends Component
             $address->update(['top50'=>1]);
         }
     }
+    /*
+
+        Adding activities
+
+
+
+    */
+    public function addActivity(Address $address)
+    {
+      
+        $this->resetActivities();
+        $this->doShow();
+
+        $this->address = $address;
+        $this->address_id = $this->address->id;
+       
+       
+        
+
+    }
+    public function rules()
+    {
+       
+        $activityDateRules = 'date|required';
+        if ($this->completed) {
+            $activityDateRules.='|before:tomorrow';
+        }
+
+        return [
+            'activity_date'=> $activityDateRules,
+            'activitytype_id'=>'required',
+            'note'=>'required',
+            'followup_date'=>'date|nullable|after:activity_date',
+            'followup_activity'=>'required_with:followup_date',
+            'address_id' => 'required',
+            'branch_id'=>'required',
+        ];
+    }
+
+    protected $messages = [
+        'activity_date.before' => 'Completed activities cannot be in the future',
+        
+    ];
+    public function doShow() {
+        $this->show = true;
+    }
+
+    public function doClose() {
+        
+        $this->show = false;
+    }
+
+    private function resetActivities()
+    {
+        $this->note=null;
+        $this->completed = null;
+        $this->activity_date = now()->format('Y-m-d');
+        $this->followup_date=null;
+        $this->activitytype_id = 13;
+        $this->followup_activity = 13;
+ 
+    }
+
+    public function store()
+    {
+        $this->_getActivity();
+        $new = $this->_recordActivity();
+        $message =  ($this->completed ? 'Completed ' : 'To do ') . $this->activityTypes[$this->activitytype_id] .' activity added at '. $this->address->businessname;
+        session()->flash('message', $message);
+        if ($this->followup_date) {
+            $followup = $this->_recordFollowUpactivity();
+            $new->update(['relatedActivity'=>$followup->id]);
+        }
+        $this->resetActivities();
+        $this->show = false;
+    }
+   
+    
+    private function _recordFollowUpactivity() {
+
+        $activity = [
+            'address_id' => $this->address_id,
+            'activity_date' => $this->followup_date,
+            'activitytype_id'=> $this->followup_activity,
+            'branch_id' => $this->branch_id,
+            'completed' => null,
+            'note'=> "Follow up to prior " . $this->activityTypes[$this->activitytype_id] . " on " . Carbon::parse($this->activity_date)->format('m/d/y') . " (". $this->note . ")",
+            'user_id' => auth()->user()->id,
+        ];
+       
+        ray('Followup', $activity);
+        return Activity::create($activity);
+        
+    }
+
+    private function _recordActivity()
+    {
+         $activity = [
+            'address_id' => $this->address_id,
+            'activitytype_id'=> $this->activitytype_id,
+            'branch_id' => $this->branch_id,
+            'completed' => $this->completed,
+            'note'=>$this->note,
+            'user_id' => auth()->user()->id,
+            'activity_date' => $this->activity_date,
+            'followup_date'=> $this->followup_date,
+        ];
+         
+        // need to update the last activity on the
+         return  Activity::create($activity);
+   
+    }
+    private function _getActivity() 
+    {
+            
+            
+            $this->validate();
+            
+    }
+    
     
 }

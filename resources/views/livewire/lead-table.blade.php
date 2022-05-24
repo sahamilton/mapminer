@@ -1,7 +1,7 @@
 <div>
     
     <h1>{{$branch->branchname}}</h1>
-
+    
     <h4>
         {{($type=='Customers' ? ' Customers ' : ' Leads ')}}
         @if ($campaign_id != 'All')
@@ -30,7 +30,13 @@
         @break
         @endswitch
     </h4>
- 
+    <div>
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+    </div>
     @if (! in_array($this->setPeriod, ["All" ,'allDates']))
     <p class="bg-warning">Created between the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
     @else
@@ -236,7 +242,11 @@
                             @if($lead->lastActivity)
                                 {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
                             @endif
-                                
+                             <p>
+                                <a href="#" wire:click.prevent="addActivity({{ $lead->id }})">
+                                    <i class="text-success fa-solid fa-calendar-circle-plus"></i>Record Activity
+                                </a>
+                            </p>  
                         </td>
                         <td>
                             @if($lead->dateAdded)
@@ -283,6 +293,6 @@
             Showing {{ $leads->firstItem() }} to {{ $leads->lastItem() }} out of {{ $leads->total() }} results
         </div>
     </div>
-    @include('livewire.activities._modal')
+    @include('activities.partials._modal')
 </div>
 

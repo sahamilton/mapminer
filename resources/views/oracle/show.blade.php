@@ -14,7 +14,7 @@
             <i class="far fa-check-circle text-success" title="Mapminer user"></i>
          @else
           
-            @if($oracle->oracleManager->mapminerUser)
+            @if($oracle->oracleManager && $oracle->oracleManager->mapminerUser)
             
                <a href="{{route('oracle.useradd', $oracle->id)}}" class="btn btn-success">Add to Mapminer</a>
             
