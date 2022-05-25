@@ -46,10 +46,11 @@
         "owen-it/laravel-auditing": "^12.0",
         "fico7489/laravel-pivot": "^3.0",
         "stechstudio/laravel-ssh-tunnel": "^3.1",
-        "protonemedia/laravel-form-components": "^2.5",
+        "protonemedia/laravel-form-components": "^3.2.0",
         "spatie/laravel-sluggable": "^2.6",
         "spatie/icalendar-generator": "^2.3",
-        "tightenco/quicksand": "^2.5"
+        "tightenco/quicksand": "^2.5",
+        "wire-elements/modal": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

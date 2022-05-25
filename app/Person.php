@@ -31,6 +31,7 @@ class Person extends NodeModel implements Auditable
                         'lat',
                         'lng',
                         'reports_to',
+                        'hiredate',
                         'city',
                         'state',
                         'zip',

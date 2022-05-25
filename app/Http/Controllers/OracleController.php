@@ -79,6 +79,8 @@ class OracleController extends Controller
     public function addUser(Oracle $oracle)
     {
         $oracle->load('branch', 'oracleManager.mapminerUser.person', 'mapminerRole');
+
+        
         // create user
         //  employee_id
         //  email
@@ -94,35 +96,39 @@ class OracleController extends Controller
 
                     'firstname' => $oracle->first_name,
                     'lastname'  => $oracle->last_name,
-                    'address' => $oracle->branch->address,
-                    'city' => $oracle->branch->city,
-                    'state' => $oracle->branch->state,
-                    'zip' => $oracle->branch->zip,
-                    'country' => $oracle->branch->country,
-                    'lat' =>$oracle->branch->lat,
-                    'lng' =>$oracle->branch->lng,
-                    'lng' =>$oracle->branch->lng,
-                    'position' =>$oracle->branch->position,
+                    'address' => $oracle->branch ? $oracle->branch->address : null,
+                    'city' => $oracle->branch ? $oracle->branch->city : null,
+                    'state' => $oracle->branch ? $oracle->branch->state : null,
+                    'zip' => $oracle->branch ? $oracle->branch->zip : null,
+                    'country' => $oracle->branch ? $oracle->branch->country : null,
+                    'lat' =>$oracle->branch ? $oracle->branch->lat : null,
+                    'lng' =>$oracle->branch ? $oracle->branch->lng : null,
+                    'lng' =>$oracle->branch ? $oracle->branch->lng : null,
+                    'position' =>$oracle->branch ? $oracle->branch->position : null,
                     'business_title' => $oracle->job_profile,
                     'reports_to' =>$oracle->oracleManager->mapminerUser->person->id,
+                    'hiredate' => $oracle->current_hire_date,
 
                 ], 
-                'branch'=>$oracle->branch,
+                'branch'=>$oracle->branch ? $oracle->branch : null,
                 
                 ];
 
             // Check if the new user was previously deleted
-            // or if the email belongs to a deleted user
+            // or the email belonged to a deleted user
             if ($olduser = User::withTrashed()
                 ->where('employee_id', $oracle->person_number)
                 ->orWhere('email', $oracle->primary_email)
                 ->get()
             ) {
                 foreach ($olduser as $old) {
-                     $oldperson = Person::withTrashed()
-                    ->where('user_id', $old->id)
-                    ->forceDelete();
-                    $old->where('id', $oldid)->forceDelete();
+                    Person::withTrashed()
+                        ->where('user_id', $old->id)
+                        ->forceDelete();
+                    User::withTrashed()
+                        ->where('id', $old->id)
+                        ->forceDelete();
+                       
                 }
                
                 
@@ -131,8 +137,10 @@ class OracleController extends Controller
             $user = User::create($data['user']);
             $user->roles()->attach($oracle->mapminerRole->role_id);
             $person = $user->person()->create($data['person']);
-            $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>$oracle->mapminerRole->role_id]);
-        
+            if($data['branch']) {
+                $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>$oracle->mapminerRole->role_id]);
+                    
+            }
 
             return redirect()->back()->withMessage($person->fullName() . ' has been added to Mapminer');
         } else {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<!-- Basic Page Needs
+		<!-- Basic Page Needs layouts default
 		================================================== -->
 		@include('site.layouts.partials._meta')
 		<!-- CSS
@@ -69,7 +69,7 @@
 	<body>
 	<div id="app">
 		@include('site.layouts.partials._googletagmanager')
-		@include('partials._newsflash')
+		
 		@if(config('app.env')=='production')
 		@include('site.layouts.partials._fullstory')
 		@endif

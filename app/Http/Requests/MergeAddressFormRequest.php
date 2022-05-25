@@ -24,8 +24,8 @@ class MergeAddressFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'primary'=>'required',
-            'address'=>'required',
+            'original'=>'required',
+            'address'=>'array|required',
         ];
     }
     /**
@@ -36,7 +36,7 @@ class MergeAddressFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'primary.required' => 'You must specify an address to merge duplicates into',
+            'original.required' => 'You must specify an address to merge duplicates into',
             'address.required' => 'You must specify at least one address to merge',
        
         ];

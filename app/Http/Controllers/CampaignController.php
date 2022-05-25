@@ -624,20 +624,6 @@ class CampaignController extends Controller
     }
 
     /**
-     * [campaignStats description]
-     * 
-     * @param  Request $request [description]
-     * 
-     * @return [type]           [description]
-     
-    public function campaignStats(Request $request)
-    {
-        $stats = $this->campaign->campaignStats()->whereIn('id', request('campaigns'));
-        dd($stats);
-        return response()->view('campaigns.stats', compact('stats'));
-    }
-     */
-    /**
      * [_getCampaignPeriod description]
      * 
      * @param Campaign $campaign [description]

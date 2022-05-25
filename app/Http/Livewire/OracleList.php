@@ -22,7 +22,7 @@ class OracleList extends Component
     public $serviceline ='All';
     public $selectRole = 'All';
     public $showConfirmation=false;
-    public $linked = 'yes';
+    public $linked = 'can';
     public $export = false;
 
     public function updatingSearch()
@@ -58,7 +58,7 @@ class OracleList extends Component
             [
                 'users'=>$this->_getUsers()->paginate($this->perPage),
                 'roles'=>Oracle::distinct()->orderBy('job_profile')->get(['job_code', 'job_profile']),
-                'links'=>['All'=>'All', 'no'=>'Not In Mapminer', 'yes'=>'In Mapminer'],
+                'links'=>['All'=>'All', 'no'=>'Not In Mapminer', 'can' =>"Can be activated", 'yes'=>'In Mapminer'],
                  
              ]
          );
@@ -81,6 +81,11 @@ class OracleList extends Component
                             $q->has('mapminerUser');
                         }, function ($q) {
                             $q->doesntHave('mapminerUser');
+                        }
+                    )->when(
+                        $this->linked == 'can', function ($q) {
+                            $q->doesntHave('mapminerUser')
+                            ->has('oracleManager.mapminerUser');
                         }
                     );  
                 }
