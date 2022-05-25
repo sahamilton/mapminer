@@ -68,11 +68,23 @@
       <a href="{{route('branches.show', $branch->id)}}">
         {{$branch->branchname}}
       </a>
-      <a class="btn btn-warning" href="{{route('lead.transferrequest', $location->id)}}" title="Requesting owning branch to transfer this lead to your branch">Request transfer</a>
+
+      <button type="submit" 
+        class="p-2 btn btn-warning"
+        
+        data-toggle="modal" 
+        data-target="#confirm-transfer-request" 
+         
+        href="#">
+       <i class="text-white fa-solid fa-arrows-cross"></i>
+        Request transfer
+      </button>
+      
     </li>
 
     
   @endforeach
+  @include('addresses.partials._transferrequest')
 @else
 
   <form name="claimlead"
@@ -101,3 +113,4 @@
     value="Claim Lead" />
   </form>
 @endif
+

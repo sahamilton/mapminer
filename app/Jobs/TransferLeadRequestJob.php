@@ -39,9 +39,11 @@ class TransferLeadRequestJob implements ShouldQueue
     public function handle()
     {
         foreach ($this->address->claimedByBranch as $branch) {
-            Mail::to([$branch->manager->first()->fullEmail()])
-            ->cc([$this->user->person->fullEmail()])
-            ->queue(new TransferLeadRequest($this->address, $this->user));
+            if($branch->manager->count()){
+                Mail::to([$branch->manager->first()->fullEmail()])
+                ->cc([$this->user->person->fullEmail()])
+                ->queue(new TransferLeadRequest($this->address, $this->user));
+            }
         }
     }
 }
