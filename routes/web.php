@@ -189,13 +189,14 @@ Route::group(
         Route::post('lead/{address}/reassign', ['as'=>'lead.reassign', 'uses'=>'MyLeadsController@reassign']);
         //     Locations
         Route::get('search/leads', ['as'=>'search.leads', 'uses'=>'SearchController@leads']);
-        Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
-        Route::get('locations/{id}/vcard', ['as'=>'locations.vcard', 'uses'=>'LocationsController@vcard']);
+        Route::get('location/{address}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
+        Route::get('locations/{address}/vcard', ['as'=>'locations.vcard', 'uses'=>'LocationsController@vcard']);
         Route::get('location/{locationId}/branchmap', ['as' => 'nearby.location', 'uses' => 'LocationsController@getClosestBranchMap']);
         Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
         Route::get('location/nearby', ['as' => 'nearby/location', 'uses' => 'LocationsController@mapNearbyLocations']);
         Route::post('location/contact', ['as'=>'location.addcontact', 'uses'=>'LocationContactController@store']);
         Route::get('customer/{address}', ['as' => 'mark.customer', 'uses' => 'LocationsController@markAsCustomer']);
+        Route::get('location/{address}/transferrequest', ['as'=>'lead.transferrequest','uses' => 'LocationsController@transferrequest' ]);
         Route::resource('locations', 'LocationsController', ['only' => ['show']]);
         
         //     Managers

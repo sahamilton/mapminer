@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Storage;
 use JeroenDesloovere\VCard\VCard;
 use phpDocumentor\Reflection\Types\Boolean;
 
+use App\Jobs\TransferLeadRequestJob;
+
 class LocationsController extends BaseController
 {
     public $distance = '400';
@@ -191,12 +193,12 @@ class LocationsController extends BaseController
      * @param  [type] $id [description]
      * @return [type]     [description]
      */
-    public function getClosestBranch(Request $request, $id, $n = 5)
+    public function getClosestBranch(Request $request, Address $address, $n = 5)
     {
         if (request()->filled('d')) {
             $this->distance = request('d');
         }
-        $data['location'] = $this->location->with('company', 'company.serviceline')->findOrFail($id);
+        $data['location'] = $address->load('company', 'company.serviceline');
 
         //$this->getCompanyServiceLines();
 
@@ -358,20 +360,18 @@ class LocationsController extends BaseController
         echo 'All done!';
     }
 
-    public function vcard($id)
+    public function vcard(Address $address)
     {
         $vcard = new VCard;
-        $location = $this->location
-            ->with('company')
-            ->findOrFail($id);
+        
 
-        $vcard->addName($location->contact, null, null, null, null);
+        $vcard->addName($address->contact, null, null, null, null);
 
         // add work data
-        $vcard->addCompany($location->businessname);
-        $vcard->addPhoneNumber($location->phone, 'PREF;WORK');
-        $vcard->addAddress(null, $location->address2, $location->street, $location->city, null, $location->zip, null);
-        $vcard->addURL(route('locations.show', $location->id));
+        $vcard->addCompany($address->businessname);
+        $vcard->addPhoneNumber($address->phone, 'PREF;WORK');
+        $vcard->addAddress(null, $address->address2, $address->street, $address->city, null, $address->zip, null);
+        $vcard->addURL(route('locations.show', $address->id));
 
         $vcard->download();
     }
@@ -383,6 +383,13 @@ class LocationsController extends BaseController
             
         }
         return redirect()->back();
+    }
+
+    public function transferrequest(Address $address)
+    {
+        
+        TransferLeadRequestJob::dispatch($address, auth()->user());
+        return redirect()->back()->withSuccess('An email has been sent to the owning branch requesting that the lead be transferred');
     }
 
     

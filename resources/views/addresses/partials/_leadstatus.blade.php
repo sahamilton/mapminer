@@ -1,4 +1,5 @@
 @if ($owned)
+
   @if($branch->pivot->status_id === 1)
     <div class="d-flex flex-row">
       <form class='p-2 form-inline'
@@ -60,15 +61,17 @@
      
 
 @elseif ($location->assignedToBranch->count())
-
+  
   @foreach ($location->assignedToBranch as $branch)
 
     <li><strong>Owned By:</strong>
       <a href="{{route('branches.show', $branch->id)}}">
         {{$branch->branchname}}
       </a>
+      <a class="btn btn-warning" href="{{route('lead.transferrequest', $location->id)}}" title="Requesting owning branch to transfer this lead to your branch">Request transfer</a>
     </li>
-  
+
+    
   @endforeach
 @else
 

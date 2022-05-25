@@ -27,8 +27,9 @@ class BranchReassignFormRequest extends FormRequest
     {
         
         return [
-            'newbranch'=>'required_without:nearbranch',
-            'nearbranch'=>'required_without:newbranch'
+            'dontreassign'=>'required_without:newbranch,newbranch',
+            'newbranch'=>'required_without:dontreassign',
+            'nearbranch'=>'required_without:dontreassign'
 
 
         ];

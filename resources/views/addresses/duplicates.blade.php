@@ -1,8 +1,12 @@
 @extends('site.layouts.default')
 @section('content')
 <h1>Possible Duplicate Locations</h1>  
+<h4>Merge Into {{$address->businessname}}</h4>
 
-<div class="warning">
+<p>{{$address->fullAddress()}}</p>
+
+<div class="alert alert-warning">
+
 	<p>Note merging addresses cannot be unmerged.  Please check carefully before merging.</p>
 </div>
 <form 
@@ -19,7 +23,7 @@ action="{{route('addresses.merge')}}"
 	class="btn btn-success"
 	value="Ignore" />
 @csrf
-
+	
 
 
 	<table id='sorttable' class ='table table-bordered table-striped table-hover'>
@@ -35,7 +39,7 @@ action="{{route('addresses.merge')}}"
 		</thead>
 		<tbody>
 			@foreach ($dupes as $account)
-		
+				@if($account->id != $address->id)
 				<tr>
 					
 					<td><a href="{{route('address.show', $account->id)}}">{{$account->businessname}}</a></td>
@@ -53,7 +57,7 @@ action="{{route('addresses.merge')}}"
 					<td>
 						
 						@if(array_intersect($account->assignedToBranch->pluck('id')->toArray(), $myBranches) or  $account->assignedToBranch->count()==0)
-						Merge into<input type="radio" {{$loop->first ? 'checked' : ''}} name='primary' value ="{{$account->id}}" />
+						Merge into {{$address->businessname}}
 						<input type="checkbox" checked name="address[]" value="{{$account->id}}"/>
 						@else
 						<p class="text-danger">Not Owned by any of your branches</p>
@@ -62,6 +66,7 @@ action="{{route('addresses.merge')}}"
 					
 
 				</tr>
+				@endif
 			@endforeach
 		</tbody>
 
