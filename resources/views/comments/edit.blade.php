@@ -6,7 +6,7 @@
 <form
 name="comment"
 method="post"
-action = "{{route('comment.update', $commet->id)}}"
+action = "{{route('comment.update', $comment->id)}}"
 >
 @csrf
 @method="patch"
