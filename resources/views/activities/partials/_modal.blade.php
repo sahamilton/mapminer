@@ -10,15 +10,13 @@
          @endif;"
          tabindex="-1"
          role="dialog"
-         aria-labelledby="exampleModalLabel"
+         aria-labelledby="modal-title"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Activity at <span id="title"> {{isset($address) ? $address->businessname :'company'}} </span> </h5>
-                    @if($errors->any())
-                        {!! implode('', $errors->all('<div>:message</div>')) !!}
-                    @endif
+                    <h5 class="modal-title">Record Activity at <span id="title"> {{isset($address) ? $address->businessname :'company'}} </span> </h5>
+                    
                     <button type="button" class="close"  wire:click.prevent="doClose">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -30,6 +28,15 @@
                         label="Activity:" 
                         :options="$activityTypes" 
                     />
+                    @if(isset($address) && $address->contacts()->count() > 0)
+                    @php 
+                        $contacts[]='Choose';
+                        $contacts = $contacts + $address->contacts()->pluck('fullname', 'id')->toArray(); 
+                        
+                    @endphp
+                    @ray($contacts);
+                        <x-form-select  name="contact_id" label="Contact:" :options="$contacts" />
+                    @endif
                     <x-form-textarea required name="note" label="Comments:" placeholder="Enter details...." />
                     <x-form-input required type="date"  id="activity_date" name="activity_date" label="Activity Date:" />
                     <x-form-checkbox checked  name="completed"  label="Completed:" />       

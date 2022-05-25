@@ -47,8 +47,9 @@ class LeadTable extends Component
     public $completed;
     public $followup_date;
     public $followup_activity;
-    public $show =false;
-   
+    public $show = false;
+
+    public $contact_id=null;
 
  
     public function updatingSearch()
@@ -276,10 +277,10 @@ class LeadTable extends Component
     */
     public function addActivity(Address $address)
     {
-      
+        // get contacts;
         $this->resetActivities();
         $this->doShow();
-
+       
         $this->address = $address;
         $this->address_id = $this->address->id;
        
@@ -327,6 +328,7 @@ class LeadTable extends Component
         $this->followup_date=null;
         $this->activitytype_id = 13;
         $this->followup_activity = 13;
+        $this->contact_id = null;
  
     }
 
@@ -357,7 +359,7 @@ class LeadTable extends Component
             'user_id' => auth()->user()->id,
         ];
        
-        ray('Followup', $activity);
+        
         return Activity::create($activity);
         
     }
@@ -374,10 +376,14 @@ class LeadTable extends Component
             'activity_date' => $this->activity_date,
             'followup_date'=> $this->followup_date,
         ];
-         
-        // need to update the last activity on the
-         return  Activity::create($activity);
-   
+        
+        
+         $activity = Activity::create($activity);
+      
+         if($this->contact_id && $this->contact_id !==0) {
+            $activity->relatedContact()->attach($this->contact_id);
+         }
+        return $activity;
     }
     private function _getActivity() 
     {
