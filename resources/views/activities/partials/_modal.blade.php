@@ -34,7 +34,7 @@
                         $contacts = $contacts + $address->contacts()->pluck('fullname', 'id')->toArray(); 
                         
                     @endphp
-                    @ray($contacts);
+              
                         <x-form-select  name="contact_id" label="Contact:" :options="$contacts" />
                     @endif
                     <x-form-textarea required name="note" label="Comments:" placeholder="Enter details...." />
