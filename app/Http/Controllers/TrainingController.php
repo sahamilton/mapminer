@@ -135,7 +135,12 @@ class TrainingController extends BaseController
         $training->update($data);
         $training->relatedRoles()->sync($data['roles']);
         $training->servicelines()->sync($data['serviceline']);
-        $training->relatedIndustries()->sync($data['vertical']);
+        if (isset($data['vertical'])) {
+            $training->relatedIndustries()->sync($data['vertical']);
+        } else {
+            $training->relatedIndustries()->sync([]);
+        }
+        
 
         return redirect()->route('training.show', $training->id)->withMessage("Training updated");
     }
