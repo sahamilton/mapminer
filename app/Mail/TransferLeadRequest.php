@@ -32,7 +32,6 @@ class TransferLeadRequest extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.transfer-lead-request')
-        ->from([$this->user->person->fullEmail()]);
+        return $this->markdown('mail.transfer-lead-request');
     }
 }
