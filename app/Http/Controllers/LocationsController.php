@@ -387,9 +387,12 @@ class LocationsController extends BaseController
 
     public function transferrequest(Address $address)
     {
-        
-        TransferLeadRequestJob::dispatch($address, auth()->user());
-        return redirect()->back()->withSuccess('An email has been sent to the owning branch requesting that the lead be transferred');
+        if($address->claimedByBranch()->first()->manager()->count()){
+            TransferLeadRequestJob::dispatch($address, auth()->user());
+            return redirect()->back()->withSuccess('An email has been sent to the owning branch requesting that the lead be transferred');
+        } else {
+            return redirect()->back()->withError('There is no branch manager at this branch to start the transfer.  Please contact sales operations for assistance');
+        }
     }
 
     
