@@ -247,4 +247,11 @@
       0 => 'Geocoder\\Laravel\\Providers\\GeocoderService',
     ),
   ),
+  'wire-elements/modal' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'LivewireUI\\Modal\\LivewireModalServiceProvider',
+    ),
+  ),
 );

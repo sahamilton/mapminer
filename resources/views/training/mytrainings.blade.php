@@ -25,25 +25,25 @@ a.viewtraining{
         <p class="alert alert-warning">We are sorry {{auth()->user()->person->firstname}}, that there are no trainings based on your role and industry focus. Please contact sales operations.</p>
    @else
 
-                @foreach ($trainings as $training)
+        @foreach ($trainings as $training)
 
-                    <h4>{{$training->title}}</h4>
-                    <p>{{$training->description}}</p>
-                    <a class="viewtraining" href="{{route('training.show',$training->id)}}">
+            <h4>{{$training->title}}</h4>
+            <p>{{$training->description}}</p>
+            <a class="viewtraining" href="{{route('training.show',$training->id)}}">
 
-                    </a>
+            </a>
 
-                    <p>
-                    @if(auth()->user()->hasRole('admin'))
-                        @foreach ($training->relatedRoles as $role)
-                            {{$role->display_name}}
-                            @if(! $loop->last),@endif
-                        @endforeach
-                    @endif
-                    </p>
-
-
+            <p>
+            @if(auth()->user()->hasRole('admin'))
+                @foreach ($training->relatedRoles as $role)
+                    {{$role->display_name}}
+                    @if(! $loop->last),@endif
                 @endforeach
+            @endif
+            </p>
+
+
+        @endforeach
     @endif
 </div>
 

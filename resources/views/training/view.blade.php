@@ -1,21 +1,21 @@
 @extends('site.layouts.default')
 @section('content')
 <div class="container">
-<h1>{{$training->title}}</h1>
-<p><a href="{{route('training.index')}}">Return to all trainings</a></p>
-<h4>{{$training->description}}</h4>
-@if($training->type == 'fleeq')
-@include('training.partials._fleeq')
-@endif
-<p>Link: <a href="{{$training->reference}}">{{$training->reference}}</a></p>
+    <h1>{{$training->title}}</h1>
+    <p><a href="{{route('training.index')}}">Return to all trainings</a></p>
+    <h4>{{$training->description}}</h4>
+    @if($training->type == 'fleeq')
+        @include('training.partials._fleeq')
+    @endif
+    <p>Link: <a href="{{$training->reference}}">{{$training->reference}}</a></p>
 
 @can('manage_training')
- <div class="row">
- 	<a href="{{route('training.edit',$training->id)}}">
+    <div class="row">
+        <a href="{{route('training.edit',$training->id)}}">
             <i class="far fa-edit text-info"" aria-hidden="true"> </i>
             Edit Training</a>
-           <a 
-           data-href="{{route('training.destroy',$training->id)}}" 
+            <a 
+                data-href="{{route('training.destroy',$training->id)}}" 
 
                 data-toggle="modal" 
                 data-target="#confirm-delete" 
@@ -23,15 +23,15 @@
                 href="#">
 
                 <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-                Delete Training Item
-            </a>
-        </div>
+            Delete Training Item
+        </a>
+    </div>
 @endcan
 </div>
 <div class="row">
     <p><strong>Available for</strong>
     @foreach ($training->relatedRoles as $role)
-    {{$role->display_name}}|
+        {{$role->display_name}}|
     @endforeach
 roles</p>
 </p>
