@@ -226,6 +226,7 @@ use Illuminate\Http\Request;
 
         
         Route::get('/person/{person}/find', ['as'=>'person.details', 'uses'=>'PersonSearchController@find']);
+        Route::get('/person/{person}/welcome', ['as'=>'person.welcome', 'uses'=>'PersonSearchController@welcome']);
 
         Route::resource('newleads', 'LeadSourceController');
   
