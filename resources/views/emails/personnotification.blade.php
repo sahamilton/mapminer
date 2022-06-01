@@ -3,7 +3,7 @@
 
 {{$person->firstname}},
 
-Welcome! You have been granted you access to the {{env('APP_NAME')}} system. 
+Welcome! You have been granted you access to the {{env('APP_NAME')}} {{env('APP_ENV')}} system. 
 
 This system provides information on branch sales and support opportunties and will allow you to 
 * Search for leads.
@@ -16,6 +16,8 @@ and offered only for company business.
 
 You can access the system at [{{env('APP_URL')}}]({{env('APP_URL')}}). You should login with your email
 {{$person->userdetails->email}}. You will have to set your password intially by using the ['Forgot password' link]({{route('password.request')}}). Enter your email and you will receive instructions to create your own, personalized, password.
+
+Once you have logged in you can find training materials at ['Mapminer Training']({{route('training.index')}}).
 
 If you have any questions about the system or any difficulties accessing or using it 
 please contact Sales Operations.

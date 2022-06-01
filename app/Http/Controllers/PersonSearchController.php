@@ -6,6 +6,8 @@ use App\Person;
 use App\User;
 use App\Branch;
 use App\Track;
+use Mail;
+use App\Mail\PersonNotification;
 use Illuminate\Http\Request;
 
 class PersonSearchController extends Controller
@@ -66,5 +68,17 @@ class PersonSearchController extends Controller
             $addToMapminer = null;
         }
         return response()->view('persons.details', compact('person', 'branches', 'branchmarkers',  'user', 'addToMapminer'));
+    }
+
+    public function welcome(Person $person)
+    {
+        $person->load('userdetails');
+        if ($person->userdetails->confirmed == 1) {
+            Mail::queue(new PersonNotification($person));
+            $message = "Welcome email has been sent to " . $person->fullName();
+        }else{
+            $message = '';
+        }
+        return redirect()->back()->withMessage($message);
     }
 }

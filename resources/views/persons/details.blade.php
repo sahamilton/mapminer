@@ -14,7 +14,7 @@
 
 				Edit
 			</a>
-		
+			<a href="{{route('person.welcome',$person->id)}}"><i class="fa-solid fa-paper-plane"></i>Send Welcome Email</a>
 		@can('manage_users')
 		<a class="btn btn-danger float-right" 
                 data-href="{{route('users.destroy',$user->id)}}" 
@@ -53,7 +53,7 @@
 			</p>
 
 		</div>
-		</div>
+	</div>
 	<div class="list-group">
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>User Details</strong></p>
