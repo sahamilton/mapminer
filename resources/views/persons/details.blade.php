@@ -14,7 +14,8 @@
 
 				Edit
 			</a>
-			<a href="{{route('person.welcome',$person->id)}}"><i class="fa-solid fa-paper-plane"></i>Send Welcome Email</a>
+			<a href="{{route('person.welcome',$person->id)}}"
+				title="Sends a welcome message to {{$person->fullName()}} and their manager.  Note the welcome message is sent automatically when a user is created.  Using this link is only necessary if there was some delay in activating the user."><i class="fa-solid fa-paper-plane"></i>Send Welcome Email</a>
 		@can('manage_users')
 		<a class="btn btn-danger float-right" 
                 data-href="{{route('users.destroy',$user->id)}}" 
