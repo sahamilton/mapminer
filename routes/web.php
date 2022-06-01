@@ -266,7 +266,7 @@ Route::group(
         //Route::resource('region', 'RegionsController', ['only' => ['index', 'show']]);
         
         //     ServiceLines
-        Route::get('serviceline/{id}/{type?}', ['as'=>'serviceline.accounts', 'uses'=>'ServicelinesController@show']);
+        Route::get('serviceline/{serviceline}/{type?}', ['as'=>'serviceline.accounts', 'uses'=>'ServicelinesController@show']);
         Route::resource('serviceline', 'ServicelinesController', ['only' => ['index', 'show']]);
         
         //     Branch Sales Campaigns

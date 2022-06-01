@@ -24,7 +24,7 @@ class ServicelinesController extends BaseController
     public function index()
     {
         $servicelines = Serviceline::
-            with('companyCount', 'userCount')
+            with('companyCount', 'userCount', 'branchCount')
             ->get();
         
         
@@ -61,17 +61,16 @@ class ServicelinesController extends BaseController
      * 
      * @return [type]       [description]
      */
-    public function show($id, $type = null)
+    public function show(Serviceline $serviceline)
     {
-       
-        // Can the user see this service line?
+        
                 
-        if (! in_array($id, $this->userServiceLines)) {
-            return redirect()->route('serviceline.index');
+        if (! in_array($serviceline->id, $this->userServiceLines)) {
+            return redirect()->route('serviceline.index')->withError("That is not one of your servicelines");
         }
-       
-  
-        $serviceline = $this->serviceline->findOrFail($id);
+        
+        return response()->view('serviceline.show', compact('serviceline'));
+        /*
       
         if (! $type) {
             $branches = Branch::with('region', 'manager')
@@ -81,7 +80,7 @@ class ServicelinesController extends BaseController
                     }
                 )
                 ->get();
-            
+            dd($branches);
             return response()->view('servicelines.show', compact('serviceline', 'branches'));
         } else {
             $companies = Company::with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'countlocations')
@@ -98,6 +97,23 @@ class ServicelinesController extends BaseController
             $title = 'All ' .$serviceline->ServiceLine .' Accounts';
         
             return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
-        }
+            
+        }*/
     }
+    public function edit(ServiceLine $serviceline)
+    {
+
+    }
+
+    public function update(Request $request)
+    {
+
+    }
+
+    public function destroy(ServiceLine $serviceline)
+    {
+        $serviceline->delete();
+        return redirect()->route('serviceline.index')->withWarning('Serviceline has been removed');
+    }
+    
 }
