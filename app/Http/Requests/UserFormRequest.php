@@ -41,7 +41,7 @@ class UserFormRequest extends FormRequest
             'address'=>'required',
 
         ];
-        if (count(array_intersect(request('roles'), [5, 6, 7, 8])) > 0) {
+        if (count(array_intersect(request('roles'), [3, 5, 6, 7, 9, 17])) > 0) {
             $salesrules = ['reports_to'=>'required'];
         }
         if (count(array_intersect(request('roles'), [9])) > 0) {
