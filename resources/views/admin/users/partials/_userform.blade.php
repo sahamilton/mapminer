@@ -1,167 +1,79 @@
+<div class="m-4">
 <!-- Email -->
-<div class="form-group {!! $errors->has('email') ? 'has-error' : '' !!}">
-
+@if(isset($user))
+@bind($user)
+@endif
 	@if(auth()->user()->hasRole(['admin']))
-		<label class="col-md-2 control-label" for="email">Oracle Validation</label>
-		<div class="col-md-10">
-			<input
-			class="form-control" 
-			type="checkbox"
-			checked 
-			name="oracle" 
-			value =1>
-			{!! $errors->first('email', '<span class="help-inline">:message</span>') !!}
-		</div>
+	<x-form-checkbox
+		class="col-md-8" 
+		type="checkbox" 
+		checked
+		name="oracle" 
+		id="oracle" 
+		value="1"
+		label="Oracle Validation:" />
+		
 	@else
 		<input hidden name="oracle" value=1/>
 	@endif
-	<label class="col-md-2 control-label" for="email">Email</label>
-	<div class="col-md-10">
-		<input
-		readonly onfocus="this.removeAttribute('readonly');" 
-		required 
-		class="form-control" 
-		type="text" 
-		name="email" 
-		autocomplete = "false"
-		id="email" 
-		value="{{ old('email', isset($user) ? $user->email : '') }}" 
+		
+	<x-form-input
+		class="col-md-10" 
+		type="email"
+		required
+		name="email"
+		label="Email:"
 		placeholder="email@peopleready.com"
-		autocomplete="off"/>
-		{!! $errors->first('email', '<span class="help-inline">:message</span>') !!}
-	</div>
-</div>
-<!-- ./ email -->
-<!-- employee_id -->
-<div class="form-group{{ $errors->has('employee_id') ? ' has-error' : '' }}">
-    <label class="col-md-2 control-label">Employee Id</label>
-    <div class="col-md-10">
-        <input 
-        required
-        type="text" 
-        class="form-control" 
-        name='employee_id'
-		autocomplete = 'off' 
-        description="employee_id" 
-        value="{{ old('employee_id',isset($user) ? $user->employee_id : '') }}" 
-        placeholder="employee_id"
-        autocomplete="off">
-        <span class="help-block{{ $errors->has('employee_id') ? ' has-error' : '' }}">
-            <strong>{{ $errors->has('employee_id') ? $errors->first('employee_id') : ''}}</strong>
-            </span>
-    </div>
-</div>
-    
-<!-- Password -->
-<div class="form-group {!! $errors->has('password') ? 'has-error' : '' !!}">
-	<label class="col-md-2 control-label" for="password">Password</label>
-	<div class="col-md-10">
-		<input 
-		readonly onfocus="this.removeAttribute('readonly');" 
-		required 
-		class="form-control" 
-		type="password" 
-		autocomplete = 'false'
-		name="password" 
-		id="password" 
+		
+		autocomplete="off" />
 
-		value="" />
-		{!! $errors->first('password', '<span class="help-inline">:message</span>') !!}
-	</div>
-</div>
-<!-- ./ password -->
+	<x-form-input
+		class="col-md-10" 
+		type="text"
+		required
+		name="employee_id"
+		label="Employee ID:"
+		placeholder="GUI#"
+		 />
 
-<!-- Password Confirm -->
-<div class="form-group {!! $errors->has('password_confirmation') ? 'has-error' : '' !!}">
-	<label class="col-md-2 control-label" for="password_confirmation">Password Confirm</label>
-	<div class="col-md-10">
-		<input 
-		readonly onfocus="this.removeAttribute('readonly');" 
-		class="form-control" 
-		autocomplete = 'off'
-		type="password" 
-		name="password_confirmation" 
-		id="password_confirmation" 
-		autocomplete="off"
-		value="" />
-		{!! $errors->first('password_confirmation', '<span class="help-inline">:message</span>') !!}
-	</div>
-</div>
-<!-- ./ password confirm -->
 
-<!-- confirmed -->
-<div class="form-group {!! $errors->has('confirmed') ? 'has-error' : '' !!}">
-	<label class="col-md-2 control-label" for="password_confirmation">Active</label>
-	<div class="col-md-10">
-		<input 
-		class="form-control" 
+
+	<x-form-checkbox
+		class="col-md-2" 
 		type="checkbox" 
 		name="confirmed" 
 		id="confirmed" 
-		value="1" {{isset($user) && $user->confirmed==1 ? 'checked' : ''}}/>
-		{!! $errors->first('confirmed', '<span class="help-inline">:message</span>') !!}
-	</div>
-</div>
-<!-- ./ confirmed -->
+		checked
+		value="1"
+		label="Active:"
+		 />
 
-<!-- Groups -->
-<div class="form-group {!! $errors->has('roles') ? 'has-error' : '' !!}">
-    <label class="col-md-2 control-label" for="roles">Roles</label>
-    <div class="col-md-6">
-        <select 
-        required
-        class="form-control" 
-        name="roles[]" 
-        id="roles" 
-        multiple
-		oninvalid="this.setCustomValidity('You must choose a role')"
-		oninput="this.setCustomValidity('')"  />
-			@foreach ($roles as $role)
-				@if ($mode == 'create')
-            		<option value="{{ $role->id }}"{{ ( in_array($role->id, $selectedRoles) ? ' selected="selected"' : '') }}>{{ $role->display_name }}</option>
-            	@else
-					<option value="{{ $role->id }}" 
-						{{ ( array_search($role->id, $user->currentRoleIds()) !== false && array_search($role->id, $user->currentRoleIds()) >= 0 ? ' selected="selected"' : '') }}>{{ $role->display_name }}</option>
-				@endif
-            @endforeach
-		</select>
 
-		<span class="help-block">
-			Select a group to assign to the user, remember that a user takes on the permissions of the group they are assigned.
-		</span>
-	</div>
-</div>
-<!-- ./ groups -->
+	<x-form-select
+		class="col-md-10" 
+		name="roles[]"
+		multiple
+		required
+		many-relation
+		:options="$roles->pluck('display_name', 'id')->toArray()"
+		label="Roles:"
 
-<!-- Service Lines -->
-<div class="form-group @if ($errors->has('serviceline')) has-error @endif">
-	<label class="col-md-2 control-label" for="roles">Service Lines</label>
-	
-	<div class="col-md-6">
-		<select 
-        required
-        class="form-control" 
+		/>
+	<x-form-select
+		required
+        class="col-md-10" 
         name="serviceline[]" 
         id="serviceline" 
         multiple
-		 />
+        many-relation
+        :options="$servicelines"
+        label="Service Lines:" 
+         />
 
-			@foreach ($servicelines as $id=>$serviceline)
-				@if ($mode == 'create')
-            		<option value="{{ $id }}">
-	            		{{ $serviceline }}
-	            	</option>
-	            @else
-	            	<option 
-	            	value="{{ $id }}"
-	            	 {{ ( array_search($serviceline, $user->currentServicelineIds()) !== false && array_search($serviceline, $user->currentServicelineIds()) >= 0 ? ' selected ' : '') }}>{{ $serviceline  }}
-	            	</option>
-            	@endif
-            @endforeach
-		</select>
-
-		@if ($errors->has('serviceline')) <p class="help-block">{!! $errors->first('serviceline') !!}</p> @endif
-	</div>
 </div>
+@if(isset($user))
+@endbind
+@endif
+
 <!-- ./ servicelines -->
 
