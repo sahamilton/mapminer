@@ -14,24 +14,26 @@
 
 				Edit
 			</a>
+			@if(! $user->lastLogin)
 			<a href="{{route('person.welcome',$person->id)}}"
 				title="Sends a welcome message to {{$person->fullName()}} and their manager.  Note the welcome message is sent automatically when a user is created.  Using this link is only necessary if there was some delay in activating the user."><i class="fa-solid fa-paper-plane"></i>Send Welcome Email</a>
-		@can('manage_users')
-		<a class="btn btn-danger float-right" 
-                data-href="{{route('users.destroy',$user->id)}}" 
-				data-toggle="modal" 
-				data-target="#confirm-delete" 
-				data-title = "{{$person->fullName()}}" 
-				href="#">
-				<i class="far fa-trash-alt text-white" aria-hidden="true"> </i> 
-				Delete </a>
-		@endcan
+			@endif
+			@can('manage_users')
+			<a class="btn btn-danger float-right" 
+	                data-href="{{route('users.destroy',$user->id)}}" 
+					data-toggle="modal" 
+					data-target="#confirm-delete" 
+					data-title = "{{$person->fullName()}}" 
+					href="#">
+					<i class="far fa-trash-alt text-white" aria-hidden="true"> </i> 
+					Delete </a>
+			@endcan
 		</div>
 		@canImpersonate
 			
-		<a href="{{route('impersonate', $person->user_id)}}" class="btn btn-warning">
-			Login As {{$person->fullName()}}
-		</a>
+			<a href="{{route('impersonate', $person->user_id)}}" class="btn btn-warning">
+				Login As {{$person->fullName()}}
+			</a>
 		@endCanImpersonate
 
 		<div class="list-group-item">
@@ -62,13 +64,15 @@
 				<li>User id: {{$person->userdetails->id}}</li>
 				<li>Person id: {{$person->id}}</li>
 				<li>Employee id: {{$person->userdetails->employee_id}}</li>
-				<li><strong>Servicelines:</strong><ul>
-					@foreach ($user->serviceline as $serviceline)
-						<li>{{$serviceline->ServiceLine}}</li>
-					@endforeach
-				</ul>
-			</li>
-		</ul>
+				<li>
+					<strong>Servicelines:</strong>
+					<ul>
+						@foreach ($user->serviceline as $serviceline)
+							<li>{{$serviceline->ServiceLine}}</li>
+						@endforeach
+					</ul>
+				</li>
+			</ul>
 		</div>
 		<div class="list-group">
 			<div class="list-group-item">
@@ -149,8 +153,6 @@
 										
 							@endif
 						@endif
-						
-						
 					</ul>
 				</div>
 				<div class="col-sm-8">
