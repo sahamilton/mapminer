@@ -58,16 +58,16 @@ class ActivityTypeController extends Controller
      * @param  \App\ActivityType  $activityType
      * @return \Illuminate\Http\Response
      */
-    public function show(ActivityType $activityType)
+    public function show(ActivityType $activitytype)
     {
-        $activityType = $this->activitytype->with('activities')
-                ->findOrFail($activityType->id);
+        
+        $activitytype->load('activities');
         $users = $activityType->activities->pluck('id', 'user_id')->toArray();
         $people = $this->person->whereIn('user_id', array_keys($users))->with(['activities'=>function ($q) use ($activityType) {
             $q->where('activitytype_id', '=', $activityType->id);
         }])->with('userdetails', 'userdetails.roles')->get();
 
-        return response()->view('activitytypes.show', compact('activityType', 'people'));
+        return response()->view('activitytypes.show', compact('activitytype', 'people'));
     }
 
     /**
@@ -78,6 +78,7 @@ class ActivityTypeController extends Controller
      */
     public function edit(ActivityType $activitytype)
     {
+        
         return response()->view('activitytypes.edit', compact('activitytype'));
     }
 
@@ -88,10 +89,10 @@ class ActivityTypeController extends Controller
      * @param  \App\ActivityType  $activityType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ActivityType $activityType)
+    public function update(Request $request, ActivityType $activitytype)
     {
         
-        $activityType->update(request()->except('_token'));
+        $activitytype->update(request()->except('_token'));
 
         return redirect()->route('activitytype.index')->withSuccess('Activity Type Updated');
     }
@@ -102,10 +103,17 @@ class ActivityTypeController extends Controller
      * @param  \App\ActivityType  $activityType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ActivityType $activityType)
+    public function destroy(ActivityType $activitytype)
     {
-        $activityType->delete();
-
-        return redirect()->route('activitytype.index')->withWarning('Activity Type Deleted');
+        
+        // what do we do with all the activities?
+     
+        if($activitytype->activities()->count() > 0) {
+            $message = 'Cannot delete activity type ' . $activitytype->activity . ' until all ' . $activitytype->activity . ' activities have been reassigned';
+            return redirect()->route('activitytype.index')->withError($message);
+        }
+        $message = 'Activity type ' . $activitytype->activity . ' has been deleted.';
+        $activitytype->delete();
+        return redirect()->route('activitytype.index')->withWarning($message);
     }
 }

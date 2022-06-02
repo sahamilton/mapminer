@@ -19,7 +19,7 @@
 				
 				<tr>
 					<td>
-						<a href="{{route('activitytype.show',$activitytype->id)}}">
+						<a href="{{route('activitytype.show',$activitytype->slug)}}">
 							{{$activitytype->activity}}
 						</a>
 					</td>
@@ -37,12 +37,12 @@
 				            <ul class="dropdown-menu" role="menu">
 
 					            <a class="dropdown-item"
-					                 href="{{route('activitytype.edit',$activitytype->id)}}">
+					                 href="{{route('activitytype.edit',$activitytype->slug)}}">
 					                 <i class="far fa-edit text-info"  aria-hidden="true"> </i>
 					                    Edit {{$activitytype->activity}} activity type
 					            </a>
 								<a class="dropdown-item"
-								 	data-href="{{route('activitytype.destroy',$activitytype->id)}}" 
+								 	data-href="{{route('activitytype.destroy',$activitytype->slug)}}" 
 									data-toggle="modal" 
 									data-target="#confirm-delete" 
 									data-title = " the {{$activitytype->activity}} activity type"
