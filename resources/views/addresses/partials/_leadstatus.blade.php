@@ -1,6 +1,7 @@
 @if ($owned)
 
   @if($branch->pivot->status_id === 1)
+   
     <div class="d-flex flex-row">
       <form class='p-2 form-inline'
           action = "{{route('branchleads.update',$branch->pivot->id)}}"
@@ -60,9 +61,9 @@
   
      
 
-@elseif ($location->assignedToBranch->count())
+@elseif ($location->claimedByBranch->count())
   
-  @foreach ($location->assignedToBranch as $branch)
+  @foreach ($location->claimedByBranch as $branch)
 
     <li><strong>Owned By:</strong>
       <a href="{{route('branches.show', $branch->id)}}">
@@ -84,31 +85,34 @@
 
     
   @endforeach
-  @include('addresses.partials._transferrequest')
+  @include('addresses.partials._transferrequest') 
+@elseif ($location->assignedToBranch->count())
+  Lead currently on offer to:
+  @foreach ($location->assignedToBranch as $offered)
+    @if(! $loop->last), @endif
+      {{$offered->branchname}}
+   
+  @endforeach
 @else
 
-  <form name="claimlead"
+ <form name="claimlead"
     method="post"
     action = "{{route('branchleads.store')}}"
     >
     @csrf
-    <input type="hidden" 
-    name="address_id" 
-    value="{{$location->id}}" />
-    @if (count($myBranches)==1)
-      <input type="hidden" 
-      name="branch_id" 
-      value = "{{$myBranches[0]}}" />
+    <x-form-input type="hidden" 
+      name="address_id" 
+      value="{{$location->id}}" />
+    @if(count($myBranches)==1)
+      <x-form-input type="hidden" 
+        name="branch_id" 
+        value = "{{$myBranches[0]}}" />
     @else 
-    <select name="branch_id" required>
-      @foreach ($myBranches as $branch_id)
-        <option  value="{{$branch_id}}" >{{$branch_id}}</option>
-      
-      @endforeach
-    </select>
+      <x-form-select name="branch_id" required :options="$myBranches" />
+     
     @endif
     
-    <input type="submit" 
+    <x-form-submit 
     class="btn btn-success" 
     value="Claim Lead" />
   </form>

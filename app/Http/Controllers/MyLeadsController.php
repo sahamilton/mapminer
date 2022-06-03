@@ -472,7 +472,7 @@ class MyLeadsController extends BaseController
             $this->_reassignOpportunities($address->openOpportunities, $branches);
         }
         foreach ($branches as $branch) {
-            $data[$branch]= ['status_id'=>1];
+            $data[$branch]= ['status_id'=>2];
         }
        
         return $address->assignedToBranch()->sync($data);
