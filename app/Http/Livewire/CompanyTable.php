@@ -44,11 +44,19 @@ class CompanyTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount()
+    public function mount($accounttype=null)
     {
-        $this->types = AccountType::pluck('type', 'id')->toArray();
+        
+        $types = AccountType::pluck('type', 'id')->toArray();
+        $types['all']='All';
+        asort($types);
+       
+        $this->types = $types;
         $this->address = auth()->user()->person->fullAddress();
         $this->location = auth()->user()->person;
+        if($accounttype){
+            $this->accounttype=$accounttype;
+        }
         
     }
 
@@ -62,18 +70,23 @@ class CompanyTable extends Component
                 
                 ->search($this->search)
                 ->with('managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
-                ->whereHas('locations', function ($q) {
-                    $q->nearby(auth()->user()->person, $this->distance);
-                })
-                ->with(
-                   
-                        'locations', function ($q) {
-                            $q->nearby(auth()->user()->person, $this->distance);
+                ->with('locations', function ($q) {
+                    $q->when($this->distance != 'any', function ($q) {
+                        $q->nearby($this->location, $this->distance);
                         }
+                    );
                     
+                })
+                ->when($this->distance != 'any', function ($q) {
+               
+                        $q->whereHas('locations', function ($q) {
+                            $q->nearby($this->location, $this->distance);
+                        });
+
+                    }
                 )
                 ->when(
-                    $this->accounttype && $this->accounttype != 'All', function ($q) {
+                    $this->accounttype && $this->accounttype != 'all', function ($q) {
                         $q->whereHas(
                             'type', function ($q) {
                                 $q->where('accounttypes.id', $this->accounttype);
@@ -81,10 +94,9 @@ class CompanyTable extends Component
                         );
                     }
                 )
-           
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-                'distances' => [5=>5,10=>10, 25=>25],
+                'distances' => ['any'=>'Any',5=>5,10=>10, 25=>25],
             ]
         );
     }

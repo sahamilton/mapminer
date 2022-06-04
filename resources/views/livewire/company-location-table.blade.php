@@ -1,55 +1,48 @@
 <div>
+
     <h2>{{$company->companyname}} locations 
-        @if($state !='All') 
+        @if($state !='all') 
         in {{$state}}
         @endif
 
     </h2>
+    @if($distance != 'any')
+    <h4>within {{$distance}} miles of {{$person->fullAddress()}}</h4>
+    @endif
     @if($company->salesnotes->count() >0)
-    <p><i>See how to sell to <a href="{{route('salesnotes.show', $company->id)}}">{{$company->companyname}}"</a></i></p>
+        <p>
+            <i>See how to sell to <a href="{{route('salesnotes.show', $company->id)}}">{{$company->companyname}}"</a>
+            </i>
+        </p>
     @endif
     @if($claimed != 'All')
         <p>{{ucwords($claimed)}} by Branches</p>
 
     @endif
        
-    <div class="row" style="margin-top:5px">
+    <div class="my-4 row" >
         <div class="col form-inline">
             @include('livewire.partials._perpage')
-             @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
+            @include('livewire.partials._search', ['placeholder'=>'Search Locations'])
         </div>
     </div>
-    <div class="row" style="margin-top:5px">
+    <div class="mb-4 row">
         <div class="col form-inline">
             <i class="fas fa-filter text-danger"></i>
-            State: &nbsp;
-            <select wire:model="state" class="form-control">
-                <option value="All">All</option>
-                @foreach ($allstates as $state)
-                    <option value="{{$state}}">{{$state}}</option>
-                @endforeach
-            </select>
-        
-            Claimed: &nbsp;
-            <select wire:model="claimed" class="form-control">
-                <option value="All">All</option>
-                <option value="claimed">Claimed</option>
-                <option value="unclaimed">Unclaimed</option>    
-                
-            </select>
-            My Leads: &nbsp;
-            <select wire:model="myBranch" class="form-control">
-                <option value=false>All</option>
-                <option value=true>My Leads</option>
-                 
-                
-            </select>
-        
+            <x-form-select  class="mx-4" wire:model='state'  name="distance" label='State:' :options='$allstates' />
+
+            <x-form-select  class="mx-4" wire:model='claimed'  name="distance" label='Claimed:' :options='$status' />
+           
+            <x-form-select  class="mx-4" wire:model='myBranch'  name="myBranch" label='My Leads:' :options='$owned' />
+            
+            <x-form-select  class="mx-4" wire:model='distance'  name="distance" label='Distance' :options='$distances' />
+        </div>
         <div wire:loading>
             <div class="spinner-border text-danger"></div>
         </div>
 
-    </div>
+     </div>   
+
     <div class="row" style="margin-top:5px">
         <table 
             class='table table-striped table-bordered table-condensed table-hover'>

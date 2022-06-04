@@ -56,6 +56,7 @@ Route::group(
         Route::post('address/merge', ['as'=>'addresses.merge', 'uses'=>'AddressController@mergeAddress']);
         Route::get('address/{address}/duplicates', ['as'=>'address.duplicates', 'uses'=>'AddressController@duplicates']);
         Route::post('address/{address}/rating', ['as'=>'address.rating', 'uses'=>'AddressController@rating']);
+        Route::post('address/{address}/claim', ['as'=>'lead.claim', 'uses'=>'MyLeadsController@claim']);
         Route::resource('address', 'AddressController');
         
         //     Avatar

@@ -1,19 +1,22 @@
 <div>
-    <h2>Companies</h2>
+    <h2>@if(isset($accounttype)) {{$types[$accounttype]}} @endif Companies</h2>
+    @if($distance !='any')
     <h4>with locations within {{$distance}} miles</h4>
-    <x-form-input name="address" wire:model="address" class="form-control" /> {{$address}}
-    <div class="row mb-4">
+    of {{$address}}
+    @endif
+   
         
-         <div class="col form-inline">
-            @include('livewire.partials._perpage')
-            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
-        </div>
+     <div class="row m-4 form-inline">
+        @include('livewire.partials._perpage')
+        @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
     </div>
+    
     <div class="row mb-4">
         <div class="col form-inline">
-            <i class="fas fa-filter text-danger"></i> Type:
-            <x-form-select wire:model='accounttype' class="form-control" name="accounttype" label='Account Type:' :options='$types' />
-            <x-form-select wire:model='distance' class="form-control" name="distance" label='Distance' :options='$distances' />
+            <i class="fas fa-filter text-danger mr-4"></i> 
+            <x-form-select  class="mx-4" wire:model='accounttype'  name="accounttype" label='Account Type:' :options='$types' />
+            <x-form-select class="mx-4"  wire:model='distance'  name="distance" label='Distance:' :options='$distances' />
+            <x-form-select class="mx-4"  wire:model='vertical'  name="vertical" label='Industry:' :options='$verticals' />
         </div>
 
         
