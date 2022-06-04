@@ -7,7 +7,13 @@
         </a>
     </p>
     
-    
+    <div class="row mb-4 ">
+        <div class="col form-inline">
+            @include('livewire.partials._perpage')
+            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+        </div>
+       
+    </div>
     <div class="row mb-4">
         <div class="col form-inline">
             
@@ -60,13 +66,7 @@
             wire:click='export'>Export <i class="far fa-file-excel"></i></button>
         </div>
     </div>
-    <div class="row mb-4 ">
-        <div class="col form-inline">
-            @include('livewire.partials._perpage')
-            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
-        </div>
-       
-    </div>
+    
     <div wire:loading>
             <div class="spinner-border text-danger"></div>
         </div>
