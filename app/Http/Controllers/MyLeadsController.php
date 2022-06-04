@@ -189,6 +189,14 @@ class MyLeadsController extends BaseController
         
     }
 
+    public function claim(Address $address, Request $request)
+    {
+
+        //->sync([1 => ['expires' => true], 2, 3]);
+        $address->assignedToBranch()->sync([request('branch_id') =>['status_id'=>2]]);
+        return redirect()->route('address.show', $address->id);
+    }
+
     /**
      * [findLocations description]
      * 

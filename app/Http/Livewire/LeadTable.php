@@ -135,11 +135,7 @@ class LeadTable extends Component
                                 $q->whereNull('isCustomer');
                             }
                         )
-                        ->when(
-                            $this->type == 'Nearby', function ($q) {
-                                $q->nearby(auth()->user()->person, 25);
-                            }
-                        );
+                        
                     }
                 )
                 ->when(

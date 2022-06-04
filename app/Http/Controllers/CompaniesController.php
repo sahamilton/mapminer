@@ -115,11 +115,8 @@ class CompaniesController extends BaseController
 
     public function byType(AccountType $type)
     {
-        $companies =$this->company->where('accounttypes_id', $type->id)
-            ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
-            ->get();
-        $locationFilter = 'both';
-        return response()->view('companies.type', compact('companies', 'type'));
+        
+        return response()->view('companies.index', compact('type'));
     }
 
     /**

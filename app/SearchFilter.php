@@ -122,6 +122,13 @@ class SearchFilter extends NodeModel
     {
         return $query->where('searchtable', $table);
     }
+
+    public function scopeIndustries($query)
+    {
+        return $query->where('searchtable', '=', 'companies')
+
+            ->where('inactive', '=', 0);
+    }
     /**
      * [companies description].
      *

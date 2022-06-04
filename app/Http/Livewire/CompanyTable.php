@@ -5,6 +5,7 @@ use App\Model;
 use App\Company;
 use App\Person;
 use App\AccountType;
+use App\SearchFilter;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,9 +20,11 @@ class CompanyTable extends Component
     public $search = '';
     public $location;
     public String $address;
-    public $types;
+    public array $types;
+    public array $verticals;
+    public $vertical = 'all';
     public $distance = '25';
-    public $accounttype=false;
+    public $accounttype='all';
     public $paginationTheme = 'bootstrap';
 
     public function updatingSearch()
@@ -31,7 +34,7 @@ class CompanyTable extends Component
 
     public function updatingAddress()
     {
-        $this->_geoCodeAddress();
+        $this->location = $this->_geoCodeAddress();
     }
 
     public function sortBy($field)
@@ -57,6 +60,12 @@ class CompanyTable extends Component
         if($accounttype){
             $this->accounttype=$accounttype;
         }
+        $verticals = SearchFilter::industries()->orderBy('filter')->pluck('filter','id')->toArray();
+
+        $verticals['all']=' All';
+        asort($verticals);
+       
+        $this->verticals = $verticals;
         
     }
 
@@ -71,16 +80,26 @@ class CompanyTable extends Component
                 ->search($this->search)
                 ->with('managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
                 ->with('locations', function ($q) {
-                    $q->when($this->distance != 'any', function ($q) {
-                        $q->nearby($this->location, $this->distance);
-                        }
-                    );
-                    
-                })
+                    $q->when(
+                        $this->distance != 'any', function ($q) {
+                            $q->nearby($this->location, $this->distance);
+                            }
+                        );
+                        
+                    }
+                )
                 ->when($this->distance != 'any', function ($q) {
                
                         $q->whereHas('locations', function ($q) {
                             $q->nearby($this->location, $this->distance);
+                        });
+
+                    }
+                )
+                ->when($this->vertical != 'all', function ($q) {
+               
+                        $q->whereHas('industryVertical', function ($q) {
+                            $q->where('searchfilters.id', $this->vertical);
                         });
 
                     }
@@ -104,5 +123,10 @@ class CompanyTable extends Component
     private function _geoCodeAddress()
     {
 
+    }
+
+    public function setType($type)
+    {
+        $this->accounttype=$type;
     }
 }

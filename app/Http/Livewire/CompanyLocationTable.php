@@ -16,7 +16,7 @@ class CompanyLocationTable extends Component
     public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'distance';
-    public $state='All';
+    public $state='all';
     public Company $company;
     public $company_id;
     public $sortAsc = true;
@@ -26,6 +26,8 @@ class CompanyLocationTable extends Component
     public $claimed='All';
     public $myBranch = false;
     public $myBranches;
+    public $distance = 'any'
+    ;
 
 
     public function updatingSearch()
@@ -49,9 +51,9 @@ class CompanyLocationTable extends Component
      * 
      * @return [type]             [description]
      */
-    public function mount($company_id)
+    public function mount($company_id, $distance=null)
     {
-        
+       
         $this->company_id = $company_id;
         $this->company = Company::with('salesnotes')->findOrFail($company_id);
         $this->person = Person::where('user_id', auth()->user()->id)->first();
@@ -69,10 +71,11 @@ class CompanyLocationTable extends Component
         return view(
             'livewire.company-location-table', [
                 'locations'=>Address::query()
+
                     ->withDistance($this->person)
                     ->where('company_id', $this->company_id)
                     ->when(
-                        $this->state != 'All', function ($q) {
+                        $this->state != 'all', function ($q) {
                                 $q->where('state', $this->state);
                         }
                     )
@@ -96,18 +99,20 @@ class CompanyLocationTable extends Component
                             );
                         }
                     )
+                    ->when(
+                        $this->distance != 'any', function ($q) {
+                            $q->nearby($this->person, $this->distance);
+                        }
+                    )
                     ->search($this->search)
                     ->with('assignedToBranch')
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-            'allstates' => Address::select('state')
-                ->distinct('state')
-                ->select('state')
-                ->where('company_id', $this->company_id)
-                ->orderBy('state')
-                ->pluck('state')->toArray(),
+            'allstates' => $this->_allStates(),
             
-
+            'distances' => ['any'=>'Any',5=>5,10=>10, 25=>25],
+            'status'=>[" All"=>"All", "claimed"=>"Claimed","unclaimed"=>'Unclaimed'],
+            'owned' =>['true'=>'My Branch', 'false'=>'All'],
             ]
         );
         
@@ -116,5 +121,18 @@ class CompanyLocationTable extends Component
     private function myPosition()
     {
         $this->person->getMyPosition();
+    }
+
+    private function _allStates()
+    {
+        $states = Address::select('state')
+                ->distinct('state')
+                ->select('state')
+                ->where('company_id', $this->company_id)
+                ->orderBy('state')
+                ->pluck('state','state')->toArray();
+        $states['all']=' All';
+        asort($states);
+        return $states;
     }
 }
