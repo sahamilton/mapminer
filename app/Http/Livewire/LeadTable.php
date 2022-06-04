@@ -134,7 +134,7 @@ class LeadTable extends Component
                             }, function ($q) {
                                 $q->whereNull('isCustomer');
                             }
-                        )
+                        );
                         
                     }
                 )
