@@ -55,7 +55,11 @@ class GeoCodingController extends BaseController
      */
     public function findMe(FindMeFormRequest $request)
     {
-        
+    
+        if (request('view') === 'list' && request('type') === 'location') {
+
+            return response()->view('companies.nearby');
+        }
         $geocode = app('geocoder')->geocode(request('search'))->get();
         
         if (request()->filled('search')) {
@@ -69,10 +73,7 @@ class GeoCodingController extends BaseController
         }
        
         /// New Livewire search list
-        if ($data['view'] === 'list' && $data['type'] === 'location') {
-
-            return response()->view('companies.nearby');
-        }
+        
         // get position from address
         if (! $data = $this->_getPostionFromAddress($data) ) {
 

@@ -77,7 +77,10 @@ class MyLeadsController extends BaseController
         return response()->view('myleads.branches', compact('branch', 'myBranches', 'campaigns', 'search'));
         
     }
-
+    public function list()
+    {
+        return response()->view('companies.nearby');
+    }
 
     public function create()
     {

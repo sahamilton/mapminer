@@ -1,16 +1,22 @@
 <div>
     <h4>{{isset($company_ids[0]) ? 'Selected': 'All'}} Companies</h4>
+    Lead type = {{$leadtype}}
     <p>
         <a href="{{route('company.index')}}" title="Return to all companies">
             <i class="far fa-building"></i>
                 Return to all companies
         </a>
     </p>
-    
+  
     <div class="row mb-4 ">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
-            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])
+            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])    
+            <div class="float-right">
+                <button class="btn btn-success" 
+                title="Export Selection to Excel"
+                wire:click='export'>Export Selection to Excel <i class="far fa-file-excel"></i></button>
+            </div>
         </div>
        
     </div>
@@ -39,18 +45,23 @@
         </div>
     </div>
     <div class="row mb-4 ">
+        <x-form-select wire:model="leadtype"
+                name='leadtype'
+                label="Lead type:"
+                :options='$leadtypes'
+                />
         <div class="col form-inline">
-           <label for="distance">With locations within&nbsp;</label>
-           <select wire:model="distance"  
-                class="form-control">>
-                @foreach ($distances as $distance)
-                    <option value="{{$distance}}">{{$distance}} miles</option>
-                @endforeach
-            </select>
+            <x-form-select wire:model="distance"
+                name='distance'
+                label="With locations within:"
+                :options='$distances'
+                />
+
              &nbsp;of address &nbsp;
-             <form wire:submit.prevent="updateAddress">
+             
+            <form wire:submit.prevent="updateAddress">
                 <input class="form-control" 
-                    wire:model="address"
+                    wire:model.defer="address"
                     type="text" 
                     value="{{$address ? $address : 'Enter an address'}}"
                     />
@@ -58,13 +69,11 @@
                             <i class="fas fa-search"></i>
                     </button>
             </form>
+
+
         </div>
     
-        <div class="float-right">
-            <button class="btn btn-success" 
-            title="Export to Excel"
-            wire:click='export'>Export <i class="far fa-file-excel"></i></button>
-        </div>
+    
     </div>
     
     <div wire:loading>

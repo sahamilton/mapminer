@@ -24,6 +24,7 @@ class NearbyLocations extends Component
     public $perPage =10;
     public $accounttype = 0;
     public $search='';
+    public $leadtype='all';
 
 
     public function updatingSearch()
@@ -79,6 +80,27 @@ class NearbyLocations extends Component
                                 }
                             );
                         }
+                    )
+                    ->when(
+                        $this->leadtype !='all', function($q) {
+                            $q->when(
+                                $this->leadtype==="lead", function ($q) {
+                                    $q->doesntHave('claimedByBranch');
+                                }
+                            )->when(
+                                $this->leadtype==="customer", function ($q) {
+                                    $q->whereNotNull('isCustomer');
+                                }
+                            )->when(
+                                $this->leadtype==="opportunity", function ($q) {
+                                    $q->has('openOpportunities');
+                                }
+                            )->when(
+                                $this->leadtype==="branchlead", function ($q) {
+                                    $q->has('claimedByBranch');
+                                }
+                            );
+                        }
                     )    
                     ->nearby($this->location, $this->distance)
                     ->with('company', 'assignedToBranch')
@@ -87,17 +109,19 @@ class NearbyLocations extends Component
                     ->paginate($this->perPage),
                 'accounttypes'=>$this->_getaccountTypes(),
                 'companies'=>Company::when(
-                    $this->accounttype != '0', function ($q) {
+                        $this->accounttype != '0', function ($q) {
 
-                        $q->where('companies.accounttypes_id', $this->accounttype);
-                    }
-                )->whereHas(
-                    'locations', function ($q) {
-                        $q->nearby($this->location, $this->distance);
-                    }
-                )
-                ->orderBy('companyname')->pluck('companyname', 'id')->toArray(),
-                'distances'=>['5','10','25', '50','100'],
+                            $q->where('companies.accounttypes_id', $this->accounttype);
+                        }
+                    )->whereHas(
+                        'locations', function ($q) {
+                            $q->nearby($this->location, $this->distance);
+                        }
+                    )
+                    ->orderBy('companyname')->pluck('companyname', 'id')->toArray(),
+                'distances'=>[5=>5,10=>10,25=>25, 50=>50,100=>100],
+                'leadtypes' =>['all'=>'All', 'opportunity'=>"Lead with Active Opportunity" , 'customer'=>'Customer Lead', 'branchlead' => 'Branch lead', 'lead'=>'Unassigned Lead'],
+
             ]
         );
     }
