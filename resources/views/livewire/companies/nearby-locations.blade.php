@@ -1,5 +1,5 @@
 <div>
-    <h2>Nearby Locations
+    <h2>Nearby Locations !!
         @if($company_ids != 'all') 
             of {{$companies[$company_ids]}}
          @endif 
@@ -18,12 +18,7 @@
             @include('livewire.partials._search', ['placeholder'=>'Search Companies'])    
             
             
-            <x-form-select 
-                wire:model="company_ids"
-                name="company_ids"
-                label="Locations of Company:"
-                :options='$companies'
-             />
+            
             
         </div>
        
@@ -72,7 +67,7 @@
             <th>
                 <a wire:click.prevent="sortBy('businessname')" 
                 role="button" href="#" 
-                wire:loading.class="bg-danger">
+                >
                     Business
                     @include('includes._sort-icon', ['field' => 'businessname'])
                 </a>
@@ -85,12 +80,7 @@
             <th>Number of Contacts</th>
             <th>Created / Updated</th>
             <th>Assigned to Branch</th>
-            <th>
-                <a wire:click.prevent="sortBy('distance')" 
-                role="button" href="#" 
-                wire:loading.class="bg-danger">Distance
-                @include('includes._sort-icon', ['field' => 'distance'])
-            </th>
+            <th>Distance</th>
         </thead>
         <tbody>
         @foreach ($locations as $location)
