@@ -35,7 +35,7 @@
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                  People</a>
           @if(auth()->user()->hasRole('branch_manager'))
-          <a class="dropdown-item" href="{{route('branch.leads')}}">
+          <a class="dropdown-item" href="{{route('lead.list')}}">
                 <i class="fas fa-arrow-right" aria-hidden="true"> </i>
                  Leads</a>
           @endif

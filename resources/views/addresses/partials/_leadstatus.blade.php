@@ -112,9 +112,12 @@
      
     @endif
     
-    <x-form-submit 
-    class="btn btn-success" 
-    value="Claim Lead" />
+     <button type="submit" 
+        class="p-2 btn btn-success btn-sm"
+        >
+       
+        Claim Lead
+      </button>
   </form>
 @endif
 

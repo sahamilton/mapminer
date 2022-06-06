@@ -26,7 +26,7 @@ class CompanyLocationTable extends Component
     public $claimed='All';
     public $myBranch = false;
     public $myBranches;
-    public $distance = 'any'
+    public $distance = '25'
     ;
 
 
@@ -51,11 +51,12 @@ class CompanyLocationTable extends Component
      * 
      * @return [type]             [description]
      */
-    public function mount($company_id, $distance=null)
+    public function mount(Company $company, $distance=null)
     {
+
        
-        $this->company_id = $company_id;
-        $this->company = Company::with('salesnotes')->findOrFail($company_id);
+        $this->company_id = $company->id;
+        $this->company = $company->load('salesnotes');
         $this->person = Person::where('user_id', auth()->user()->id)->first();
         $this->myBranches = auth()->user()->person->getMyBranches();
         

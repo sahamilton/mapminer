@@ -5,8 +5,9 @@
 		<a href="{{route('company.index')}}">Show All Companies</a>
 	</div>
 
+	
+	<livewire:company-location-table :company='$company' />
 
-	@livewire('company-location-table', ['company_id'=>$company->id])
 </div>
 
 

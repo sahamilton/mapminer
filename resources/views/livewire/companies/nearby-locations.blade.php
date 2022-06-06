@@ -1,50 +1,37 @@
 <div>
-    <h4>{{isset($company_ids[0]) ? 'Selected': 'All'}} Companies</h4>
-    Lead type = {{$leadtype}}
-    <p>
-        <a href="{{route('company.index')}}" title="Return to all companies">
-            <i class="far fa-building"></i>
-                Return to all companies
-        </a>
-    </p>
+    <h2>Nearby Locations
+        @if($company_ids != 'all') 
+            of {{$companies[$company_ids]}}
+         @endif 
+    </h2>
+    <h4>
+        @if($leadtype != 'all')
+            {{$leadtypes[$leadtype]}}
+        @endif
+    within {{$distance}} miles of {{$address}}</h4>
+    
+    
   
     <div class="row mb-4 ">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             @include('livewire.partials._search', ['placeholder'=>'Search Companies'])    
-            <div class="float-right">
-                <button class="btn btn-success" 
-                title="Export Selection to Excel"
-                wire:click='export'>Export Selection to Excel <i class="far fa-file-excel"></i></button>
-            </div>
+            
+            
+            <x-form-select 
+                wire:model="company_ids"
+                name="company_ids"
+                label="Locations of Company:"
+                :options='$companies'
+             />
+            
         </div>
        
     </div>
-    <div class="row mb-4">
-        <div class="col form-inline">
-            
-            <label for="accounttype">Account Type:</label>
-            <select wire:model="accounttype" 
+    
+    
 
-            class="form-control">
-                <option value="0">All</option>
-                @foreach ($accounttypes as $key=>$value)
-                    <option value="{{$key}}">{{$value}}</option>
-                @endforeach
-            </select>
-            <label for="company_ids">Companies:</label>
-            <select wire:model="company_ids" 
-            multiple
-            size="3"
-            class="form-control">
-                <option>All</option>
-                @foreach ($companies as $key=>$value)
-                    <option value="{{$key}}">{{$value}}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-    <div class="row mb-4 ">
+    <div class="row mb-4">
         <x-form-select wire:model="leadtype"
                 name='leadtype'
                 label="Lead type:"
@@ -110,10 +97,14 @@
           
             <tr>
                <td>
+                @if($location->company)
                     <a href="{{route('company.show', $location->company_id)}}">
                             
                         {{$location->company->companyname}}
                     </a>
+               
+
+                @endif
                 </td>
                <td>
                     <a href="{{route('address.show', $location->id)}}">

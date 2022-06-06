@@ -16,7 +16,7 @@ class NearbyLocations extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public Location $location;
-    public $company_ids=[];
+    public $company_ids='all';
     public $address;
     public $distance = 25;
     public $sortField = 'distance';
@@ -24,7 +24,7 @@ class NearbyLocations extends Component
     public $perPage =10;
     public $accounttype = 0;
     public $search='';
-    public $leadtype='all';
+    public $leadtype='lead';
 
 
     public function updatingSearch()
@@ -65,11 +65,12 @@ class NearbyLocations extends Component
 
         return view(
             'livewire.companies.nearby-locations', [
-                'locations'=>Address::has('company')
+                'locations'=>Address::query()
                     ->search($this->search)
+                   
                     ->when(
-                        count($this->company_ids) && $this->company_ids[0] != 'All', function ($q) {
-                            $q->whereIn('company_id', $this->company_ids);
+                        $this->company_ids != 'all', function ($q) {
+                            $q->where('company_id', $this->company_ids);
                         }
                     )
                     ->when(
@@ -108,19 +109,9 @@ class NearbyLocations extends Component
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                 'accounttypes'=>$this->_getaccountTypes(),
-                'companies'=>Company::when(
-                        $this->accounttype != '0', function ($q) {
-
-                            $q->where('companies.accounttypes_id', $this->accounttype);
-                        }
-                    )->whereHas(
-                        'locations', function ($q) {
-                            $q->nearby($this->location, $this->distance);
-                        }
-                    )
-                    ->orderBy('companyname')->pluck('companyname', 'id')->toArray(),
+                'companies'=>$this->_getCompanies(),
                 'distances'=>[5=>5,10=>10,25=>25, 50=>50,100=>100],
-                'leadtypes' =>['all'=>'All', 'opportunity'=>"Lead with Active Opportunity" , 'customer'=>'Customer Lead', 'branchlead' => 'Branch lead', 'lead'=>'Unassigned Lead'],
+                'leadtypes' =>['all'=>'All', 'opportunity'=>"Leads with active opportunities" , 'customer'=>'Customer leads', 'branchlead' => 'Branch leads', 'lead'=>'Unassigned leads'],
 
             ]
         );
@@ -159,5 +150,28 @@ class NearbyLocations extends Component
     {
         return AccountType::orderBy('type')->pluck('type', 'id')->toArray();
         
+    }
+
+    private function _getCompanies() :array
+    {
+        $companies=Company::when(
+            $this->accounttype != '0', function ($q) {
+
+                $q->where('companies.accounttypes_id', $this->accounttype);
+            }
+        )->whereHas(
+            'locations', function ($q) {
+                $q->nearby($this->location, $this->distance);
+            }
+        )
+        ->orderBy('companyname')
+        ->pluck('companyname', 'id')
+        ->toArray();
+        
+        asort($companies);
+        $all = ['all'=> 'All'];
+        $companies = array_replace($all, $companies);
+        
+        return $companies;
     }
 }
