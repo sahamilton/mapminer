@@ -82,8 +82,8 @@ class BranchLeadController extends Controller
      */
     public function store(Request $request)
     {   
-      
-        
+
+       
         $exists = $this->branchlead
             ->where('branch_id', '=', request('branch_id'))
             ->where('address_id', '=', request('address_id'))
@@ -93,18 +93,23 @@ class BranchLeadController extends Controller
         if ($exists->count() > 0) {
                 return redirect()->back()->withError('Branch ' . request('branch_id') . ' already owns this lead');
         }
-        $this->branchlead->create(
-            [
-                'address_id'=>request('address_id'),
-                'branch_id'=>request('branch_id'),
-                'status_id'=>'2',
-                'person_id'=>auth()->user()->person->id
-            ]
-        );
-  
-        return redirect()->route('address.show', request('address_id'));
-    }
 
+        if (in_array(request('branch_id'), auth()->user()->person->getMyBranches())) {
+
+            $this->branchlead->create(
+                [
+                    'address_id'=>request('address_id'),
+                    'branch_id'=>request('branch_id'),
+                    'status_id'=>'2',
+                    'person_id'=>auth()->user()->person->id
+                ]
+            );
+          
+             return redirect()->route('address.show', request('address_id'));
+        } else {
+            return redirect()->back()->withError(request('branch_id') . ' is not one of your branches');
+        }
+    }
     /**
      * [show description]
      * 
