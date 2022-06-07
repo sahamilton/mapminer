@@ -95,29 +95,44 @@
   @endforeach
 @else
 
- <form name="claimlead"
-    method="post"
-    action = "{{route('branchleads.store')}}"
-    >
-    @csrf
-    <x-form-input type="hidden" 
-      name="address_id" 
-      value="{{$location->id}}" />
-    @if(count($myBranches)==1)
-      <x-form-input type="hidden" 
-        name="branch_id" 
-        value = "{{$myBranches[0]}}" />
-    @else 
-      <x-form-select name="branch_id" required :options="$myBranches" />
-     
-    @endif
-    
-     <button type="submit" 
-        class="p-2 btn btn-success btn-sm"
-        >
+<div class="row mb-4">
+   <form name="claimlead"
+      class="form-inline"
+      method="post"
+      action = "{{route('branchleads.store')}}"
+      >
+      @csrf
+      <button type="submit" 
+          class="btn btn-success btn-sm"
+          title="Claim lead for branch">
+         
+          Claim Lead
+        </button>
+      <input type="hidden" 
+        name="address_id" 
+        value="{{$location->id}}" /> 
+        
+      @if(count($myBranches)===1)
+        <input type="hidden" 
+          name="branch_id" 
+          value = "{{$myBranches[0]}}" />
        
-        Claim Lead
-      </button>
-  </form>
+      @else 
+        for branch:
+          <select  class="form-control mb-2 mx-sm-2" name="branch_id" required >
+
+          @foreach ($myBranches as $myBranch)
+            <option value="{{$myBranch}}">{{$myBranch}}</option>
+
+          @endforeach
+
+        </select>
+       
+       
+      @endif
+      
+      
+    </form>
+</div>
 @endif
 

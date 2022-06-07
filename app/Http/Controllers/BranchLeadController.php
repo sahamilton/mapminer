@@ -81,13 +81,15 @@ class BranchLeadController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+      
         
         $exists = $this->branchlead
             ->where('branch_id', '=', request('branch_id'))
             ->where('address_id', '=', request('address_id'))
             ->get();
-        
+        // check if one of the users branches
+
         if ($exists->count() > 0) {
                 return redirect()->back()->withError('Branch ' . request('branch_id') . ' already owns this lead');
         }
@@ -95,7 +97,8 @@ class BranchLeadController extends Controller
             [
                 'address_id'=>request('address_id'),
                 'branch_id'=>request('branch_id'),
-                'status_id'=>'2'
+                'status_id'=>'2',
+                'person_id'=>auth()->user()->person->id
             ]
         );
   
