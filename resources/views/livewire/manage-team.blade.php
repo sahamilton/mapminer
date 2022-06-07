@@ -1,6 +1,6 @@
 <div>
-    <h2>{{$user->fullName()}}'s Team</h2>
-    <h4>Based on Oracle HRMS</h4>
+    <h4>{{$user->fullName()}}'s Team</h4>
+    <h6>Based on Oracle HRMS</h6>
 
     <p>
         <a href=""
@@ -15,6 +15,7 @@
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             @include('livewire.partials._search', ['placeholder'=>'Search Team'])
+            <x-form-select name="role" wire:model="role" :options="$job_codes" label="Role:" />
         </div>
     
     </div>
