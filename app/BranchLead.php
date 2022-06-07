@@ -8,7 +8,7 @@ class BranchLead extends Model
 {
     public $table = 'address_branch';
 
-    public $fillable = ['status_id', 'comments', 'address_id', 'branch_id'];
+    public $fillable = ['status_id', 'comments', 'address_id', 'branch_id', 'person_id'];
     /**
      * [address description]
      * 
