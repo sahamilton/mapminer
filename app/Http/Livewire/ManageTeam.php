@@ -18,8 +18,8 @@ class ManageTeam extends Component
     public $sortAsc = true;
     public $search = '';
     public $paginationTheme = 'bootstrap';
-   
-  
+    public array $job_codes;
+    public $role = 'all';
   
 
     public function updatingSearch()
@@ -41,6 +41,7 @@ class ManageTeam extends Component
     {
         
         $this->user = $user;
+        $this->job_codes = $this->_getJobCodes();
         
     }
 
@@ -53,7 +54,13 @@ class ManageTeam extends Component
                     'oracleManager', function ($q) {
                         $q->where('person_number', $this->user->employee_id);
                     }
-                )->leftJoin('users', 'oracle.person_number', '=', 'users.employee_id')
+                )
+                ->leftJoin('users', 'oracle.person_number', '=', 'users.employee_id')
+                ->when(
+                    $this->role !='all', function ($q) {
+                        $q->where('job_code', $this->role);
+                    }
+                )
                 ->with('mapminerUser.roles', 'mapminerUser.person.branchesServiced', 'oracleManager')
                 ->select('oracle.*', 'users.lastlogin') 
                 ->search($this->search)
@@ -80,5 +87,18 @@ class ManageTeam extends Component
             return auth()->user()
                 ->load('person.reportsTo');
         }
+    }
+
+    private function _getJobCodes()
+    {
+        $job_codes = Oracle::whereHas(
+            'oracleManager', function ($q) {
+                $q->where('person_number', $this->user->employee_id);
+            }
+        )->pluck('job_profile', 'job_code')
+        ->unique()
+        ->toArray();
+        $job_codes['all']='All';
+        return $job_codes;
     }
 }

@@ -90,89 +90,10 @@
 				</div>
 				
 			</div>
-			@if(isset($branches))
-
+			
 			<div class="list-group-item">
-				<p><strong>Closest Branches to your location</strong></p>
-				<div class="row">
-					<div class="list-group-item-text col-sm-12">
-						@include('branches.partials._nearby')
-					</div>
-				</div>
+			    <livewire:manage-team :user='$user' />
 			</div>
-
-			@endif
-		
-				<div class="list-group-item">
-					<div class="row">
-
-					<div class="list-group-item-text col-sm-4">
-						<p><strong>Reporting Structure</strong></p>
-						<ul style="list-style-type: none;">
-						@if($user->person->reportsTo)
-							<li>Reports To:
-							@if($user->person->reportsTo()->count() >0)
-							
-							<a href="{{route('salesorg.show',$user->person->reportsTo->id)}}">
-								{{$user->person->reportsTo->fullName()}}
-							</a>
-							@else
-								No Manager
-							@endif
-						@endif
-						@if($user->oracleMatch 
-							&& $user->oracleMatch->oracleManager
-							&& $user->oracleMatch->oracleManager->mapminerUser
-							&& $user->oracleMatch->oracleManager->mapminerUser->person->id != $user->person->reports_to)
-						<p>
-							<i class="fa-solid fa-user-plus txt-danger"></i>
-							<a href="{{route('oracle.reassign',[$user->person->id, $user->oracleMatch->oracleManager->id])}}"
-								title="Change {{$user->fullName()}}'s manager to {{$user->oracleMatch->oracleManager->mapminerUser->fullName()}}">
-							{{$user->oracleMatch->manager_name}}</a>
-						</p>
-							
-						@endif
-						<li>Team:</li>
-					
-						@if($user->person->directReports->count()>0)
-							
-							@foreach ($user->person->directReports as $reports)
-						
-								<li>
-									<a href="{{route('user.show',$reports->user_id)}}">
-										@if(! $reports->userdetails->oracleMatch)
-											<i class="fas fa-times-circle text-danger"
-											title="No match with Oracle"></i>
-										@else
-											<i class="far fa-check-circle text-success"
-											title="Matched to Oracle"></i>
-										@endif
-
-										{{$reports->fullName()}}
-									</a>
-								</li>
-							
-							@endforeach
-
-						
-					@endif
-					@if($user->oracleMatch && $user->oracleMatch->teamMembers->count())
-
-						<a href="{{route('team.manage', $user->id)}}" class="btn btn-info">Manage Team</a>
-						
-					@endif
-				</ul>
-				
-					
-			</div>
-			<div class="col-sm-8">
-				@if(isset($user->person->directReports->id))
-					@include('site.user._teammap')
-					@endif
-				</div>
-				<div style="clear:both"></div> 
-			</div>
-
 		</div>
 		
 				
