@@ -112,10 +112,14 @@
 			@endcan
 				
 			@can('manage_branches')
+			<div class="list-group-item">
 			<h4>Branches managed</h4>
-				<div class="list-group-item">
+				
+					@foreach($user->person->branchesServiced as $serviced)
+					<li>{{$serviced->branchname}}</li>
+					@endforeach
 					
-				<div class="col-sm-8">
+				<div class="float-right col-sm-8">
 					@include('persons.partials._branchmap')
 				</div>
 				<div style="clear:both"></div>  
