@@ -1,4 +1,4 @@
-<h2>{{ucwords($type)}} Reports</h2>
+<h2>{{isset($type) ? ucwords($type) : 'All'}} Reports</h2>
 <div class="container">
     @can('manage_users')
     <div class="float-right">
