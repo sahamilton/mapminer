@@ -32,13 +32,19 @@ class BranchReportJob implements ShouldQueue
         Report $report, 
         Array $period = null, 
         $distribution = null, 
-        $manager = null
+        Person $manager = null
     ) {
         
         $this->period = $period;
         $this->report = $report;
-        $this->manager = $manager;   
-        $this->distribution = $this->report->distribution;
+        $this->manager = $manager;
+
+        if ($distribution) {
+            $this->distribution = $distribution;
+        } else {
+            $this->distribution = $this->report->distribution;
+        } 
+        
 
     }
 
@@ -49,15 +55,15 @@ class BranchReportJob implements ShouldQueue
      */
     public function handle()
     {
-        
+       
         /// what do we do if there is no distribution?
         foreach ($this->distribution as $recipient) {
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             $branches = $this->_getReportBranches($recipient);
             $export = $this->_getExportClass();
-      
-            (new $export($this->period, $branches))
+          
+            (new $export($this->report, $this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
@@ -94,8 +100,8 @@ class BranchReportJob implements ShouldQueue
     private function _getReportBranches($recipient)
     {
         if ($this->manager) {
-
-            return Person::findOrFail($this->manager)->getMyBranches();
+            
+            return $this->manager->getMyBranches();
         }
         return $recipient->person->getMyBranches();
     }

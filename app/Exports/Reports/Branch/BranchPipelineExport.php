@@ -37,7 +37,7 @@ class BranchPipelineExport implements FromQuery, ShouldQueue, WithHeadings, With
      * 
      * @param Array $period [description]
      */
-    public function __construct(Report $report, array $period = null, array $branches=null)
+    public function __construct(array $period = null, array $branches=null)
     {
         $this->branches = $branches;
         if (! $period) {
@@ -46,8 +46,7 @@ class BranchPipelineExport implements FromQuery, ShouldQueue, WithHeadings, With
         }
         $this->period = $period; 
         $this->pers = $this->_createPeriods();
-        $this->report = $report;
-       
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
     }
     public function headings(): array
     {

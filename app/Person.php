@@ -13,6 +13,9 @@ class Person extends NodeModel implements Auditable
     public $salesroles = ['5', '9', '17'];
     public $branchroles = ['3', '9', '17'];
        
+    protected $spatialFields = [
+        'position'
+    ];
     
     protected $table ='persons';
     protected $hidden = ['created_at','updated_at','deleted_at','position'];

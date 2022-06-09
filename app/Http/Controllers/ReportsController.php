@@ -241,6 +241,7 @@ class ReportsController extends Controller {
     public function run(Report $report, RunReportFormRequest $request)
     {
         
+        
         $distribution = User::with('person')->where('id', auth()->user()->id)->get();
         $this->_dispatchJob($report, $request, $distribution);
         return redirect()->back()->withSuccess('Your job has been dispatched. Check your email in a few minutes time');
@@ -253,13 +254,15 @@ class ReportsController extends Controller {
         Request $request, 
         \Illuminate\Database\Eloquent\Collection $distribution
     ) {
-       
+        
         $manager = $this->_getManager($request);
+
         $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
         $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-       
+        
         switch($report->object) {
         case 'Branch':
+
             return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;
 
@@ -323,9 +326,13 @@ class ReportsController extends Controller {
 
     private function _getManager(Request $request)
     {
-        if (! request()->filled('manager')) {
+        if (! request()->filled('manager') && ! auth()->user()->id) {
             return $this->person->getCapoDiCapo()->id;
+        } elseif (! request()->filled('manager') && auth()->user()->id) {
+            
+            return Person::where('user_id', auth()->user()->id)->first();
         }
+       
         return request('manager');
     }
     /**
