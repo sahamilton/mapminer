@@ -27,7 +27,7 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
-        
+       
         if (auth()->user()->hasRole(['admin']) 
             or auth()->user()->id == $user->id
             or in_array($user->id, auth()->user()->person->directReports->pluck('user_id')->toArray())
@@ -56,20 +56,13 @@ class UsersController extends Controller
                 $salesrepmarkers = $user->person->jsonify($user->person->directReports);
             }
 
-            if ($user->person->lat && $user->person->lng) {
-
-                $branches = $this->branch->nearby($user->person, 100, 5)->orderBy('distance')->get();
-                if (! $branchmarkers) {
-                    $branchmarkers = $branches->toJson();
-
-                }
-            }
+            
             
             
       
             return response()->view(
                 'site.user.profile', 
-                compact('user', 'branchmarkers', 'salesrepmarkers', 'branches',  'branchesServiced')
+                compact('user', 'branchmarkers', 'salesrepmarkers', 'branchesServiced')
             );
         } else {
             return redirect()->back()->withWarning('You are not authorized to view that profile');
