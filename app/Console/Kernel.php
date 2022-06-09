@@ -4,19 +4,21 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Jobs\WeeklyActivityReminder;
-use App\Jobs\WeeklySummary;
-use App\Jobs\Top25WeeklyReport;
+
 use App\Jobs\ActivityOpportunity;
-use App\Jobs\AccountActivities;
-use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchActivitiesDetail;
+use App\Jobs\BranchCampaign;
+use App\Jobs\BranchLogins;
 use App\Jobs\BranchStats;
 use App\Jobs\DailyBranch;
-use App\Jobs\BranchCampaign;
-use App\Campaign;
 use App\Jobs\RebuildPeople;
-use App\Jobs\BranchLogins;
+
+use App\Jobs\WeeklyActivityReminder;
+use App\Jobs\WeeklySummary;
+
+
+use App\Campaign;
+
 use App\Company;
 use Carbon\Carbon;
 
@@ -112,15 +114,7 @@ class Kernel extends ConsoleKernel
                 ->wednesdays()
                 ->at('04:59');
             
-            // National Account Jobs
-            /* $companies = Company::whereIn('id', [532])->get();
-            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
-            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new AccountActivities($companies, $period))
-                ->weekly()
-                ->sundays()
-                ->at('18:30');
-            */
+           
             // Branch Login Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
