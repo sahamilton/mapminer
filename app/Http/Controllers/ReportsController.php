@@ -256,7 +256,7 @@ class ReportsController extends Controller {
     ) {
         
         $manager = $this->_getManager($request);
-
+       
         $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
         $period['to'] = Carbon::parse(request('todate'))->endOfDay();
         
@@ -333,7 +333,7 @@ class ReportsController extends Controller {
             return Person::where('user_id', auth()->user()->id)->first();
         }
        
-        return request('manager');
+       return Person::findOrFail(request('manager'));
     }
     /**
      * [_getMyTeam description]

@@ -59,11 +59,11 @@ class BranchReportJob implements ShouldQueue
         /// what do we do if there is no distribution?
         foreach ($this->distribution as $recipient) {
             $this->user = $recipient;
-            $this->file = $this->_makeFileName();
+            $this->file = $this->_makeFileName($recipient);
             $branches = $this->_getReportBranches($recipient);
             $export = $this->_getExportClass();
           
-            (new $export($this->report, $this->period, $branches))
+            (new $export($this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
                     [
@@ -79,23 +79,39 @@ class BranchReportJob implements ShouldQueue
         }
     }
 
-    private function _makeFileName()
+     /**
+     * [_makeFileName description]
+     * 
+     * @return string filename
+     */
+    private function _makeFileName($recipient)
     {
-        if (! is_a($this->user, 'App\User')) {
-            $this->user = User::with('person')->first();          
-        }
-
         return 
-                strtolower(
-                    Str::slug(
-                        $this->user->person->fullName()." ".
-                        $this->report->filename ." ". 
-                        $this->period['from']->format('Y_m_d'), 
-                        '_'
-                    )
-                ). ".xlsx";  
-        
+            strtolower(
+                Str::slug(
+                    $recipient->person->fullName()." ".
+                    $this->report->report ." ". 
+                    $this->period['from']->format('Y_m_d'), 
+                    '_'
+                )
+            ). ".xlsx";
     }
+
+    
+
+    private function _getDistribution()
+    {
+        if ($this->manager) {
+            return User::where('id', $this->manager->user_id)->get();
+        } elseif ($this->report->distribution->count()) {
+            return $this->report->distribution;
+        } elseif (auth()->user()) {
+            return User::where('id', auth()->user()->id)->get();
+        } else {
+            dd('we are herer');
+        }
+    }
+
 
     private function _getReportBranches($recipient)
     {

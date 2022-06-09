@@ -1,6 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
 
-@include('reports.partials._index')
+<livewire:report-table />
 @include('partials._scripts')
 @endsection

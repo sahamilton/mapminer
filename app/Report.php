@@ -107,4 +107,17 @@ class Report extends Model
         return $query->where('public', 1);
     }
 
+    /**
+     * [scopeSearch description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $search [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSearch($query, $search)
+    {
+        return  $query->where('report', 'like', "%{$search}%");
+    }
+
 }
