@@ -19,7 +19,9 @@
             </div>
         </div>
     </div>
+    @if(isset($types))
     <x-form-select wire:model='type' name='type' :options='$types' label="Report type:" />
+    @endif
     <table class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
             <th>Report</th>
