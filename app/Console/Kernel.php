@@ -7,11 +7,12 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 /*use App\Jobs\ActivityOpportunity;
 use App\Jobs\BranchActivitiesDetail;
-use App\Jobs\BranchCampaign;
+
 use App\Jobs\BranchLogins;
 use App\Jobs\BranchStats;
 use App\Jobs\DailyBranch;
 */
+use App\Jobs\BranchCampaign;
 use App\Report;
 use App\Jobs\BranchReportJob;
 
@@ -56,6 +57,8 @@ class Kernel extends ConsoleKernel
         
 
         if (config('app.env') == 'production') {
+
+
             $schedule->command('quicksand:run')->daily();
             
 
