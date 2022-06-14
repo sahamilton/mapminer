@@ -47,7 +47,7 @@ class BranchStats implements ShouldQueue
     public function handle()
     {
         
-         foreach ($this->distribution as $recipient) {
+        foreach ($this->distribution as $recipient) {
             $this->file = $this->_makeFileName($recipient);
             $branches = $this->_getReportBranches($recipient); 
             (new BranchStatsExport($this->period, $branches))

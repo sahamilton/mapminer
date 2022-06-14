@@ -130,11 +130,9 @@ class BranchReportJob implements ShouldQueue
             break;
 
         case "company": 
-            return "\App\Exports\\". $this->report->export;
+            return "\App\Exports\Reports\\". $this->report->export;
             break;
 
-
-        
 
         case "role": 
             return "\App\Exports\\". $this->report->export;
@@ -142,11 +140,11 @@ class BranchReportJob implements ShouldQueue
 
 
         case "campaign": 
-            return "\App\Exports\Campaign\\". $this->report->export;
+            return "\App\Exports\Reports\Campaign\\". $this->report->export;
             break;
 
         case "user": 
-            return "\App\Exports\\". $this->report->export;
+            return "\App\Exports\Reports\User\\". $this->report->export;
             break;
 
         default:
