@@ -122,7 +122,7 @@ class Kernel extends ConsoleKernel
            
             $report = Report::where('job', 'DailyBranch')->first();
             $period = ['from'=>now()->subDay()->startOfDay(), 'to'=>now()->subDay()->endOfDay()];            
-            $schedule->job(new DailyBranch($period))
+            $schedule->job(new BranchReportJob($report, $period))
                 ->daily()->at('02:12');
           
             
