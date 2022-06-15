@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Reports\Campaign;
 
 use App\Branch;
 use App\Campaign;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Reports\Branch;
 
 use App\Branch;
 use Carbon\Carbon;

@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Carbon\Carbon;
 
-class SendTop25WeeklyReport extends Mailable
+class SendTop50WeeklyReport extends Mailable
 {
     use Queueable, SerializesModels;
 

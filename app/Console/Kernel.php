@@ -58,14 +58,14 @@ class Kernel extends ConsoleKernel
 
         if (config('app.env') == 'production') {
 
-
+            // delete stale deleted users
             $schedule->command('quicksand:run')->daily();
             
 
             $schedule->command('monitor:check-uptime')->everyMinute();
             
             $schedule->command('monitor:check-certificate')->daily();
-
+            // rebuild hierarchy of people
             $schedule->job(new RebuildPeople())
                 ->dailyAt('21:51');
 
@@ -97,7 +97,7 @@ class Kernel extends ConsoleKernel
             //********* Excel Reports ************//
             
 
-            // Stephanie Harp Report
+            // Weekly Branch Stats
 
             $report = Report::where('job', 'BranchStats')->first();
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();

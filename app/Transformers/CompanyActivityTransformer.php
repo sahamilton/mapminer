@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transfomers;
+namespace App\Transformers;
 
 use App\Company;
 use Illuminate\Database\Eloquent\Model;
