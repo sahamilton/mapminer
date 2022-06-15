@@ -6,8 +6,7 @@ The {{$opportunity->branch->branch->branchname}} branch has won the {{$opportuni
 Branch Manager(s):
 @foreach ($branchManager as $manager)
 
-{{$manager['name']}} (
-{{$manager['email']}})
+{{$manager['name']}} (<{{$manager['email']}}>)
 
 @endforeach
 

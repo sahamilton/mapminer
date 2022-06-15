@@ -23,11 +23,18 @@ class OpportunityTable extends Component
     public $filter = '0';
     public $myBranches;
     public $selectuser = 'All';
+    public $expected = 'all';
+    public Array $expectedRange = [];
 
 
     public function updatingSearch()
     {
         $this->resetPage();
+    }
+
+    public function updatingExpected()
+    {
+        $this->_getExpectedDatesRange();
     }
     /**
      * [sortBy description]
@@ -76,6 +83,8 @@ class OpportunityTable extends Component
     public function render()
     {
         $this->_setPeriod();
+        $this->_getExpectedDatesRange();
+        
         return view(
             'livewire.opportunity-table', 
             [
@@ -103,6 +112,13 @@ class OpportunityTable extends Component
                         }
                     )
                     ->when(
+
+                        $this->expected !='all', function ($q) {
+                            $q->whereBetween('expected_close', [$this->expectedRange['from'], $this->expectedRange['to']]);
+                        }
+
+                    )
+                    ->when(
                         $this->selectuser != 'All', function ($q) {
                             $q->where('opportunities.user_id', $this->selectuser);
                         }
@@ -123,6 +139,18 @@ class OpportunityTable extends Component
                     ->paginate($this->perPage),
                 'branch'=>Branch::query()->findOrFail($this->branch_id),
                 'filters' => ['All'=>'All', 0=>'Open', '1'=>'Closed Won', '2'=>'Closed Lost'],
+                'expecteddates'=>[
+                    'all'=>'All', 
+                    'lastYear'=>'Last Year or Earlier', 
+                    'lastQtr'=> 'Last Qtr', 
+                    'lastMonth'=> 'Last Month', 
+                    'thisMonth'=> 'This Month',
+                    'thisQtr' =>'This Quarter', 
+                    'nextMonth'=> 'Next Month',
+                    'nextQtr' => 'Next Qtr',
+                    'future' =>'After Next Qtr',
+                ],
+
                 'campaigns'=> Campaign::active()
                     ->current([$this->branch_id])
                     ->pluck('title', 'id')
@@ -139,5 +167,49 @@ class OpportunityTable extends Component
         $this->livewirePeriod($this->setPeriod);
       
         
+    }
+
+    private function _getExpectedDatesRange()
+    {
+        if ($this->expected != 'all') {
+            
+            switch($this->expected) {
+
+                case 'lastYear':
+                    $this->expectedRange = ['from'=>now()->subYear(4)->startOfYear(), 'to'=>now()->subYear(1)->endOfYear()];
+                    break;
+                
+                case 'lastQtr':
+                    $this->expectedRange = ['from'=>now()->subMonth(3)->startOfQuarter(), 'to'=>now()->subMonth(3)->endOfQuarter()];
+                    break;
+                
+                case 'lastMonth':
+                    $this->expectedRange = ['from'=>now()->subMonth(1)->startOfMOnth(), 'to'=>now()->subMonth(1)->endOfMonth()];
+                    break;
+                
+                case 'thisMonth':
+                    $this->expectedRange = ['from'=>now()->startOfMonth(), 'to'=>now()->endOfMonth()];
+                    break;
+                
+                case 'thisQuarter':
+                    $this->expectedRange = ['from'=>now()->startOfQuarter(), 'to'=>now()->endOfQuarter()];
+                    break;
+                case'nextMonth':
+                    $this->expectedRange = ['from'=>now()->addMonth(1)->startOfMOnth(), 'to'=>now()->addMonth(1)->endOfMonth()];
+                    break;
+                case 'nextQtr':
+                    $this->expectedRange = ['from'=>now()->addMonth(3)->startOfQuarter(), 'to'=>now()->addMonth(3)->endOfQuarter()];
+                    break;
+                case 'future':
+                    $this->expectedRange = ['from'=>now()->addMonth(3)->endOfQuarter(), 'to'=>now()->addYear(3)];
+                    break;
+                
+            }
+              
+
+
+
+        }
+
     }
 }

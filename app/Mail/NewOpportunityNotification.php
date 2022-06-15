@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class WonOpportunityNotification extends Mailable
+class NewOpportunityNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -35,8 +35,10 @@ class WonOpportunityNotification extends Mailable
     {
         
         $this->branchManager = $this->_getBranchManagerDetails();
-       
-        return $this->replyTo($this->branchManager)->markdown('emails.opportunities.won');
+
+        return $this->replyTo($this->branchManager)
+         ->subject('New Large Opportunity Created')
+         ->markdown('emails.opportunities.new');
     }
 
     private function _getBranchManagerDetails()

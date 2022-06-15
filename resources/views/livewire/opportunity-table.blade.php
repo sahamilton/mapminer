@@ -6,6 +6,10 @@
     @else
     <p>Created in all time periods</p>
     @endif
+     @if ($expected != 'all')
+    <p class="bg-warning">Expected to close between  {{$expectedRange['from']->format('Y-m-d')}} to  {{$expectedRange['to']->format('Y-m-d')}}</p>
+    
+    @endif
     <p>
         <a href="{{route('branchdashboard.show', $branch->id)}}">
             Return To Branch {{$branch->id}} Dashboard
@@ -25,11 +29,16 @@
     
     <div class="row mb-4">
         <div class="col form-inline">
-            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
+            <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;Date Opened:</label>
             @include('livewire.partials._periodselector', ['all'=>true])
+            <x-form-select wire:model='expected' name="expected" :options="$expecteddates" label="Expected Close:" />
             <div wire:loading>
                 <div class="spinner-border text-danger"></div>
             </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col form-inline">
             @if(count($team)>1)
             <label for="selectuser">Team:</label>
             <select wire:model="selectuser" 

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\WonOpportunity;
+use App\Jobs\NewOpportunity;
 use App\Opportunity;
 use App\Address;
 
@@ -19,7 +20,10 @@ class OpportunityObserver
      */
     public function created(Opportunity $opportunity)
     {
-        //
+        if ($opportunity->value > 50000 && $opportunity->closed ==0) {
+            
+                NewOpportunity::dispatch($opportunity);
+            }
     }
 
     /**

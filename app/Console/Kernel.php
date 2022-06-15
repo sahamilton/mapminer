@@ -20,6 +20,7 @@ use App\Jobs\RebuildPeople;
 
 use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\WeeklySummary;
+use App\Jobs\NotifyMarketManagersMissingBranchManagersMail;
 
 
 use App\Campaign;
@@ -93,6 +94,11 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->mondays()
                 ->at('3:12');
+
+            $schedule->job(new NotifyMarketManagersMissingBranchManagersMail())
+                ->weekly()
+                ->mondays()
+                ->at('18:00');
 
             //********* Excel Reports ************//
             
