@@ -49,14 +49,16 @@ class ReportsController extends Controller {
      */
     public function index()
     {
-        $reports = $this->report->withCount('distribution');
-        if (! auth()->user()->hasRole('admin')) {
-            $reports = $reports->publicReports();
-        }
-        $reports = $reports->get();
-        $person = $this->person->where('user_id', auth()->user()->id)->with('directReports')->firstOrFail();
-        $managers = $person->directReports;
-        return response()->view('reports.index', compact('reports', 'managers'));
+        $reports = $this->report->query()
+            ->withCount('distribution')
+            ->when(! auth()->user()->hasRole(['admin', 'sales_ops']), function ($q) {
+                    $q->publicReports();
+                }
+            )
+            ->get();
+      
+        
+        return response()->view('reports.index', compact('reports'));
     }
 
 
@@ -129,12 +131,9 @@ class ReportsController extends Controller {
         } else {
             $object=null;
         }
-        if (auth()->user()->hasRole(['admin', 'sales_operations'])){
-            
-            $managers = auth()->user()->person->managers();
-        } else {
-            $managers = auth()->user()->person->descendants()->get();
-        }
+
+        
+        $managers = $this->_getManagerList();
         
                 
         return response()->view('reports.show', compact('report', 'object', 'managers'));
@@ -453,6 +452,22 @@ class ReportsController extends Controller {
 
             return false;
         }
+        
+    }
+
+    private function _getManagerList()
+    {
+        $mgrList['']='All Managers';
+        if (auth()->user()->hasRole(['admin', 'sales_operations'])){
+            $managers = auth()->user()->person->managers();
+           
+        } else {
+            $managers = auth()->user()->person->descendants()->get();
+        }
+        $managers = $managers->sortBy('post_name')->pluck('post_name', 'id')->toArray();
+       
+        return array_replace($mgrList, $managers);
+      
         
     }
 }

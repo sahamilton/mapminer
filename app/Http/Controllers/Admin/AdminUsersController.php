@@ -553,9 +553,8 @@ class AdminUsersController extends BaseController
                     $q->whereIn('role_id', $managerroles);
                 }
             )
-            ->orderBy('lastname')
             ->get();
-        return $managers->pluck('post_name', 'id')->toArray();
+        return $managers->orderBy('post_name')->pluck('post_name', 'id')->toArray();
     }
 
 
