@@ -1,6 +1,6 @@
 <?php
 namespace App;
-
+use Illuminate\Database\Eloquent\Builder;
 trait Geocode
 {
       /**
@@ -97,18 +97,19 @@ trait Geocode
      * 
      * @return [type]            [description]
      */
-    public function scopeNearby($query, $location, $radius = 100, $limit = null)
+    public function scopeNearby($query, $location, $radius = 100, $limit = null) : Builder
     {
         
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-        
-        
+       
+
         return $query
             ->select()//pick the columns you want here.
             ->selectRaw("{$this->_haversine($location)} AS distance")
-            
+            ->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
+            ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon])
             ->whereRaw("{$this->_haversine($location)} < $radius ")
             ->orderBy('distance', 'ASC')
             ->when(
@@ -118,57 +119,26 @@ trait Geocode
             );
     }
 
-    public function scopeCountNearby($query, $location,  $radius = 100, $limit = null)
+    public function scopeCountNearby($query, $location,  $radius = 100, $limit = null)  : Builder
     {
-        
-
-        return  $query
-            ->selectRaw("count('id')")//pick the columns you want here.
-            
-            ->whereRaw("{$this->_haversine($location)} < $radius ")
-
-
-            ->when(
-                $limit, function ($q) use ($limit) {
-                
-                    $q->limit($limit);
-                }
-            );
-    }
-    /*
-     * ScopeNewNearby [description]
-     * 
-     * @param [type]  $query    [description]
-     * @param [type]  $location [description]
-     * @param integer $radius   [description]
-     * @param [type]  $limit    [description]
-     * 
-     * @return [type]            [description]
-     */
-    public function scopeNewNearby($query, $location, $radius = 100, $limit = null)
-    {
-    
         
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
-    
+        
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-       
-        $sub = $this->selectSub('id', 'lat', 'lng')
-            ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
-            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
-
-        return $query
-            ->select()//pick the columns you want here.
-            ->selectRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 AS distance")
-            ->mergeBindings($sub->getQuery())
-            ->whereRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 < $radius ")
-
-            ->orderBy('distance', 'ASC')->when(
+        return  $query
+            ->selectRaw("count('id') as nearby")//pick the columns you want here.
+          
+            ->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
+            ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon])
+            ->whereRaw("{$this->_haversine($location)} < $radius ")
+            
+            ->when(
                 $limit, function ($q) use ($limit) {
-                    $query = $q->limit($limit);
+                   $q->limit($limit);
                 }
             );
     }
+    
     /**
      * LocationsNearbyBranches [description]
      * 
@@ -336,12 +306,15 @@ trait Geocode
      */
     public function getMyPosition()
     {
+        
         $location = new Location;
             //$limited=$this->limit;
             //we need to test to see if geo is filled
-        if ($geo = session()->get('geo') && isset($geo['lat'])) {
-                $location->lat = $geo['lat'];
-                $location->lng = $geo['lng'];
+        if (session()->has('geo') && session()->has('geo.lat')) {
+             
+                $location->lat = session('geo.lat');
+                $location->lng = session('geo.lng');
+                $location->address = session('geo.fulladdress');
         } elseif ($position = auth()->user()->position()) {
             $position = explode(",", auth()->user()->position());
             $location->lat =  $position[0];

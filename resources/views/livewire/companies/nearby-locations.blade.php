@@ -1,13 +1,16 @@
 <div>
-    <h2>Nearby Locations
+    <h2> @if($leadtype != 'all')
+            {{$leadtypes[$leadtype]}}
+        @else 
+            Nearby Locations
+        @endif
+        
         @if($company_ids != 'all') 
             of {{$companies[$company_ids]}}
          @endif 
     </h2>
     <h4>
-        @if($leadtype != 'all')
-            {{$leadtypes[$leadtype]}}
-        @endif
+        
     within {{$distance}} miles of {{$address}}</h4>
     
     

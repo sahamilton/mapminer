@@ -50,9 +50,13 @@ class NearbyLocations extends Component
 
     public function mount()
     {
+       
+       
+        
         $geocode = new Location;
-        $this->location = $geocode->getMyPosition();
-        $this->address = $this->location->address;
+        $this->location = $geocode->getMyPosition(); 
+        $this->address = $this->location->address;  
+        
     }
     /**
      * [render description]
@@ -86,7 +90,7 @@ class NearbyLocations extends Component
                         $this->leadtype !='all', function($q) {
                             $q->when(
                                 $this->leadtype==="lead", function ($q) {
-                                    $q->doesntHave('claimedByBranch');
+                                    $q->doesntHave('assignedToBranch');
                                 }
                             )->when(
                                 $this->leadtype==="customer", function ($q) {
@@ -100,6 +104,11 @@ class NearbyLocations extends Component
                                 $this->leadtype==="branchlead", function ($q) {
                                     $q->has('claimedByBranch');
                                 }
+                            )
+                            ->when(
+                                $this->leadtype==="offered", function ($q) {
+                                    $q->has('offeredToBranch');
+                                }
                             );
                         }
                     )    
@@ -111,7 +120,7 @@ class NearbyLocations extends Component
                 'accounttypes'=>$this->_getaccountTypes(),
                 'companies'=>$this->_getCompanies(),
                 'distances'=>[5=>5,10=>10,25=>25, 50=>50,100=>100],
-                'leadtypes' =>['all'=>'All', 'opportunity'=>"Leads with active opportunities" , 'customer'=>'Customer leads', 'branchlead' => 'Branch leads', 'lead'=>'Unassigned leads'],
+                'leadtypes' =>['all'=>'All', 'opportunity'=>"Leads with active opportunities" , 'customer'=>'Customer leads', 'branchlead' => 'Branch leads', 'lead'=>'Unassigned leads','offered'=>"Offered Leads"],
 
             ]
         );
