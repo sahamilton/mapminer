@@ -198,6 +198,23 @@ trait Geocode
             $query->select('*');
         }
        
+       $query->selectRaw("{$this->_haversine($location)} AS distance");
+
+    
+    }
+    /**
+     * [scopeDistanceTo description]
+     * @param  [type] $query    [description]
+     * @param  [type] $location [description]
+     * @return [type]           [description]
+     */
+    public function scopeNewDistanceTo($query, $location) 
+    {
+
+        if(is_null($query->getQuery()->columns)) {
+            $query->select('*');
+        }
+       
         $query->selectRaw('ST_Distance(
                 ST_SRID(POINT(lng, lat), 4236),
                 ST_SRID(POINT(? , ?), 4236)

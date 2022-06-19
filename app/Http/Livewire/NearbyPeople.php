@@ -13,7 +13,7 @@ class NearbyPeople extends Component
     protected $paginationTheme = 'bootstrap';
     
     public $address;
-    public $distance = 'all';
+    public $distance = '25';
     public $sortField = 'lastname';
     public $sortAsc ='true';
     public $perPage =10;
