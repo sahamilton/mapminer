@@ -55,7 +55,7 @@ class GeoCodingController extends BaseController
      */
     public function findMe(FindMeFormRequest $request)
     {
-    
+        
         if (request('view') === 'list' && request('type') === 'location') {
 
             return response()->view('companies.nearby');

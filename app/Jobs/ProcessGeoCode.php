@@ -39,7 +39,7 @@ class ProcessGeoCode implements ShouldQueue
                 $data['lat'] = $geoCode['lat'];
                 $data['lng'] = $geoCode['lng'];
             } else {
-                $dat['geostatus'] = false;
+                $data['geostatus'] = false;
             }
             $person->update($data);
         }

@@ -1,32 +1,25 @@
 <div>
-    <h2> @if($leadtype != 'all')
-            {{$leadtypes[$leadtype]}}
+    <h2> @if($roletype != 'all')
+            {{$roles[$roletype]}}s
         @else 
-            Nearby Locations
+            Nearby People
         @endif
         
-        @if($company_ids != 'all') 
-            of {{$companies[$company_ids]}}
-         @endif 
-    </h2>
-    <h4>
         
-    within {{$distance}} miles of {{$address}}</h4>
+    </h2>
     
+    @if($distance !='all')    
+   <h4> within {{$distance}} miles of {{$address}}</h4>
+    @endif
+
     
-  
     <div class="row mb-4 ">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
-            @include('livewire.partials._search', ['placeholder'=>'Search Companies'])    
+            @include('livewire.partials._search', ['placeholder'=>'Search People'])    
             
             
-            <x-form-select 
-                wire:model="company_ids"
-                name="company_ids"
-                label="Locations of Company:"
-                :options='$companies'
-             />
+            
             
         </div>
        
@@ -35,10 +28,10 @@
     
 
     <div class="row mb-4">
-        <x-form-select wire:model="leadtype"
-                name='leadtype'
-                label="Lead type:"
-                :options='$leadtypes'
+        <x-form-select wire:model="roletype"
+                name='roletype'
+                label="Roles:"
+                :options='$roles'
                 />
         <div class="col form-inline">
             <x-form-select wire:model="distance"
@@ -59,8 +52,7 @@
                             <i class="fas fa-search"></i>
                     </button>
             </form>
-
-
+       
         </div>
         <div wire:loading>
             <div class="spinner-border text-danger"></div>
@@ -71,23 +63,32 @@
     
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
-            <th>Company</th>
+
             <th>
-                <a wire:click.prevent="sortBy('businessname')" 
+                <a wire:click.prevent="sortBy('lastname')" 
                 role="button" href="#" 
                 >
-                    Business
-                    @include('includes._sort-icon', ['field' => 'businessname'])
+                    Person
+                    @include('includes._sort-icon', ['field' => 'lastname'])
                 </a>
             </th>
+            <th>Role(s)</th>
             <th>Address</th>
-            <th>City</th>
-            <th>State</th>
-            <th>ZIP</th>
+            <th>
             
-            <th>Number of Contacts</th>
-            <th>Created / Updated</th>
-            <th>Assigned to Branch</th>
+                <a wire:click.prevent="sortBy('created_at')" 
+                role="button" href="#" >
+                    Mapminer User Since
+
+                @include('includes._sort-icon', ['field' => 'created_at'])
+            </th>
+            
+            <th><a wire:click.prevent="sortBy('lastlogin')" 
+                role="button" href="#" >
+                   Last Login
+
+                @include('includes._sort-icon', ['field' => 'lastlogin'])</th>
+            <th>Assigned to Branch(es)</th>
             <th>
                 <a wire:click.prevent="sortBy('distance')" 
                 role="button" href="#" 
@@ -96,34 +97,33 @@
             </th>
         </thead>
         <tbody>
-        @foreach ($locations as $location)
-          
+        @foreach ($people as $person)
+      
             <tr>
-               <td>
-                @if($location->company)
-                    <a href="{{route('company.show', $location->company_id)}}">
-                            
-                        {{$location->company->companyname}}
-                    </a>
                
-
-                @endif
-                </td>
                <td>
-                    <a href="{{route('address.show', $location->id)}}">
-                        {{$location->businessname}}
-                    </a>
+                    
+                        {{$person->fullName()}}
+                   
                 
                </td>
-               <td>{{$location->street}}</td>
-               <td>{{$location->city}}</td>
-               <td>{{$location->state}}</td>
-               <td>{{$location->zip}}</td>
-               <td>{{$location->contacts_count}}</td>
-               <td>{{max($location->created_at, $location->updated_at)->format('Y-m-d')}}</td>
+               <td>
+                    @if($person->userdetails)
+                        @foreach($person->userdetails->roles as $role)
+                           
+                               {{$role->display_name}}
+                                
+                            
+                            {{! $loop->last ? ',' :''}}
+                        @endforeach
+                    @endif
+                </td>
+               <td>{{$person->fullAddress()}}</td>
+               <td>{{$person->created_at->format('Y-m-d')}}</td>
+               <td>{{$person->userdetails && $person->userdetails->lastlogin ? $person->userdetails->lastlogin->format('Y-m-d') : ''}}</td>
                <td>
                 
-                    @foreach($location->assignedToBranch as $branch)
+                    @foreach($person->branchesServiced as $branch)
                        
                             <a href="{{route('branches.show', $branch->id)}}" title="Visit {{$branch->branchname}}">{{$branch->branchname}}
                             </a>
@@ -131,7 +131,7 @@
                         {{! $loop->last ? ',' :''}}
                     @endforeach
                 </td>
-                <td>{{number_format($location->distance,2)}}</td>
+                <td>{{number_format($person->distance,2)}}</td>
             </tr>
         @endforeach
         </tbody>
@@ -139,11 +139,14 @@
     </table>
     <div class="row">
         <div class="col">
-            {{ $locations->links() }}
+            {{ $people->links() }}
         </div>
 
         <div class="col text-right text-muted">
-            Showing {{ $locations->firstItem() }} to {{ $locations->lastItem() }} out of {{ $locations->total() }} results
+            Showing {{ $people->firstItem() }} to {{ $people->lastItem() }} out of {{ $people->total() }} results
         </div>
     </div>
+</div>
+<div>
+    {{-- Stop trying to control. --}}
 </div>

@@ -152,7 +152,7 @@ class Person extends NodeModel implements Auditable
         if (! $roles) {
             $roles = $this->managerRoles;
         }
-
+        
         if(! $servicelines) {
             $servicelines = auth()->user()->serviceline()->pluck('id')->toArray();
         }
@@ -1196,9 +1196,9 @@ class Person extends NodeModel implements Auditable
      */
     public function scopeSearch($query, $search)
     {
-        return  $query->where('firstname', 'like', "%{$search}%")
-            ->orWhereRaw("concat_ws(' ', firstname, lastname) like ?", "%{$search}%")
-            ->Orwhere('lastname', 'like', "%{$search}%");
+        return  $query->whereRaw("concat_ws(' ', firstname, lastname) like ?", "%{$search}%")
+
+            ->orWhereRaw("concat_ws(' ', address, city) like ?", "%{$search}%");
     }
     /**
      * [rankings description]
