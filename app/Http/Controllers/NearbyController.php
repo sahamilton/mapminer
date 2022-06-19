@@ -46,12 +46,15 @@ class NearbyController extends Controller
     public function show($type)
     {
        switch($type) {
-
+        
         case 'people':
             return response()->view('persons.list');
             break;
 
-        
+        case 'leads':
+
+            return response()->view('companies.nearby');
+            break;
         default: 
             dd('Error');
             break;
