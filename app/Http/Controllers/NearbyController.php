@@ -46,7 +46,7 @@ class NearbyController extends Controller
     public function show($type)
     {
        switch($type) {
-        
+
         case 'people':
             return response()->view('persons.list');
             break;
@@ -55,8 +55,9 @@ class NearbyController extends Controller
 
             return response()->view('companies.nearby');
             break;
+
         default: 
-            dd('Error');
+            return redirect()->back()->withWarning('Not a valid path');
             break;
 
         }

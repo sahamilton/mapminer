@@ -58,6 +58,8 @@ class NearbyPeople extends Component
 
             [
                 'people'=>Person::query()
+                    ->select('users.*', 'persons.*')
+        
                     ->join('users', 'persons.user_id','=', 'users.id')
                     ->search($this->search)
                     ->with('branchesServiced','userdetails.roles')

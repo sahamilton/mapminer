@@ -98,16 +98,17 @@ trait Geocode
      * 
      * @return [type]            [description]
      */
-    public function scopeNearby($query, $location, $radius = 100, $limit = null) : Builder
+    public function scopeNearby($query, $location, $radius = 100, $limit = null)
     {
         
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-       
+        if(is_null($query->getQuery()->columns)) {
+            $query->select('*');
+        }
 
-        return $query
-            ->select()//pick the columns you want here.
+        $query
             ->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon])
             ->selectRaw("{$this->_haversine($location)} AS distance")

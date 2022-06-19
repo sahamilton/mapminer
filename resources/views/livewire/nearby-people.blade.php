@@ -98,13 +98,16 @@
         </thead>
         <tbody>
         @foreach ($people as $person)
-      
+           
             <tr>
                
                <td>
-                    
+                    @can('manage_users')
+
+                        <a href="{{route('person.details', $person->id)}}">{{$person->fullName()}}</a>
+                    @else
                         {{$person->fullName()}}
-                   
+                    @endcan
                 
                </td>
                <td>
