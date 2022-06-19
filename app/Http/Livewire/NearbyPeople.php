@@ -52,7 +52,7 @@ class NearbyPeople extends Component
     public function render()
     {
         
-        @ray('render', $this->location, $this->address);
+
         $this->_getLocation();
         return view('livewire.nearby-people',
 
@@ -63,9 +63,8 @@ class NearbyPeople extends Component
                     ->with('branchesServiced','userdetails.roles')
                     ->when(
                         $this->distance != 'all', function ($q) {
-                            $q->newNearby($this->location, $this->distance);
-                        }
-                    , function ($q) {
+                            $q->nearby($this->location, $this->distance);
+                        }, function ($q) {
                         $q->distanceTo($this->location);
                     })->when(
                         $this->roletype != 'all', function ($q) {
