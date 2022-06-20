@@ -73,7 +73,7 @@ class CompanyLocationTable extends Component
             'livewire.company-location-table', [
                 'locations'=>Address::query()
 
-                    ->withDistance($this->person)
+                    ->distanceTo($this->person)
                     ->where('company_id', $this->company_id)
                     ->when(
                         $this->state != 'all', function ($q) {
