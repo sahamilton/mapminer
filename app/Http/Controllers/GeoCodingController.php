@@ -56,10 +56,7 @@ class GeoCodingController extends BaseController
     public function findMe(FindMeFormRequest $request)
     {
         
-        if (request('view') === 'list' && request('type') === 'location') {
-
-            return response()->view('companies.nearby');
-        }
+        
         $geocode = app('geocoder')->geocode(request('search'))->get();
         
         if (request()->filled('search')) {
@@ -80,13 +77,17 @@ class GeoCodingController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('search'));
         
         }
-        
         if (! request()->has('addressType') or count(request('addressType'))==0) {
             $data['addressType'] = ['customer', 'lead', 'opportunity', 'branchlocation'];
         }
 
         session()->put('geo', $data);
-        
+        if (request('view') === 'list') {
+
+            return redirect()->route('nearby.show', request('type'));
+            
+        }
+               
         $watchlist = [];
         $data['vertical'] = null;
        
@@ -107,34 +108,11 @@ class GeoCodingController extends BaseController
         $servicelines = $this->serviceline
             ->whereIn('id', $this->userServiceLines)
             ->get();
-        // check which type of view to return
-        if (isset($data['view']) && $data['view'] == 'list') {
-            // list view
-            if ($data['type']=='people') {
-                return response()->view('maps.peoplelist', compact('data'));
-            }
-
-            if ($data['type']=='myleads') {
-                $statuses = \App\LeadStatus::pluck('status', 'id')->toArray();
-                return response()->view('myleads.index', compact('data', 'statuses'));
-            }
-
-            try {
-                $watching = Watch::where('user_id', "=", \Auth::id())->get();
-                foreach ($watching as $watch) {
-                    $watchlist[$watch->id] = $watch->location_id;
-                }
-            } catch (Exception $e) {
-                $watchlist = null;
-            }
-            
-            return response()->view('maps.list', compact('data', 'watchlist', 'filtered', 'company', 'servicelines'));
-        } else {
-            // map view
-            $data = $this->_setZoomLevel($data);
-          
-            return response()->view('maps.map', compact('data', 'filtered', 'servicelines', 'company'));
-        }
+       
+        $data = $this->_setZoomLevel($data);
+      
+        return response()->view('maps.map', compact('data', 'filtered', 'servicelines', 'company'));
+        
 
     }
 

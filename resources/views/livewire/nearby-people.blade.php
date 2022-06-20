@@ -2,7 +2,7 @@
     <h2> @if($roletype != 'all')
             {{$roles[$roletype]}}s
         @else 
-            Nearby People
+            All People
         @endif
         
         
@@ -36,11 +36,11 @@
         <div class="col form-inline">
             <x-form-select wire:model="distance"
                 name='distance'
-                label="With locations within:"
+                label="located within:"
                 :options='$distances'
                 />
 
-             &nbsp;of address &nbsp;
+             <span class="ml-x" >miles of address </span>
              
             <form wire:submit.prevent="updateAddress">
                 <input class="form-control" 
@@ -73,21 +73,30 @@
                 </a>
             </th>
             <th>Role(s)</th>
+            <th>Reports To</th>
             <th>Address</th>
-            <th>
-            
-                <a wire:click.prevent="sortBy('created_at')" 
-                role="button" href="#" >
-                    Mapminer User Since
+            @if(auth()->user()->hasRole(['sales_ops', 'admin']))
+                   
+                <th>
+                
+                    <a wire:click.prevent="sortBy('created_at')" 
+                        role="button" href="#" >
+                            Mapminer User Since
 
-                @include('includes._sort-icon', ['field' => 'created_at'])
-            </th>
-            
-            <th><a wire:click.prevent="sortBy('lastlogin')" 
-                role="button" href="#" >
-                   Last Login
+                        @include('includes._sort-icon', ['field' => 'created_at'])
+                    </a>
+                </th>
+                
+                <th>
+                    <a wire:click.prevent="sortBy('lastlogin')" 
+                        role="button" href="#" >
+                           Last Login
 
-                @include('includes._sort-icon', ['field' => 'lastlogin'])</th>
+                        @include('includes._sort-icon', ['field' => 'lastlogin'])
+                    </a>
+                </th>
+            @endif
+
             <th>Assigned to Branch(es)</th>
             <th>
                 <a wire:click.prevent="sortBy('distance')" 
@@ -121,9 +130,12 @@
                         @endforeach
                     @endif
                 </td>
+                <td>{{$person->reportsTo->count() ? $person->reportsTo->fullName() : ''}}
                <td>{{$person->fullAddress()}}</td>
-               <td>{{$person->created_at->format('Y-m-d')}}</td>
-               <td>{{$person->userdetails && $person->userdetails->lastlogin ? $person->userdetails->lastlogin->format('Y-m-d') : ''}}</td>
+               @if(auth()->user()->hasRole(['sales_ops', 'admin']))
+                   <td>{{$person->created_at->format('Y-m-d')}}</td>
+                   <td>{{$person->userdetails && $person->userdetails->lastlogin ? $person->userdetails->lastlogin->format('Y-m-d') : ''}}</td>
+               @endif
                <td>
                 
                     @foreach($person->branchesServiced as $branch)
