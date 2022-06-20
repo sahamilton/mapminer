@@ -40,6 +40,7 @@ class User extends Authenticatable implements Auditable
             'persons' => ['users.id','persons.user_id'],
         ],
     ];
+    protected $hidden = ['created_at','updated_at','deleted_at','password'];
     /**
      * Attributes to exclude from the Audit.
      *

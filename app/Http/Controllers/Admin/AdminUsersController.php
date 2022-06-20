@@ -244,21 +244,21 @@ class AdminUsersController extends BaseController
         
         if ($user) {
             $user->load('serviceline', 'person', 'person.branchesServiced', 'person.industryfocus', 'roles');
-            $roles = $this->role->orderBy('display_name')->get();
-            $permissions = $this->permission->orderBy('display_name')->get();
-
-
+            $roles = Role::orderBy('display_name')->get();
+           
+            $permissions = Permission::orderBy('display_name')->get();
+         
             $title = 'Update user';
 
             $mode = 'edit';
             $managers = $this->_getManagerList();
             $branchesServiced = $user->person->branchesServiced()->pluck('branchname', 'id')->toArray();
-           
+         
             $branches = $this->_getUsersBranches($user, $branchesServiced);
 
             $verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-         
+            
             return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals', 'title', 'mode', 'managers', 'servicelines', 'branches', 'branchesServiced'));
         } else {
             return redirect()->to(route('users.index'))->with('error', 'User does not exist');
@@ -407,17 +407,17 @@ class AdminUsersController extends BaseController
     private function _associateBranchesWithPerson(Request $request, Person $person)
     {
         $data = request()->all();
-
+       
         $syncData=[];
         // Branch string take precendence.
         if (request()->filled('branchstring')) {
-            $data['branches'] = $this->branch->getBranchIdFromid(request('branchstring'));
-        }
-        
-        if (isset($data['branches']) && count($data['branches']) > 0 && $data['branches'][0] != 0) {
+            $data['branchesServiced'] = $this->branch->getBranchIdFromid(request('branchstring'));
+           
+        } 
+        if (isset($data['branchesServiced']) && count($data['branchesServiced']) > 0 && $data['branchesServiced'][0] != 0) {
 
             $data['roles'] = $person->userdetails->roles->pluck('id')->toArray();
-            foreach ($data['branches'] as $branch) {
+            foreach ($data['branchesServiced'] as $branch) {
                 if ($data['roles']) {
                     foreach ($data['roles'] as $role) {
                         $syncData[$branch]=['role_id'=>$role];
@@ -425,7 +425,7 @@ class AdminUsersController extends BaseController
                 }
             }
         }
-        
+      
         $person->branchesServiced()->sync($syncData);
 
     }
@@ -553,9 +553,9 @@ class AdminUsersController extends BaseController
                     $q->whereIn('role_id', $managerroles);
                 }
             )
-            ->orderBy('lastname')
+            
             ->get();
-        return $managers->pluck('post_name', 'id')->toArray();
+        return $managers->sortBy('post_name')->pluck('post_name', 'id')->toArray();
     }
 
 

@@ -206,7 +206,7 @@ class BranchesController extends BaseController
      */
     public function show(Branch $branch)
     {
-
+        
         $servicelines = $this->serviceline
             ->whereIn('id', $this->userServiceLines)->get();
         // need a try here 
@@ -370,12 +370,13 @@ class BranchesController extends BaseController
      */
     public function destroy(Branch $branch)
     {
-        $branch->load('openActivities', 'openOpportunities', 'allLeads');
+        $branch->load('openActivities', 'openOpportunities', 'allLeads', 'branchTeam');
         if ($branch->openActivities->count() > 0
             or $branch->openOpportunities->count() > 0
             or $branch->allLeads()->count() > 0
+            or $branch->branchTeam->count() >0
         ) {
-            return redirect()->route('branchReassign', $branch->id)->withError('You must first reassign the leads, open opportunities and open activities');
+            return response()->view('branches.reassign',compact('branch'));
         } else {
             
             $branch->delete();
@@ -393,10 +394,8 @@ class BranchesController extends BaseController
      */
     public function reassignBranch(Branch $branch)
     {
-        $branch->load('openActivities', 'openOpportunities', 'allLeads');
-        $branches = $this->branch->orderBy('id')->get();
-        $nearby = $this->branch->nearby($branch, 100, 5)->get();
-        return response()->view('branches.reassign', compact('branch', 'branches', 'nearby'));
+        
+        return response()->view('branches.reassign');
     }
     /**
      * [reassign description]

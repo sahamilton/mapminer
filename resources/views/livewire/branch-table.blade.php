@@ -1,4 +1,11 @@
 <div>
+    <h2> 
+       Branches
+    </h2>
+    
+    @if($distance !='all')    
+   <h4> within {{$distance}} miles of {{$address}}</h4>
+    @endif
     <div class="row" style="margin-top:5px">
         <div class="col form-inline">
             @include('livewire.partials._perpage')
@@ -12,6 +19,7 @@
     <div class="row" style="margin-top:5px">
 
         <div class="col form-inline">
+            @if($distance === 'all')
             <i class="fas fa-filter text-danger"></i>
             State: &nbsp;
             <select wire:model="state" class="form-control">
@@ -20,23 +28,26 @@
                     <option value="{{$state->state}}">{{$state->state}}</option>
                 @endforeach
             </select>
-        
-            Service Line: &nbsp;
-            <select wire:model="serviceline" class="form-control">
-                <option value="All">All</option>
-                @foreach ($userServiceLines as $key=>$value)
-                    <option value="{{$key}}">{{$value}}</option>
-                @endforeach
-            </select>
-        
-        
-            Region: &nbsp;
-            <select wire:model="region" class="form-control">
-                <option value="All">All</option>
-                @foreach ($regions as $region)
-                    <option value="{{$region->id}}">{{$region->region}}</option>
-                @endforeach
-            </select>
+            @endif
+
+            <x-form-select name="distance"
+                wire:model="distance"
+                label="Distance:"
+                :options="$distances" />
+            &nbsp;of address &nbsp;
+             
+            <form wire:submit.prevent="updateAddress">
+                <input class="form-control" 
+                    wire:model.defer="address"
+                    type="text" 
+                    value="{{$address ? $address : 'Enter an address'}}"
+                    />
+                    <button title="Search from an address" type="submit" class="btn btn-success">
+                            <i class="fas fa-search"></i>
+                    </button>
+            </form>
+            @if(auth()->user()->hasRole(['admin', 'sales_ops']))
+           
             Managers: &nbsp;
             <select wire:model="manager" class="form-control">
                 <option value="All">All</option>
@@ -44,6 +55,7 @@
                 <option value="without">Without manager</option>
                 
             </select>
+            @endif
         </div>
     </div>
     <div class="row">
@@ -62,11 +74,10 @@
            
             <th>Service Line</th>
             <th>Branch Address</th>
-            <th>City</th>
-            <th>State</th>
+            
             <th>Region</th>
             <th>Manager</th>
-
+            <th>Distance</th>
             @can('manage_branches')
             <th>Actions</th>
             @endcan

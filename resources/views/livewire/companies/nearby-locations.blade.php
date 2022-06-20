@@ -1,13 +1,16 @@
 <div>
-    <h2>Nearby Locations !!
+    <h2> @if($leadtype != 'all')
+            {{$leadtypes[$leadtype]}}
+        @else 
+            Nearby Locations
+        @endif
+        
         @if($company_ids != 'all') 
             of {{$companies[$company_ids]}}
          @endif 
     </h2>
     <h4>
-        @if($leadtype != 'all')
-            {{$leadtypes[$leadtype]}}
-        @endif
+        
     within {{$distance}} miles of {{$address}}</h4>
     
     
@@ -54,13 +57,13 @@
 
 
         </div>
-    
+        <div wire:loading>
+            <div class="spinner-border text-danger"></div>
+        </div>
     
     </div>
     
-    <div wire:loading>
-            <div class="spinner-border text-danger"></div>
-        </div>
+    
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
             <th>Company</th>
@@ -80,7 +83,12 @@
             <th>Number of Contacts</th>
             <th>Created / Updated</th>
             <th>Assigned to Branch</th>
-            <th>Distance</th>
+            <th>
+                <a wire:click.prevent="sortBy('distance')" 
+                role="button" href="#" 
+                >Distance
+                @include('includes._sort-icon', ['field' => 'distance'])
+            </th>
         </thead>
         <tbody>
         @foreach ($locations as $location)

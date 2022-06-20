@@ -181,8 +181,10 @@ Route::group(
         
         Route::post('findme', ['as'=>'findme', 'uses'=>'GeoCodingController@findMe']);
         Route::get('findme', ['as'=>'findme', 'uses'=>'MapsController@findme']);
+        
         // Industries
         Route::resource('naic', 'NaicsController');
+        
         //     Industry Focus
         Route::resource('/industryfocus', 'PersonIndustryController');
     
@@ -219,6 +221,12 @@ Route::group(
         Route::get('api/myleads/{person}/{distance}/{latLng}/{limit?}', ['as'=>'myleadsmap', 'uses'=>'MyLeadsController@findNearbyLeads']);
         Route::get('api/address/{distance}/{latLng}', ['as'=>'addressmap', 'uses'=>'AddressController@findLocations']);
         
+        // Nearby
+        // 
+        
+        Route::resource('nearby', 'NearbyController');
+
+
         //     News
         Route::resource('news', 'NewsController',  ['' => ['index', 'show']]);
         Route::get('currentnews', ['as'=>'currentnews', 'uses'=>'NewsController@currentNews']);

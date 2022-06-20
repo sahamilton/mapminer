@@ -3,19 +3,36 @@
 namespace App\Exports;
 
 use App\Person;
-use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use App\Report;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class OrganizationExport implements FromView
+class OrganizationExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
-    public $roles;
-    public $manager;
+    use Exportable;
+    public $period;
+    public $branches;
+    public $report;
+    public $roles = [];
+    public $fields = [
+        'name'=>'Name',
+        'role'=>'Role',
+        'reportsTo'=>'Manager',
+        'branch'=>'Branch(es)',
+        ];
+        
 
-    public function __construct(array $roles = null, array $manager = null)
+    public function __construct(array $period = null, array $manager = null)
     {
-        $this->roles = $roles;
+        
         $this->manager = $manager;
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
     }
 
     /**
@@ -23,24 +40,59 @@ class OrganizationExport implements FromView
      *
      * @return [type] [description]
      */
-    public function view(): View
+     public function headings(): array
     {
-        $people = new Person();
-        if ($this->roles) {
-            $people = $people->whereHas(
-                'userdetails.roles', function ($q) {
-                    $q->whereIn('roles.id', $this->roles);
-                }
-            );
-        }
-
-        $people = $people->with('branchesServiced');
-        if ($this->manager) {
-            $people = $people->whereIn('id', $this->manager);
-        }
-        $people = $people->with('userdetails.roles')
-            ->get();
-
-        return view('reports.organization', compact('people'));
+        return [
+            [' '],
+            [$this->report->report],
+            
+            [$this->report->description],
+            $this->fields
+        ];
     }
+
+    public function map($person): array
+    {
+         foreach ($this->fields as $key=>$field) {
+            switch($key) {
+            case 'name':
+                $detail[] = $person->fullName();
+                break;
+
+            case 'reportsto':
+                $detail[] = $person->reportsTo->fullName();
+                break;
+
+            case 'branch':
+                $detail[] = implode(",",$person->branchesServiced->pluck('branchname')->toArray());
+                break;
+
+
+            default:
+                $detail[]=$person->$key;
+                break;
+
+            }
+        }
+        return $detail;
+    }
+    public function query()
+    {
+        return Person::query()
+            ->when(
+                $this->roles, function ($q) {
+                    $q->whereHas(
+                        'userdetails.roles', function ($q) {
+                            $q->whereIn('roles.id', $this->roles);
+                        }
+                    );
+                }
+            )->with('branchesServiced','reportsTo','userdetails.roles');
+    }
+
+    public function columnFormats(): array
+    {
+        return [];
+    }
+
 }

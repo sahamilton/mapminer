@@ -103,110 +103,29 @@
 				</div>
 				<div style="clear:both"></div> 
 			</div>
+			<div class="list-group-item">
 			@can('manage_people')
-				<div class="list-group-item">
-					<div class="list-group-item-text col-sm-4">
-						<p><strong>Reporting Structure</strong></p>
-						<ul style="list-style-type: none;">
-						@if($person->reportsTo->id)
-							Reports To:
-		
-							<a href="{{route('person.details',$person->reportsTo->id)}}">{{$person->reportsTo->fullName()}}</a>
-						@else
-							{{$person->reportsTo->fullName()}}
-						@endif
-						@if($person->userdetails->oracleMatch 
-							&& $person->userdetails->oracleMatch->oracleManager
-							&& $person->userdetails->oracleMatch->oracleManager->mapminerUser
-							&& $person->userdetails->oracleMatch->oracleManager->mapminerUser->person->id != $person->reports_to)
-						<p>
-							<i class="fa-solid fa-user-plus txt-danger"></i>
-							<a href="{{route('oracle.reassign',[$person->id, $person->userdetails->oracleMatch->oracleManager->id])}}"
-								title="Change {{$person->fullName()}}'s manager to {{$person->userdetails->oracleMatch->oracleManager->mapminerUser->person->fullName()}}">
-							{{$user->oracleMatch->manager_name}}</a>
-						</p>
-							
-						@endif
-						<li>Team:</li>
-						
-						@if($person->userdetails->oracleMatch 
-							&& $person->userdetails->oracleMatch->teamMembers->count()>0)
-							
-							@foreach ($person->userdetails->oraclematch->teamMembers as $reports)
-								
-								<li>
-									@if($reports->mapminerUser)
-										<i class="far fa-check-circle text-success"title="In Oracle"></i>
-										<a href="{{route('person.details',$reports->mapminerUser->person->id)}}">{{$reports->fullName()}}
-										</a>
-									@endif
-									
-									
-									
-									
-								</li>
-							
-							@endforeach
-							@if(isset($addToMapminer))
-
-								<a href="{{route('team.manage', $person->user_id)}}" class="btn btn-info">Manage Team</a>
-										
-							@endif
-						@endif
-					</ul>
-				</div>
-				<div class="col-sm-8">
-					@if($person->directReports->count()>0)
-						@include('persons.partials._teammap')
-						@endif
-					</div>
-					<div style="clear:both"></div> 
-				</div>
+				
+					<livewire:manage-team :user='$user' />
+				
+				
 			@endcan
 				
 			@can('manage_branches')
-
-				<div class="list-group-item">
-					<div class="list-group-item-text col-sm-6">
-						<p><strong>Branches Serviced</strong></p>
-
-					<table id='sorttable' class ='table table-bordered table-striped table-hover'>
-						<thead>
-							<th>Branch</th>
-							<th>Manager(s)</th>
-
-						</thead>
-						<tbody>
-
-						@foreach ($branches as $branch)
-							<tr>
-								<td>
-									<a href="{{route('branches.show',$branch->id)}}"
-										title="Review {{$branch->branchname}} branch">
-										{{$branch->branchname}}
-									</a>
-								</td>
-								<td>
-									@foreach ($branch->manager as $manager)
-										<a href="{{route('person.details', $manager->id)}}"
-											title="See {{$manager->fullName()}}'s profile">
-											{{$manager->fullName()}}
-										</a>
-										@if (! $loop->last), @endif
-									@endforeach
-								</td>
-							</tr>
-						@endforeach
-					</tbody>
-				</table>
+			<div class="list-group-item">
+			<h4>Branches managed</h4>
+				
+					@foreach($user->person->branchesServiced as $serviced)
+					<li>{{$serviced->branchname}}</li>
+					@endforeach
 					
-				</div>
-				<div class="col-sm-8">
+				<div class="float-right col-sm-8">
 					@include('persons.partials._branchmap')
 				</div>
 				<div style="clear:both"></div>  
 				</div>
 			@endcan
+		</div>
 			@if($user->scheduledReports()->exists())
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Scheduled Reports</strong>
 					<ul style="list-style-type: none;">

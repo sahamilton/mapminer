@@ -36,7 +36,7 @@ class WonOpportunity implements ShouldQueue
     {
         $this->opportunity->load('location', 'branch.branch.manager');
         $distribution = $this->_getDistribution();
-
+        
         Mail::to($distribution)->send(new WonOpportunityNotification($this->opportunity));
     }
 

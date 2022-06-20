@@ -37,7 +37,7 @@
     <tbody>
 
      @foreach ($users as $user)
-   
+
         <tr> 
             <td class="col-md-2">
                 <a href="{{route('oracle.show', $user->id)}}">
@@ -59,7 +59,7 @@
                     {{$user->last_name}}
                 </a>
 
-                @if(! $user->mapminerUser && isset($user->oracleManager->mapminerUser))  
+                @if(! $user->mapminerUser && isset($user->oracleManager->mapminerUser) && isset($user->branch))  
                         <a href="{{route('oracle.useradd', $user->id)}}"
                             title="Add {{$user->fullName()}} to Mapminer">
                             <i class="fas fa-user-plus text-success"></i>
@@ -76,7 +76,7 @@
                  @endif
 
             </td>
-            <td class="col-md-2">{{$user->location_name}}</td>
+            <td class="col-md-2">{{isset($user->branch) ? $user->branch->branchname : 'Not a Mapminer location'}}</td>
             
             <td>
                 @if(isset($user->oracleManager->mapminerUser))

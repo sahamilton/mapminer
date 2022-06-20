@@ -345,6 +345,21 @@ class Address extends Model
             ->withTimeStamps()
             ->whereIn('status_id', [2]);
     }
+
+    /**
+     * [claimedByBranch description]
+     * 
+     * @return [type] [description]
+     */
+    public function offeredToBranch()
+    {
+        return $this->belongsToMany(
+            Branch::class, 'address_branch', 'address_id', 'branch_id'
+        )
+            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withTimeStamps()
+            ->whereIn('status_id', [1]);
+    }
     /**
      * [closed description]
      * 

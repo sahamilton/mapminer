@@ -2,9 +2,10 @@
 
 namespace App\Jobs;
 
-use Mail;
+
 use App\Report;
 use App\Person;
+use App\User;
 
 use App\Exports\Reports\Branch\StaleOpportunitiesSummaryExport;
 
@@ -20,6 +21,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class StaleOpportunitiesSummary implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    
     public $distribution;
     public $file;
     public $manager;
@@ -27,28 +29,17 @@ class StaleOpportunitiesSummary implements ShouldQueue
     public $person;
     public $report; 
     public $user;
-
-
-    public function __construct(Array $period= null, $distribution, $manager)
+    
+    public function __construct(Array $period= null, Person $manager = null)
     {
-        
-        $this->period = $period;
-        $this->report = Report::where('job', class_basename($this))->firstOrFail();
-        $this->manager = $manager;   
-        $this->distribution = $distribution;
-
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
      
-    public function handle()
-    {
-        Excel::store(new StaleOpportunitiesSummaryExport($this->branches),  $this->file,, 'reports');
+        $this->period = $period;
+        $this->report = Report::where('job', class_basename($this))->with('distribution')->firstOrFail();
+        $this->manager = $manager;
+        $this->distribution = $this->_getDistribution();
         
-    }*/
+    }
+    
     /**
      * Execute the job.
      *
@@ -59,8 +50,8 @@ class StaleOpportunitiesSummary implements ShouldQueue
         
 
         foreach ($this->distribution as $recipient) {
-            $this->user = $recipient;
-            $this->file = $this->_makeFileName();
+         
+            $this->file = $this->_makeFileName($recipient);
             $branches = $this->_getReportBranches($recipient); 
             (new StaleOpportunitiesSummaryExport($this->period, $branches))
                 ->store($this->file, 'reports')
@@ -74,29 +65,49 @@ class StaleOpportunitiesSummary implements ShouldQueue
                         )
                     ]
                 );
+            
+        
         }
     }
 
-    private function _makeFileName()
+    
+    /**
+     * [_makeFileName description]
+     * 
+     * @return string filename
+     */
+    private function _makeFileName($recipient)
     {
         return 
             strtolower(
                 Str::slug(
-                    $this->user->person->fullName()." ".
-                    $this->report->filename ." ". 
+                    $recipient->person->fullName()." ".
+                    $this->report->report ." ". 
                     $this->period['from']->format('Y_m_d'), 
                     '_'
                 )
             ). ".xlsx";
     }
 
-    private function _getReportBranches($recipient)
+    private function _getReportBranches(User $recipient)
     {
         if ($this->manager) {
 
-            return Person::findOrFail($this->manager)->getMyBranches();
-            
+            return $this->manager->getMyBranches();
         }
         return $recipient->person->getMyBranches();
+    }
+
+    private function _getDistribution()
+    {
+        if ($this->manager) {
+            return User::where('id', $this->manager->user_id)->get();
+        } elseif ($this->report->distribution->count()) {
+            return $this->report->distribution;
+        } elseif (auth()->user()) {
+            return User::where('id', auth()->user()->id)->get();
+        } else {
+            dd('we are herer');
+        }
     }
 }

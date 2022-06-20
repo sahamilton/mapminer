@@ -4,19 +4,27 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Jobs\WeeklyActivityReminder;
-use App\Jobs\WeeklySummary;
-use App\Jobs\Top25WeeklyReport;
-use App\Jobs\ActivityOpportunity;
-use App\Jobs\AccountActivities;
-use App\Jobs\BranchOpportunities;
+
+/*use App\Jobs\ActivityOpportunity;
 use App\Jobs\BranchActivitiesDetail;
+
+use App\Jobs\BranchLogins;
 use App\Jobs\BranchStats;
 use App\Jobs\DailyBranch;
+*/
 use App\Jobs\BranchCampaign;
-use App\Campaign;
+use App\Report;
+use App\Jobs\BranchReportJob;
+
 use App\Jobs\RebuildPeople;
-use App\Jobs\BranchLogins;
+
+use App\Jobs\WeeklyActivityReminder;
+use App\Jobs\WeeklySummary;
+use App\Jobs\NotifyMarketManagersMissingBranchManagersJob;
+
+
+use App\Campaign;
+
 use App\Company;
 use Carbon\Carbon;
 
@@ -50,7 +58,27 @@ class Kernel extends ConsoleKernel
         
 
         if (config('app.env') == 'production') {
+
+            // delete stale deleted users
             $schedule->command('quicksand:run')->daily();
+            
+
+            $schedule->command('monitor:check-uptime')->everyMinute();
+            
+            $schedule->command('monitor:check-certificate')->daily();
+            // rebuild hierarchy of people
+            $schedule->job(new RebuildPeople())
+                ->dailyAt('21:51');
+
+            $schedule->command('db:backup')
+                ->dailyAt('22:58');
+            
+            //********* Email reports *****************//
+
+            $schedule->job(new BranchCampaign())
+                ->weekly()
+                ->sundays()
+                ->at('18:42');
             $period['from'] = Carbon::now();
             $period['to'] = Carbon::now()->addWeek();
             
@@ -58,16 +86,7 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->sundays()
                 ->at('16:45');
-
-            $schedule->command('monitor:check-uptime')->everyMinute();
             
-            $schedule->command('monitor:check-certificate')->daily();
-
-            $schedule->job(new RebuildPeople())
-                ->dailyAt('21:51');
-
-            $schedule->command('db:backup')
-                ->dailyAt('22:58');
             // Weekly Summary Mapminer Stats
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
@@ -75,63 +94,67 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->mondays()
                 ->at('3:12');
-            // Stephanie Harp Report
+
+            $schedule->job(new NotifyMarketManagersMissingBranchManagersJob())
+                ->weekly()
+                ->mondays()
+                ->at('18:00');
+
+            //********* Excel Reports ************//
+            
+
+            // Weekly Branch Stats
+
+            $report = Report::where('job', 'BranchStats')->first();
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new BranchStats($period))
+            $schedule->job(new BranchReportJob($report, $period))
                 ->weekly()
                 ->wednesdays()
                 ->at('23:05');
 
-            
-            $schedule->job(new BranchCampaign())
-                ->weekly()
-                ->sundays()
-                ->at('18:42');
-            
+            // RVP Weekly Branch Report
+
+            $report = Report::where('job', 'DailyBranch')->first();
             $period = [
                 'from'=>now()->subWeek()->startOfWeek()->startOfDay(), 
                 'to'=>now()->subWeek()->endOfWeek()->endOfDay()];
-            $schedule->job(new DailyBranch($period))
+            $schedule->job(new BranchReportJob($report, $period))
                 ->weekly()
                 ->mondays()
                 ->at('03:48');
             
             // RVP Daily Branch Report
-            //
+           
+            $report = Report::where('job', 'DailyBranch')->first();
             $period = ['from'=>now()->subDay()->startOfDay(), 'to'=>now()->subDay()->endOfDay()];            
-            $schedule->job(new DailyBranch($period))
+            $schedule->job(new BranchReportJob($report, $period))
                 ->daily()->at('02:12');
-            // 
+          
             
-            // Josh Hammer report
+            // TAHA Josh Hammer report 
+            $report = Report::where('job','ActivityOpportunity')->first();
             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new ActivityOpportunity($period))
+            $schedule->job(new BranchReportJob($report, $period))
                 ->weekly()
                 ->wednesdays()
                 ->at('04:59');
             
-            // National Account Jobs
-            /* $companies = Company::whereIn('id', [532])->get();
-            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
-            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new AccountActivities($companies, $period))
-                ->weekly()
-                ->sundays()
-                ->at('18:30');
-            */
-            // Branch Login Report
+           
+            // Branch Login Report - Monthly
+            $report = Report::where('job', 'BranchLogins')->first();
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new BranchLogins($period))
+            $schedule->job(new BranchReportJob($report, $period))
                 ->monthlyOn(2, '1:17');
                
                 
-            // Branch Activities Report
+            // Branch Activities Report - Weekly
+            $report = Report::where('job', 'BranchActivitiesDetail')->first();
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new BranchActivitiesDetail($period))
+            $schedule->job(new BranchReportJob($report, $period))
                 ->weekly()
                 ->wednesdays()
                 ->at('09:59');

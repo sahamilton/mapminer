@@ -2,9 +2,11 @@
 
 namespace App\Jobs;
 
-use Mail;
+
 use App\Report;
 use App\Person;
+use App\User;
+
 use App\Exports\Reports\Branch\BranchActivitiesDetailExport;
 
 use Illuminate\Support\Str;
@@ -26,14 +28,14 @@ class BranchActivitiesDetail implements ShouldQueue
     public $report; 
     public $user;
     
-    public function __construct(Array $period= null)
+    public function __construct(Array $period= null, Person $manager = null)
     {
      
         $this->period = $period;
-        $this->report = Report::where('job', class_basename($this))->firstOrFail();
+        $this->report = Report::where('job', class_basename($this))->with('distribution')->firstOrFail();
+        $this->manager = $manager;
+        $this->distribution = $this->_getDistribution();
         
-        $this->distribution =  $this->report->distribution;
-
     }
 
     /**
@@ -47,10 +49,20 @@ class BranchActivitiesDetail implements ShouldQueue
     {
    
         foreach ($this->distribution as $recipient) {
-            $this->user = $recipient;
-            $this->file = $this->_makeFileName();
+            $this->file = $this->_makeFileName($recipient);
             $branches = $this->_getReportBranches($recipient); 
-            
+            (new BranchActivitiesDetailExport($this->period, $branches))
+                ->store($this->file, 'reports')
+                ->chain(
+                    [
+                        new ReportReadyJob(
+                            $recipient, 
+                            $this->period, 
+                            $this->file, 
+                            $this->report
+                        )
+                    ]
+                );
         } 
             
     }
@@ -60,12 +72,12 @@ class BranchActivitiesDetail implements ShouldQueue
      * 
      * @return string filename
      */
-    private function _makeFileName(): string
+    private function _makeFileName($recipient)
     {
         return 
             strtolower(
                 Str::slug(
-                    $this->user->person->fullName()." ".
+                    $recipient->person->fullName()." ".
                     $this->report->filename ." ". 
                     $this->period['from']->format('Y_m_d'), 
                     '_'
@@ -73,12 +85,25 @@ class BranchActivitiesDetail implements ShouldQueue
             ). ".xlsx";
     }
 
-    private function _getReportBranches($recipient)
+    private function _getReportBranches(User $recipient)
     {
         if ($this->manager) {
 
-            return Person::findOrFail($this->manager)->getMyBranches();
+            return $this->manager->getMyBranches();
         }
         return $recipient->person->getMyBranches();
+    }
+
+    private function _getDistribution()
+    {
+        if ($this->manager) {
+            return User::where('id', $this->manager->user_id)->get();
+        } elseif ($this->report->distribution->count()) {
+            return $this->report->distribution;
+        } elseif (auth()->user()) {
+            return User::where('id', auth()->user()->id)->get();
+        } else {
+            dd('we are herer');
+        }
     }
 }

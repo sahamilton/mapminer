@@ -1,6 +1,7 @@
 <?php
 namespace App;
-
+use Illuminate\Database\Eloquent\Builder;
+use App\Model;
 trait Geocode
 {
       /**
@@ -103,14 +104,17 @@ trait Geocode
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-        
-        
-        return $query
-            ->select()//pick the columns you want here.
+        if(is_null($query->getQuery()->columns)) {
+            $query->select('*');
+        }
+
+        $query
+            ->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
+            ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon])
             ->selectRaw("{$this->_haversine($location)} AS distance")
             
             ->whereRaw("{$this->_haversine($location)} < $radius ")
-            ->orderBy('distance', 'ASC')
+           
             ->when(
                 $limit, function ($q) use ($limit) {
                    $q->limit($limit);
@@ -118,57 +122,128 @@ trait Geocode
             );
     }
 
-    public function scopeCountNearby($query, $location,  $radius = 100, $limit = null)
+    public function scopeCountNearby($query, $location,  $radius = 100, $limit = null)  : Builder
     {
-        
-
-        return  $query
-            ->selectRaw("count('id')")//pick the columns you want here.
-            
-            ->whereRaw("{$this->_haversine($location)} < $radius ")
-
-
-            ->when(
-                $limit, function ($q) use ($limit) {
-                
-                    $q->limit($limit);
-                }
-            );
-    }
-    /*
-     * ScopeNewNearby [description]
-     * 
-     * @param [type]  $query    [description]
-     * @param [type]  $location [description]
-     * @param integer $radius   [description]
-     * @param [type]  $limit    [description]
-     * 
-     * @return [type]            [description]
-     */
-    public function scopeNewNearby($query, $location, $radius = 100, $limit = null)
-    {
-    
         
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
-    
+        
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-       
-        $sub = $this->selectSub('id', 'lat', 'lng')
-            ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
-            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
-
-        return $query
-            ->select()//pick the columns you want here.
-            ->selectRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 AS distance")
-            ->mergeBindings($sub->getQuery())
-            ->whereRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 < $radius ")
-
-            ->orderBy('distance', 'ASC')->when(
+        return  $query
+            ->selectRaw("count('id') as nearby")//pick the columns you want here.
+          
+            ->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
+            ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon])
+            ->whereRaw("{$this->_haversine($location)} < $radius ")
+            
+            ->when(
                 $limit, function ($q) use ($limit) {
-                    $query = $q->limit($limit);
+                   $q->limit($limit);
                 }
             );
     }
+
+    public function orderByDistance($query, $location, string $direction = 'asc') {
+        $direction = strtolower($direction) === 'asc' ? 'asc' : 'desc';
+
+    }
+    /**
+     * [scopeNewNearby description]
+     * @param  Builder  $query    [description]
+     * @param  Model  $location [description]
+     * @param  integer $radius   [description]
+     * @param  integer  $limit    [description]
+     * @return Builder            [description]
+     */
+    public function scopeNewNearby($query, $location, int $radius = 25, int $limit = null) :Builder
+    {
+        if(is_null($query->getQuery()->columns)) {
+            $query->select('*');
+        }
+        $query->bounding($location, $radius)
+            ->distanceTo($location)
+            ->withinDistance($location, $radius)
+            
+            ->when(
+                $limit, function ($q) use ($limit) {
+                   $q->limit($limit);
+                }
+            );
+    }
+    /**
+     * return Bounding box for spatial queries
+     * @param  [type] $query    [description]
+     * @param  [type] $location [description]
+     * @param  [type] $radius   [description]
+     * @return [type]           [description]
+     */
+    public function scopeBounding($query, $location, int $radius=25) 
+    {
+        $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
+        
+        $bounding = $geocode->boundingCoordinates($radius, 'mi');
+
+        $query->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
+            ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon]);
+
+    }
+    /**
+     * [scopeDistanceTo description]
+     * @param  [type] $query    [description]
+     * @param  [type] $location [description]
+     * @return [type]           [description]
+     */
+    public function scopeDistanceTo($query, $location) 
+    {
+
+     
+        if(is_null($query->getQuery()->columns)) {
+            $query->select('*');
+        }
+       
+       $query->selectRaw("{$this->_haversine($location)} AS distance");
+
+    
+    }
+    /**
+     * [scopeDistanceTo description]
+     * @param  [type] $query    [description]
+     * @param  [type] $location [description]
+     * @return [type]           [description]
+     */
+    public function scopeNewDistanceTo($query, $location) 
+    {
+
+        if(is_null($query->getQuery()->columns)) {
+            $query->select('*');
+        }
+       
+        $query->selectRaw('ST_Distance(
+                ST_SRID(POINT(lng, lat), 4236),
+                ST_SRID(POINT(? , ?), 4236)
+                ) / 1609.344 as distance', ['lng'=>$location->lng, 'lat'=>$location->lat]);
+
+    
+    }
+    /**
+     * [scopeWithinDistance description]
+     * @param  [type] $query    [description]
+     * @param  [type] $location [description]
+     * @param  int    $radius   [description]
+     * @return [type]           [description]
+     */
+    public function scopeWithinDistance($query, $location, int $radius)
+    {
+
+         $query->whereRaw('ST_Distance(
+                ST_SRID(POINT(lng, lat), 4236),
+                ST_SRID(POINT(? , ?), 4236)
+                ) / 1609.344 < ' .$radius, ['lng'=>$location->lng, 'lat'=>$location->lat]);
+
+
+
+    }
+
+    
     /**
      * LocationsNearbyBranches [description]
      * 
@@ -300,6 +375,28 @@ trait Geocode
                      + sin(radians($location->lat)) 
                      * sin(radians($this->table.lat))))";
     }
+
+    /**
+     * _Vincenty [description]
+     * 
+     * @param [type] $location [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _vincenty($location)
+    {
+        
+       return  "111.45 * (DEGREES * (
+            ATAN2(
+              SQRT(
+                POWER(COS(RADIANS * ($location->lat))*SIN(RADIANS * ($location->lng - $this->table.lng)),2) +
+                POWER(COS(RADIANS * ($this->table.lat))*SIN(RADIANS * (lat2)) -
+                     (SIN(RADIANS * ($this->table.lat))*COS(RADIANS * (lat2)) *
+                      COS(RADIANS * ($location->lng - $this->table.lng))) ,2)),
+              SIN(RADIANS * ($this->table.lat))*SIN(RADIANS * ($location->lat)) +
+              COS(RADIANS * ($this->table.lat))*COS(RADIANS * ($location->lat))*COS(RADIANS * ($location->lng - $this->table.lng))))";
+
+    }
     
     /**
      * DistanceBetween [description]
@@ -336,12 +433,15 @@ trait Geocode
      */
     public function getMyPosition()
     {
+        
         $location = new Location;
             //$limited=$this->limit;
             //we need to test to see if geo is filled
-        if ($geo = session()->get('geo') && isset($geo['lat'])) {
-                $location->lat = $geo['lat'];
-                $location->lng = $geo['lng'];
+        if (session()->has('geo') && session()->has('geo.lat')) {
+             
+                $location->lat = session('geo.lat');
+                $location->lng = session('geo.lng');
+                $location->address = session('geo.fulladdress');
         } elseif ($position = auth()->user()->position()) {
             $position = explode(",", auth()->user()->position());
             $location->lat =  $position[0];
@@ -490,57 +590,5 @@ trait Geocode
             );
         }
     }
-    /**
-     * ScopeDistance [description]
-     * 
-     * @param [type] $query    [description]
-     * @param [type] $position [description]
-     * @param [type] $dist     [description]
-     * 
-     * @return [type]           [description]
-     */
-    public function scopeDistance($query, $position, $dist=null)
-    {
-        
-        return $query->whereRaw('ST_Distance_Sphere(position, POINT(' . $position->lng ."," .$position->lat . ')) < ' . $dist);
-        
-
-    }
-    /**
-     * ScopeWithDistance [description]
-     * 
-     * @param [type] $query    [description]
-     * @param [type] $position [description]
-     * 
-     * @return [type]           [description]
-     */
-    public function scopeWithDistance($query, $location)
-    {
-        return $query->selectRaw("*, (ST_DISTANCE_SPHERE(POINT($location->lng, $location->lat), POINT(lng, lat))/1609.344) as distance");
-        //ST_DISTANCE_SPHERE(POINT($position->lng, $position->lat), POINT(lng, lat)) 
-    }
-
-    /**
-     * ScopeCloseTo Return addresses within radius
-     * 
-     * @param [type]  $query    [description]
-     * @param Object  $location [description]
-     * @param integer $radius   [description]
-     * 
-     * @return Builder           Query
-     */
-    public function scopeCloseTo($query, $location, $radius = 25)
-    {
-        return $query->whereRaw(
-            "ST_Distance_Sphere(
-                    point(lng, lat),
-                    point(?, ?)
-                ) * .000621371192 < ?", 
-            [
-                $location->lng,
-                $location->lat,
-                $radius,
-            ]
-        );
-    }
+    
 }

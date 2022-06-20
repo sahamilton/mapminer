@@ -24,25 +24,20 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           
           <a class="dropdown-item" href="{{{ route('findme') }}}">
-          <i class="far fa-map" aria-hidden="true"> </i> Maps</a>
+            <i class="far fa-map" aria-hidden="true"> </i> Maps</a>
         
           <a class="dropdown-item" href="{{{ route('company.index') }}}">
-          <i class="far fa-building" aria-hidden="true"> </i> Accounts</a>
-         
-          <a class="dropdown-item" href="{{{ route('branches.map') }}}">
-          <i class="fab fa-pagelines"></i> Branches</a>
-          <a class="dropdown-item" href="{{route('salesorg.index')}}">
-                <i class="fas fa-sitemap" aria-hidden="true"> </i>
-                 People</a>
-          @if(auth()->user()->hasRole('branch_manager'))
+            <i class="far fa-building" aria-hidden="true"> </i> Accounts</a>
+
           <a class="dropdown-item" href="{{route('lead.list')}}">
-                <i class="fas fa-arrow-right" aria-hidden="true"> </i>
+            <i class="fa-solid fa-location-arrow"> </i>
                  Leads</a>
-          @endif
-          
-          
-                           
-          
+          <a class="dropdown-item" href="{{{ route('branches.map') }}}">
+            <i class="fab fa-pagelines"></i> Branches</a>
+          <a class="dropdown-item" href="{{route('nearby.show', 'people')}}">
+            <i class="fa-solid fa-people-group"> </i>
+                 People</a>
+         
         </div>
         </li>
         <li class="nav-item dropdown">

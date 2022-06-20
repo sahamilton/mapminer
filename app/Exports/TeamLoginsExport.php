@@ -3,6 +3,8 @@ namespace App\Exports;
 
 use App\Branch;
 use App\Person;
+use App\Report;
+use App\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -17,7 +19,10 @@ class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
 {
     use Exportable;
     public $manager;
+    public $user;
+    public $branches;
     public $period;
+    public $report;
     public $fields =
         [
             'manager'=>'Team Member',
@@ -32,27 +37,29 @@ class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
      * @param Array $period [description]
      * @param array $person [description]
      */
-    public function __construct(Array $period, Array $manager)
+    public function __construct(Array $period, Array $branches, Person $manager)
     {
         $this->period = $period;
         $this->manager = $manager;
-      
+       
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
+       
     }
 
     public function headings(): array
     {
         return [
             [' '],
-            ['Team Member Logins'],
-            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
-            [' ' ],
+            [$this->report->report],
+            
+            [$this->report->description],
             $this->fields
         ];
     }
 
     public function map($person): array
     {
-       
+        
         foreach ($this->fields as $key=>$field) {
             switch ($key) {
             case 'manager':
@@ -98,17 +105,30 @@ class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
     public function query()
     {
         
-        $manager = Person::findOrFail($this->manager[0]);
-        return $manager->descendantsAndSelf()
-            ->with('branchesServiced')
-            ->with(
-                ['userdetails'=>function ($q) {
-                    $q->withLastLoginId()
-                        ->with('lastlogin', 'roles')
-                        ->totalLogins($this->period);
-                }
-                ]
-            );
-                     
+        if($this->manager->userdetails->hasRole(['admin'])) {
+            dd('hreere');
+            return Person::with(
+                    [
+                        'userdetails'=>function ($q) {
+                            $q->withLastLoginId()
+                                ->with('lastlogin', 'roles')
+                                ->totalLogins($this->period);
+                        }
+                    ]
+                )->with('branchesServiced');
+        } else {
+
+
+            return $this->manager->descendantsAndSelf()
+                ->with(
+                    [
+                        'userdetails'=>function ($q) {
+                            $q->withLastLoginId()
+                                ->with('lastlogin', 'roles')
+                                ->totalLogins($this->period);
+                        }
+                    ]
+                )->with('branchesServiced');
+        }             
     }
 }

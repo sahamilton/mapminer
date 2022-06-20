@@ -32,13 +32,19 @@ class BranchReportJob implements ShouldQueue
         Report $report, 
         Array $period = null, 
         $distribution = null, 
-        $manager = null
+        Person $manager = null
     ) {
         
         $this->period = $period;
         $this->report = $report;
-        $this->manager = $manager;   
-        $this->distribution = $this->report->distribution;
+        $this->manager = $manager;
+
+        if ($distribution) {
+            $this->distribution = $distribution;
+        } else {
+            $this->distribution = $this->report->distribution;
+        } 
+        
 
     }
 
@@ -49,14 +55,14 @@ class BranchReportJob implements ShouldQueue
      */
     public function handle()
     {
-        
+       
         /// what do we do if there is no distribution?
         foreach ($this->distribution as $recipient) {
             $this->user = $recipient;
-            $this->file = $this->_makeFileName();
+            $this->file = $this->_makeFileName($recipient);
             $branches = $this->_getReportBranches($recipient);
             $export = $this->_getExportClass();
-      
+          
             (new $export($this->period, $branches))
                 ->store($this->file, 'reports')
                 ->chain(
@@ -73,29 +79,45 @@ class BranchReportJob implements ShouldQueue
         }
     }
 
-    private function _makeFileName()
+     /**
+     * [_makeFileName description]
+     * 
+     * @return string filename
+     */
+    private function _makeFileName($recipient)
     {
-        if (! is_a($this->user, 'App\User')) {
-            $this->user = User::with('person')->first();          
-        }
-
         return 
-                strtolower(
-                    Str::slug(
-                        $this->user->person->fullName()." ".
-                        $this->report->filename ." ". 
-                        $this->period['from']->format('Y_m_d'), 
-                        '_'
-                    )
-                ). ".xlsx";  
-        
+            strtolower(
+                Str::slug(
+                    $recipient->person->fullName()." ".
+                    $this->report->report ." ". 
+                    $this->period['from']->format('Y_m_d'), 
+                    '_'
+                )
+            ). ".xlsx";
     }
+
+    
+
+    private function _getDistribution()
+    {
+        if ($this->manager) {
+            return User::where('id', $this->manager->user_id)->get();
+        } elseif ($this->report->distribution->count()) {
+            return $this->report->distribution;
+        } elseif (auth()->user()) {
+            return User::where('id', auth()->user()->id)->get();
+        } else {
+            dd('we are herer');
+        }
+    }
+
 
     private function _getReportBranches($recipient)
     {
         if ($this->manager) {
-
-            return Person::findOrFail($this->manager)->getMyBranches();
+            
+            return $this->manager->getMyBranches();
         }
         return $recipient->person->getMyBranches();
     }
@@ -108,11 +130,9 @@ class BranchReportJob implements ShouldQueue
             break;
 
         case "company": 
-            return "\App\Exports\\". $this->report->export;
+            return "\App\Exports\Reports\\". $this->report->export;
             break;
 
-
-        
 
         case "role": 
             return "\App\Exports\\". $this->report->export;
@@ -120,11 +140,11 @@ class BranchReportJob implements ShouldQueue
 
 
         case "campaign": 
-            return "\App\Exports\Campaign\\". $this->report->export;
+            return "\App\Exports\Reports\Campaign\\". $this->report->export;
             break;
 
         case "user": 
-            return "\App\Exports\\". $this->report->export;
+            return "\App\Exports\Reports\User\\". $this->report->export;
             break;
 
         default:

@@ -37,11 +37,12 @@ class StaleOpportunitiesSummaryExport implements FromQuery, ShouldQueue, WithHea
      * @param array      $period   [description]
      * @param array|null $branches [description]
      */
-    public function __construct(Report $report, Array $period, Array $branches=null)
+    public function __construct( Array $period, Array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
-        $this->report = $report;
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
+
         
     }
 

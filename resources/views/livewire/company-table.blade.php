@@ -35,7 +35,7 @@
             <th>Manager</th>
             <th>Email</th>
             <th>Vertical</th>
-            <th>Locations</th>
+            <th>Locations within {{$distance}} miles</th>
            
             @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
 

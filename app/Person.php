@@ -12,7 +12,12 @@ class Person extends NodeModel implements Auditable
     use Geocode, Filters, PeriodSelector, SoftDeletes, FullTextSearch, \OwenIt\Auditing\Auditable;
     public $salesroles = ['5', '9', '17'];
     public $branchroles = ['3', '9', '17'];
-       
+    
+    public $managerRoles = [3,6,7,9];
+    
+    protected $spatialFields = [
+        'position'
+    ];
     
     protected $table ='persons';
     protected $hidden = ['created_at','updated_at','deleted_at','position'];
@@ -145,7 +150,11 @@ class Person extends NodeModel implements Auditable
     {
         
         if (! $roles) {
-            $roles = [14,9,6,7,3];
+            $roles = $this->managerRoles;
+        }
+        
+        if(! $servicelines) {
+            $servicelines = auth()->user()->serviceline()->pluck('id')->toArray();
         }
         
         return $this->wherehas(
@@ -174,9 +183,9 @@ class Person extends NodeModel implements Auditable
     public function managers(Array $roles=null, Array $servicelines=null)
     {
         
-        // this sucks .... why are these hard coded?
+        
         if (! $roles) {
-            $roles = [14,3,6,7,9];
+            $roles = $this->managerRoles;
         }
         
         return $this->wherehas(
@@ -1187,9 +1196,9 @@ class Person extends NodeModel implements Auditable
      */
     public function scopeSearch($query, $search)
     {
-        return  $query->where('firstname', 'like', "%{$search}%")
-            ->orWhereRaw("concat_ws(' ', firstname, lastname) like ?", "%{$search}%")
-            ->Orwhere('lastname', 'like', "%{$search}%");
+        return  $query->whereRaw("concat_ws(' ', firstname, lastname) like ?", "%{$search}%")
+
+            ->orWhereRaw("concat_ws(' ', address, city) like ?", "%{$search}%");
     }
     /**
      * [rankings description]

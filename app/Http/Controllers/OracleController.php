@@ -133,7 +133,7 @@ class OracleController extends Controller
                
                 
             }
-
+         
             $user = User::create($data['user']);
             $user->roles()->attach($oracle->mapminerRole->role_id);
             $person = $user->person()->create($data['person']);

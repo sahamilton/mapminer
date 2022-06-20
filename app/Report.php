@@ -9,6 +9,8 @@ class Report extends Model
     
     
     public $fillable = ['report', 'description', 'details', 'job', 'export', 'public', 'filename'];
+
+    public $managerRoles = [3,6,7,9];
     
     /**
      * [company description]
@@ -105,6 +107,19 @@ class Report extends Model
     public function scopePublicReports($query)
     {
         return $query->where('public', 1);
+    }
+
+    /**
+     * [scopeSearch description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $search [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSearch($query, $search)
+    {
+        return  $query->where('report', 'like', "%{$search}%");
     }
 
 }

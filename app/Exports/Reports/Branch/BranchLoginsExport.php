@@ -37,12 +37,12 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
      * @param Array      $period   [description]
      * @param Array|null $branches [description]
      */
-    public function __construct(Report $report, Array $period, Array $branches=null)
+    public function __construct(Array $period, Array $branches=null)
     {
         $this->period = $period;
         $this->branches = $branches;
         $this->diff = $this->period['from']->diff($this->period['to'])->days +1;
-        $this->report = $report;
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
     }
     /**
      * [headings description]

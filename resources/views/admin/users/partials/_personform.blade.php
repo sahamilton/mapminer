@@ -65,7 +65,7 @@
 	<x-form-select
 		multiple 
 		many-relation
-		name="branchesServiced"
+		name="branchesServiced[]"
 		label="Branches Managed:"
 		:options="$branches"
 		placeholder="Choose..." 

@@ -17,7 +17,7 @@ class Branch extends Model
     ];
     public $incrementing = false;
 
-    public $branchManagerRole = 9;
+    public $branchManagerRole = [9];
     public $branchRoles = [3,5,9,11,17];
     public $branchTeamRoles = [9,17];
     public $businessManagerRole = 11;
@@ -331,7 +331,7 @@ class Branch extends Model
     public function manager()
     {
         return $this->belongsToMany(Person::class)
-            ->wherePivot('role_id', $this->branchManagerRole);
+            ->wherePivotIn('role_id', $this->branchManagerRole);
     }
 
     public function branchteam()

@@ -46,7 +46,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     {
         $this->period = $period;
         $this->branches = $branches;
-        $this->report = Report::where('export', 'BranchStatsExport')->first();
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
         
     }
 

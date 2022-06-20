@@ -85,6 +85,8 @@ class OracleList extends Component
                     )->when(
                         $this->linked == 'can', function ($q) {
                             $q->doesntHave('mapminerUser')
+                            ->has('branch')
+
                             ->has('oracleManager.mapminerUser');
                         }
                     );  

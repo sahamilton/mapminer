@@ -24,6 +24,7 @@ class NearbyLocations extends Component
     public $perPage =10;
     public $accounttype = 0;
     public $search='';
+    public array $myBranches;
     public $leadtype='lead';
 
 
@@ -50,9 +51,14 @@ class NearbyLocations extends Component
 
     public function mount()
     {
+       
+       
+        $this->myBranches = auth()->user()->person->getMyBranches();
         $geocode = new Location;
-        $this->location = $geocode->getMyPosition();
-        $this->address = $this->location->address;
+        $this->location = $geocode->getMyPosition(); 
+        $this->address = $this->location->address; 
+        @ray($this->myBranches);
+        
     }
     /**
      * [render description]
@@ -85,20 +91,43 @@ class NearbyLocations extends Component
                     ->when(
                         $this->leadtype !='all', function($q) {
                             $q->when(
-                                $this->leadtype==="lead", function ($q) {
-                                    $q->doesntHave('claimedByBranch');
+                                $this->leadtype === "lead", function ($q) {
+                                    $q->doesntHave('assignedToBranch');
                                 }
                             )->when(
-                                $this->leadtype==="customer", function ($q) {
-                                    $q->whereNotNull('isCustomer');
+                                $this->leadtype === "customer", function ($q) {
+                                    $q->whereNotNull('isCustomer')
+                                      ->whereHas('claimedByBranch', function ($q) {
+                                            $q->whereIn('branches.id', $this->myBranches);
+                                        }
+                                    );
                                 }
                             )->when(
-                                $this->leadtype==="opportunity", function ($q) {
-                                    $q->has('openOpportunities');
+                                $this->leadtype === "opportunity", function ($q) {
+                                    $q->has('openOpportunities')
+                                    ->whereHas('claimedByBranch', function ($q) {
+                                            $q->whereIn('branches.id', $this->myBranches);
+                                        }
+                                    );
                                 }
                             )->when(
                                 $this->leadtype==="branchlead", function ($q) {
-                                    $q->has('claimedByBranch');
+                                    $q->whereHas('claimedByBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->myBranches);
+                                    });
+                                }
+                            )->when(
+                                $this->leadtype === "otherbranchlead", function ($q) {
+                                    $q->whereHas('claimedByBranch', function ($q) {
+                                        $q->whereNotIn('branches.id', $this->myBranches);
+                                    });
+                                }
+                            )
+                            ->when(
+                                $this->leadtype === "offered", function ($q) {
+                                    $q->whereHas('offeredToBranch', function ($q) {
+                                        $q->whereIn('branches.id', $this->myBranches);
+                                    });
                                 }
                             );
                         }
@@ -111,7 +140,14 @@ class NearbyLocations extends Component
                 'accounttypes'=>$this->_getaccountTypes(),
                 'companies'=>$this->_getCompanies(),
                 'distances'=>[5=>5,10=>10,25=>25, 50=>50,100=>100],
-                'leadtypes' =>['all'=>'All', 'opportunity'=>"Leads with active opportunities" , 'customer'=>'Customer leads', 'branchlead' => 'Branch leads', 'lead'=>'Unassigned leads'],
+                'leadtypes' =>[
+                    'all'=>'All', 
+                    'opportunity'=>"Leads with active opportunities" , 
+                    'customer'=>'Customer leads', 
+                    'branchlead' => 'My Branch leads',
+                    'offered'=>"Offered Leads", 
+                    'otherbranchlead' => 'Other Branch leads',
+                    'lead'=>'Unassigned leads'],
 
             ]
         );
@@ -129,6 +165,8 @@ class NearbyLocations extends Component
             $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
             $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
             $this->location->address = $this->address;
+            //update session
+            session()->put('geo', ['lat'=>$this->location->lat, 'lng'=>$this->location->lng, 'fulladdress'=>$this->location->address]);
         }
     }
 

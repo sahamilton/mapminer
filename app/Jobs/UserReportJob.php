@@ -51,25 +51,21 @@ class UserReportJob implements ShouldQueue
     public function handle()
     {
         $distribution = $this->_getDistribution();
-       
+        
         foreach ($distribution as $recipient) {
+            @ray($recipient);
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
-           
-            $export = $this->_getExportClass();
             
-            (new $export($this->period, [$this->manager]))
-                ->store($this->file, 'reports')
-                ->chain(
-                    [
-                        new ReportReadyJob(
-                            $recipient, 
-                            $this->period, 
-                            $this->file, 
-                            $this->report
-                        )
-                    ]
-                )->onQueue('reports');
+            $export = $this->_getExportClass();
+         
+
+
+       
+
+            (new $export($this->period, $this->manager))
+                ->store($this->file, 'reports');
+                
             
         }
     }
@@ -83,6 +79,7 @@ class UserReportJob implements ShouldQueue
         return 
                 strtolower(
                     Str::slug(
+                        $this->manager->fullName()." ".
                         $this->report->report." ".
                         $this->report->filename ." ". 
                         $this->period['from']->format('Y_m_d'), 
@@ -96,7 +93,7 @@ class UserReportJob implements ShouldQueue
     {
         if ($this->manager) {
 
-            return Person::findOrFail($this->manager)->getMyBranches();
+            return $this->manager->getMyBranches();
         }
         return $recipient->person->getMyBranches();
     }

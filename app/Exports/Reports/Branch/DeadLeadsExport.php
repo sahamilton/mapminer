@@ -34,11 +34,11 @@ class DeadLeadsExport implements FromQuery, ShouldQueue, WithHeadings,WithMappin
      * @param array      $period   [description]
      * @param array|null $branches [description]
      */
-    public function __construct(Report $report, Array $period, Array $branches = null)
+    public function __construct(Array $period, Array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
-        $this->report = $report;
+        $this->report = Report::where('export', class_basename($this))->firstOrFail();
     }
     /**
      * [headings description]
@@ -114,24 +114,5 @@ class DeadLeadsExport implements FromQuery, ShouldQueue, WithHeadings,WithMappin
             }
         )->deadLeads($this->period);
     }
-    /**
-     * [view description].
-     *
-     * @return [type] [description]
     
-    public function view(): View
-    {
-        if ($this->branches) {
-            $branch = Branch::whereIn('id', $this->branches);
-        } else {
-            $branch = new Branch;
-        }
-
-        $branches = $branch->deadLeads($this->period)
-            ->with('manager')->get();
-
-        $period = $this->period;
-
-        return view('reports.deadleads', compact('branches', 'period'));
-    } */
 }
