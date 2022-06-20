@@ -74,6 +74,3 @@
 @if(isset($user))
 @endbind
 @endif
-
-<!-- ./ servicelines -->
-

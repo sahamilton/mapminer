@@ -27,6 +27,7 @@ class UserFormRequest extends FormRequest
      */
     public function rules(Request $request)
     {
+       
         $salesrules = [];
         $branchrules = [];
         $oracle = [];
@@ -45,8 +46,8 @@ class UserFormRequest extends FormRequest
             $salesrules = ['reports_to'=>'required'];
         }
         if (count(array_intersect(request('roles'), [9])) > 0) {
-            $branchrules = ['branches'=>'required_without:branchstring',
-                        'branchstring'=>'required_without:branches', ];
+            $branchrules = ['branchesServiced' => 'required_without:branchstring',
+                        'branchstring'=>'required_without:branchesServiced', ];
         }
         if (request('oracle')==1) {
             $oracle =[
@@ -59,7 +60,7 @@ class UserFormRequest extends FormRequest
                 'employee_id' => 'required|unique:users,employee_id,'.request()->segment(3),
             ];
         }
-
+     
         return array_merge($salesrules, $branchrules, $oracle, $rules);
     }
 
