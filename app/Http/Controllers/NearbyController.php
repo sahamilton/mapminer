@@ -55,7 +55,10 @@ class NearbyController extends Controller
 
             return response()->view('companies.nearby');
             break;
+         case 'branches':
 
+            return response()->view('branches.index');
+            break;
         default: 
             return redirect()->back()->withWarning('Not a valid path');
             break;

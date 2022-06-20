@@ -195,6 +195,7 @@ trait Geocode
     public function scopeDistanceTo($query, $location) 
     {
 
+     
         if(is_null($query->getQuery()->columns)) {
             $query->select('*');
         }

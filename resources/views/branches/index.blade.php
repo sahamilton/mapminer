@@ -9,16 +9,7 @@
  Create New Branch</a>  </div>
 @endif
 
-<h1>All Branches</h1>
-
-
-<?php $route ='branches.state';?>
-
-<p><a href="{{route('branches.map')}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a>
-
-
-@include('maps.partials._form')
-@livewire('branch-table')
+<livewire:branch-table />)
 
 @include('partials._scripts')
 @include('partials._modal')

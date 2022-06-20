@@ -21,17 +21,7 @@
         @endif
         </td>
 
-        <td>{{$branch->street}} {{$branch->suite}}</td>
-
-        <td>{{$branch->city}}</td>
-
-        <td>
-                <a href="{{route('branches.statelist',$branch->state)}}"
-                 title="See all {{$branch->state}} state branches">
-                    {{$branch->state}}
-                </a>
-
-        </td>
+        <td>{{$branch->fullAddress()}}</td>
 
         <td>
                 @if(!is_null($branch->region))
@@ -54,6 +44,7 @@
                     @endforeach
                 @endif
         </td>
+        <td>{{$branch->distance ? number_format($branch->distance,1). ' miles' :''}}</td>
         @can('manage_branches')
         <td>
         
