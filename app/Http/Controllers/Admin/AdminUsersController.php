@@ -244,21 +244,21 @@ class AdminUsersController extends BaseController
         
         if ($user) {
             $user->load('serviceline', 'person', 'person.branchesServiced', 'person.industryfocus', 'roles');
-            $roles = $this->role->orderBy('display_name')->get();
-            $permissions = $this->permission->orderBy('display_name')->get();
-
-
+            $roles = Role::orderBy('display_name')->get();
+           
+            $permissions = Permission::orderBy('display_name')->get();
+         
             $title = 'Update user';
 
             $mode = 'edit';
             $managers = $this->_getManagerList();
             $branchesServiced = $user->person->branchesServiced()->pluck('branchname', 'id')->toArray();
-           
+         
             $branches = $this->_getUsersBranches($user, $branchesServiced);
 
             $verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-         
+            
             return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals', 'title', 'mode', 'managers', 'servicelines', 'branches', 'branchesServiced'));
         } else {
             return redirect()->to(route('users.index'))->with('error', 'User does not exist');
@@ -553,8 +553,9 @@ class AdminUsersController extends BaseController
                     $q->whereIn('role_id', $managerroles);
                 }
             )
+            
             ->get();
-        return $managers->orderBy('post_name')->pluck('post_name', 'id')->toArray();
+        return $managers->sortBy('post_name')->pluck('post_name', 'id')->toArray();
     }
 
 
