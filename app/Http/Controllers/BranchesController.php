@@ -74,9 +74,13 @@ class BranchesController extends BaseController
      * 
      * @return [type] [description]
      */
-    public function index()
+    public function index(Request $request)
     {
-       
+        if (request()->has('state')){
+            $state = request('state');
+            return response()->view('branches.index', compact('state'));
+        }
+
         return response()->view('branches.index');
     }
 
@@ -96,7 +100,7 @@ class BranchesController extends BaseController
         
         $servicelines = $this->serviceline->all();
         $allstates = $this->branch->allstates();
-    
+     
         return response()->view('branches.map', compact('servicelines', 'allstates'));
     }
     
@@ -546,7 +550,9 @@ class BranchesController extends BaseController
      */
     public function statemap(Request $request, $state=null)
     {
-        
+        if ($state === 'All') {
+            return $this->mapall();
+        }
         $servicelines = $this->serviceline->whereIn('id', $this->userServiceLines)
             ->get();
 
@@ -559,6 +565,7 @@ class BranchesController extends BaseController
         $data = $this->state->where('statecode', $state)
             ->firstOrFail()->toArray();
         $data['type'] = 'branch';
+        @ray($data);
         return response()->view(
             'branches.statemap', 
             compact('data', 'servicelines', 'allstates')
@@ -665,8 +672,7 @@ class BranchesController extends BaseController
             )
             ->where('state', '=', $statecode)
             ->orderBy('id')
-            ->get();
-
+            ->get();   
         $state = \App\State::where('statecode', '=', $statecode)->first();
         $allstates = $this->branch->allStates();
         return response()->view(

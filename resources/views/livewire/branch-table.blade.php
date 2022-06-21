@@ -1,12 +1,13 @@
 <div>
     <h2> 
-       Branches
+       {{$state}} Branches
     </h2>
     
     @if($distance !='all')    
    <h4> within {{$distance}} miles of {{$address}}</h4>
     @endif
-    <div class="row" style="margin-top:5px">
+    <p><a href="{{route('branches.showstatemap', $state)}}">Show Map View</a></p>
+    <div class="row mt-4" >
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             
@@ -16,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="row" style="margin-top:5px">
+    <div class = "row my-2" >
 
         <div class="col form-inline">
             @if($distance === 'all')
@@ -48,13 +49,13 @@
             </form>
             @if(auth()->user()->hasRole(['admin', 'sales_ops']))
            
-            Managers: &nbsp;
-            <select wire:model="manager" class="form-control">
-                <option value="All">All</option>
-                <option value="with">With manager</option>
-                <option value="without">Without manager</option>
-                
-            </select>
+                Managers: &nbsp;
+                <select wire:model="manager" class="form-control">
+                    <option value="All">All</option>
+                    <option value="with">With manager</option>
+                    <option value="without">Without manager</option>
+                    
+                </select>
             @endif
         </div>
     </div>
@@ -77,7 +78,12 @@
             
             <th>Region</th>
             <th>Manager</th>
-            <th>Distance</th>
+            <th>
+                <a wire:click.prevent="sortBy('distance')" role="button" href="#">
+                    Distance
+                 @include('includes._sort-icon', ['field' => 'distance'])
+                </a>
+            </th>
             @can('manage_branches')
             <th>Actions</th>
             @endcan

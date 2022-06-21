@@ -46,9 +46,12 @@ class BranchTable extends Component
         $this->sortField = $field;
     }
 
-    public function mount()
+    public function mount($state = null)
     {
-        
+        if (isset($state)) {
+            $this->state = $state;
+            $this->distance = 'all';
+        }
         $this->userServiceLines = auth()->user()->currentServiceLineIds();
         $geocode = new Location;
         $this->location = $geocode->getMyPosition(); 
@@ -106,9 +109,9 @@ class BranchTable extends Component
                         }
                     )
                     ->when(
-                            $this->distance != 'all', function ($q) {
-                                $q->nearby($this->location, $this->distance);
-                            }, function ($q) {
+                        $this->distance != 'all', function ($q) {
+                            $q->nearby($this->location, $this->distance);
+                        }, function ($q) {
                             $q->distanceTo($this->location);
                         }
                     )

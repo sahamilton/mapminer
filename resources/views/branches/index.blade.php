@@ -9,7 +9,11 @@
  Create New Branch</a>  </div>
 @endif
 
-<livewire:branch-table />)
+@if(isset($state))
+    <livewire:branch-table :state='$state' />
+@else
+    <livewire:branch-table />
+@endif
 
 @include('partials._scripts')
 @include('partials._modal')

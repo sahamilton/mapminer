@@ -9,11 +9,11 @@
     </a>
 </p>
 
-@php $route ='branches.statemap';@endphp
+  @php $route ='branches.index';@endphp
   @include('branches/partials/_state')
   @include('maps.partials._form')  
   @include('partials._branchesmap')
-  @include('maps/partials/_keys')
+  
 
     <div id="map" style="width: 800px; height: 600px"></div>
 

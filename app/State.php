@@ -24,7 +24,7 @@ class State extends Model
      */
     public function branches()
     {
-        return $this->hasMany(Branch::class, 'statecode', 'state');
+        return $this->hasMany(Branch::class, 'state', 'statecode');
     }
 
     /**

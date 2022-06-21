@@ -1,36 +1,19 @@
 
 @php
-$statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
-		foreach ($statelist as $state) {
-			$states[]= $state->state;
-			
-		}
+$statelist = App\State::has('branches')->orderBy('statecode')->pluck('fullstate', 'statecode')->toArray();
+
 @endphp
 
-<form method="post" id="selectForm" action ="{{route($route)}}" >
-@csrf
+<form class = "form-inline" 
+	method="post" action="{{route('branches.statemap')}}" 
+	role = "form">
 
-
-<label>Search for branches in </label>
-       <select name='state' class="btn btn-mini" onchange='this.form.submit()'>
-           @foreach ($allstates as $statecode)
-
-           @if(isset($state) && $statecode->statecode == $state->state)
-				<option selected value="{{$statecode->statecode}}">{{$statecode->statecode}}</option>
-           @else
-           		<option value="{{$statecode->statecode}}">{{$statecode->statecode}}</option>
-           @endif
-				
-           @endforeach
-        </select>
- 
-
-         <button type="submit"  class= "btn btn-default btn-xs"><i class="fas fa-search" aria-hidden="true"></i> Search!</button>
-
-        </form>
-		
-		<script>
-
-
-</script>
+	@csrf
+     <div class = "form-group">
+        
+        <x-form-select name="state" :options='$statelist' label="Branches in:" />
+        
+     </div>
+     
+     <button type = "submit" class = "btn btn-success">Submit</button>
 </form>
