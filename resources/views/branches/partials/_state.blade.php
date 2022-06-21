@@ -1,6 +1,11 @@
 
 @php
+
 $statelist = App\State::has('branches')->orderBy('statecode')->pluck('fullstate', 'statecode')->toArray();
+$add['All'] = 'All Branches';
+$statelist = array_merge($add , $statelist);
+asort($statelist);
+@ray($statelist)
 
 @endphp
 

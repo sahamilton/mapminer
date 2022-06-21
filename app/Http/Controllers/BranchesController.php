@@ -550,7 +550,8 @@ class BranchesController extends BaseController
      */
     public function statemap(Request $request, $state=null)
     {
-        if ($state === 'All') {
+        
+        if ($state === 'All' || request('state')==='All') {
             return $this->mapall();
         }
         $servicelines = $this->serviceline->whereIn('id', $this->userServiceLines)
@@ -565,7 +566,7 @@ class BranchesController extends BaseController
         $data = $this->state->where('statecode', $state)
             ->firstOrFail()->toArray();
         $data['type'] = 'branch';
-        @ray($data);
+   
         return response()->view(
             'branches.statemap', 
             compact('data', 'servicelines', 'allstates')
