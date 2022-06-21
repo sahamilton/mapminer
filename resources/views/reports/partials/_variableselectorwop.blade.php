@@ -28,25 +28,9 @@
             >
            @csrf
           
-          <div class="form-group form-group-lg">
-              <label for='manager'>Manager:</label>
-              <select class="form-control" 
-                 
-                  name="manager" 
-                  
-                  id="manager" 
-                  value="{{  old('manager')}}">
-                  <option value="">All Managers
-                  </option>
-                  @foreach ($managers as $manager)
-                  <option value="{{$manager->id}}">{{$manager->fullName()}}
-                  </option>
-                  @endforeach
-              </select>
-              <span class="help-block">
-                  <strong>{{$errors->has('manager') ? $errors->first('manager')  : ''}}</strong>
-              </span>
-          </div>
+           @if(isset($managers))
+          <x-form-select class="form-group-lg" name="manager" label="Manager:" :options="$managers" />
+          @endif
           @if(auth()->user()->hasRole('admin'))
               @if( $report->object == 'Company')
                   @include('reports.partials._companyselector')
