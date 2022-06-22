@@ -550,7 +550,7 @@ class BranchesController extends BaseController
      */
     public function statemap(Request $request, $state=null)
     {
-        y
+    
         if ($state === 'All' || request('state')==='All') {
             return $this->mapall();
         }
