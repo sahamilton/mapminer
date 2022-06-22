@@ -24,7 +24,7 @@ class BranchTable extends Component
     public $paginationTheme = 'bootstrap';
     public $manager = 'All';
     public Location $location;
-
+    
     public function updatingSearch()
     {
         $this->resetPage();
@@ -53,9 +53,7 @@ class BranchTable extends Component
             $this->distance = 'all';
         }
         $this->userServiceLines = auth()->user()->currentServiceLineIds();
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
+        $this->_geoCodeHomeAddress();
     }
     public function render()
     {
@@ -136,13 +134,24 @@ class BranchTable extends Component
         );
         
     }
+    
+    private function _geoCodeHomeAddress()
+    {
+        $geocode = new Location;
+        $this->location = $geocode->getMyPosition(); 
+        $this->address = $this->location->address; 
+    }
+    
+
     private function _getLocation()
     {
-        if(!$this->location || $this->address != $this->location->address) {
+        if(! $this->address) {
+           $this->_geoCodeHomeAddress();
+        }
+        if(! $this->location || $this->address != $this->location->address) {
             $this->updateAddress();
         }
     }
-
     /**
      * [updateAddress description]
      * 

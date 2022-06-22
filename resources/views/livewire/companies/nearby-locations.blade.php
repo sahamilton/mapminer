@@ -52,6 +52,7 @@
             <form wire:submit.prevent="updateAddress">
                 <input class="form-control" 
                     wire:model.defer="address"
+                    required
                     type="text" 
                     value="{{$address ? $address : 'Enter an address'}}"
                     />
