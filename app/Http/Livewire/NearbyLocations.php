@@ -56,10 +56,8 @@ class NearbyLocations extends Component
        
        
         $this->myBranches = auth()->user()->person->getMyBranches();
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
-        @ray($this->myBranches);
+        $this->_geoCodeHomeAddress(); 
+
         
     }
     /**
@@ -155,6 +153,9 @@ class NearbyLocations extends Component
      */
     public function updateAddress()
     {
+        if(! $this->address) {
+            $this->_geoCodeHomeAddress();
+        }
         if ($this->address != $this->location->address) {
             $geocode = app('geocoder')->geocode($this->address)->get();
             
@@ -180,7 +181,12 @@ class NearbyLocations extends Component
             ), 'nearbylocations.csv'
         );
     }
-
+    private function _geoCodeHomeAddress()
+    {
+        $geocode = new Location;
+        $this->location = $geocode->getMyPosition(); 
+        $this->address = $this->location->address; 
+    }
     private function _getaccountTypes()
     {
         return AccountType::orderBy('type')->pluck('type', 'id')->toArray();

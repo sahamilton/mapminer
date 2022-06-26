@@ -30,9 +30,9 @@
            <x-form-input type="date" name="fromdate" label="From:" />
            <x-form-input type="date" name="todate" label="To:" />
 
-          
+          @if(isset($managers))
           <x-form-select class="form-group-lg" name="manager" label="Manager:" :options="$managers" />
-         
+          @endif
           @if(auth()->user()->hasRole('admin'))
               @if( $report->object == 'Company')
                   @include('reports.partials._companyselector')

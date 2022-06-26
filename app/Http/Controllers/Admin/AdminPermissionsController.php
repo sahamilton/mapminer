@@ -58,8 +58,8 @@ class AdminPermissionsController extends BaseController
      */
     public function index()
     {
-        $permissions = $this->permission->with('roles')->get();
-        return response()->view('admin.permissions.index', compact('permissions'));
+        
+        return response()->view('admin.permissions.index');
     }
 
     /**

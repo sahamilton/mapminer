@@ -40,4 +40,9 @@ class Role extends Model
 
         return $currentPermissions;
     }
+
+    public function scopeSearch($query, $search)
+    {
+        $query->where('display_name',  'like', "%{$search}%");
+    }
 }

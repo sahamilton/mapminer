@@ -24,7 +24,7 @@ class BranchTable extends Component
     public $paginationTheme = 'bootstrap';
     public $manager = 'All';
     public Location $location;
-
+    
     public function updatingSearch()
     {
         $this->resetPage();
@@ -46,13 +46,14 @@ class BranchTable extends Component
         $this->sortField = $field;
     }
 
-    public function mount()
+    public function mount($state = null)
     {
-        
+        if (isset($state)) {
+            $this->state = $state;
+            $this->distance = 'all';
+        }
         $this->userServiceLines = auth()->user()->currentServiceLineIds();
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
+        $this->_geoCodeHomeAddress();
     }
     public function render()
     {
@@ -106,9 +107,9 @@ class BranchTable extends Component
                         }
                     )
                     ->when(
-                            $this->distance != 'all', function ($q) {
-                                $q->nearby($this->location, $this->distance);
-                            }, function ($q) {
+                        $this->distance != 'all', function ($q) {
+                            $q->nearby($this->location, $this->distance);
+                        }, function ($q) {
                             $q->distanceTo($this->location);
                         }
                     )
@@ -133,13 +134,24 @@ class BranchTable extends Component
         );
         
     }
+    
+    private function _geoCodeHomeAddress()
+    {
+        $geocode = new Location;
+        $this->location = $geocode->getMyPosition(); 
+        $this->address = $this->location->address; 
+    }
+    
+
     private function _getLocation()
     {
-        if(!$this->location || $this->address != $this->location->address) {
+        if(! $this->address) {
+           $this->_geoCodeHomeAddress();
+        }
+        if(! $this->location || $this->address != $this->location->address) {
             $this->updateAddress();
         }
     }
-
     /**
      * [updateAddress description]
      * 

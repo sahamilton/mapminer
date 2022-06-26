@@ -17,4 +17,9 @@ class Permission extends Model
     {
         return $this->belongsToMany(Role::class);
     }
+
+    public function scopeSearch($query, $search)
+    {
+        $query->where('display_name',  'like', "%{$search}%");
+    }
 }

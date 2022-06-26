@@ -41,6 +41,7 @@
                 <input class="form-control" 
                     required
                     wire:model.defer="address"
+                    required
                     type="text" 
                     value="{{$address ? $address : 'Enter an address'}}"
                     />

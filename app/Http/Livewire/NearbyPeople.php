@@ -41,10 +41,8 @@ class NearbyPeople extends Component
     public function mount()
     {
        
-
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
+        $this->_geoCodeHomeAddress();
+        
 
         
     }
@@ -87,7 +85,12 @@ class NearbyPeople extends Component
 
         );
     }
-
+    private function _geoCodeHomeAddress()
+    {
+        $geocode = new Location;
+        $this->location = $geocode->getMyPosition(); 
+        $this->address = $this->location->address; 
+    }
     private function _getRoles()
     {
         $roleslist =Role::pluck('display_name', 'id')->toArray();
@@ -100,7 +103,10 @@ class NearbyPeople extends Component
 
     private function _getLocation()
     {
-        if(!$this->location || $this->address != $this->location->address) {
+        if(! $this->address) {
+           $this->_geoCodeHomeAddress();
+        }
+        if(! $this->location || $this->address != $this->location->address) {
             $this->updateAddress();
         }
     }
@@ -112,6 +118,7 @@ class NearbyPeople extends Component
      */
     public function updateAddress()
     {
+       
         if ($this->address != $this->location->address) {
             $geocode = app('geocoder')->geocode($this->address)->get();
             

@@ -54,7 +54,7 @@ class AdminRolesController extends BaseController
 
         $roles = $this->role->with('assignedRoles')->get();
         // Show the page
-        return response()->view('admin/roles/index', compact('roles', 'title'));
+        return response()->view('admin.roles.index',);
     }
 
     /**

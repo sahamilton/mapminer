@@ -44,7 +44,10 @@
                     @endforeach
                 @endif
         </td>
-        <td>{{$branch->distance ? number_format($branch->distance,1). ' miles' :''}}</td>
+        <td>
+            
+                {{$branch->distance ? number_format($branch->distance,1). ' miles' :''}}
+        </td>
         @can('manage_branches')
         <td>
         
