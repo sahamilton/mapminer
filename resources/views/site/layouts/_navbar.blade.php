@@ -30,8 +30,8 @@
             <i class="far fa-building" aria-hidden="true"> </i> Accounts</a>
 
           <a class="dropdown-item" href="{{route('lead.list')}}">
-            <i class="fa-solid fa-location-arrow"> </i>
-                 Leads</a>
+            <i class="fa-solid fa-map-pin"></i>
+                 Locations</a>
           <a class="dropdown-item" href="{{{ route('branches.map') }}}">
             <i class="fab fa-pagelines"></i> Branches</a>
           <a class="dropdown-item" href="{{route('nearby.show', 'people')}}">
