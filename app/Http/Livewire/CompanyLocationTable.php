@@ -83,7 +83,7 @@ class CompanyLocationTable extends Component
                     ->when(
                         $this->claimed != 'All', function ($q) {
                             $q->when(
-                                $this->claimed == 'claimed', function ($q) {
+                                $this->claimed === 'claimed', function ($q) {
                                     $q->has('assignedToBranch');
                                 }, function ($q) {
                                     $q->doesntHave('assignedToBranch');

@@ -10,10 +10,11 @@ use Livewire\WithPagination;
 use App\Exports\ExportNearbyLocations;
 use Excel;
 
+
     
 class NearbyLocations extends Component
 {
-    use WithPagination;
+    use WithPagination, NearbyGeocoder;
     protected $paginationTheme = 'bootstrap';
     public Location $location;
     public $company_ids='all';
@@ -33,10 +34,14 @@ class NearbyLocations extends Component
         $this->resetPage();
     }
 
-    public function updatingAccountype()
+    public function updatingDistance()
     {
-        $this->$company_ids[0] = 'All';
+        $this->resetPage();
     }
+
+    protected $rules = [
+        'address' => 'required|min:8',
+    ];
 
     public function sortBy($field)
     {
@@ -77,7 +82,7 @@ class NearbyLocations extends Component
                             $q->where('company_id', $this->company_ids);
                         }
                     )
-                    ->when(
+                   /* ->when(
                         $this->accounttype != '0', function ($q) {
                             $q->whereHas(
                                 'company', function ($q) {
@@ -85,8 +90,9 @@ class NearbyLocations extends Component
                                 }
                             );
                         }
-                    )
-                    ->when(
+                    )*/
+                    ->doesntHave('assignedToBranch')
+                    /*->when(
                         $this->leadtype !='all', function($q) {
                             $q->when(
                                 $this->leadtype === "lead", function ($q) {
@@ -129,46 +135,19 @@ class NearbyLocations extends Component
                                 }
                             );
                         }
-                    )    
+                    ) */   
                     ->nearby($this->location, $this->distance)
-                    ->with('company', 'assignedToBranch')
+                    ->with('company', 'assignedToBranch', 'leadsource')
                     ->withCount('contacts')
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'accounttypes'=>$this->_getaccountTypes(),
+                
                 'companies'=>$this->_getCompanies(),
-                'distances'=>[5=>5,10=>10,25=>25, 50=>50,100=>100],
-                'leadtypes' =>[
-                    'all'=>'All', 
-                    'opportunity'=>"Leads with active opportunities" , 
-                    'customer'=>'Customer leads', 
-                    'branchlead' => 'My Branch leads',
-                    'offered'=>"Offered Leads", 
-                    'otherbranchlead' => 'Other Branch leads',
-                    'lead'=>'Unassigned leads'],
+                'distances'=>[1=>1,5=>5,10=>10,25=>25],
+                
 
             ]
         );
-    }
-    /**
-     * [updateAddress description]
-     * 
-     * @return [type] [description]
-     */
-    public function updateAddress()
-    {
-        if(! $this->address) {
-            $this->_geoCodeHomeAddress();
-        }
-        if ($this->address != $this->location->address) {
-            $geocode = app('geocoder')->geocode($this->address)->get();
-            
-            $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
-            $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
-            $this->location->address = $this->address;
-            //update session
-            session()->put('geo', ['lat'=>$this->location->lat, 'lng'=>$this->location->lng, 'fulladdress'=>$this->location->address]);
-        }
     }
 
     public function export()
@@ -184,36 +163,26 @@ class NearbyLocations extends Component
             ), 'nearbylocations.csv'
         );
     }
-    private function _geoCodeHomeAddress()
-    {
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
-    }
-    private function _getaccountTypes()
-    {
-        return AccountType::orderBy('type')->pluck('type', 'id')->toArray();
-        
-    }
+    
+    
 
     private function _getCompanies() :array
     {
-        $companies=Company::when(
-            $this->accounttype != '0', function ($q) {
-
-                $q->where('companies.accounttypes_id', $this->accounttype);
-            }
-        )->whereHas(
-            'locations', function ($q) {
+        
+      
+        $companies=Company::has('unassigned')
+        ->whereHas(
+            'unassigned', function ($q) {
                 $q->nearby($this->location, $this->distance);
             }
         )
+
         ->orderBy('companyname')
         ->pluck('companyname', 'id')
         ->toArray();
         
         asort($companies);
-        $all = ['all'=> 'All'];
+        $all = ['all'=> 'All Companies'];
         $companies = array_replace($all, $companies);
         
         return $companies;

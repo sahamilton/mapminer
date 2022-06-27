@@ -31,7 +31,7 @@
             <i class="fas fa-filter text-danger"></i>
             <x-form-select  class="mx-4" wire:model='state'  name="distance" label='State:' :options='$allstates' />
 
-            <x-form-select  class="mx-4" wire:model='claimed'  name="distance" label='Claimed:' :options='$status' />
+            <x-form-select  class="mx-4" wire:model='claimed'  name="claimed" label='Claimed:' :options='$status' />
            
             <x-form-select  class="mx-4" wire:model='myBranch'  name="myBranch" label='My Leads:' :options='$owned' />
             

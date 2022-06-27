@@ -9,7 +9,7 @@ use App\Location;
 use App\Person;
 class NearbyPeople extends Component
 {
-    use WithPagination;
+    use WithPagination, NearbyGeocoder;
     protected $paginationTheme = 'bootstrap';
     
     public $address;
@@ -24,6 +24,8 @@ class NearbyPeople extends Component
     public function updatingSearch()
     {
         $this->resetPage();
+        $this->distance = 'all';
+        $this->roletype= 'all';
     }
 
     
@@ -51,7 +53,7 @@ class NearbyPeople extends Component
     {
         
 
-        $this->_getLocation();
+        $this->updateAddress();
         return view('livewire.nearby-people',
 
             [
@@ -85,12 +87,7 @@ class NearbyPeople extends Component
 
         );
     }
-    private function _geoCodeHomeAddress()
-    {
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
-    }
+    
     private function _getRoles()
     {
         $roleslist =Role::pluck('display_name', 'id')->toArray();
@@ -101,32 +98,5 @@ class NearbyPeople extends Component
         return $list;
     }
 
-    private function _getLocation()
-    {
-        if(! $this->address) {
-           $this->_geoCodeHomeAddress();
-        }
-        if(! $this->location || $this->address != $this->location->address) {
-            $this->updateAddress();
-        }
-    }
-
-    /**
-     * [updateAddress description]
-     * 
-     * @return [type] [description]
-     */
-    public function updateAddress()
-    {
-       
-        if ($this->address != $this->location->address) {
-            $geocode = app('geocoder')->geocode($this->address)->get();
-            
-            $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
-            $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
-            $this->location->address = $this->address;
-            //update session
-            session()->put('geo', ['lat'=>$this->location->lat, 'lng'=>$this->location->lng, 'fulladdress'=>$this->location->address]);
-        }
-    }
+   
 }
