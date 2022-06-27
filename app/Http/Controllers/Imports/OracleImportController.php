@@ -48,9 +48,10 @@ class OracleImportController extends ImportController
     public function import(OracleImportFormRequest $request)
     {
         
-       
-        $data = $this->uploadfile(request()->file('upload'));
+        $file = request()->file('upload');
 
+        $data = $this->uploadfile(request()->file('upload'));
+        $data['originalFilename'] = $file->getClientOriginalName();
         $title="Map the Oracle import file fields";
         $requiredFields = $this->oracle->requiredfields;
         $data['type'] = request('type');

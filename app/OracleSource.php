@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OracleSource extends Model
 {
     use HasFactory;
-    public $fillable = ['user_id', 'sourcefile', 'type'];
+    public $fillable = ['user_id', 'sourcefile', 'type', 'originalfilename'];
 
     public function user()
     {

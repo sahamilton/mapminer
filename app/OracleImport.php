@@ -6,6 +6,7 @@ use App\OracleSource;
 use Illuminate\Database\Eloquent\Model;
 use PhpOffice\PhpSpreadsheet\Style\Conditional;
 use DB;
+use Illuminate\Http\Request;
 
 
 class OracleImport extends Imports
@@ -147,13 +148,16 @@ class OracleImport extends Imports
     }
 
     
-    private function _createSource($request)
+    private function _createSource(Request $request)
     {
+
         $data = [
             'user_id' => auth()->user()->id,
             'type'=>request('type'),
             'sourcefile' => $this->importfilename,
+            'originalfilename' => request('originalFilename'),
             ];
+      
         $source = OracleSource::create($data);
         $this->source_id = $source->id;
     }
