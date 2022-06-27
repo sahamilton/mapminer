@@ -12,7 +12,7 @@ use Livewire\WithPagination;
 class CompanyTable extends Component
 {
     
-    use WithPagination;
+    use WithPagination, NearbyGeocoder;
 
     public $perPage = 10;
     public $sortField = 'companyname';
@@ -34,7 +34,7 @@ class CompanyTable extends Component
 
     public function updatingAddress()
     {
-        $this->location = $this->_geoCodeAddress();
+        $this->resetPage();
     }
 
     public function sortBy($field)
@@ -72,7 +72,7 @@ class CompanyTable extends Component
 
     public function render()
     {
-        $this->_geoCodeAddress();
+        $this->updateAddress();
         return view(
             'livewire.company-table', [
             'companies' => Company::query()
@@ -120,10 +120,7 @@ class CompanyTable extends Component
         );
     }
 
-    private function _geoCodeAddress()
-    {
-
-    }
+    
 
     public function setType($type)
     {
