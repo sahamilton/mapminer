@@ -211,39 +211,8 @@ class BranchesController extends BaseController
     public function show(Branch $branch)
     {
         
-        $servicelines = $this->serviceline
-            ->whereIn('id', $this->userServiceLines)->get();
-        // need a try here 
-        // check to see that this branch can be seen by this user
-        // move to model
-        $data['branch'] = $this->branch
-            ->whereHas(
-                'servicelines', function ($q) {
-                    $q->whereIn('serviceline_id', $this->userServiceLines);
- 
-                }
-            )
-            ->findOrFail($branch->id);
-
-        $filtered = $this->branch->isFiltered(['companies'], ['vertical']);
-        
-        // in case of null results of manager search
-    
-        $data['fulladdress'] = $branch->fullAddress();
-        $data['urllocation'] ="api/mylocalaccounts";
-        $data['title'] ='National Account Locations';
-        $data['company']=null;
-        //$data['companyname']=NULL;
-        $data['latlng'] = $data['branch']->lat.":".$data['branch']->lng;
-        $data['distance'] = '10';
-
-
-        $roles = Role::pluck('display_name', 'id');
-
         return response()->view(
-            'branches.show', 
-            compact('data', 'servicelines', 'roles')
-        );
+            'branches.detail',compact('branch'));
     }
     /**
      * [showSalesTeam description]

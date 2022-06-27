@@ -132,7 +132,7 @@ Route::group(
         Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
            
         //   Branch Leads
-        Route::get('lead/list', ['as'=>'lead.list','uses'=>'MyLeadsController@list']);
+        Route::get('location/list', ['as'=>'lead.list','uses'=>'MyLeadsController@list']);
         Route::get('branch/leads/{branch?}', ['as'=>'branch.leads', 'uses'=>'MyLeadsController@index']);
         Route::get('branch/{branch}/leads', ['as'=>'lead.branch', 'uses'=>'MyLeadsController@branchLeads']);
         Route::post('branch/lead', ['as'=>'leads.branch', 'uses'=>'MyLeadsController@branchLeads']);

@@ -37,6 +37,7 @@ class NearbyLocations extends Component
     public function updatingDistance()
     {
         $this->resetPage();
+        $this->company_ids = 'all';
     }
 
     protected $rules = [
