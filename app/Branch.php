@@ -263,7 +263,7 @@ class Branch extends Model
     {
         return $this->manager->map(
             function ($manager) {
-                return ['name'=>$manager->fullName(), 'email'=>$manager->userdetails->email];
+                return $manager->fullEmail();
             }
         )
         ->toArray();
