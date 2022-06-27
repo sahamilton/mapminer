@@ -25,7 +25,7 @@
        
     </div>
     
-    
+    @include('notifications')
 
     <div class="row mb-4">
         <x-form-select wire:model="roletype"

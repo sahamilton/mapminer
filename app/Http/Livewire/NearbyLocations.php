@@ -10,10 +10,11 @@ use Livewire\WithPagination;
 use App\Exports\ExportNearbyLocations;
 use Excel;
 
+
     
 class NearbyLocations extends Component
 {
-    use WithPagination;
+    use WithPagination, NearbyGeocoder;
     protected $paginationTheme = 'bootstrap';
     public Location $location;
     public $company_ids='all';
@@ -38,7 +39,9 @@ class NearbyLocations extends Component
         $this->resetPage();
     }
 
-    
+    protected $rules = [
+        'address' => 'required|min:8',
+    ];
 
     public function sortBy($field)
     {
@@ -138,34 +141,13 @@ class NearbyLocations extends Component
                     ->withCount('contacts')
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'accounttypes'=>$this->_getaccountTypes(),
+                
                 'companies'=>$this->_getCompanies(),
                 'distances'=>[1=>1,5=>5,10=>10,25=>25],
                 
 
             ]
         );
-    }
-    /**
-     * [updateAddress description]
-     * 
-     * @return [type] [description]
-     */
-    public function updateAddress()
-    {
-        if(! $this->address) {
-            $this->_geoCodeHomeAddress();
-        }
-        if ($this->address != $this->location->address) {
-            $geocode = app('geocoder')->geocode($this->address)->get();
-            
-            $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
-            $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
-            $this->location->address = $this->address;
-            //update session
-            session()->put('geo', ['lat'=>$this->location->lat, 'lng'=>$this->location->lng, 'fulladdress'=>$this->location->address]);
-           
-        }
     }
 
     public function export()
@@ -181,17 +163,8 @@ class NearbyLocations extends Component
             ), 'nearbylocations.csv'
         );
     }
-    private function _geoCodeHomeAddress()
-    {
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
-    }
-    private function _getaccountTypes()
-    {
-        return AccountType::orderBy('type')->pluck('type', 'id')->toArray();
-        
-    }
+    
+    
 
     private function _getCompanies() :array
     {

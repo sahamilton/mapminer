@@ -1,4 +1,6 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
+
+
    <livewire:nearby-locations />
 @endsection

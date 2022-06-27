@@ -1,4 +1,5 @@
 <div>
+
     <h2>Locations
        
         
@@ -24,7 +25,7 @@
        
     </div>
     
-    
+    @include('notifications')
 
     <div class="row mb-4">
        

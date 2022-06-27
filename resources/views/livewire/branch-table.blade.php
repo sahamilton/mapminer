@@ -59,7 +59,9 @@
                 </select>
             @endif
         </div>
+
     </div>
+    @include("notifications")
     <div class="row">
         <table 
             class='table table-striped table-bordered table-condensed table-hover'>

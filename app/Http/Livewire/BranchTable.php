@@ -10,7 +10,7 @@ use App\Location;
 
 class BranchTable extends Component
 {
-    use WithPagination;
+    use WithPagination, NearbyGeocoder;
 
     public $perPage = 10;
     public $sortField = 'id';
@@ -57,7 +57,7 @@ class BranchTable extends Component
     }
     public function render()
     {
-        $this->_getLocation();
+        $this->updateAddress();
         return view(
             'livewire.branch-table', [
                 'branches'=>Branch::query()
@@ -135,38 +135,5 @@ class BranchTable extends Component
         
     }
     
-    private function _geoCodeHomeAddress()
-    {
-        $geocode = new Location;
-        $this->location = $geocode->getMyPosition(); 
-        $this->address = $this->location->address; 
-    }
-    
-
-    private function _getLocation()
-    {
-        if(! $this->address) {
-           $this->_geoCodeHomeAddress();
-        }
-        if(! $this->location || $this->address != $this->location->address) {
-            $this->updateAddress();
-        }
-    }
-    /**
-     * [updateAddress description]
-     * 
-     * @return [type] [description]
-     */
-    public function updateAddress()
-    {
-        if ($this->address != $this->location->address) {
-            $geocode = app('geocoder')->geocode($this->address)->get();
-            
-            $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
-            $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
-            $this->location->address = $this->address;
-            //update session
-            session()->put('geo', ['lat'=>$this->location->lat, 'lng'=>$this->location->lng, 'fulladdress'=>$this->location->address]);
-        }
-    }
+   
 }
