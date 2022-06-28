@@ -3,13 +3,14 @@
 
 {{$user->person->firstname}},
 
-Welcome! You have been granted you access to the {{env('APP_NAME')}} system. 
+Welcome! You have been granted access to the {{env('APP_NAME')}} system. 
 
 This system provides information on branch sales and support opportunties and will allow you to 
 * Search for leads.
 * Add and track you own leads.
 * Record sales activities.
 * Create and track sales opportunities.
+* Manage your branch(es) team.
 
 Please note that information in the {{env('APP_NAME')}} is strictly confidential
 and offered only for company business.
