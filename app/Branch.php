@@ -232,6 +232,11 @@ class Branch extends Model
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
     }
+    /**
+     * [oraclelocation description]
+     * 
+     * @return [type] [description]
+     */
     public function oraclelocation()
     {
         return $this->hasMany(Oracle::class, 'location_name', 'oracle_location');

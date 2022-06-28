@@ -189,7 +189,7 @@ Route::group(
         Route::resource('/industryfocus', 'PersonIndustryController');
     
         //   Lead
-    
+        Route::get('leads',  ['as'=>'lead.assign', 'uses'=>'LeadsController@assign']);
         Route::post('lead/{address}/reassign', ['as'=>'lead.reassign', 'uses'=>'MyLeadsController@reassign']);
         //     Locations
         Route::get('search/leads', ['as'=>'search.leads', 'uses'=>'SearchController@leads']);

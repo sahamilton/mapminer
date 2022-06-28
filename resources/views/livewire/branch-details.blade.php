@@ -11,12 +11,14 @@
         </div>
     @endif
     <table class='table table-striped table-bordered table-condensed table-hover'>
+        <thead><th colspan=5>Per Mapminer Data</th></thead></tr>
     <thead>
         <th>Team Member</th>
         <th>Role(s)</th>
         <th>Phone</th>
         <th>Email</th>
         <th>Reports To</th>
+        <th>Manager Email</th>
     </thead>
     <tbody>
         @foreach ($branch->branchteam as $manager)
@@ -38,16 +40,37 @@
                 
             </td>
             <td>{{$manager->phone}}</td>
-            <td>{{$manager->userdetails->email}}</td>
+            <td><a href="mailto:{{$manager->userdetails->email}}">{{$manager->userdetails->email}}</a></td>
             <td>
                 @if($manager->reportsTo)
                     <a href="{{route('user.show', $manager->reportsTo->user_id)}}">
                         {{$manager->reportsTo->fullName()}}
+                       
                     </a>
                 @endif
-            </td>
+            </td> 
+            <td>
+                <a href="mailto:{{$manager->reportsTo->userdetails->email}}">{{$manager->reportsTo->userdetails->email}}</a>
         </tr>
         @endforeach
-    </tbody>
+    
+    <tr>
+        <thead><th colspan=5>Per Oracle Data</th></thead></tr>
+    @foreach ($branch->oraclelocation as $location)
+    <tr>
+        <td>{{$location->fullName()}}</td>
+        <td>{{$location->job_profile}}</td>
+        <td>{{$location->phone}}</td>
+        <td><a href="mailto:{{$location->primary_email}}">{{$location->primary_email}}</td>
+        <td>{{$location->manager_name}}</td>
+        <td><a href="mailto:{{$location->manager_email_address}}">{{$location->manager_email_address}}</a></td>
+
+
+
+    </tr>
+   
+
+   @endforeach 
+</tbody>
 </table>
 </div>

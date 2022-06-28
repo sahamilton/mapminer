@@ -1280,3 +1280,16 @@ ALTER TABLE `activities` ADD CONSTRAINT `activity_user_id_fk` FOREIGN KEY (`user
        Check Oracle & Mapminer roles
 /****************************************************
 select concat_ws(' ', persons.firstname, persons.lastname), roles.id as MMRole, display_name, oracle_jobs.job_profile, oracle_jobs.job_code, oracle_jobs.role_id as OracleRole from users, persons, role_user, roles, oracle, oracle_jobs where users.id = role_user.user_id and role_user.role_id = roles.id and users.employee_id = oracle.person_number and oracle.job_code = oracle_jobs.job_code and oracle_jobs.role_id != roles.id and users.id = persons.user_id and users.deleted_at is null
+
+/***************************************************
+       Multiple Count query
+/***************************************************
+SELECT count(addresses.id) as total_count, 
+       count(if(activities.id,1,null)) as activity_count,
+    count(if(address_branch.id,1,null)) as branch_count,
+    count(if(opportunities.id and closed =0,1,null)) as opportunity_count
+FROM `addresses` 
+left join activities on addresses.id = activities.address_id
+left join opportunities on addresses.id = opportunities.address_id
+left join address_branch on addresses.id = address_branch.address_id
+where company_id = 512;

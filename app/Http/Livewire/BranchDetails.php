@@ -27,7 +27,7 @@ class BranchDetails extends Component
             [
                 'branch'=>Branch::query()
 
-                    ->with('branchteam.reportsto')
+                    ->with('branchteam.reportsto', 'oraclelocation.mapminerUser')
             
                     
                     ->findOrFail($this->branch_id),

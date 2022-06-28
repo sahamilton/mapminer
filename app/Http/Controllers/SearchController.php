@@ -102,8 +102,12 @@ class SearchController extends Controller
     public function leads()
     {
         $branches = array_keys(auth()->user()->person->myBranches());
-        $branch = Branch::findOrFail($branches[0]);
+        if (count($branches) > 0) {
+            $branch = Branch::findOrFail($branches[0]);
         
-        return response()->view('search.leads', compact('branch'));
+            return response()->view('search.leads', compact('branch'));
+        }
+        return redirect()->back()->withError('You are not assigned to any branches');
+        
     }
 }

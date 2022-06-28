@@ -906,7 +906,10 @@ class LeadsController extends BaseController
 
         return response()->view('leads.assignable', compact('leads', 'data'));
     }
-
+    public function assign()
+    {
+        return response()->view('leads.assignleads');
+    }
     /**
      * [assignLeads description].
      *
