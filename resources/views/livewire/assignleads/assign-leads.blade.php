@@ -1,5 +1,5 @@
 <div>
-    <h2>Search Closest Branch within {{$distance}} miles of Lead </h2>
+    <h2>Search for closest {{$view}} within {{$distance}} miles of Lead </h2>
     <div class="col-sm-10 form-group">
         <form class="form-inline" wire:submit.prevent="updateAddress">
             
@@ -15,79 +15,21 @@
                     <i class="fas fa-search"></i>
             </button> 
         </form>
-       
-            
     </div>
+    <div class="col-sm-10 form-group">
+       <form class="form-inline">
+            <x-form-select name="view" wire:model="view" label="Change view:" :options="$views" />
+        </form>
+    </div>     
+    
 
 
     <div class="row">
-        <table 
-            class='table table-striped table-bordered table-condensed table-hover'>
-            <thead>
-
-                <th>
-                    <a wire:click.prevent="sortBy('branchname')" role="button" href="#">
-                        Branch
-                        @include('includes._sort-icon', ['field' => 'branchname'])
-                    </a>
-                    
-                </th>
-
-               
-              
-                <th>Branch Address</th>
-                
-               
-                <th>Manager</th>
-                <th>
-                    <a wire:click.prevent="sortBy('distance')" role="button" href="#">
-                        Distance
-                     @include('includes._sort-icon', ['field' => 'distance'])
-                    </a>
-                </th>
-            
-
-               
-            </thead>
-            <tbody>
-                @foreach($branches as $branch)
-                    <tr>  
-                        <td>
-                            <a href="{{route('branches.show',$branch->id)}}" 
-                             title="See details of branch {{$branch->branchname}}">
-                                {{$branch->branchname}}
-                            </a>
-                        </td>
-                        
-                        
-
-                        
-
-                        <td>{{$branch->fullAddress()}}</td>
-
-
-                        <td>            
-                                @if($branch->manager->count()>0)
-                                    
-                                    @foreach ($branch->manager as $manager)
-                                    <a href="{{route('managed.branch',$manager->id)}}"
-                                    title="See all branchesmanaged by {{$manager->fullName()}}">
-                                    {{$manager->fullName()}}</a>
-
-                                    @endforeach
-                                @endif
-                        </td>
-                        <td>
-                            
-                                {{$branch->distance ? number_format($branch->distance,1). ' miles' :''}}
-                        </td>
-                        
-
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
+        @if($view === 'branch')
+            @include('livewire.assignleads.branch-view')
+        @else
+            @include('livewire.assignleads.people-view')
+        @endif
     </div>         
     
     
