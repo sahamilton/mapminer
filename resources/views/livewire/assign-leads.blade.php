@@ -1,5 +1,5 @@
 <div>
-    <h2>Search Closest Branch within {{$distance}} miles for Lead </h2>
+    <h2>Search Closest Branch within {{$distance}} miles of Lead </h2>
     <div class="col-sm-10 form-group">
         <form class="form-inline" wire:submit.prevent="updateAddress">
             
