@@ -31,21 +31,58 @@ class HomeController extends Controller
 
         return view('welcome');
     }
-
-    private function _chooseRoute()
+    /**
+     * Choose initial route based on role
+     * @return string 
+     */
+    private function _chooseRoute() :string 
     {
-        if (auth()->user()->hasRole(['svp','rvp','evp','market_manager'])) {
-            $route ='dashboard.index';
+        
+        $role = auth()->user()->roles()->first()->name;
+        
+        switch($role) {
+            case 'svp':
+            case 'rvp':
+            case 'evp':
+            case 'market_manager':
+                $route ='dashboard.index';
+                break;
+
+            case 'branch_manager':
+            case 'staffing_specialist':
+                if (isset($agent) && $agent->isMobile()) {
+                    $route = 'mobile.index';  
+                } else {
+                    $route = 'dashboard.index';
+                }
+                break;
+
+            case 'lead_specialist':
+                $route = 'lead.assign';
+                break;
+
+            default:
+                $route = false;
+                break;
+        }
+        return $route;
+
+
+
+
+
+        /*if (auth()->user()->hasRole(['svp','rvp','evp','market_manager'])) {
+            
         } elseif (auth()->user()->hasRole(['branch_manager', 'staffing_specialist'])) {
             if (isset($agent) && $agent->isMobile()) {
                 $route = 'mobile.index';  
             } else {
-                $route = 'dashboard.index';
+                
             }
     
         } else {
             return false;
         }
-        return $route;
+        return $route;*/
     }
 }

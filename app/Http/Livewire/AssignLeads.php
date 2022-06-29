@@ -57,6 +57,7 @@ class AssignLeads extends Component
                     ->orderBy('distance', 'asc')
                     ->get(),
 
+                'distances'=>['25'=>'25 miles', '50'=>'50 miles', '100'=>'100 miles'],
 
             ]
         );

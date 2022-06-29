@@ -116,7 +116,7 @@
 			<h4>Branches managed</h4>
 				
 					@foreach($user->person->branchesServiced as $serviced)
-					<li>{{$serviced->branchname}}</li>
+					<li><a href="{{route('branches.show',$serviced->id)}}">{{$serviced->branchname}}</a> </li>
 					@endforeach
 					
 				<div class="float-right col-sm-8">
