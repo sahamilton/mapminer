@@ -1,20 +1,22 @@
 <div>
-    <h2>Search Closest Branch for Lead</h2>
-    <div class="row my-4">
-        <div class="form-group">
+    <h2>Search Closest Branch within {{$distance}} miles for Lead </h2>
+    <div class="col-sm-10 form-group">
+        <form class="form-inline" wire:submit.prevent="updateAddress">
             
-            <form class="col form-inline" wire:submit.prevent="updateAddress">
-                <label for="address">Paste lead address:</label><input class="form-control" 
-                    wire:model.defer="address"
-                    type="text" 
-                    value="{{$address ? $address : 'Enter an address'}}"
-                    />
-                    <button title="Search from an address" type="submit" class="btn btn-success">
-                            <i class="fas fa-search"></i>
-                    </button>
-            </form>
-
-        </div>
+            <label for="address">Paste lead address:</label>
+            <input class="form-control mx-4" 
+                wire:model.defer="address"
+                type="text" 
+                value="{{$address ? $address : 'Enter an address'}}"
+                />
+           
+            <x-form-select class="mx-4" name="distance" wire:model="distance" label=" within " :options="$distances" /> 
+            <button title="Search from an address" type="submit" class="btn btn-success">
+                    <i class="fas fa-search"></i>
+            </button> 
+        </form>
+       
+            
     </div>
 
 
