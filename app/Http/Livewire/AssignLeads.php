@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Location;
 use App\Branch;
 use App\Address;
+use App\Person;
 class AssignLeads extends Component
 {
     use WithPagination, NearbyGeocoder;
@@ -17,7 +18,9 @@ class AssignLeads extends Component
     public $distance = '25';
     public $leaddistance = '0.01';
     public $address;
+    public $view = 'branch';
     public Location $location;
+    public $roles = [3,7,9,13];
 
     
     
@@ -41,7 +44,7 @@ class AssignLeads extends Component
     {
         $this->updateAddress();
         @ray($this->location);
-        return view('livewire.assign-leads',
+        return view('livewire.assignleads.assign-leads',
             [
                 'branches'=>Branch::query()
                     ->with('branchteam.reportsto')
@@ -49,7 +52,14 @@ class AssignLeads extends Component
                     ->nearby($this->location, $this->distance)
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                
+                'people' => Person::query()
+                    ->with('reportsTo','userdetails.roles', 'branchesServiced')
+                    ->wherehas('userdetails.roles', function ($q) {
+                        $q->whereIn('roles.id', $this->roles);
+                    })
+                    ->nearby($this->location, $this->distance)
+                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->paginate($this->perPage),
                 'leads'=>Address::query()
                     ->with('assignedToBranch', 'company')
 
@@ -58,7 +68,7 @@ class AssignLeads extends Component
                     ->get(),
 
                 'distances'=>['25'=>'25 miles', '50'=>'50 miles', '100'=>'100 miles'],
-
+                'views' => ['branch'=>'Branches', 'people'=>'People'],
             ]
         );
     }
