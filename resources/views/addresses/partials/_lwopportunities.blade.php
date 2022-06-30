@@ -1,29 +1,34 @@
+@if($owned)
 
-@php $statuses = ['open','closed - won','closed - lost']; @endphp
-
-<div class="float-right">
-        <a class="btn btn-info" 
-            title="Add Opportunity"
-             
-            data-toggle="modal" 
-            data-target="#createopportunity" 
-            data-title = "Create New Opportunity at {{$address->businessname}}" 
-            href="#">
-            <i class="fas fa-pencil-alt"></i>
-            New Opportunity
-            </a>
+  <div class="float-right mb-4">
+    <div class="float-right mb-4">
+      <button class="btn btn-info" href="#" wire:click.prevent="addOpportunity({{ $address->id }})">
+        Record Opportunity
+      </button>
     </div>
-   <div class="col form-inline">
-    @include('livewire.partials._perpage')
-   
-    @include('livewire.partials._search', ['placeholder'=>'Search activities'])
-    
+  </div>
+@endif
+<div class="col form-inline mb-4">
+  @include('livewire.partials._perpage')
+
+  @include('livewire.partials._search', ['placeholder'=>'Search activities'])
+  <x-form-select 
+    name="status"
+    wire:model='status'
+    label="Status:"
+    :options="$statuses" 
+    />
+
 </div>           
                   
 <table class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
       <th>Title</th>
-      <th>Date Opened</th>
+      <th>
+
+        Date Opened
+
+      </th>
       <th>Days Open</th>
       <th>Status</th>
       <th>Company</th>
@@ -32,13 +37,12 @@
       <th>Potential Headcount</th>
       <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
-      
-      <th>Last Activity</th>
+      <th>Last activity</th>
       
     </thead>
       <tbody>
         @foreach ($viewdata as $opportunity)
-         
+        
         <tr>
           <td>
            @if($owned)
@@ -87,51 +91,23 @@
           <td>{{$opportunity->requirements}}</td>
           <td>{{$opportunity->duration}}</td>
           <td>{{$opportunity->value}}</td>
-          <td>
-            @if($opportunity->address->activities->count() >0 )
-
-              {{$opportunity->address->activities->last()->activity_id}}
-             <br />
-            {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
-            @endif
-          </td>
+          <td>{{$opportunity->lastActivity->count()>0 ? $opportunity->lastActivity->activity_date : ''}}</td>
           
         </tr>
         @endforeach
 
       </tbody>
-    <tfoot>
-      
-    </tfoot>
+  
 
 </table>
+<div class="row">
+        <div class="col">
+            {{ $viewdata->links() }}
+        </div>
 
+        <div class="col text-right text-muted">
+            Showing {{ $viewdata->firstItem() }} to {{ $viewdata->lastItem() }} out of {{ $viewdata->total() }} results
+        </div>
+    </div>
 
-<script>
-$( document ).ready(function() {
-    $("input[id^=Top25]").change (function () {
-      var id = $(this).val();
-
-      $.ajax(
-    
-        {
-        
-        type: "get",
-        
-        cache: false,
-        
-        url: '{{route("opportunity.toggle")}}',
-
-        data: {id: id,api_token:"{{auth()->user()->api_token}}"},
-        
-        dataType: "xml",
-        
-        contentType: "json",
-        
-        success: true
-        
-        }); 
-    });
-});
-
-</script>
+@include('opportunities.partials._modal')

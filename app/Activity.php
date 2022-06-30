@@ -196,7 +196,8 @@ class Activity extends Model
                         ->from('addresses')
                         ->where('businessname', 'like', "%{$search}%")
                         ->orWhere('street', 'like', "%{$search}%")
-                        ->orWhere('city', 'like', "%{$search}%");
+                        ->orWhere('city', 'like', "%{$search}%")
+                        ->orWhere('note', 'like', "%{$search}%");
                 }
             );
     }
@@ -413,6 +414,10 @@ class Activity extends Model
         ->where('followup_date', '<=', now());
     }
 
-    
+    public  function highlightWords($word)
+    {
+        return  preg_replace('#'. preg_quote($word) .'#i', '<span style="background-color: #F9F902;">\\0</span>', $this->note);
+   
+    }
 
 }

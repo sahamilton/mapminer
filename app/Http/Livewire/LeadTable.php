@@ -47,7 +47,7 @@ class LeadTable extends Component
     public $completed;
     public $followup_date;
     public $followup_activity;
-    public $show = false;
+    public $activityModalShow = false;
 
     public $contact_id=null;
 
@@ -319,12 +319,12 @@ class LeadTable extends Component
         
     ];
     public function doShow() {
-        $this->show = true;
+        $this->activityModalShow = true;
     }
 
     public function doClose() {
         
-        $this->show = false;
+        $this->activityModalShow = false;
     }
 
     private function resetActivities()

@@ -12,13 +12,11 @@
         </a>
     </div>
 @endif
-<div class="col form-inline">
+<div class="col form-inline mb-4">
     @include('livewire.partials._perpage')
    
     @include('livewire.partials._search', ['placeholder'=>'Search contacts'])
-    <div  wire:loading>
-        <div class="col spinner-border text-danger"></div>
-    </div>
+   
 </div>
  <table class='table table-striped table-bordered table-condensed table-hover'>
     <thead>

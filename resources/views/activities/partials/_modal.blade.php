@@ -1,9 +1,9 @@
 
    
-    <div class="modal fade @if($show) show @endif"
+    <div class="modal fade @if($activityModalShow) show @endif"
          id="add_activity"
 
-         style="display: @if($show === true)
+         style="display: @if($activityModalShow === true)
                  block
          @else
                  none
@@ -39,7 +39,7 @@
                     @endif
                     <x-form-textarea required name="note" label="Comments:" placeholder="Enter details...." />
                     <x-form-input required type="date"  id="activity_date" name="activity_date" label="Activity Date:" />
-                    <x-form-checkbox checked  name="completed"  label="Completed:" />       
+                    <x-form-checkbox checked  name="completed"  value='1' label="Completed:" />       
                     <x-form-input type="date" wire:model="followup_date" name="followup_date" label="Followup Date:"  />
                     @if($followup_date)   
                         <x-form-select  name="followup_activity" label="Followup Activity:" :options="$activityTypes" placeholder="Enter details...."/>
@@ -53,7 +53,7 @@
                             wire:click.prevent="doClose">
                             Cancel
                         </button>
-                        <button wire:click.ignore="store" class="btn btn-danger">Record Activity</button>
+                        <button wire:click.ignore="storeActivity" class="btn btn-danger">Record Activity</button>
 
                     </div>
                     @endwire

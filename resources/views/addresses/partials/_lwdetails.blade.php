@@ -1,49 +1,48 @@
-
-
 <div id="map-container">
 	<div style="float:left;width:300px">
 
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			@if($address->assignedToBranch)
-			@php $branch = $address->assignedToBranch->first() @endphp
+				@php $branch = $address->assignedToBranch->first() @endphp
 
 			@endif
-						<p>
-						<i class="far fa-user" aria-hidden="true"></i>
-						 <b>Primary Contact:</b> <span id="primaryContact">
-						 	{{$address->primaryContact->count() ? $address->primaryContact->first()->fullName() : ''}}
-						 </span>
-						 </p>
-						
-						<p>
-							<b>
-								<i class="fas fa-phone" aria-hidden="true"></i> 
-								Phone:
-							</b>
-							@if(isset($address->phone))
-								{{$address->phone}}
-							@elseif ($address->primaryContact->count() > 0)
-								{{$address->primaryContact->first()->contactphone}}
-							
-							@endif
-							
-						</p>
-						<p>
-							<strong>
-								<a href="" wire:click.prevent="changeview('contacts')"> Contacts</a>
-							</strong>{{$address->contacts->count()}}
-						</p>
-			  			<p>
-							<strong>
-								<a href="" wire:click.prevent="changeview('activities')"> Activities</a>
-							</strong>{{$address->activities_count}}
-						</p>
-						<p>
-							<strong>
-								<a href="" wire:click.prevent="changeview('opportunities')"> Opportunities</a>
-							</strong>{{$address->opportunities_count}}
-						</p>
-						 <p>Lat: {{number_format($address->lat,4)}};<br /> Lng: {{number_format($address->lng,4)}}</p>
+			<p>
+				<i class="far fa-user" aria-hidden="true"></i>
+				 <b>Primary Contact:</b> <span id="primaryContact">
+				 	{{$address->primaryContact->count() ? $address->primaryContact->first()->fullName() : ''}}
+				 </span>
+			 </p>
+			
+			<p>
+				<b>
+					<i class="fas fa-phone" aria-hidden="true"></i> 
+					Phone:
+				</b>
+				@if(isset($address->phone))
+					{{$address->phone}}
+				@elseif ($address->primaryContact->count() > 0)
+					{{$address->primaryContact->first()->contactphone}}
+				
+				@endif
+				
+			</p>
+			<p>
+
+				<strong>
+					<a href="" wire:click.prevent="changeview('contacts')"> Contacts</a>
+				</strong>{{$address->contacts->count()}}
+			</p>
+  			<p>
+				<strong>
+					<a href="" wire:click.prevent="changeview('activities')"> Activities</a>
+				</strong>{{$address->activities_count}}
+			</p>
+			<p>
+				<strong>
+					<a href="" wire:click.prevent="changeview('opportunities')"> Opportunities</a>
+				</strong>{{$address->opportunities_count}}
+			</p>
+			 <p>Lat: {{number_format($address->lat,4)}};<br /> Lng: {{number_format($address->lng,4)}}</p>
 			</fieldset>
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 						<p>
@@ -107,7 +106,7 @@
 		@endif
 		</fieldset>
 	</div>
-		<div id = "map" wire:ignore style="height: 600px;width: 700px;" ></div>
+		<div id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>
 	 	@include('addresses.partials.lwmap')
 	
 </div>
