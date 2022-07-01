@@ -19,12 +19,19 @@ class OracleManagers extends Component
     public $search = '';
     public $type ='oracle';
     
-
+    /**
+     * [updatingSearch description]
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
-
+    /**
+     * [sortBy description]
+     * @param  [type] $field [description]
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -35,6 +42,10 @@ class OracleManagers extends Component
 
         $this->sortField = $field;
     }
+    /**
+     * [render description]
+     * @return [type] [description]
+     */
     public function render()
     {
         
@@ -90,7 +101,10 @@ class OracleManagers extends Component
         } 
         
     }
-
+    /**
+     * [_getUsers description]
+     * @return [type] [description]
+     */
     private function _getUsers()
     {
         $users = Oracle::whereHas(
@@ -111,10 +125,19 @@ class OracleManagers extends Component
             }
         )->paginate($this->perPage);
     }
+    /**
+     * [rules description]
+     * @return [type] [description]
+     */
     public function rules()
     {
         return ['reports_to'=>'required'];
     }
+    /**
+     * [reassign description]
+     * @param  Oracle $oracle [description]
+     * @return [type]         [description]
+     */
     public function reassign(Oracle $oracle)
     {
         $oracle->load('mapminerUser.person', 'oracleManager.mapminerUser.person.reportsTo');
@@ -125,6 +148,10 @@ class OracleManagers extends Component
 
         session()->flash('message', $message);
     }
+    /**
+     * [reassignAll description]
+     * @return [type] [description]
+     */
     public function reassignAll()
     {
         $users = $this->_getUsers();
@@ -132,7 +159,10 @@ class OracleManagers extends Component
             $this->reassign($user);
         }
     }
-
+    /**
+     * [_getThisTypes description]
+     * @return [type] [description]
+     */
     private function _getThisTypes()
     {
         return [

@@ -1,33 +1,27 @@
+<div>
+  
 
-<div class="col-sm-6">
-  <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
-    <label class="col-md-2 control-label">Title</label>
-    <div class="input-group input-group-lg ">
-      <input type="text" 
-        required 
-        class="form-control" 
-        name='title' 
-        required
-        description="title" 
-        value="{{ old('title' , isset($opportunity)  ? $opportunity->title : 'Opportunity @ ' . $location->businessname) }}" 
-        placeholder="Opportunity Title">
-      <span class="help-block">
-        <strong>{{ $errors->has('title') ? $errors->first('title') : ''}}</strong>
-      </span>
-    </div>
-  </div>
+  <x-form-input 
+    type="text" 
+    name="title"
+    required
+    label="Title:"
+    value="{{ old('title' , isset($opportunity)  ? $opportunity->title : 'Opportunity @ ' . $location->businessname) }}"
+    placeholder = "Opportunity title"
+    
+    />
 
-  <div class="form-group">
-    <label class="col-md-4 control-label">Estimated Headcount:</label>
-   
-      <input class="form-control" 
-      type="number" 
-      min="0" step="1" 
-      required
-      name="requirements" 
-      value="{{ old('requirements' , isset($opportunity) ? $opportunity->requirements : '0' ) }}" />
+    <x-form-input 
+    type="number" 
+    name="requirements"
+    required
+    min="0" 
+    step="1" 
+    label="Estimated Headcount:"
+    
+    />
 
-  </div>
+  
   <div class="form-group">
     <label class="col-md-4 control-label">Estimated Duration: (months):</label>
    
@@ -119,24 +113,11 @@
 </div>
 
 <!-- CSP  -->
-<div class="form-group  {{ $errors->has('csp') ? ' has-error' : ''}}">
-    <label class=" control-label">CSP Opportunity:
-    <div class="input-group checkbox inline input-group-sm">
-        <input 
-        title="Check this box if you are using this as your opportunity for the CSP Application Workshop."
-        type="checkbox" 
-        class="form-control" 
-        name='csp' 
-        @if(old('csp', isset($opportunity) && $opportunity->csp))
-            checked
-        @endif
-        value="1"
-        title="CSP Opportunity"
+<x-form-checkbox 
+  title="Check this box if you are using this as your opportunity for the CSP Application Workshop."
+   name='csp' 
+   value="1"
+   label="CSP Opportunity"
+       
 
-        ></label>
-        <span class="help-block">
-            <strong>{{ $errors->has('csp') ? $errors->first('csp') : ''}}</strong>
-        </span>
-    </div>
-</div>
-        
+/>

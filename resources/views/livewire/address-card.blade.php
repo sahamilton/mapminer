@@ -1,9 +1,13 @@
 <div>
     @wire
-    @ray($address);
+
         <h2>{{$address->businessname}}</h2>
         <h4>{{$address->fulladdress()}}</h4>
-   
+       @if(auth()->user()->hasROle(['branch_manager', 'staffing_specialist', 'market_manager']))
+       <p><a href="{{route('branch.leads')}}" >Return to branch leads</a></p>
+
+       @endif
+        
         <div class="row mb-4">
             <form class="form-inline">
                 <x-form-select 
@@ -18,18 +22,19 @@
                 <div class="col spinner-border text-danger"></div>
             </div>
         </div>
+
         @switch ($view)
             @case('summary')
                 @include('addresses.partials._lwdetails')
             @break;
             @case('contacts')
-                @include('addresses.partials._lwcontacts')
+                <livewire:address-contacts :address_id="$address->id" :owned="$owned" />
             @break;
             @case('activities')
-                @include('addresses.partials._lwactivities')
+                <livewire:address-activities :address="$address" :owned="$owned" />
             @break;
             @case('opportunities')
-                @include('addresses.partials._lwopportunities')
+                <livewire:address-opportunities :address="$address" :owned="$owned" />
             @break;
         @endswitch
     @endwire

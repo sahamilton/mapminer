@@ -1,4 +1,5 @@
-@if($owned)
+<div>
+    @if($owned)
 
   <div class="float-right mb-4">
     <div class="float-right mb-4">
@@ -11,7 +12,8 @@
 <div class="col form-inline mb-4">
   @include('livewire.partials._perpage')
 
-  @include('livewire.partials._search', ['placeholder'=>'Search activities'])
+  @include('livewire.partials._search', ['placeholder'=>'Search opportunities'])
+
   <x-form-select 
     name="status"
     wire:model='status'
@@ -41,7 +43,7 @@
       
     </thead>
       <tbody>
-        @foreach ($viewdata as $opportunity)
+        @foreach ($opportunities as $opportunity)
         
         <tr>
           <td>
@@ -89,7 +91,7 @@
           <td>{{$opportunity->requirements}}</td>
           <td>{{$opportunity->duration}}</td>
           <td>{{$opportunity->value}}</td>
-          <td>{{$opportunity->lastActivity->count()>0 ? $opportunity->lastActivity->activity_date : ''}}</td>
+          <td>{{$opportunity->lastActivity->count()>0 ? $opportunity->lastActivity->activity_date->format('Y-m-d') : ''}}</td>
           
         </tr>
         @endforeach
@@ -100,13 +102,15 @@
 </table>
 <div class="row">
         <div class="col">
-            {{ $viewdata->links() }}
+            {{ $opportunities->links() }}
         </div>
 
         <div class="col text-right text-muted">
-            Showing {{ $viewdata->firstItem() }} to {{ $viewdata->lastItem() }} out of {{ $viewdata->total() }} results
+            Showing {{ $opportunities->firstItem() }} to {{ $opportunities->lastItem() }} out of {{ $opportunities->total() }} results
         </div>
     </div>
 
 @include('opportunities.partials._modal')
 @include('opportunities.partials._lwclosemodal')
+
+</div>

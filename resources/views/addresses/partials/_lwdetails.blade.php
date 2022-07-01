@@ -12,6 +12,12 @@
 				 	{{$address->primaryContact->count() ? $address->primaryContact->first()->fullName() : ''}}
 				 </span>
 			 </p>
+			 <p>
+				<i class="fas fa-map-marker" aria-hidden="true"></i>
+				 <b>Address:</b> <span id="primaryContact">
+				 	{{$address->fullAddress()}}
+				 </span>
+			 </p>
 			
 			<p>
 				<b>
@@ -42,7 +48,7 @@
 					<a href="" wire:click.prevent="changeview('opportunities')"> Opportunities</a>
 				</strong>{{$address->opportunities_count}}
 			</p>
-			 <p>Lat: {{number_format($address->lat,4)}};<br /> Lng: {{number_format($address->lng,4)}}</p>
+			
 			</fieldset>
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 						<p>
@@ -59,14 +65,12 @@
 			  @if(! $address->isCustomer)
 			      Lead
 			      @if($owned)
-			      <p><a href="{{route('mark.customer', $address->id)}}" class="txt-success">Mark as Customer</a></p>
+			      <button wire:click="changeCustomerType({{$address->id}})" class="btn btn-success">Mark as Customer</button>
 			      @endif
 			  @else
 			    Customer 
 			    @if($owned)
-			      <a href="{{route('mark.customer', $address->id)}}" title="Change to lead">
-			        <i class="fas fa-times text-danger"></i>
-			      </a>
+			      <button wire:click="changeCustomerType({{$address->id}})" class="btn btn-warning">Mark as Lead</button>
 			    @endif
 			  
 			  @endif
@@ -76,6 +80,7 @@
 
 
 			<p><strong>Date Added:</strong> {{$address->created_at->format('Y-m-d')}}</p>
+			<p><strong>Last Activity:</strong> {{$address->created_at->format('Y-m-d')}}</p>
 			</fieldset>
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 						 @if($address->duplicates->count() > 1 && $owned)
@@ -99,11 +104,10 @@
 			Delete Locaton
 	
 		
-		@elseif ($address->createdBy)
-
-			<p>Lead Created by: <a href="{{route('user.show',$address->createdBy->id)}}">{{$address->createdBy->postName()}}</a></p>
+		
 
 		@endif
+		@include('addresses.partials._lwleadstatus')
 		</fieldset>
 	</div>
 		<div id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>

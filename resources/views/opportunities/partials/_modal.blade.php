@@ -1,9 +1,9 @@
 
    
-    <div class="modal fade @if($opportunityModalShow) show @endif"
-         id="add_activity"
+    <div class="modal fade @if($opportunityModal) show @endif"
+         id="opportunityModal"
 
-         style="display: @if($opportunityModalShow === true)
+         style="display: @if($opportunityModal === true)
                  block
          @else
                  none
@@ -17,26 +17,29 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Record Opportunity at <span id="title"> {{isset($address) ? $address->businessname :'company'}} </span> </h5>
                     
-                    <button type="button" class="close"  wire:click.prevent="doClose">&times;</button>
+                    <button type="button" class="close"  wire:click.prevent="doClose('opportunityModal')">&times;</button>
                 </div>
                 <div class="modal-body">
                     @wire('defer')
-                    <x-form-input required type="text"  id="title" name="title" value="Opportunity @ {{$address->businessname}}" label="Title:" />
-                    <x-form-input required type="number"  id="requirements" name="requirements" step=1 min=0 label="Requirements (headcount):"/> 
-                    <x-form-input required type="number"  id="duration" name="duration" step=1 min=0 label="Duration (months):"/> 
-                    <x-form-input required type="number"  id="value" name="value" min=0 label="Value:"/> 
-                    <x-form-input required type="date"  id="expected_close" name="expected_close" label="Expected Close Date:" />     
-                    <x-form-input type="date" wire:model="actual_close" name="actual_close" label="Actual Close Date:"  />
-                    <x-form-textarea required name="description" label="Description:" placeholder="Enter details...." />
-                    <x-form-checkbox name="Top25" value='1' label="Top 25 Opportunity?" />
-                    <x-form-checkbox name="csp" value='1' label="CSP Opportunity?" />
                     
+                    <x-form-input class="col-sm-10" required type="text"  id="opportunity.title" name="opportunity.title" label="Title:" />
+                    
+                    <x-form-input class="col-sm-10" required type="number" id="opportunity.requirements" name="opportunity.requirements" step=1 min=0 label="Requirements (headcount):"/> 
+                    <x-form-input class="col-sm-10" required type="number" id="opportunity.opportunity.duration" name="duration" step=1 min=0 label="Duration (months):"/> 
+                    <x-form-input  class="col-sm-10" required type="number" id="opportunity.value" name="opportunity.value" min=0 label="Value: (in whole $'s)"/> 
+                    <x-form-input  class="col-sm-10" required type="date" id="opportunity.expected_close" name="opportunity.expected_close" label="Expected Close Date:" />     
+                    <x-form-textarea  class="col-sm-10" required name="opportunity.description" label="Description:" placeholder="Enter details...." />
+                    
+                    <x-form-group class="p-2"  inline>
+                        <x-form-checkbox class="float-left" name="Top25" value='1' label="Top 25 Opportunity?" />
+                        <x-form-checkbox class="float-right" name="csp" value='1' label="CSP Opportunity?" />
+                    </x-form-group>
 
 
                     <div class="float-right">
                         <button class="btn btn-secondary"
                             type="button"
-                            wire:click.prevent="doClose">
+                            wire:click.prevent="doClose('opportunityModal')">
                             Cancel
                         </button>
                         <button wire:click.ignore="storeOpportunity" class="btn btn-danger">Record Opportunity</button>

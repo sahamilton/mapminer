@@ -82,10 +82,18 @@ class TrainingTable extends Component
             ]
         );
     }
+    /**
+     * [create description]
+     * @return [type] [description]
+     */
     public function create()
     {
         $this->openForm = true;
     }
+    /**
+     * [_getRoles description]
+     * @return [type] [description]
+     */
     private function _getRoles()
     {
         $this->roles = Role::all()->pluck('display_name', 'id')->toArray();
