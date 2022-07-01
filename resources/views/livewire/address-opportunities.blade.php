@@ -93,7 +93,7 @@
           <td>{{$opportunity->requirements}}</td>
           <td>{{$opportunity->duration}}</td>
           <td>{{$opportunity->value}}</td>
-          <td>{{$opportunity->lastActivity->count()>0 ? $opportunity->lastActivity->activity_date->format('Y-m-d') : ''}}</td>
+          <td>{{$opportunity->lastActivity ? $opportunity->lastActivity->activity_date->format('Y-m-d') : ''}}</td>
           
         </tr>
         @endforeach

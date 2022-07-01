@@ -19,8 +19,8 @@ class AddressCard extends Component
     public $sortField = 'created_at';
     public $sortAsc = false;
     public $search ='';
-
-    
+    public $ranked;
+    public Address $address;
 
     public $paginationTheme = 'bootstrap';
     public $view = 'summary';
@@ -49,30 +49,34 @@ class AddressCard extends Component
 
         $this->sortField = $field;
     }
-    public function mount(int $address_id, string $view=null)
+    public function mount(Address $address, string $view=null)
     {
        
-        $this->address_id = $address_id;
+
+        $this->address = $address->load('claimedByBranch');
+        dd($this->address);
+                    
         $this->myBranches = $this->_getMyBranches();
         $this->owned = $this->_checkIfOwned();
-       
+        
         isset($view) ? $this->view = $view : $this->view = 'summary';
-        if($address = Address::with('claimedByBranch')->findOrFail($address_id)->claimedByBranch->first()) {
+        if($this->address->claimedByBranch->first()) {
             $this->branch_id = $address->id; 
-            $this->address_branch_id = $address->pivot->id;
+            $this->address_branch_id = $this->address->claimedByBranch->first()->pivot->id;
+            $this->ranking = $this->address->getMyRanking();
         }
       
     }
     public function render()
     {
+        @ray($this->address);
         return view(
             'livewire.address-card',
             [
 
-                'address'=>Address::withCount('activities', 'contacts', 'opportunities')
-                    ->with('ranking')
-                    ->findOrFail($this->address_id),
-                    
+
+                'address' =>Address::withCount('activities', 'contacts', 'opportunities')
+                    ->with('claimedByBranch', 'ranking')->find($this->address->id),  
                 
                 'leadStatuses' =>[1=>'Offered',2=>'Owned', 4=>'Rejected'],
                 
@@ -106,12 +110,8 @@ class AddressCard extends Component
     private function _checkIfOwned()
     {
         
-        $assignedTo = Address::with('assignedToBranch')->findOrFail($this->address_id)
-            ->assignedToBranch
-            ->where('pivot.status_id', 2)
-            ->pluck('id')
-            ->toArray();
-        return array_intersect($assignedTo, $this->myBranches);
+       
+        return array_intersect($this->address->claimedByBranch->pluck('id')->toArray(), $this->myBranches);
 
     }
     /**
@@ -140,6 +140,12 @@ class AddressCard extends Component
 
         $address->save();
 
+    }
+
+    public function updateRating($ranked)
+    {
+        
+        $this->address->ranking()->sync(auth()->user()->person->id, ['ranking'=>$ranked]);
     }
     
 

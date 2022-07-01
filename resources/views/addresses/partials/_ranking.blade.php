@@ -21,7 +21,7 @@
 </button>
 @endif
 
-@if(!$location->currentRating())
+@if(!$address->currentRating())
 	
 This location has not been rated yet.
 @endif

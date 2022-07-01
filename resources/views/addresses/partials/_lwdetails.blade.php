@@ -1,6 +1,7 @@
 <div id="map-container">
 	<div style="float:left;width:300px">
 
+
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			@if($address->assignedToBranch)
 				@php $branch = $address->assignedToBranch->first() @endphp
@@ -58,8 +59,23 @@
 			    @endif
 			</p>
 			@if($owned && $address->leadsource->id !=4)
+			@php  @endphp
+			<div>
+			    
 
-			@include('addresses.partials._ranking')
+			    <div class="flex items-center mt-0">
+			        <span class="text-sm">Your rating:</span>
+			        <div class="flex items-center ml-2">
+			            @for ($i = 0; $i < $ranked; $i++)
+			                <i wire:click="updateRating({{$i}})" class="fa-solid fa-star text-warning"></i>
+			            @endfor
+
+			            @for ($i = $ranked; $i < 5; $i++)
+			                <i wire:click="updateRating({{$i}})" class="fa-thin fa-star"></i>
+			            @endfor
+			        </div>
+			    </div>
+			</div>
 			@endif
 			<p><strong>Type:</strong>
 			  @if(! $address->isCustomer)
@@ -110,7 +126,7 @@
 		@include('addresses.partials._lwleadstatus')
 		</fieldset>
 	</div>
-		<div id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>
+		<div wire:ignore id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>
 	 	@include('addresses.partials.lwmap')
 	
 </div>
