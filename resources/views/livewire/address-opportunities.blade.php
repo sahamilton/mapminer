@@ -69,7 +69,7 @@
           
              @if($owned && $opportunity->closed ==0)
            
-            <button class="btn btn-danger" wire:click="closeOpportunity({{$opportunity->id}})" >
+            <button class="btn btn-danger" wire:click="editOpportunity({{$opportunity->id}}, 'close')" >
                     Close</button>
             @endif
           </td>
@@ -82,9 +82,11 @@
           <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>
 
-            <input type="checkbox" id="Top25{{$opportunity->id}}" value="{{$opportunity->id}}" 
+            <input type="checkbox" 
+            id="Top25{{$opportunity->id}}" 
+            wire:click ="changeOpportunityType({{$opportunity->id}}, 'Top25')"
             @if($opportunity->Top25)
-            checked/><span class="hidden">1</span>
+            checked/>
             @endif
             
           </td>

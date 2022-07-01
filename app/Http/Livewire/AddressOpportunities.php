@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Opportunity;
 use App\Address;
 use Livewire\WithPagination;
+use Carbon\Carbon;
 
 class AddressOpportunities extends Component
 {
@@ -17,7 +18,7 @@ class AddressOpportunities extends Component
     public $search ='';
     public array $owned;
     public $address_id;
-   
+    public Address $address;
 
      // opportunities
 
@@ -63,6 +64,11 @@ class AddressOpportunities extends Component
 
     public function render()
     {
+        if(count($this->getErrorBag()->all()) > 0){
+             @ray($this->getErrorBag()->all());
+             $this->emit('error:example');
+
+        }
         return view('livewire.address-opportunities',
             [
                 'opportunities'=>Opportunity::query()
@@ -91,14 +97,13 @@ class AddressOpportunities extends Component
 
 
     */
-    public function addOpportunity(Address $address)
+    public function addOpportunity()
     {
      
 
-        $this->resetOpportunities($address);
+        $this->resetOpportunities();
         $this->doShow('opportunityModal');
-        @ray($this->opportunity);
-        $this->address = $address;
+
        
 
     }
@@ -108,13 +113,13 @@ class AddressOpportunities extends Component
      * 
      * @return [type] [description]
      */
-    private function resetOpportunities(Address $address = null)
+    private function resetOpportunities()
     {
         
         
 
-        if(isset($address)) {
-            $title = "Opportunity @ " . $address->businessname;
+        if(isset($this->address)) {
+            $title = "Opportunity @ " . $this->address->businessname;
         } else {
             $title = "Opportunity @ "; 
         }
@@ -122,16 +127,27 @@ class AddressOpportunities extends Component
         $this->opportunity = Opportunity::make(
             [
                 'title'=>$title,
-                'expected_close' => now()->addWeek(1),
+                'expected_close'=>now()->addWeek(2),
+                'address_id'=> $this->address->id,
+                'branch_id' => $this->branch_id,   
+                'address_branch_id' => $this->address_branch_id,
+                'user_id' => auth()->user()->id,
+                'closed' => 0,
+                
             ]
         );
+        @ray($this->opportunity);
  
     }
 
-    public function closeOpportunity(Opportunity $opportunity)
+    public function editOpportunity(Opportunity $opportunity, $action)
     {
-        $this->doShow('closeOpportunityModal');
-        $this->opportunity->actual_close = @now();
+       if ($action === 'close') {
+            $this->doShow('closeOpportunityModal');
+            $this->opportunity = $opportunity;
+            $this->opportunity->actual_close = @now()->format('Y-m-d');
+       }
+       
         //
     }
     /**
@@ -141,7 +157,8 @@ class AddressOpportunities extends Component
      */
     public function storeOpportunity()
     {
-        $this->_getOpportunity();
+        @ray($this->opportunity);
+        $this->validate();
         $this->_recordOpportunity();
         
         $this->resetOpportunities();
@@ -156,34 +173,48 @@ class AddressOpportunities extends Component
      */
     private function _recordOpportunity()
     {
-        $this->opportunity->address_id = $this->address_id;
-        $this->opportunity->branch_id = $this->branch_id;   
-        $this->opportunity->address_branch_id = $this->address_branch_id;
-        $this->opportunity->user_id =  auth()->user()->id;
-        $this->opportunity->save();
-      
         
-        return $opportunity;
+       
+        $this->opportunity->expected_close = Carbon::parse($this->opportunity->expected_close);
+        @ray($this->opportunity);
+        $this->opportunity->save();
+
     }
-    /**
-     * [_getActivity description]
-     * 
-     * @return [type] [description]
-     */
-    private function _getOpportunity() 
+
+    public function rules()
     {
-        $rules = [
+        
+
+
+        return [
 
             'opportunity.title'=>'required',
-            'opportunity.expected_close'=> 'date',
+            'opportunity.expected_close'=> 'required|date',
+            'opportunity.actual_close'=> 'sometimes',
+            
+            
             'opportunity.value' => 'numeric|min:1', 
             'opportunity.requirements' => 'numeric|min:1', 
             'opportunity.duration' => 'numeric|min:1', 
             'opportunity.description'=>'required',
+            'opportunity.Top25'=>'sometimes',
+            'opportunity.csp'=>'sometimes',
+            'opportunity.address_id'=>'required',
+            'opportunity.branch_id'=>'required',
+            'opportunity.address_branch_id'=>'required',
+            'opportunity.closed'=>'required',
+            'opportunity.user_id'=>'required',
 
-        ] ;   
-        $this->validate($rules);
-            
+        ] ;
+    }
+    public function closeOpportunity()
+    {
+        $this->validate(['opportunity.actual_close' => 'required|date|after_or_equal:today']);
+        
+        $this->doClose('closeOpportunityModal');
+        
+        $this->opportunity->update(['actual_close' => Carbon::parse($this->opportunity->actual_close)]);
+
     }
     public function doShow($form=null)
     {
@@ -196,5 +227,20 @@ class AddressOpportunities extends Component
        $this->$form= false;
                
         
+    }
+
+    /**
+     * [changeCustomerType description]
+     * 
+     * @param  Address $address [description]
+     * @return [type]           [description]
+     */
+    public function changeOpportunityType(Opportunity $opportunity, $type)
+    {
+
+        ! $opportunity->$type ?  $opportunity->$type=1 : $opportunity->$type=null;;
+
+        $opportunity->save();
+        @ray($opportunity);
     }
 }

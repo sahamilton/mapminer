@@ -1,9 +1,9 @@
 <div>
-    @wire
+
 
         <h2>{{$address->businessname}}</h2>
         <h4>{{$address->fulladdress()}}</h4>
-       @if(auth()->user()->hasROle(['branch_manager', 'staffing_specialist', 'market_manager']))
+        @if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist', 'market_manager']))
        <p><a href="{{route('branch.leads')}}" >Return to branch leads</a></p>
 
        @endif
@@ -13,6 +13,7 @@
                 <x-form-select 
                     class="form-control col-md-20"
                     name='view' 
+                    wire:model="view"
                     label="View:"
                     :options="$viewtypes" 
                 />
@@ -37,7 +38,7 @@
                 <livewire:address-opportunities :address="$address" :owned="$owned" />
             @break;
         @endswitch
-    @endwire
+
 
 
 </div>

@@ -22,10 +22,9 @@
       </div>
       <div class="modal-body">
 
-        <form>
-          @csrf
+       
           <div class="form-group mb-4">
-            @ray($opportunityStatuses)
+            
             @php $options = [1=>'Closed - Won', 2=>'Closed - Lost'];@endphp
             
             <select class="form-control"
@@ -54,9 +53,9 @@
             </div>
             
             <div class="float-right">
-            <input type="submit" value="Close Opportunity" class="btn btn-success" />
+            <button wire:click.ignore="closeOpportunity" class="btn btn-danger">Close Opportunity</button>
           </div>
-        </form>
+        
       </div>
       <div class="modal-footer"></div>
     </div>

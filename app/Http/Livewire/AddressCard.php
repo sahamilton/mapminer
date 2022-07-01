@@ -69,8 +69,10 @@ class AddressCard extends Component
             'livewire.address-card',
             [
 
-                'address'=>Address::withCount('activities', 'contacts', 'opportunities')->findOrFail($this->address_id),
-                
+                'address'=>Address::withCount('activities', 'contacts', 'opportunities')
+                    ->with('ranking')
+                    ->findOrFail($this->address_id),
+                    
                 
                 'leadStatuses' =>[1=>'Offered',2=>'Owned', 4=>'Rejected'],
                 

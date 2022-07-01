@@ -26,7 +26,12 @@ class Opportunity extends Model
                         'actual_close'
                     ];
                     
-    public $dates = ['expected_close','actual_close'];
+    
+    protected $casts = [
+        'expected_close'  => 'date:Y-m-d',
+        'actual_close'  => 'date:Y-m-d',
+   
+    ];
     /**
      * [branch description]
      * 
