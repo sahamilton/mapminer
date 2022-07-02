@@ -35,17 +35,17 @@
                         
                     @endphp
               
-                        <x-form-select  name="contact_id" label="Contact:" :options="$contacts" />
+                        <x-form-select  name="activity.contact_id" label="Contact:" :options="$contacts" />
                     @endif
-                    <x-form-textarea required name="note" label="Comments:" placeholder="Enter details...." />
-                    <x-form-input required type="date"  id="activity_date" name="activity_date" label="Activity Date:" />
-                    <x-form-checkbox checked  name="completed"  value='1' label="Completed:" />       
-                    <x-form-input type="date" wire:model="followup_date" name="followup_date" label="Followup Date:"  />
+                    <x-form-textarea required name="activity.note" label="Comments:" placeholder="Enter details...." />
+                    <x-form-input required type="date"  id="activity_date" name="activity.activity_date" label="Activity Date:" />
+                    <x-form-checkbox checked  name="activity.completed"  value='1' label="Completed:" />       
+                    <x-form-input type="date"name="activity.followup_date" label="Followup Date:"  />
                     @if($followup_date)   
-                        <x-form-select  name="followup_activity" label="Followup Activity:" :options="$activityTypes" placeholder="Enter details...."/>
+                        <x-form-select  name="activity.followup_activity" label="Followup Activity:" :options="$activityTypes" placeholder="Enter details...."/>
                     @endif
                     
-
+                    <x-form-input type="hidden" name="activity.completed" />
 
                     <div class="float-right">
                         <button class="btn btn-secondary"
@@ -53,7 +53,7 @@
                             wire:click.prevent="doClose">
                             Cancel
                         </button>
-                        <button wire:click.ignore="storeActivity" class="btn btn-danger">Record Activity</button>
+                        <button wire:click.ignore="storeActivity()" class="btn btn-danger">Record Activity</button>
 
                     </div>
                     @endwire

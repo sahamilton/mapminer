@@ -17,17 +17,12 @@ class AddressActivities extends Component
     public $search ='';
     public array $owned;
     public $address_id;
-
-
-
-    // activities
-   
     public $activitytype_id='all';
-    public $activity_date;
-    public $note;
-    public $completed = true;
+
     public $followup_date;
-    public $followup_activity;
+    // activities
+    public Activity $activity;
+   
     public $activityModalShow = false;
 
     /**
@@ -123,13 +118,14 @@ class AddressActivities extends Component
         }
 
         return [
-            'activity_date'=> $activityDateRules,
-            'activitytype_id'=>'required',
-            'note'=>'required',
-            'followup_date'=>'date|nullable|after:activity_date',
-            'followup_activity'=>'required_with:followup_date',
-            'address_id' => 'required',
-            'branch_id'=>'required',
+            'activity.activity_date'=> $activityDateRules,
+            'activity.activitytype_id'=>'required',
+            'activity.note'=>'required',
+            'activity.followup_date'=>'date|nullable|after:activity_date',
+            'activity.followup_activity'=>'required_with:followup_date',
+            'activity.address_id' => 'required',
+            'activity.branch_id'=>'required',
+            'activity.completed'=>'sometimes',
         ];
     }
     /**
@@ -149,13 +145,17 @@ class AddressActivities extends Component
      */
     private function resetActivities()
     {
-        $this->note=null;
-        $this->completed = 1;
-        $this->activity_date = now()->format('Y-m-d');
-        $this->followup_date=null;
-        $this->activitytype_id = 13;
-        $this->followup_activity = 13;
-        $this->contact_id = null;
+        $this->activity = Activity(
+            [
+              
+                'completed' => 1,
+                'activity_date' =>now()->format('Y-m-d'),
+                
+                'user_id' => auth()->user()->id,
+                'address_id'=>$this->address_id,
+            ]
+                
+        )->make();
 
  
     }
@@ -206,22 +206,18 @@ class AddressActivities extends Component
      */
     private function _recordActivity()
     {
-         $activity = [
+         $this->activity = [
             'address_id' => $this->address_id,
             'activitytype_id'=> $this->activitytype_id,
             'branch_id' => $this->branch_id,
-            'completed' => $this->completed,
-            'note'=>$this->note,
-            'user_id' => auth()->user()->id,
-            'activity_date' => $this->activity_date,
-            'followup_date'=> $this->followup_date,
+           
         ];
         
         
-         $activity = Activity::create($activity);
+         $this->activity->save();
       
-         if($this->contact_id && $this->contact_id !==0) {
-            $activity->relatedContact()->attach($this->contact_id);
+         if($this->activity->contact_id && $this->activity->contact_id !==0) {
+            $this->activity->relatedContact()->attach($this->activity->contact_id);
          }
         return $activity;
     }
