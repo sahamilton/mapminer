@@ -106,7 +106,7 @@
                         <td>
                             @foreach ($lead->assignedTobranch as $branch)
 
-                                {{$branch->branchname}}
+                                <a href="{{route('branches.show', $branch->id)}}">{{$branch->branchname}}</a>
                             @endforeach
                         </td>
                         <td>
