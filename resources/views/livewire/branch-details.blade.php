@@ -55,22 +55,24 @@
         @endforeach
     
     <tr>
+        @if(auth()->user()->hasRole(['admin', 'sales_ops']))
         <thead><th colspan=5>Per Oracle Data</th></thead></tr>
     @foreach ($branch->oraclelocation as $location)
-    <tr>
-        <td>{{$location->fullName()}}</td>
-        <td>{{$location->job_profile}}</td>
-        <td>{{$location->phone}}</td>
-        <td><a href="mailto:{{$location->primary_email}}">{{$location->primary_email}}</td>
-        <td>{{$location->manager_name}}</td>
-        <td><a href="mailto:{{$location->manager_email_address}}">{{$location->manager_email_address}}</a></td>
+        <tr>
+            <td>{{$location->fullName()}}</td>
+            <td>{{$location->job_profile}}</td>
+            <td>{{$location->phone}}</td>
+            <td><a href="mailto:{{$location->primary_email}}">{{$location->primary_email}}</td>
+            <td>{{$location->manager_name}}</td>
+            <td><a href="mailto:{{$location->manager_email_address}}">{{$location->manager_email_address}}</a></td>
 
 
 
-    </tr>
-   
+        </tr>
+  
 
    @endforeach 
+    @endif
 </tbody>
 </table>
 </div>
