@@ -28,7 +28,7 @@
 		placeholder="Full address with city & state"
 		name="address"
 		label="Full address" 
-		value="{{optional($user)->person->fullAddress()}}"
+		value="{{isset($user) ? $user->person->fullAddress() : ''}}"
 		
 	 />
 
