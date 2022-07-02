@@ -103,7 +103,7 @@ class AddressActivities extends Component
      
         // get contacts;
         $this->resetActivities();
-        $this->doShow();
+        $this->doShow('activityModalShow');
        
         $this->address = $address;
        
@@ -175,7 +175,7 @@ class AddressActivities extends Component
             $new->update(['relatedActivity'=>$followup->id]);
         }
         $this->resetActivities();
-        $this->activityModalShow = false;
+        $this->doClose('activityModalShow');
     }
    
     /**
@@ -236,6 +236,15 @@ class AddressActivities extends Component
             
             $this->validate();
             
+    }
+
+    public function doClose($form)
+    {
+        $this->$form = false;
+    }
+    public function doShow($form)
+    {
+        $this->$form = true;
     }
 
 }

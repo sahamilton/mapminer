@@ -38,13 +38,11 @@
 				<strong>
 					<a href="" wire:click.prevent="changeview('contacts')"> Contacts</a>
 				</strong>{{$address->contacts->count()}}
-			</p>
-  			<p>
+			<br />
 				<strong>
 					<a href="" wire:click.prevent="changeview('activities')"> Activities</a>
 				</strong>{{$address->activities_count}}
-			</p>
-			<p>
+			<br />
 				<strong>
 					<a href="" wire:click.prevent="changeview('opportunities')"> Opportunities</a>
 				</strong>{{$address->opportunities_count}}
@@ -77,26 +75,29 @@
 			    </div>
 			</div>
 			@endif
-			<p><strong>Type:</strong>
-			  @if(! $address->isCustomer)
-			      Lead
+			@if(! $address->isCustomer)
+				<div class="mt-0 bg-warning">
+					<strong>Lead</strong>
 			      @if($owned)
-			      <button wire:click="changeCustomerType({{$address->id}})" class="btn btn-success">Mark as Customer</button>
+			      <button wire:click="changeCustomerType({{$address->id}})" title="Mark as customer" class="float-right fa-light fa-arrow-rotate-right bg-warning"></button>
 			      @endif
-			  @else
-			    Customer 
+			  </div>
+			@else
+
+				<div class="mt-0 bg-success">
+					<strong>Customer </strong>
 			    @if($owned)
-			      <button wire:click="changeCustomerType({{$address->id}})" class="btn btn-warning">Mark as Lead</button>
+			      <button wire:click="changeCustomerType({{$address->id}})" title="Mark as lead" class="float-right fa-light fa-arrow-rotate-left bg-success"></button>
 			    @endif
-			  
-			  @endif
-			</p>
+			  </div>
+			@endif 
+			      
+
 			<p><strong>Location Source:</strong> {{$address->leadsource ? $address->leadsource->source : 'unknown'}}
-			{{$address->createdBy ? "Created by " . $address->createdBy->person->fullname() : ''}}</p>
-
-
-			<p><strong>Date Added:</strong> {{$address->created_at->format('Y-m-d')}}</p>
-			<p><strong>Last Activity:</strong> {{$address->created_at->format('Y-m-d')}}</p>
+			@if($address->createdBy) <strong>Created by: </strong>{{$address->createdBy->person->fullname()}}@endif
+			<br /><strong>Date Added:</strong> {{$address->created_at->format('Y-m-d')}}
+			<br /><strong>Last Activity:</strong> {{$address->created_at->format('Y-m-d')}}</p>
+			@include('addresses.partials._lwleadstatus')
 			</fieldset>
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 						 @if($address->duplicates->count() > 1 && $owned)
@@ -109,9 +110,10 @@
 
 		@if($owned)
 			
-			<i class="far fa-edit"
-			title="Edit this location"></i>
-			Edit Location</a>
+			<button wire:click="editAddress()" 
+			class="border-0"
+			title="Edit this location"><i class="far fa-edit text-info"></i>
+			</button>
 			
 			
 				<i class="far fa-trash-alt text-danger" 
@@ -119,14 +121,14 @@
 				title="Delete this lead"> </i> 
 			Delete Locaton
 	
-		
+			@include('livewire.addresses._modal')
 		
 
 		@endif
-		@include('addresses.partials._lwleadstatus')
+		
 		</fieldset>
 	</div>
-		<div wire:ignore id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>
+		<div id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>
 	 	@include('addresses.partials.lwmap')
 	
 </div>

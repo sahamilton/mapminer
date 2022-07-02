@@ -29,7 +29,7 @@
                 @include('addresses.partials._lwdetails')
             @break;
             @case('contacts')
-                <livewire:address-contacts :address_id="$address->id" :owned="$owned" />
+                <livewire:address-contacts :address_id="$address_id" :owned="$owned" />
             @break;
             @case('activities')
                 <livewire:address-activities :address="$address" :owned="$owned" />

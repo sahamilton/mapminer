@@ -497,8 +497,10 @@ class Address extends Model
      */
     public function ranking()
     {
+        
         return $this->belongsToMany(Person::class)
             ->withPivot('ranking', 'comments', 'status_id')
+            
             ->withTimeStamps();
     }
     /**
@@ -521,7 +523,7 @@ class Address extends Model
     {
        
         foreach ($rankings as $ranking) {
-            if ($ranking->pivot->person_id == auth()->user()->person->id) {
+            if ($ranking->pivot->person_id === auth()->user()->person->id) {
                 return $ranking->pivot;
             }
         }

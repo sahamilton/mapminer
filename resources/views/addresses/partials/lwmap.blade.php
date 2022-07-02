@@ -4,15 +4,16 @@
 
 <script type="text/javascript">
 
-const uluru = { lat: {{$address->lat}}, lng: {{$address->lng}} };
+const address = { lat: {{$address->lat}}, lng: {{$address->lng}} };
 // The map, centered at Uluru
 const map = new google.maps.Map(document.getElementById("map"), {
   zoom: 14,
-  center: uluru,
+  center: address,
 });
 const marker = new google.maps.Marker({
-  position: uluru,
+  position: address,
   map: map,
+  title:"{{$address->businessname}}",
 });
 
 

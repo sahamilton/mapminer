@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Address;
 use App\Contact;
+use App\State;
 use App\Activity;
 use App\Opportunity;
 use App\ActivityType;
@@ -20,14 +21,15 @@ class AddressCard extends Component
     public $sortAsc = false;
     public $search ='';
     public $ranked;
-    public Address $address;
+    public $address_id;
+    public $open = true;
 
     public $paginationTheme = 'bootstrap';
     public $view = 'summary';
     public $owned = false;
-    
+    public Address $location;
     public $branch_id;
-    
+    public $addressModal=false;
     public array $myBranches;
   
 
@@ -49,38 +51,37 @@ class AddressCard extends Component
 
         $this->sortField = $field;
     }
-    public function mount(Address $address, string $view=null)
+    public function mount(int $address_id, string $view=null)
     {
        
 
-        $this->address = $address->load('claimedByBranch');
-        dd($this->address);
-                    
+        
         $this->myBranches = $this->_getMyBranches();
-        $this->owned = $this->_checkIfOwned();
+        
+        $this->owned = array_intersect(Address::findOrFail($address_id)->claimedByBranch->pluck('id')->toArray(), $this->myBranches);
+                    
+        $this->location = Address::findOrFail($address_id);
         
         isset($view) ? $this->view = $view : $this->view = 'summary';
-        if($this->address->claimedByBranch->first()) {
-            $this->branch_id = $address->id; 
-            $this->address_branch_id = $this->address->claimedByBranch->first()->pivot->id;
-            $this->ranking = $this->address->getMyRanking();
-        }
+        
       
     }
     public function render()
     {
-        @ray($this->address);
+        
         return view(
             'livewire.address-card',
             [
 
 
-                'address' =>Address::withCount('activities', 'contacts', 'opportunities')
-                    ->with('claimedByBranch', 'ranking')->find($this->address->id),  
+                'address' =>Address::query()
+                    ->withCount('activities', 'contacts', 'opportunities')
+                    ->with('claimedByBranch', 'ranking')->find($this->address_id),  
                 
                 'leadStatuses' =>[1=>'Offered',2=>'Owned', 4=>'Rejected'],
                 
                 'campaigns' => Campaign::active()->get(),
+                'states'=>State::pluck('fullstate', 'statecode')->toArray(),
                 'viewtypes'=>[
                     'summary'=>'Summary',
                     'contacts'=>'Contacts', 
@@ -110,7 +111,7 @@ class AddressCard extends Component
     private function _checkIfOwned()
     {
         
-       
+        
         return array_intersect($this->address->claimedByBranch->pluck('id')->toArray(), $this->myBranches);
 
     }
@@ -141,7 +142,7 @@ class AddressCard extends Component
         $address->save();
 
     }
-
+    
     public function updateRating($ranked)
     {
         
@@ -149,6 +150,47 @@ class AddressCard extends Component
     }
     
 
+    public function editAddress()
+    {
+        $this->location = Address::findOrFail($this->address_id);
+        $this->doShow('addressModal');
+
+    }
+
+    public function updateAddress()
+    {
+        $this->validate();
+        $geocode = app('geocoder')->geocode($this->location->fullAddress())->get();
+        @ray($geocode);
+            if(count($geocode) > 0) {
+                 $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
+                 $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
+                
+            }
+        $this->doClose('addressModal');
+        $this->location->save();
+        $this->resetPage();
+
+    }
+    public function rules()
+    {
+        return [
+            'location.businessname'=>'required',
+            'location.street'=>'required',
+            'location.city'=>'required',
+            'location.state'=>'required',
+            'location.zip'=>'required',
+
+        ];
+    }
+    public function doClose($form)
+    {
+        $this->$form = false;
+    }
+    public function doShow($form)
+    {
+        $this->$form = true;
+    }
     
     
-}
+}   
