@@ -7,12 +7,14 @@ use App\Activity;
 use App\ActivityType;
 use App\Address;
 use Livewire\WithPagination;
+use Carbon\Carbon;
+
 class AddressActivities extends Component
 {
     use WithPagination;
 
     public $perPage = 10;
-    public $sortField = 'created_at';
+    public $sortField = 'activity_date';
     public $sortAsc = false;
     public $search ='';
     public array $owned;
@@ -22,9 +24,10 @@ class AddressActivities extends Component
     public $followup_date;
     // activities
     public Activity $activity;
-   
+    
+    public $branch_id;
     public $activityModalShow = false;
-
+    public $address_branch_id;
     /**
      * [updatingSearch description]
      * 
@@ -50,6 +53,12 @@ class AddressActivities extends Component
     public function mount(Address $address, array $owned=null){
         $this->address = $address;
         $this->owned = $owned;
+        if($branch = Address::with('claimedByBranch')->findOrFail($address->id)->claimedByBranch->first()) {
+            $this->branch_id = $branch->id; 
+            $this->address_branch_id = $branch->pivot->id;
+            
+        }
+      
     }
 
     public function render()
@@ -65,7 +74,7 @@ class AddressActivities extends Component
                 ->search($this->search)
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-            'activityTypes' => ActivityType::pluck('activity', 'id')->toArray(),
+            'activityTypes' =>$this->_getActivityTypes($this->address),
 
             ]
         );
@@ -78,12 +87,8 @@ class AddressActivities extends Component
      */
     private function _getActivityTypes()
     {
-        $activityTypes = ActivityType::orderBy('activity')->pluck('activity', 'id')->toArray();
-        $activityTypes['0'] = 'All';
+        return ActivityType::orderBy('activity')->pluck('activity', 'id')->toArray();
        
-        sort($activityTypes);
-
-        return $activityTypes;
     }
 
     /*
@@ -97,7 +102,7 @@ class AddressActivities extends Component
     {
      
         // get contacts;
-        $this->resetActivities();
+        $this->resetActivities($address);
         $this->doShow('activityModalShow');
        
         $this->address = $address;
@@ -113,7 +118,7 @@ class AddressActivities extends Component
     {
        
         $activityDateRules = 'date|required';
-        if ($this->completed) {
+        if (isset($this->activity) && $this->activity->completed) {
             $activityDateRules.='|before:tomorrow';
         }
 
@@ -121,11 +126,12 @@ class AddressActivities extends Component
             'activity.activity_date'=> $activityDateRules,
             'activity.activitytype_id'=>'required',
             'activity.note'=>'required',
-            'activity.followup_date'=>'date|nullable|after:activity_date',
-            'activity.followup_activity'=>'required_with:followup_date',
+            
             'activity.address_id' => 'required',
-            'activity.branch_id'=>'required',
             'activity.completed'=>'sometimes',
+            'activity.contact_id'=>'sometimes',
+            'activity.followup_date'=>'sometimes|date|after:activity_date',
+            'activity.followup_activity' => 'required_with:activity.followup_date',
         ];
     }
     /**
@@ -143,21 +149,18 @@ class AddressActivities extends Component
      * 
      * @return [type] [description]
      */
-    private function resetActivities()
+    private function resetActivities(Address $address)
     {
-        $this->activity = Activity(
-            [
+        $this->activity = Activity::make([
               
                 'completed' => 1,
-                'activity_date' =>now()->format('Y-m-d'),
-                
+                'activity_date' =>now(),
+                'branch_id' => $this->branch_id,
                 'user_id' => auth()->user()->id,
-                'address_id'=>$this->address_id,
-            ]
-                
-        )->make();
+                'address_id'=>$address->id,
+            ]);
 
- 
+       
     }
     /**
      * [store description]
@@ -166,15 +169,18 @@ class AddressActivities extends Component
      */
     public function storeActivity()
     {
-        $this->_getActivity();
+        $this->validate();
         $new = $this->_recordActivity();
-        $message =  ($this->completed ? 'Completed ' : 'To do ') . $this->activityTypes[$this->activitytype_id] .' activity added at '. $this->address->businessname;
+        if($this->activity->contact_id && $this->activity->contact_id !== 0) {
+            $new->relatedContact()->attach($this->activity->contact_id);
+        }
+        $message =  ($this->activity->completed ? 'Completed ' : 'To do ') . ' activity added at '. $this->address->businessname;
         session()->flash('message', $message);
-        if ($this->followup_date) {
+        if ($this->activity->followup_date) {
             $followup = $this->_recordFollowUpactivity();
             $new->update(['relatedActivity'=>$followup->id]);
         }
-        $this->resetActivities();
+        $this->resetActivities($this->address);
         $this->doClose('activityModalShow');
     }
    
@@ -186,15 +192,15 @@ class AddressActivities extends Component
     private function _recordFollowUpactivity() {
 
         $activity = [
-            'address_id' => $this->address_id,
-            'activity_date' => $this->followup_date,
-            'activitytype_id'=> $this->followup_activity,
+            'address_id' => $this->address->id,
+            'activity_date' => $this->activity->followup_date,
+            'activitytype_id'=> $this->activity->followup_activity,
             'branch_id' => $this->branch_id,
             'completed' => null,
-            'note'=> "Follow up to prior " . $this->activityTypes[$this->activitytype_id] . " on " . Carbon::parse($this->activity_date)->format('m/d/y') . " (". $this->note . ")",
+            'note'=> "Follow up to prior  on " . Carbon::parse($this->activity->activity_date)->format('m/d/y') . " (". $this->activity->note . ")",
             'user_id' => auth()->user()->id,
         ];
-       
+        @ray($activity);
         
         return Activity::create($activity);
         
@@ -206,32 +212,30 @@ class AddressActivities extends Component
      */
     private function _recordActivity()
     {
-         $this->activity = [
-            'address_id' => $this->address_id,
-            'activitytype_id'=> $this->activitytype_id,
-            'branch_id' => $this->branch_id,
-           
-        ];
-        
-        
-         $this->activity->save();
+       
+        $data = [
+                'activity_date'=>$this->activity->activity_date,
+                'activitytype_id'=>$this->activity->activitytype_id,
+                'address_id'=>$this->address->id,
+                'branch_id'=>$this->branch_id,
+                'user_id' =>auth()->user()->id,
+                'note'=>$this->activity->note,
+                'completed'=>$this->activity->completed,
+                'address_branch_id'=>$this->address_branch_id,
+            ];
+        @ray(211, $data);
+        return Activity::create(
+
+            $data
+
+        );
       
-         if($this->activity->contact_id && $this->activity->contact_id !==0) {
-            $this->activity->relatedContact()->attach($this->activity->contact_id);
-         }
-        return $activity;
     }
-    /**
-     * [_getActivity description]
-     * 
-     * @return [type] [description]
-     */
-    private function _getActivity() 
+    public function updateActivity(Activity $activity)
     {
-            
-            
-            $this->validate();
-            
+        @ray($activity);
+        $this->activity = $activity;
+        $this->doShow('activityModalShow');
     }
 
     public function doClose($form)

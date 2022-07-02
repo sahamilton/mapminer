@@ -98,7 +98,7 @@ class AddressCard extends Component
      * @param  [type] $view [description]
      * @return [type]       [description]
      */
-    public function changeview(string $view)
+    public function changeView(string $view)
     {
         $this->view = $view;
        

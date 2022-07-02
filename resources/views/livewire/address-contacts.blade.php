@@ -1,18 +1,13 @@
 <div>
     @if($owned)
-        <div class="float-right">
-        <a class="btn btn-info" 
-            title="Add Contact"
-            data-href="" 
-            data-toggle="modal" 
-            data-target="#add_contact" 
-            data-title = "Add contact to address" 
-            href="#">
-            <i class="fas fa-user-alt"></i>
-            Add Contact
-            </a>
+        <div class="float-right mb-4">
+            <button class="btn btn-info" href="#" wire:click.prevent="addContact()"><i class="fas fa-user-alt"></i>
+                Add Contact
+            </button>
+                
         </div>
     @endif
+       
     <div class="col form-inline mb-4">
         @include('livewire.partials._perpage')
        
@@ -36,12 +31,12 @@
                     <td>
                         {{$contact->complete_name}}
                         @if($owned)
-                            edit / delete
+                            <button  wire:click="addContact({{$contact->id}})" /><i class="fa-light fa-pen-to-square text-info"></i></button> / delete
                         @endif
                     </td>
                     <td>{{$contact->title}}</td>
                     <td>{{$contact->email}}</td>
-                    <td>{{$contact->phone_number}}</td>
+                    <td>{{$contact->contactphone}}</td>
                     <td>{{$contact->comments}}</td>
                 </tr>
                @endforeach
@@ -57,4 +52,5 @@
             Showing {{ $contacts->firstItem() }} to {{ $contacts->lastItem() }} out of {{ $contacts->total() }} results
         </div>
     </div>
+    @include('contacts.partials._modal')
 </div>

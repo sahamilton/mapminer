@@ -29,7 +29,11 @@ class Activity extends Model
               'Stop By',
               'Left material',
               'Proposal'];
-    
+    protected $casts = [
+        'activity_date'  => 'date:Y-m-d',
+        'followup_date'  => 'date:Y-m-d',
+   
+    ];
 
     /**
      * [getId description]

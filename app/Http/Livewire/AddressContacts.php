@@ -15,7 +15,8 @@ class AddressContacts extends Component
     public $search ='';
     public array $owned;
     public $address_id;
-
+    public $contactModalShow =false;
+    public Contact $contact;
 
     public function updatingSearch()
     {
@@ -52,4 +53,107 @@ class AddressContacts extends Component
                 ]
             );
     }
+
+    
+    /*
+
+        Adding Contact
+
+
+
+    */
+    public function addContact(Contact $contact = null)
+    {
+       
+        // get contacts;
+         if (! $contact) {
+            $this->resetContact();
+         }else {
+            $this->contact = $contact;
+         }
+        
+        $this->doShow('contactModalShow');
+
+       
+       
+
+    }
+    /**
+     * [rules description]
+     * 
+     * @return [type] [description]
+     */
+    public function rules()
+    {
+       
+       
+        return [
+            
+            'contact.fullname'=>'required',
+            'contact.title'=>'required',
+            'contact.email'=>'sometimes|email',
+            'contact.comments'=>'sometimes',
+            'contact.contactphone'=>'sometimes',
+            'contact.primary'=>'sometimes',
+        ];
+            
+    }
+    /**
+     * [$messages description]
+     * 
+     * @var [type]
+     */
+
+    /**
+     * [resetContact description]
+     * 
+     * @return [type] [description]
+     */
+    private function resetContact()
+    {
+        $this->contact = Contact::make([
+              
+                'user_id' => auth()->user()->id,
+                'address_id'=>$this->address_id,
+            ]);
+
+       
+    }
+    /**
+     * [store description]
+     * 
+     * @return [type] [description]
+     */
+    public function storeContact()
+    {
+        $this->validate();
+        $this->contact->user_id = auth()->user()->id;
+        $this->contact->address_id = $this->address_id;
+        $this->contact->save();
+        @ray($this->contact);
+        $this->resetContact();
+        $this->doClose('contactModalShow');
+    }
+   
+   
+   
+    public function updatecontact(contact $contact)
+    {
+      
+        $this->contact = $contact;
+        $this->doShow('contactModalShow');
+    }
+
+    public function doClose($form)
+    {
+        $this->$form = false;
+    }
+    public function doShow($form)
+    {
+        $this->$form = true;
+    }
+
+
+
+
 }

@@ -46,35 +46,48 @@
         <th>Completed</th>
     </thead>
     <tbody>
-         @foreach($activities as $activity)
+         @foreach($activities as $acts)
   
             <tr>
-                <td>{{$activity->activity_date ? $activity->activity_date->format('Y-m-d'):''}}</td>
+                <td>{{$acts->activity_date ? $acts->activity_date->format('Y-m-d'):''}}</td>
                 <td>
-                    @if($activity->user)
-                        {{$activity->user->person->fullName()}}
+                    @if($acts->user)
+                        {{$acts->user->person->fullName()}}
                     @else
                     No Longer with Company
                     @endif
                 </td>
-                <td>@if($activity->type)
-                    {{$activity->type->activity}}
+                <td>
+                    @if($acts->type)
+                        {{$acts->type->activity}}
                     @endif
                 </td>
-                <td>@foreach($activity->relatedContact as $contact)
-                    <li>{{$contact->complete_name}}</li>
+                <td>
+                    @foreach($acts->relatedContact as $contact)
+                    {{$contact->complete_name}}
+                    {{! $loop->last ? "," : ''}}
                     @endforeach
                     
                 </td>
                 <td>
                     @if($search !='')
-                        {!! $activity->highlightWords($search) !!}
+                        {!! $acts->highlightWords($search) !!}
                     @else
 
-                        {{$activity->note}}
+                        {{$acts->note}}
                     @endif
                 </td>
-                <td>{{$activity->completed ? 'Completed' : ''}}</td>
+                <td>
+                    @if($acts->completed)
+                     Completed
+
+                     @else
+
+                     <bbutton wire:click="updateActivity({{$acts->id}})" class="fa-light fa-calendar-lines-pen text-success"></button>
+
+                     @endif
+
+                 </td>
             </tr>
            @endforeach
 
