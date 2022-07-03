@@ -31,7 +31,8 @@
                     <td>
                         {{$contact->complete_name}}
                         @if($owned)
-                            <button  wire:click="addContact({{$contact->id}})" /><i class="fa-light fa-pen-to-square text-info"></i></button> / delete
+                            <a wire:click="addContact({{$contact->id}})" /><i class="fa-light fa-pen-to-square text-info"></i></a>
+                            <a wire:click="deleteContact({{$contact->id}})" /><i class="fa-solid fa-trash-can text-danger"></i></a>
                         @endif
                     </td>
                     <td>{{$contact->title}}</td>
@@ -52,5 +53,10 @@
             Showing {{ $contacts->firstItem() }} to {{ $contacts->lastItem() }} out of {{ $contacts->total() }} results
         </div>
     </div>
+    @if($contactModalShow)
     @include('contacts.partials._modal')
+    @endif
+    @if('confirmContact')
+    @include('livewire.contacts._confirmmodal')
+    @endif
 </div>

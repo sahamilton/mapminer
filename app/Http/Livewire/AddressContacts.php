@@ -16,6 +16,7 @@ class AddressContacts extends Component
     public array $owned;
     public $address_id;
     public $contactModalShow =false;
+    public $confirmContact = false;
     public Contact $contact;
 
     public function updatingSearch()
@@ -112,7 +113,7 @@ class AddressContacts extends Component
     private function resetContact()
     {
         $this->contact = Contact::make([
-              
+                'fullname'=>'Contacts Name',
                 'user_id' => auth()->user()->id,
                 'address_id'=>$this->address_id,
             ]);
@@ -137,11 +138,23 @@ class AddressContacts extends Component
    
    
    
-    public function updatecontact(contact $contact)
+    public function updatecontact(Contact $contact)
     {
       
         $this->contact = $contact;
         $this->doShow('contactModalShow');
+    }
+
+
+    public function deleteContact(Contact $contact)
+    {
+        $this->doShow('confirmContact');
+    }
+
+    public function destroyContact(Contact $contact)
+    {
+        $contact->delete();
+        $this->doClose('confirmContact');
     }
 
     public function doClose($form)

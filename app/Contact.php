@@ -32,13 +32,7 @@ class Contact extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function fullName()
-    {
-        if (isset($this->fullname)) {
-            return $this->fullname;
-        }
-        return $this->firstname . " " . $this->lastname;
-    }
+    
     public function relatedActivities()
     {
         return $this->belongsToMany(Activity::class, 'activity_contact');
