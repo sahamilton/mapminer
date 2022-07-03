@@ -16,7 +16,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Record Contact at <span id="title"> {{isset($address) ? $address->businessname :'company'}} </span> </h5>
+                    <h5 class="modal-title">Record Contact <span id="title"> {{isset($address) ? ' at ' .  $address->businessname :''}} </span> </h5>
                     
                     <button type="button" class="close"  wire:click.prevent="doClose('contactModalShow')">&times;</button>
                 </div>

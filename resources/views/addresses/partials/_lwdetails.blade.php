@@ -10,7 +10,7 @@
 			<p>
 				<i class="far fa-user" aria-hidden="true"></i>
 				 <b>Primary Contact:</b> <span id="primaryContact">
-				 	{{$address->primaryContact->count() ? $address->primaryContact->first()->fullName() : ''}}
+				 	{{$address->primaryContact->count() ? $address->primaryContact->first()->fullname : ''}}
 				 </span>
 			 </p>
 			 <p>

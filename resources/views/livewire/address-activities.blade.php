@@ -2,7 +2,7 @@
     @if($owned)
      <div class="float-right mb-4">
         <button class="btn btn-info" href="#" wire:click.prevent="addActivity({{ $address->id }})">
-            <i class="fa-light fa-calendar-circle-plus"></i>
+            <i class="fa-solid fa-calendar-lines-pen"></i>
             Record Activity
         </button>
             
@@ -94,7 +94,9 @@
 
                      @else
                      @if($owned)
-                     <button wire:click="editActivity({{$acts->id}})" class="fa-light fa-calendar-lines-pen text-success"></button>
+                     <a wire:click="editActivity({{$acts->id}})" 
+                        title="Edit activity"
+                        class="fa-light fa-calendar-lines-pen text-info"></a>
                      @endif
                      @endif
 

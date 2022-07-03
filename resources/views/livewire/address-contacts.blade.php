@@ -36,8 +36,15 @@
                         @endif
                     </td>
                     <td>{{$contact->title}}</td>
-                    <td>{{$contact->email}}</td>
-                    <td>{{$contact->contactphone}}</td>
+                    <td>
+                        @if(isset($contact->email))
+                            <a href="mailto:{{$contact->email}}">{{$contact->email}}</a>
+
+                        @endif
+
+
+                    </td>
+                    <td>{{$contact->phoneNumber}}</td>
                     <td>{{$contact->comments}}</td>
                 </tr>
                @endforeach
