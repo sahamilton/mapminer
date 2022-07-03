@@ -27,6 +27,7 @@ class AddressActivities extends Component
     
     public $branch_id;
     public $activityModalShow = false;
+    public $activityEditModal =false;
     public $address_branch_id;
     /**
      * [updatingSearch description]
@@ -126,11 +127,11 @@ class AddressActivities extends Component
             'activity.activity_date'=> $activityDateRules,
             'activity.activitytype_id'=>'required',
             'activity.note'=>'required',
-            
+           
             'activity.address_id' => 'required',
             'activity.completed'=>'sometimes',
             'activity.contact_id'=>'sometimes',
-            'activity.followup_date'=>'sometimes|date|after:activity_date',
+            'activity.followup_date'=>'sometimes|date|nullable|after:activity_date',
             'activity.followup_activity' => 'required_with:activity.followup_date',
         ];
     }
@@ -200,7 +201,7 @@ class AddressActivities extends Component
             'note'=> "Follow up to prior  on " . Carbon::parse($this->activity->activity_date)->format('m/d/y') . " (". $this->activity->note . ")",
             'user_id' => auth()->user()->id,
         ];
-        @ray($activity);
+
         
         return Activity::create($activity);
         
@@ -223,21 +224,40 @@ class AddressActivities extends Component
                 'completed'=>$this->activity->completed,
                 'address_branch_id'=>$this->address_branch_id,
             ];
-        @ray(211, $data);
+
         return Activity::create(
 
             $data
 
         );
-      
+        
     }
-    public function updateActivity(Activity $activity)
+    public function editActivity(Activity $activity)
     {
         @ray($activity);
         $this->activity = $activity;
-        $this->doShow('activityModalShow');
+        $this->doShow('activityEditModal');
     }
 
+
+    public function updateActivity(Activity $activity)
+    {
+        @ray($activity, $this->activity);
+
+         $data = [
+                'activity_date'=>$this->activity->activity_date,
+                'activitytype_id'=>$this->activity->activitytype_id,
+               
+                'note'=>$this->activity->note,
+                'completed'=>$this->activity->completed,
+                
+            ];
+        $activity->update($data);
+        if($this->activity->contact_id && $this->activity->contact_id !== 0) {
+            $activity->relatedContact()->sync($this->activity->contact_id);
+        }
+        $this->doClose('activityEditModal');
+    }
     public function doClose($form)
     {
         $this->$form = false;
@@ -245,6 +265,13 @@ class AddressActivities extends Component
     public function doShow($form)
     {
         $this->$form = true;
+    }
+
+    public function delete(Activity $activity)
+    {
+
+        $activity->delete();
+        $this->doClose('confirmationModal');
     }
 
 }

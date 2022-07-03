@@ -25,7 +25,7 @@
             
         
             <div  wire:loading>
-                <div class="col spinner-border text-danger"></div>
+                <div class="spinner-border text-danger"></div>
             </div>
         </div>
 

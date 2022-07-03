@@ -33,20 +33,6 @@
 				@endif
 				
 			</p>
-			<p>
-
-				<strong>
-					<a href="" wire:click.prevent="changeview('contacts')"> Contacts</a>
-				</strong>{{$address->contacts->count()}}
-			<br />
-				<strong>
-					<a href="" wire:click.prevent="changeview('activities')"> Activities</a>
-				</strong>{{$address->activities_count}}
-			<br />
-				<strong>
-					<a href="" wire:click.prevent="changeview('opportunities')"> Opportunities</a>
-				</strong>{{$address->opportunities_count}}
-			</p>
 			
 			</fieldset>
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">

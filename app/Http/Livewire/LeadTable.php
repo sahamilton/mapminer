@@ -341,7 +341,7 @@ class LeadTable extends Component
 
     public function store()
     {
-        $this->_getActivity();
+        $this->validate();
         $new = $this->_recordActivity();
         $message =  ($this->completed ? 'Completed ' : 'To do ') . $this->activityTypes[$this->activitytype_id] .' activity added at '. $this->address->businessname;
         session()->flash('message', $message);
@@ -392,13 +392,7 @@ class LeadTable extends Component
          }
         return $activity;
     }
-    private function _getActivity() 
-    {
-            
-            
-            $this->validate();
-            
-    }
+    
     
     
 }

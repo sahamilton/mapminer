@@ -83,7 +83,7 @@
 
                      @else
 
-                     <bbutton wire:click="updateActivity({{$acts->id}})" class="fa-light fa-calendar-lines-pen text-success"></button>
+                     <button wire:click="editActivity({{$acts->id}})" class="fa-light fa-calendar-lines-pen text-success"></button>
 
                      @endif
 
@@ -103,6 +103,7 @@
         </div>
     </div>
     @include('activities.partials._modal')
+    @include('activities.partials._editmodal')
 </div>
 
 
