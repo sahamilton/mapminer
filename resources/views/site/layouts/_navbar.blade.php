@@ -67,7 +67,7 @@
           </li>
 
         <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Sales Resources<span class="caret"></span>
                             </a> 
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -105,26 +105,26 @@
                 </div>
               
             </li> 
-             
+          </ul>   
               @if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist', 'market_manager']))
               
                 @include('branchleads.partials._searchbar')
               
               
-              <li class="nav-item">
-                  <a  class="nav-link" 
-                  href="#"
-                  data-href="" 
-                  data-toggle="modal" 
-                  data-target="#add_lead" >
-                      <i class="fas fa-plus" style="color:green"> </i> Add Lead</a>
-                  </li>
+                 <div>
+                  <button class="btn btn-success"  
+                    href="#"
+                    data-href="" 
+                    data-toggle="modal" 
+                    data-target="#add_lead" >
+                      <i class="fas fa-plus text-white"> </i>  Add Lead </button>
+                </div>
 
                 @include('branchleads.partials._mylead')
               @endif
 
 
-          </ul>
+          
 
           @include('site.layouts.partials._rightnav')
                

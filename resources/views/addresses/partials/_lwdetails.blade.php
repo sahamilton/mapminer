@@ -86,34 +86,38 @@
 			@include('addresses.partials._lwleadstatus')
 			</fieldset>
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
-						 @if($address->duplicates->count() > 1 && $owned)
-				<div class="alert alert-danger">
-					<p><strong>Possible Duplicate(s)</strong> {{$address->duplicates->count()}}- 
-						<a href="{{route('address.duplicates', $address->id)}}"><button class="btn btn-danger">Merge?</button></a></p>
-				</div>
-			@endif
+				@if($address->duplicates->count() > 1 && $owned)
+					<div class="alert alert-danger">
+						<p><strong>Possible Duplicate(s)</strong> {{$address->duplicates->count()}}- 
+							<a href="{{route('address.duplicates', $address->id)}}"><button class="btn btn-danger">Merge?</button></a></p>
+					</div>
+				@endif
 
 
 		@if($owned)
 			
-			<button wire:click="editAddress()" 
-			class="border-0"
-			title="Edit this location"><i class="far fa-edit text-info"></i>
-			</button>
+			<a   wire:click="editAddress('{{$address->id}}')" 
+			class="fa-solid fa-pen-to-square text-info"
+			title="Edit this location"></i>
+			</a>
+			<a  wire:click="deleteAddress('{{$address->id}}')" 
+			class="far fa-trash-alt text-danger"
+			title="Remove this location from your branch"></i>
+			</a>
 			
-			
-				<i class="far fa-trash-alt text-danger" 
-				aria-hidden="true"
-				title="Delete this lead"> </i> 
-			Delete Locaton
 	
 			@include('livewire.addresses._modal')
+			@include('livewire.addresses._confirmmodal')
+			@include('livewire.addresses._reassignmodal')
+			
 		
-
+		@else
+			@include('livewire.addresses._transferrequestmodal')
 		@endif
 		
 		</fieldset>
 	</div>
+
 		<div id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>
 	 	@include('addresses.partials.lwmap')
 	

@@ -11,6 +11,9 @@ use App\Activity;
 use App\Opportunity;
 use App\ActivityType;
 use App\Campaign;
+use App\Branch;
+use App\Jobs\TransferLeadRequestJob;
+
 
 class AddressCard extends Component
 {
@@ -23,15 +26,19 @@ class AddressCard extends Component
     public $ranked;
     public $address_id;
     public $open = true;
-
+    public array $branches;
     public $paginationTheme = 'bootstrap';
     public $view = 'summary';
     public $owned = false;
     public Address $location;
     public $branch_id;
-    public $addressModal=false;
+    public $addressModal = false;
+    public $confirmModal = false;
+    public $transferModal = false;
+    public $requestTransfer = false;
+    public $transferbranch;
     public array $myBranches;
-  
+
 
     public function updatingSearch()
     {
@@ -57,9 +64,9 @@ class AddressCard extends Component
 
         
         $this->myBranches = $this->_getMyBranches();
+        @ray($this->myBranches);
         
-        $this->owned = array_intersect(Address::findOrFail($address_id)->claimedByBranch->pluck('id')->toArray(), $this->myBranches);
-                    
+        $this->branches = Branch::has('manager')->pluck('branchname', 'id')->toArray();           
         $this->location = Address::findOrFail($address_id);
         
         isset($view) ? $this->view = $view : $this->view = 'summary';
@@ -68,7 +75,7 @@ class AddressCard extends Component
     }
     public function render()
     {
-        
+        $this->owned = $this->_checkIfOwned();
         return view(
             'livewire.address-card',
             [
@@ -111,8 +118,10 @@ class AddressCard extends Component
     private function _checkIfOwned()
     {
         
-        
-        return array_intersect($this->address->claimedByBranch->pluck('id')->toArray(), $this->myBranches);
+        if(auth()->user()->hasRole(['branch_manager', 'staffing_specialst'])) {
+           return array_intersect($this->address->claimedByBranch->pluck('id')->toArray(), $this->myBranches); 
+        }
+        return $owned =[];
 
     }
     /**
@@ -123,9 +132,7 @@ class AddressCard extends Component
     private function _getMyBranches()
     {
         return auth()->user()->person
-            ->branchesManaged()
-            ->pluck('id')
-            ->toArray();
+            ->getMyBranches();
     }
     
     /**
@@ -150,9 +157,9 @@ class AddressCard extends Component
     }
     
 
-    public function editAddress()
+    public function editAddress(Address $address)
     {
-        $this->location = Address::findOrFail($this->address_id);
+        $this->location = $address;
         $this->doShow('addressModal');
 
     }
@@ -161,7 +168,7 @@ class AddressCard extends Component
     {
         $this->validate();
         $geocode = app('geocoder')->geocode($this->location->fullAddress())->get();
-        @ray($geocode);
+       
             if(count($geocode) > 0) {
                  $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
                  $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
@@ -183,6 +190,58 @@ class AddressCard extends Component
 
         ];
     }
+
+    public function deleteAddress(Address $address)
+    {
+        
+        $this->doShow('confirmModal');
+    }
+    public function destroyAddress(Address $address)
+    {
+       
+        $address = Address::with('claimedByBranch')->findOrFail($address->id);
+        
+        $address->claimedByBranch()->detach();
+        $this->owned = [];
+        $this->doClose('confirmModal');
+
+    }
+
+    public function claimLead(Branch $branch, Address $address)
+    {
+        
+         $address->claimedByBranch()->attach($branch->id, ['status_id'=>2]);
+         $owned = [$branch->id];
+    }
+    public function requestTransfer()
+    {
+       
+        @ray('herere');
+       $this->doShow('requestTransfer'); 
+    }
+    public function processTransferRequest(Address $address)
+    {
+        TransferLeadRequestJob::dispatch($address, auth()->user());
+            session()->flash('success', 'An email has been sent to the owning branch requesting that the lead be transferred');
+        $this->doClose('requestTransfer');
+    }
+    public function reassignAddress()
+    {
+       
+        $this->doShow('transferModal');
+    }
+    public function transferLead(Address $address)
+    {
+        
+        $fromBranch = $address->claimedByBranch()->first()->branchname;
+        $pivot['status_id']= 2;
+        $pivot['comments'] = 'Transferred from branch '. $fromBranch .' to ' . $this->transferbranch . " on " . now()->format('Y-m-d');
+        $this->owned = [];
+        $address->claimedByBranch()->detach();
+        $address->claimedByBranch()->attach($this->transferbranch,$pivot);
+        $this->doClose('transferModal');
+    }
+
     public function doClose($form)
     {
         $this->$form = false;

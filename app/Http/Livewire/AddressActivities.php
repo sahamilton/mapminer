@@ -20,7 +20,7 @@ class AddressActivities extends Component
     public array $owned;
     public $address_id;
     public $activitytype_id='all';
-
+    public $completed = 'all';
     public $followup_date;
     // activities
     public Activity $activity;
@@ -71,6 +71,20 @@ class AddressActivities extends Component
                         $q->where('activitytype_id', $this->activitytype_id);
                     }
                 )
+                ->when(
+                    $this->completed != 'all', function ($q) {
+                        $q->when(
+                            $this->completed === 'complete', function ($q) {
+                                $q->where('completed', 1);
+                            }
+                        )->when(
+                            $this->completed === 'todo', function ($q) {
+                                $q->whereNull('completed');
+                            }
+                        );
+                    }
+                )
+            
                 ->with('relatesToAddress.contacts')
                 ->search($this->search)
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')

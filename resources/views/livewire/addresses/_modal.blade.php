@@ -33,7 +33,7 @@
                       <div class="float-right">
                         <button class="btn btn-secondary"
                               type="button"
-                              x-on:click="doClose('addressModal')">
+                              wire:click="doClose('addressModal')">
                             Cancel
                           </button>
                         <button wire:click.defer="updateAddress()" class="btn btn-danger">Update Address</button>

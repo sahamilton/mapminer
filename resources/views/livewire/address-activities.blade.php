@@ -2,6 +2,7 @@
     @if($owned)
      <div class="float-right mb-4">
         <button class="btn btn-info" href="#" wire:click.prevent="addActivity({{ $address->id }})">
+            <i class="fa-light fa-calendar-circle-plus"></i>
             Record Activity
         </button>
             
@@ -12,15 +13,25 @@
     @include('livewire.partials._search', ['placeholder'=>'Search activities'])
 
     <div class="col form-inline">
-            <label for="activitytype">Type:</label>
-            <select wire:model="activitytype_id" 
-            class="form-control">
-                <option value="all">All</option>
-                @foreach ($activityTypes as $key=>$type)
-                    <option value="{{$key}}">{{$type}}</option>
-                @endforeach
-            </select>
-        </div>
+        <label for="activitytype">Type:</label>
+        <select wire:model="activitytype_id" 
+        class="form-control">
+            <option value="all">All</option>
+            @foreach ($activityTypes as $key=>$type)
+                <option value="{{$key}}">{{$type}}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col form-inline">
+        <label for="activitytype">Completed?:</label>
+        <select wire:model="completed" 
+        class="form-control">
+            <option value="all">All</option>
+            <option value="complete">Completed</option>
+            <option value="todo">To Do</option>
+            
+        </select>
+    </div>
     
        
 
@@ -82,9 +93,9 @@
                      Completed
 
                      @else
-
+                     @if($owned)
                      <button wire:click="editActivity({{$acts->id}})" class="fa-light fa-calendar-lines-pen text-success"></button>
-
+                     @endif
                      @endif
 
                  </td>

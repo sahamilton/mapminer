@@ -328,7 +328,7 @@ class Address extends Model
         return $this->belongsToMany(
             Branch::class, 'address_branch', 'address_id', 'branch_id'
         )
-            ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments')
+            ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments', 'last_activity')
             ->withTimeStamps();
     }
     /**
@@ -341,7 +341,7 @@ class Address extends Model
         return $this->belongsToMany(
             Branch::class, 'address_branch', 'address_id', 'branch_id'
         )
-            ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments')
+            ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments', 'last_activity')
             ->withTimeStamps()
             ->whereIn('status_id', [2]);
     }
@@ -356,7 +356,7 @@ class Address extends Model
         return $this->belongsToMany(
             Branch::class, 'address_branch', 'address_id', 'branch_id'
         )
-            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withPivot('rating', 'person_id', 'status_id', 'comments', 'last_activity')
             ->withTimeStamps()
             ->whereIn('status_id', [1]);
     }
@@ -370,7 +370,7 @@ class Address extends Model
         return $this->belongsToMany(
             Branch::class, 'address_branch', 'address_id', 'branch_id'
         )
-            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withPivot('rating', 'person_id', 'status_id', 'comments', 'last_activity')
             ->withTimeStamps()->whereIn('status_id', [3]);
     }
     /**
@@ -383,7 +383,7 @@ class Address extends Model
         return $this->belongsToMany(
             Person::class, 'address_person', 'address_id', 'person_id'
         )
-            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withPivot('rating', 'person_id', 'status_id', 'comments', 'last_activity')
             ->withTimeStamps();
     }
     /**

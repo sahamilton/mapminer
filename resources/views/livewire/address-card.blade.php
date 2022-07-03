@@ -1,5 +1,5 @@
 <div>
-
+        @include('notifications')
 
         <h2>{{$address->businessname}}</h2>
 

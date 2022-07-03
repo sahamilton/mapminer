@@ -4,6 +4,7 @@
   <div class="float-right mb-4">
     <div class="float-right mb-4">
       <button class="btn btn-info" href="#" wire:click.prevent="addOpportunity({{ $address->id }})">
+        <i class="fa-solid fa-sack-dollar"></i>
         Record Opportunity
       </button>
     </div>
