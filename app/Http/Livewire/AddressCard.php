@@ -31,6 +31,10 @@ class AddressCard extends Component
     public $view = 'summary';
     public $owned = false;
     public Address $location;
+
+
+
+
     public $branch_id;
     public $addressModal = false;
     public $confirmModal = false;
@@ -61,7 +65,7 @@ class AddressCard extends Component
     public function mount(int $address_id, string $view=null)
     {
        
-
+        
         
         $this->myBranches = $this->_getMyBranches();
         @ray($this->myBranches);
@@ -119,7 +123,7 @@ class AddressCard extends Component
     {
         
         if(auth()->user()->hasRole(['branch_manager', 'staffing_specialst'])) {
-           return array_intersect($this->address->claimedByBranch->pluck('id')->toArray(), $this->myBranches); 
+           return array_intersect($this->location->claimedByBranch->pluck('id')->toArray(), $this->myBranches); 
         }
         return $owned =[];
 
