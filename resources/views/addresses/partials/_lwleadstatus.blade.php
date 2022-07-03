@@ -32,7 +32,7 @@
       @if(isset($campaigns) && $campaigns->count() >0)
         @include('addresses.partials._lwcampaigns')
       @endif
-        <div class="col-sm-6">
+        <div>
           @foreach ($address->assignedToBranch as $branch)
             <p><strong>{{$leadStatuses[$branch->pivot->status_id]}}</strong>
               {{$branch->branchname}}
@@ -43,17 +43,16 @@
             
         <button type="submit"
            class="btn btn-warning"
-             data-toggle="modal" 
-             data-target="#reassign"
-             href="#">
+             wire:click="reassignAddress({{$address->id}})">
              <i class="fas fa-random "></i> Reassign</button>
       
       @include('addresses.partials._lwreassignlead')
   @else
+
     @foreach ($address->assignedToBranch as $branch)
       @if($branch->pivot->status_id)
-        <li><strong>{{$leadStatuses[$branch->pivot->status_id]}}</strong>
-        {{$branch->branchname}}</li>
+        <strong>{{$leadStatuses[$branch->pivot->status_id]}}</strong>
+        {{$branch->branchname}}
       @endif
     @endforeach
   @endif
@@ -63,24 +62,19 @@
 
 @elseif ($address->claimedByBranch->first())
   
- 
 
     <strong>Owned By:</strong>
       <a href="{{route('branches.show', $address->claimedByBranch->first()->id)}}">
         {{$branch->branchname}}
       </a>
-
-      <button type="submit" 
+      @if(auth()->user()->hasRole(['branch_manager']))
+      <button 
         class="p-2 btn btn-warning"
-        
-        data-toggle="modal" 
-        data-target="#confirm-transfer-request" 
-         
-        href="#">
+        wire:click="requestTransfer({{$address->id}})">
        <i class="text-white fa-solid fa-arrows-cross"></i>
         Request transfer
       </button>
-      
+      @endif
    
 
     
@@ -95,41 +89,18 @@
   @endforeach
 @else
 
-<div class="row mb-4">
-   <form name="claimlead"
-      class="form-inline"
-      method="post"
-      action = "{{route('branchleads.store')}}"
-      >
-      @csrf
-      <button type="submit" 
+<div class="row m-4">
+  @if(count($myBranches) === 1)
+      <button wire:click="claimLead({{$myBranches[0]}}, '{{$address->id}}')"
           class="btn btn-success btn-sm"
-          title="Claim lead for branch">
+          title="Claim lead for branch {{$myBranches[0]}}">
          
           Claim Lead
         </button>
-      <input type="hidden" 
-        name="address_id" 
-        value="{{$address->id}}" /> 
-        
-      @if(count($myBranches)===1)
-        <input type="hidden" 
-          name="branch_id" 
-          value = "{{$myBranches[0]}}" />
-       
-      @else 
-        for branch:
-          <select  class="form-control mb-2 mx-sm-2" name="branch_id" required >
-
-          @foreach ($myBranches as $myBranch)
-            <option value="{{$myBranch}}">{{$myBranch}}</option>
-
-          @endforeach
-
-        </select>
+     
        
        
-      @endif
+  @endif
       
       
     </form>
