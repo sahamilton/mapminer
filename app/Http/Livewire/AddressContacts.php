@@ -9,7 +9,7 @@ class AddressContacts extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    
+
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortAsc = false;
@@ -92,7 +92,7 @@ class AddressContacts extends Component
         return [
             
             'contact.fullname'=>'required',
-            'contact.title'=>'required',
+            'contact.title'=>'sometimes',
             'contact.email'=>'sometimes|nullable|email',
             'contact.comments'=>'sometimes',
             'contact.contactphone'=>'sometimes',
