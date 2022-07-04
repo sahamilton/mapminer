@@ -23,24 +23,21 @@
       <div class="modal-body">
 
        
-          <div class="form-group mb-4">
+          <div class="form-group-inline mb-4">
             
             @php $options = [1=>'Closed - Won', 2=>'Closed - Lost'];@endphp
             
-            <select class="form-control"
-              required
-              name="opportunity.closed"
-              wire:model="opportunity.closed">
-              <option>Select</option>
-              @foreach($options as $value=>$option)
-              <option value={{$value}}>{{$option}}</option>
-              @endforeach
-            />
+            @foreach ($options as $key=>$value)
+             <label class = "radio-inline">
+              <input type = "radio" name="opportunity.closed" wire:model="opportunity.closed" id = "{{$key}}" value = "{{$key}}"> {{$value}}
+            </label>
+             
+            @endforeach
           </div>
              
           <div class="form-group">
             <label class="col-md-4 control-label">Comments</label>
-            <textarea wire:mode ="opportunity.comments" 
+            <textarea wire:model ="opportunity.comments" 
             name="opportunity.comments" 
             required 
             class="form-control" 

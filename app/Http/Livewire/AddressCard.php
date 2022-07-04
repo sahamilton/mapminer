@@ -197,8 +197,13 @@ class AddressCard extends Component
 
     public function deleteAddress(Address $address)
     {
+        $address->loadCount('openOpportunities');
+        if ($address->open_opportunities_count > 0) {
+            session()->flash('error', 'You must close all open opportunities before removing this lead from your branch');
+        } else {
+            $this->doShow('confirmModal');
+        }
         
-        $this->doShow('confirmModal');
     }
     public function destroyAddress(Address $address)
     {
