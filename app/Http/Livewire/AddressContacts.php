@@ -148,6 +148,7 @@ class AddressContacts extends Component
 
     public function deleteContact(Contact $contact)
     {
+        $this->contact = $contact;
         $this->doShow('confirmContact');
     }
 

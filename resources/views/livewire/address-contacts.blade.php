@@ -25,27 +25,27 @@
 
         </thead>
         <tbody>
-             @foreach($contacts as $contact)
+             @foreach($contacts as $person)
             
                 <tr>
                     <td>
-                        {{$contact->complete_name}}
+                        {{$person->complete_name}}
                         @if($owned)
-                            <a wire:click="addContact({{$contact->id}})" /><i class="fa-light fa-pen-to-square text-info"></i></a>
-                            <a wire:click="deleteContact({{$contact->id}})" /><i class="fa-solid fa-trash-can text-danger"></i></a>
+                            <a wire:click="addContact({{$person->id}})" /><i class="fa-light fa-pen-to-square text-info"></i></a>
+                            <a wire:click="deleteContact({{$person->id}})" /><i class="fa-solid fa-trash-can text-danger"></i></a>
                         @endif
                     </td>
-                    <td>{{$contact->title}}</td>
+                    <td>{{$person->title}}</td>
                     <td>
                         @if(isset($contact->email))
-                            <a href="mailto:{{$contact->email}}">{{$contact->email}}</a>
+                            <a href="mailto:{{$person->email}}">{{$person->email}}</a>
 
                         @endif
 
 
                     </td>
-                    <td>{{$contact->phoneNumber}}</td>
-                    <td>{{$contact->comments}}</td>
+                    <td>{{$person->phoneNumber}}</td>
+                    <td>{{$person->comments}}</td>
                 </tr>
                @endforeach
 
@@ -61,9 +61,9 @@
         </div>
     </div>
     @if($contactModalShow)
-    @include('contacts.partials._modal')
+        @include('contacts.partials._modal')
     @endif
     @if('confirmContact')
-    @include('livewire.contacts._confirmmodal')
+        @include('livewire.contacts._confirmmodal')
     @endif
 </div>
