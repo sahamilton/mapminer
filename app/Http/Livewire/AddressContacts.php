@@ -8,7 +8,8 @@ use Livewire\WithPagination;
 class AddressContacts extends Component
 {
     use WithPagination;
-
+    protected $paginationTheme = 'bootstrap';
+    
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortAsc = false;

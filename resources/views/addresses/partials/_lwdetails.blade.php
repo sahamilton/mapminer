@@ -86,12 +86,7 @@
 			@include('addresses.partials._lwleadstatus')
 			</fieldset>
 			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
-				@if($address->duplicates->count() > 1 && $owned)
-					<div class="alert alert-danger">
-						<p><strong>Possible Duplicate(s)</strong> {{$address->duplicates->count()}}- 
-							<a href="{{route('address.duplicates', $address->id)}}"><button class="btn btn-danger">Merge?</button></a></p>
-					</div>
-				@endif
+				
 
 
 		@if($owned)

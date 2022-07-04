@@ -58,7 +58,7 @@
     </thead>
     <tbody>
          @foreach($activities as $acts)
-  
+            
             <tr>
                 <td>{{$acts->activity_date ? $acts->activity_date->format('Y-m-d'):''}}</td>
                 <td>
@@ -67,6 +67,7 @@
                     @else
                     No Longer with Company
                     @endif
+                   
                 </td>
                 <td>
                     @if($acts->type)

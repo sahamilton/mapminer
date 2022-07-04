@@ -7,7 +7,7 @@ use Livewire\Component;
 class AddressBranch extends Component
 {
     public $address;
-
+    
     public function mount(Address $address)
     {
         

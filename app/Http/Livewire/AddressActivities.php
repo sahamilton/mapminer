@@ -89,7 +89,7 @@ class AddressActivities extends Component
                 ->search($this->search)
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-            'activityTypes' =>$this->_getActivityTypes($this->address),
+            'activityTypes' =>$this->_getActivityTypes(),
 
             ]
         );
