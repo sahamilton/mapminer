@@ -92,7 +92,7 @@ class AddressContacts extends Component
             
             'contact.fullname'=>'required',
             'contact.title'=>'required',
-            'contact.email'=>'sometimes|email',
+            'contact.email'=>'sometimes|nullable|email',
             'contact.comments'=>'sometimes',
             'contact.contactphone'=>'sometimes',
             'contact.primary'=>'sometimes',

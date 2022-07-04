@@ -27,7 +27,7 @@
                         <x-form-input required name="contact.fullname" label="Full Name:" />
                         <x-form-checkbox name="contact.primary" label="Primary Contact:" />
                         <x-form-input required name="contact.title"  placeholder="Contact title"   label="Title:" />
-                        <x-form-input name="contact.email"  placeholder="Contact email"   label="Email:" />
+                        <x-form-input type="email" name="contact.email"  placeholder="Contact email"   label="Email:" />
                         <x-form-input name="contact.contactphone"  placeholder="Contact phone"   label="Phone:" />      
                         <x-form-textarea name="contact.comments" label="Comments:" />
                         <div class="float-right">
