@@ -10,7 +10,7 @@ use App\PeriodSelector;
 class AuditTable extends Component
 {
     use WithPagination, PeriodSelector;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortAsc = true;
@@ -18,7 +18,7 @@ class AuditTable extends Component
     public $setPeriod = 'thisWeek';
     public $activitytype = "All";
     public $model = 'All';
-    public $paginationTheme = 'bootstrap';
+    ;
 
 
     public function updatingSearch()

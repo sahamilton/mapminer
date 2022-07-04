@@ -10,6 +10,7 @@ class BranchOpportunityTable extends Component
 {
     
     use WithPagination, PeriodSelector;
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'branches.id';
     public $sortAsc = true;
@@ -20,7 +21,7 @@ class BranchOpportunityTable extends Component
     public $manager;
     public $person;
     public $accounttype=false;
-    public $paginationTheme = 'bootstrap';
+    
     public function updatingSearch()
     {
         $this->resetPage();

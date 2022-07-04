@@ -18,7 +18,7 @@ use App\Jobs\TransferLeadRequestJob;
 class AddressCard extends Component
 {
     use WithPagination;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortAsc = false;
@@ -27,7 +27,7 @@ class AddressCard extends Component
     public $address_id;
     public $open = true;
     public array $branches;
-    public $paginationTheme = 'bootstrap';
+    
     public $view = 'summary';
     public $owned = false;
     public Address $location;

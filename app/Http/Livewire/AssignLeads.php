@@ -11,10 +11,11 @@ use App\Person;
 class AssignLeads extends Component
 {
     use WithPagination, NearbyGeocoder;
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'distance';
     public $sortAsc = true; 
-    public $paginationTheme = 'bootstrap';
+    
     public $distance = '25';
     public $leaddistance = '0.01';
     public $address;

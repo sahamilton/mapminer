@@ -12,13 +12,13 @@ use Livewire\WithPagination;
 class BranchCampaign extends Component
 {
     use WithPagination;
-   
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'id';
     public $sortAsc = true;
     public $search = '';
     public $status = 'All';
-    public $paginationTheme = 'bootstrap';
+    
     public $company_id = 'All';
     public $campaignid;
     public $view = 'leads';

@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class AddressActivities extends Component
 {
     use WithPagination;
-
+    protected $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'activity_date';
     public $sortAsc = false;

@@ -11,7 +11,7 @@ use App\Location;
 class BranchTable extends Component
 {
     use WithPagination, NearbyGeocoder;
-
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'id';
     public $state='All';
@@ -21,7 +21,7 @@ class BranchTable extends Component
     public $search ='';
     public $serviceline = 'All';
     public $userServiceLines;
-    public $paginationTheme = 'bootstrap';
+    
     public $manager = 'All';
     public Location $location;
     

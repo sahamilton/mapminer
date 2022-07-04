@@ -10,6 +10,7 @@ class BranchLocationsTable extends Component
 {
     
     use WithPagination;
+    public $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $sortField = 'distance';
     public $sortAsc = true;
@@ -18,7 +19,7 @@ class BranchLocationsTable extends Component
     public $range;
     public $distance;
     public $accounttype=false;
-    public $paginationTheme = 'bootstrap';
+    
   
     
 
