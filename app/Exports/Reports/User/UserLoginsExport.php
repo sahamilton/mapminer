@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports\Reports\Users;
+namespace App\Exports\Reports\User;
 
 
 use App\Report;

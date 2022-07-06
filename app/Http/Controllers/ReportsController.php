@@ -92,12 +92,13 @@ class ReportsController extends Controller {
      */
     public function store(ReportFormRequest $request)
     {   
-        if (request()->filled('job') && ! $this->_checkValidJob(request('job'))) {
+        
+
+
+        if ( ! $this->_checkValidJob(request(['job', 'object', 'export']))) {
             return redirect()->back()->withError('job does not exist');
         }
-        if (request()->filled('export') && ! $this->_checkValidJob(request('export'))) {
-            return redirect()->back()->withError('export does not exist');
-        }
+        
         $report = $this->report->create(request()->all());
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
@@ -269,7 +270,7 @@ class ReportsController extends Controller {
             return \App\Jobs\CampaignReportJob::dispatch($report, $distribution, $manager)->onQueue('reports');
             break;
         
-        case 'User':
+        case 'Users':
             return \App\Jobs\UserReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;   
         case 'Company':
@@ -413,11 +414,12 @@ class ReportsController extends Controller {
      * 
      * @return [type]        [description]
      */
-    private function _checkValidJob($class)
+    private function _checkValidJob(array $request)
     {
-        $check = ['Exports'];
+     
+        $check = ['job', 'export'];
         foreach ($check as $type) {
-            if (! $this->_checkClassExists($class, $type)) {
+            if (! $this->_checkClassExists($request, $type)) {
                 return false;
             }
         }
@@ -430,19 +432,20 @@ class ReportsController extends Controller {
      * @param  [type] $type  [description]
      * @return [type]        [description]
      */
-    private function _checkClassExists($class, $type) {
+    private function _checkClassExists(array $request, $type) {
 
-       
+      
     
         switch($type) {
 
-        case "Jobs":
+        case "job":
              $dir = "\App\\Jobs\\";
+             $class= $request['job'];
             break;
 
-        case "Exports":
-            $dir = "\App\\Exports\\Reports\\Branch\\";
-           
+        case "export":
+            $dir = "\App\\Exports\\Reports\\". $request['object']. "\\";
+            $class= $request['export'];
             break;
         }
         
@@ -450,6 +453,7 @@ class ReportsController extends Controller {
             return true;
         } else {
 
+            dd($dir.$class);
             return false;
         }
         

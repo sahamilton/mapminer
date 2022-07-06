@@ -8,7 +8,7 @@ class Report extends Model
 {
     
     
-    public $fillable = ['report', 'description', 'details', 'job', 'export', 'public', 'filename'];
+    public $fillable = ['report', 'description', 'details', 'job', 'export', 'public', 'filename', 'object'];
 
     public $managerRoles = [3,6,7,9];
     
