@@ -43,7 +43,7 @@
 			    @endif
 			</p>
 			@if($owned && $address->leadsource->id !=4)
-			@php  @endphp
+			@php $ranked = 5; @endphp
 			<div>
 			    
 
@@ -89,7 +89,7 @@
 				
 
 
-		@if($owned)
+		@if(count($owned)>0)
 			
 			<a   wire:click="editAddress('{{$address->id}}')" 
 			class="fa-solid fa-pen-to-square text-info"
@@ -106,7 +106,7 @@
 			@include('livewire.addresses._reassignmodal')
 			
 		
-		@else
+		@elseif ($address->assignedToBranch->count()>0)
 			@include('livewire.addresses._transferrequestmodal')
 		@endif
 		

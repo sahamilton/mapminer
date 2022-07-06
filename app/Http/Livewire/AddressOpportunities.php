@@ -22,7 +22,7 @@ class AddressOpportunities extends Component
 
      // opportunities
 
-    public $status = 0;
+    public $status = 'all';
     public $address_branch_id;
     public $branch_id;
     public $opportunityModal = false;
@@ -143,9 +143,12 @@ class AddressOpportunities extends Component
     public function editOpportunity(Opportunity $opportunity, $action)
     {
        if ($action === 'close') {
+
             $this->doShow('closeOpportunityModal');
             $this->opportunity = $opportunity;
+            $this->opportunity->closed = null;
             $this->opportunity->actual_close = @now()->format('Y-m-d');
+            $this->opportunity->comments = null;
        }
        
         //
@@ -162,7 +165,7 @@ class AddressOpportunities extends Component
         $this->_recordOpportunity();
         
         $this->resetOpportunities();
-        $this->doClose('opportunityModal');
+        $this->doClose('closeOpportunityModal');
     }
    
     
@@ -190,9 +193,9 @@ class AddressOpportunities extends Component
 
             'opportunity.title'=>'required',
             'opportunity.expected_close'=> 'required|date',
-            'opportunity.actual_close'=> 'sometimes',
-            
-            
+
+            'opportunity.comments'=>'sometimes|filled',
+            'opportunity.closed'=>'in:0,1,2',
             'opportunity.value' => 'numeric|min:1', 
             'opportunity.requirements' => 'numeric|min:1', 
             'opportunity.duration' => 'numeric|min:1', 
@@ -202,14 +205,15 @@ class AddressOpportunities extends Component
             'opportunity.address_id'=>'required',
             'opportunity.branch_id'=>'required',
             'opportunity.address_branch_id'=>'required',
-            'opportunity.closed'=>'required',
+            'opportunity.actual_close' => 'sometimes|nullable|date|before:tomorrow',
             'opportunity.user_id'=>'required',
 
         ] ;
     }
-    public function closeOpportunity()
+    public function closeOpportunity(Opportunity $opportunity)
     {
-        $this->validate(['opportunity.actual_close' => 'required|date|after_or_equal:today']);
+        @ray('closing', $this->opportunity);
+        $this->validate(['opportunity.actual_close' => 'required|date|before:tomorrow',  'opportunity.closed'=>'required|in:1,2']);
         
         $this->doClose('closeOpportunityModal');
         

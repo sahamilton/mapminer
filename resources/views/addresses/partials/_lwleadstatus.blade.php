@@ -1,34 +1,9 @@
-@if ($owned)
+ 
+@if (count($owned) > 0)
 
-  @if($branch->pivot->status_id === 1)
+  @if(isset($branch->pivot) && $branch->pivot->status_id === 2)
    
-    <div class="d-flex flex-row">
-      <form class='p-2 form-inline'
-          action = "{{route('branchleads.update',$branch->pivot->id)}}"
-          method="post"
-          >
-          @csrf
-          @method('put')
-          <button type="submit" 
-          class="p-2 btn btn-success">
-            <i class="far fa-thumbs-up text-white" aria-hidden="true"></i> Accept Lead
-          </button>
-      </form>
-      <button type="submit" 
-        class="p-2 btn btn-danger"
-        data-href="{{route('branchleads.destroy',$branch->pivot->id)}}" 
-        data-toggle="modal" 
-        data-target="#decline-lead" 
-        data-title = " {{$address->businessname}} lead"
-        title = "Reject {{$address->businessname}} lead" 
-        href="#">
-       <i class="far fa-thumbs-down text-white" aria-hidden="true"></i> 
-        Decline Lead
-      </button>
-    </div>
-   
-    @include('addresses.partials._declinemodal')
-  @elseif ($branch->pivot->status_id == 2)
+    
       @if(isset($campaigns) && $campaigns->count() >0)
         @include('addresses.partials._lwcampaigns')
       @endif
@@ -60,33 +35,22 @@
   
      
 
-@elseif ($address->claimedByBranch->first())
-  
+@elseif ($address->claimedByBranch->count() >0)
 
+    @ray('herer', $owned, $address->claimedByBranch->first())  
     <strong>Owned By:</strong>
       <a href="{{route('branches.show', $address->claimedByBranch->first()->id)}}">
         {{$branch->branchname}}
       </a>
       @if(auth()->user()->hasRole(['branch_manager']))
-      <button 
-        class="p-2 btn btn-warning"
-        wire:click="requestTransfer({{$address->id}})">
-       <i class="text-white fa-solid fa-arrows-cross"></i>
-        Request transfer
-      </button>
+        <button 
+          class="p-2 btn btn-warning"
+          wire:click="requestTransfer({{$address->id}})">
+         <i class="text-white fa-solid fa-arrows-cross"></i>
+          Request transfer
+        </button>
       @endif
-   
-
-    
  
-  @include('addresses.partials._lwtransferrequest') 
-@elseif ($address->assignedToBranch->count())
-  Lead currently on offer to:
-  @foreach ($address->assignedToBranch as $offered)
-    @if(! $loop->last), @endif
-      {{$offered->branchname}}
-   
-  @endforeach
 @else
 
 <div class="row m-4">
@@ -101,9 +65,6 @@
        
        
   @endif
-      
-      
-    </form>
 </div>
 @endif
 

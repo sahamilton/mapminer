@@ -29,7 +29,7 @@ class AddressCard extends Component
     public array $branches;
     
     public $view = 'summary';
-    public $owned = false;
+    public $owned;
     public Address $location;
 
 
@@ -68,10 +68,10 @@ class AddressCard extends Component
         
         
         $this->myBranches = $this->_getMyBranches();
-        @ray($this->myBranches);
+       
         
         $this->branches = Branch::has('manager')->pluck('branchname', 'id')->toArray();           
-        $this->location = Address::findOrFail($address_id);
+        
         
         isset($view) ? $this->view = $view : $this->view = 'summary';
         
@@ -79,7 +79,9 @@ class AddressCard extends Component
     }
     public function render()
     {
+        $this->location = Address::findOrFail($this->address_id);
         $this->owned = $this->_checkIfOwned();
+        @ray($owned);
         return view(
             'livewire.address-card',
             [
@@ -211,7 +213,8 @@ class AddressCard extends Component
         $address = Address::with('claimedByBranch')->findOrFail($address->id);
         
         $address->claimedByBranch()->detach();
-        $this->owned = [];
+        $this->owned = $this->_checkIfOwned();
+        //$this->address = null;
         $this->doClose('confirmModal');
 
     }
@@ -220,12 +223,14 @@ class AddressCard extends Component
     {
         
          $address->claimedByBranch()->attach($branch->id, ['status_id'=>2]);
-         $owned = [$branch->id];
+         $this->owned = $this->_checkIfOwned();
+         @ray($this->owned, $branch->id);
+
     }
     public function requestTransfer()
     {
        
-        @ray('herere');
+
        $this->doShow('requestTransfer'); 
     }
     public function processTransferRequest(Address $address)

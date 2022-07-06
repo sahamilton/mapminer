@@ -315,7 +315,10 @@ class Address extends Model
 
     public function assignedToMyBranch()
     {
-        return $this->assignedToBranch()->whereIn('branches.id', auth()->user()->person->getMyBranches());
+        return $this->assignedToBranch()
+        ->whereIn('branches.id', auth()->user()->person->getMyBranches())
+            ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments', 'last_activity')
+            ->withTimeStamps();;
       
     }
     /**

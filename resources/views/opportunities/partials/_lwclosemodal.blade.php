@@ -22,37 +22,30 @@
       </div>
       <div class="modal-body">
 
-       
+        <form wire:submit.prevent="closeOpportunity({{$opportunity->id}})">
           <div class="form-group-inline mb-4">
-            
+
             @php $options = [1=>'Closed - Won', 2=>'Closed - Lost'];@endphp
-            
             @foreach ($options as $key=>$value)
-             <label class = "radio-inline">
-              <input type = "radio" name="opportunity.closed" wire:model="opportunity.closed" id = "{{$key}}" value = "{{$key}}"> {{$value}}
-            </label>
-             
+              <x-form-radio class="inline" name="opportunity.closed" wire:model="opportunity.closed" value="{{$key}}" label="{{$value}}"  />
             @endforeach
-          </div>
-             
+
+          </div>  
           <div class="form-group">
-            <label class="col-md-4 control-label">Comments</label>
-            <textarea wire:model ="opportunity.comments" 
-            name="opportunity.comments" 
-            required 
-            class="form-control" 
-            placeholder="Explain reason for closing"></textarea>
+            <x-form-textarea required name="opportunity.comments" wire:model="opportunity.comments" label="Comments:" placeholder="Enter details...." />
+
+
           </div>
           <div class="form-group">
-            <x-form-input type="date" name="actual_close"
-              wire:model="opportunity.actual_close"
-              label="Actual Close" />
-            </div>
-            
-            <div class="float-right">
-            <button wire:click.ignore="closeOpportunity" class="btn btn-danger">Close Opportunity</button>
+            <x-form-input type="date" name="opportunity.actual_close"
+            wire:model="opportunity.actual_close"
+            label="Actual Close:" />
           </div>
-        
+
+          <div class="float-right">
+            <button type="submit" class="btn btn-danger">Close Opportunity</button>
+          </div>
+        </form>
       </div>
       <div class="modal-footer"></div>
     </div>

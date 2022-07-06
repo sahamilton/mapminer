@@ -1,26 +1,27 @@
 <div>
     @if($owned)
 
-  <div class="float-right mb-4">
+
     <div class="float-right mb-4">
       <button class="btn btn-info" href="#" wire:click.prevent="addOpportunity({{ $address->id }})">
         <i class="fa-solid fa-sack-dollar"></i>
         Record Opportunity
       </button>
     </div>
-  </div>
+
 @endif
-<div class="col form-inline mb-4">
-  @include('livewire.partials._perpage')
+<div class="col-4">
+   @include('livewire.partials._search', ['placeholder'=>"Search opportunities"])
 
-  @include('livewire.partials._search', ['placeholder'=>'Search opportunities'])
 
-  <x-form-select 
-    name="status"
-    wire:model='status'
-    label="Status:"
-    :options="$opportunityStatuses" 
-    />
+
+   
+    <x-form-select 
+      name="status"
+      wire:model='status'
+      label="Status:"
+      :options="$opportunityStatuses" 
+      />
 
 </div>           
                   
@@ -114,6 +115,7 @@
     </div>
 
 @include('opportunities.partials._modal')
-@include('opportunities.partials._lwclosemodal')
-
+@if($opportunities->total() >0)
+  @include('opportunities.partials._lwclosemodal')
+@endif
 </div>
