@@ -47,8 +47,9 @@
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             @include('livewire.partials._branchselector')
-            @include('livewire.partials._search', ['placeholder'=>'Search leads'])
+            
             <label>Lead Created</label>@include('livewire.partials._periodselector', ['all'=>true])
+            @include('livewire.partials._search', ['placeholder'=>"Search leads"])
         </div>
     </div>
     <div class="row mb-4">
