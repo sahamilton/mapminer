@@ -193,8 +193,8 @@ class AddressOpportunities extends Component
 
             'opportunity.title'=>'required',
             'opportunity.expected_close'=> 'required|date',
-
-            'opportunity.comments'=>'sometimes|filled',
+            'opportunity.comments'=>'sometimes',
+            
             'opportunity.closed'=>'in:0,1,2',
             'opportunity.value' => 'numeric|min:1', 
             'opportunity.requirements' => 'numeric|min:1', 
@@ -213,7 +213,7 @@ class AddressOpportunities extends Component
     public function closeOpportunity(Opportunity $opportunity)
     {
         @ray('closing', $this->opportunity);
-        $this->validate(['opportunity.actual_close' => 'required|date|before:tomorrow',  'opportunity.closed'=>'required|in:1,2']);
+        $this->validate(['opportunity.actual_close' => 'required|date|before:tomorrow', 'opportunity.comments'=>'required|filled', 'opportunity.closed'=>'required|in:1,2']);
         
         $this->doClose('closeOpportunityModal');
         
