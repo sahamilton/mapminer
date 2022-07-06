@@ -64,7 +64,17 @@ class UserReportJob implements ShouldQueue
        
 
             (new $export($this->period, $this->manager))
-                ->store($this->file, 'reports');
+                ->store($this->file, 'reports')
+                ->chain(
+                    [
+                        new ReportReadyJob(
+                            $recipient, 
+                            $this->period, 
+                            $this->file, 
+                            $this->report
+                        )
+                    ]
+                )->onQueue('reports');
                 
             
         }
@@ -122,7 +132,7 @@ class UserReportJob implements ShouldQueue
             break;
 
         case "user": 
-            return "\App\Exports\\". $this->report->export;
+            return "\App\Exports\Reports\Users\\". $this->report->export;
             break;
 
         default:
