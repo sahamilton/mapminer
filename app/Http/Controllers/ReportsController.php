@@ -270,7 +270,7 @@ class ReportsController extends Controller {
             return \App\Jobs\CampaignReportJob::dispatch($report, $distribution, $manager)->onQueue('reports');
             break;
         
-        case 'Users':
+        case 'User':
             return \App\Jobs\UserReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;   
         case 'Company':

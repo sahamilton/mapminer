@@ -5,6 +5,7 @@ namespace App\Exports\Reports\User;
 
 use App\Report;
 use App\User;
+use App\Person;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -22,6 +23,7 @@ class UserLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
     public $branches;
     public $report;
     public $types;
+    public $users_id;
 
     public $fields = [
         'user'=>'Team Member',
@@ -35,9 +37,12 @@ class UserLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
     
     public function __construct(array $period, $manager=null)
     {
+        
         $this->period = $period;
         $this->report = Report::where('export', class_basename($this))->firstOrFail();
-      
+        if($manager) {
+            $this->users_id = $manager->descendantsAndSelf()->pluck('user_id')->toArray();
+        }
         
     }
 
@@ -94,7 +99,12 @@ class UserLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
 
     public function query()
     {
-        return  User::totalLogins($this->period)
-            ->with('person.branchesServiced', 'roles');
+   
+       return  User::totalLogins($this->period)
+            ->when(
+                $this->users_id, function ($q) {
+                    $q->whereIn('id', $this->users_id);
+                }
+            )->with('person.branchesServiced', 'roles');
     }
 }

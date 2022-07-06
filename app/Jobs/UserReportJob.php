@@ -33,7 +33,7 @@ class UserReportJob implements ShouldQueue
         Report $report, 
         Array $period = null, 
         $distribution = null, 
-        $manager = null
+        Person $manager = null
     ) {
         
         $this->period = $period;
@@ -53,7 +53,7 @@ class UserReportJob implements ShouldQueue
         $distribution = $this->_getDistribution();
         
         foreach ($distribution as $recipient) {
-            @ray($recipient);
+            
             $this->user = $recipient;
             $this->file = $this->_makeFileName();
             
@@ -132,7 +132,7 @@ class UserReportJob implements ShouldQueue
             break;
 
         case "user": 
-            return "\App\Exports\Reports\Users\\". $this->report->export;
+            return "\App\Exports\Reports\User\\". $this->report->export;
             break;
 
         default:

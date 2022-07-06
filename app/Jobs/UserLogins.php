@@ -31,7 +31,7 @@ class UserLogins implements ShouldQueue
     
     public function __construct(Array $period= null, Person $manager = null)
     {
-     
+        
         $this->period = $period;
         $this->report = Report::where('job', class_basename($this))->with('distribution')->firstOrFail();
         $this->manager = $manager;
@@ -46,7 +46,7 @@ class UserLogins implements ShouldQueue
      */
     public function handle()
     {
-        
+        @ray('job', $this->manager);
         foreach ($this->distribution as $recipient) {
             $this->file = $this->_makeFileName($recipient);
             //$branches = $this->_getReportBranches($recipient); 
