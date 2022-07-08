@@ -109,7 +109,10 @@ class User extends Authenticatable implements Auditable
      * 
      * @return mixed
      */
-
+    public function getCreationDateAttribute()
+    {
+        return $this->created_at->format('Y-m-d');
+    }
     public $dates=['lastlogin','created_at','updated_at','deleted_at','nonews'];
     /**
      * [person description]
