@@ -80,10 +80,14 @@ class OracleController extends Controller
     {
         $oracle->load('branch', 'oracleManager.mapminerUser.person', 'mapminerRole');
 
-        
         // create user
         //  employee_id
         //  email
+        if(! $oracle->branch) {
+        
+            $defaultAddress= $oracle->getGeoCode(app('geocoder')->geocode(config('mapminer.default_address'))->get());
+            
+        }
         if ($oracle->mapminerRole) {
         
             $data = [
@@ -96,15 +100,14 @@ class OracleController extends Controller
 
                     'firstname' => $oracle->first_name,
                     'lastname'  => $oracle->last_name,
-                    'address' => $oracle->branch ? $oracle->branch->address : null,
-                    'city' => $oracle->branch ? $oracle->branch->city : null,
-                    'state' => $oracle->branch ? $oracle->branch->state : null,
-                    'zip' => $oracle->branch ? $oracle->branch->zip : null,
-                    'country' => $oracle->branch ? $oracle->branch->country : null,
-                    'lat' =>$oracle->branch ? $oracle->branch->lat : null,
-                    'lng' =>$oracle->branch ? $oracle->branch->lng : null,
-                    'lng' =>$oracle->branch ? $oracle->branch->lng : null,
-                    'position' =>$oracle->branch ? $oracle->branch->position : null,
+                    'address' => $oracle->branch ? $oracle->branch->address : $defaultAddress['address'],
+                    'city' => $oracle->branch ? $oracle->branch->city : $defaultAddress['city'],
+                    'state' => $oracle->branch ? $oracle->branch->state : $defaultAddress['state'],
+                    'zip' => $oracle->branch ? $oracle->branch->zip : $defaultAddress['zip'],
+                    'country' => $oracle->branch ? $oracle->branch->country : $defaultAddress['country'],
+                    'lat' =>$oracle->branch ? $oracle->branch->lat : $defaultAddress['lat'],
+                    'lng' =>$oracle->branch ? $oracle->branch->lng : $defaultAddress['lng'],
+                    'position' =>$oracle->branch ? $oracle->branch->position : $defaultAddress['position'],
                     'business_title' => $oracle->job_profile,
                     'reports_to' =>$oracle->oracleManager->mapminerUser->person->id,
                     'hiredate' => $oracle->current_hire_date,
@@ -113,7 +116,7 @@ class OracleController extends Controller
                 'branch'=>$oracle->branch ? $oracle->branch : null,
                 
                 ];
-
+  
             // Check if the new user was previously deleted
             // or the email belonged to a deleted user
             if ($olduser = User::withTrashed()

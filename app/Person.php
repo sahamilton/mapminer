@@ -1111,17 +1111,12 @@ class Person extends NodeModel implements Auditable
     public function updatePersonsAddress(UserFormRequest $request)
     {
         if (request()->filled('address')) {
-            $data = $this->getGeoCode(app('geocoder')->geocode(request('address'))->get());
             
+            $address = request('address');
         } else {
-            $data['address']=null;
-            $data['city']=null;
-            $data['state']=null;
-            $dta['zip']=null;
-            $data['lat']=null;
-            $data['lng']=null;
+            $address = config('mapminer.default_address');
         }
-        return $data;
+        return  $this->getGeoCode(app('geocoder')->geocode($address)->get());
     }
     /**
      * [myAddress description]
