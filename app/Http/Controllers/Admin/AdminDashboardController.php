@@ -114,10 +114,11 @@ class AdminDashboardController extends BaseController
     public function logins($view = null)
     {
 
-        $users = $this->_getUsersByLoginDate($view);
+        /*$users = $this->_getUsersByLoginDate($view);
 
         $views = $this->_getViews();
-        return response()->view('admin.users.newshow', compact('users', 'views', 'view'));
+        return response()->view('admin.users.newshow', compact('users', 'views', 'view'));*/
+        return response()->view('admin.users.lwshow');
     }
     /**
      * [downloadlogins description]
