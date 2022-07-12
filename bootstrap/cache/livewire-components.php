@@ -58,6 +58,7 @@
   'training-table' => 'App\\Http\\Livewire\\TrainingTable',
   'user-autocomplete' => 'App\\Http\\Livewire\\UserAutocomplete',
   'user-create' => 'App\\Http\\Livewire\\UserCreate',
+  'user-logins' => 'App\\Http\\Livewire\\UserLogins',
   'user-table' => 'App\\Http\\Livewire\\UserTable',
   'usertrack-activities' => 'App\\Http\\Livewire\\UsertrackActivities',
   'usertrack-detail' => 'App\\Http\\Livewire\\UsertrackDetail',

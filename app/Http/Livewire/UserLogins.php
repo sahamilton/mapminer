@@ -55,6 +55,9 @@ class UserLogins extends Component
                                 ]
                             );
                            
+                        }, function ($q) {
+
+                            $q->withCount('usage');
                         }
                     )
                     ->when(
@@ -76,11 +79,7 @@ class UserLogins extends Component
                     ->paginate($this->perPage),
 
                 'roles'=>Role::pluck('display_name', 'id')->prepend('All', 'all'),
-
             ]
-
-
-
         );
     }
 

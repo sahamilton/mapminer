@@ -323,6 +323,7 @@ class User extends Authenticatable implements Auditable
     { 
         
         return  $query->where('users.email', 'like', "%{$search}%");
+
      
 
     }

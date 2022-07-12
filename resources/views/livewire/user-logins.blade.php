@@ -64,6 +64,7 @@
                 </a>
 
             </th>
+            <th></th>
         </thead>
         <tbody>
             @foreach ($users as $user)
@@ -82,6 +83,7 @@
                     <td>{{$user->created_at->format('Y-m-d')}}</td>
                     <td>{{$user->lastlogin ? $user->lastlogin->format('Y-m-d') : ''}}</td>
                     <td>{{$user->usage_count}}</td>
+                    <td>{{$user->lastlogin && $user->lastlogin->diffInDays($user->created_at) >0 ? number_format($user->usage_count / $user->lastlogin->diffInDays($user->created_at),1) :''}}</td>
 
                 </tr>
             @endforeach
