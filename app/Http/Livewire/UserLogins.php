@@ -77,7 +77,7 @@ class UserLogins extends Component
 
                 'roles'=>Role::pluck('display_name', 'id')->prepend('All', 'all'),
 
-        ]
+            ]
 
 
 
