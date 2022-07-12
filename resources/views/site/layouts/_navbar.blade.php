@@ -53,6 +53,12 @@
                 My Dashboard
               </a>
               <a class="dropdown-item" 
+                href="{{{ route('reports.index') }}}">
+                <i class="fa-solid fa-file-excel"></i>
+                Reports
+              </a>
+              
+              <a class="dropdown-item" 
                   href="{{{ route('branchcampaigns.index') }}}">
                  <i class="fas fa-chart-line"></i>
                   My Sales Campaigns</a> 
