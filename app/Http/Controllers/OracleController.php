@@ -80,9 +80,10 @@ class OracleController extends Controller
     {
         $oracle->load('branch', 'oracleManager.mapminerUser.person', 'mapminerRole');
 
-        // create user
-        //  employee_id
-        //  email
+        /* 
+            if no branch association in Oracle set the persons
+            address to the application default
+        */
         if(! $oracle->branch) {
         
             $defaultAddress= $oracle->getGeoCode(app('geocoder')->geocode(config('mapminer.default_address'))->get());
