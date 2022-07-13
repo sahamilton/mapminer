@@ -21,7 +21,10 @@
 
 @endif
 
+@if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist', 'market_manager']))
+       <p><a href="{{route('branch.leads')}}" >Return to branch leads</a></p>
 
+       @endif
 
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
