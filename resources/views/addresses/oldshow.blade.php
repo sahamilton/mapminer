@@ -24,10 +24,14 @@
 @if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist', 'market_manager']))
       
   <p><a href="{{route('branch.leads')}}" >Return to branch leads</a></p>
-  <img src="{{asset('/assets/icons/google.png')}}" width="25" height="25" />
+  
   <a href="https://www.google.com/search?q={{$location->businessname. " " .$location->fullAddress()}} news" 
     title="Google search for {{$location->businessname}}" 
-    target="_blank">Search for {{$location->businessname}}</a>
+    target="_blank">
+    <img src="{{asset('/assets/icons/google.png')}}" width="25" height="25" 
+    title="Google search for {{$location->businessname}}" 
+
+  />Search for {{$location->businessname}}</a>
 @endif
 
 @if($location->assignedToBranch)
