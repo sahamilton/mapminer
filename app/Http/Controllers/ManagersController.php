@@ -39,9 +39,15 @@ class ManagersController extends BaseController {
     public function manager()
     {
         
+        if (auth()->user()->hasRole('national_account_manager')) {
+            $manager_id = auth()->user()->person->id;
+        } elseif (auth()->user()->hasRole(['admin', 'sales_operations'])) {
+            $manager_id = 'All';
+        } else {
+            return redirect()->back()->withError('You are not authorized to view this page');
+        }
         
-        
-        return response()->view('managers.manageaccounts');
+        return response()->view('managers.manageaccounts', compact('manager_id'));
         
         
     }
