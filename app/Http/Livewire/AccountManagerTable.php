@@ -28,6 +28,7 @@ class AccountManagerTable extends Component
 
 
 
+
     /**
      * [updatingSearch description]
      * 
@@ -69,13 +70,14 @@ class AccountManagerTable extends Component
     /**
      * [mount description]
      * 
-     * @return [type] [description]
+     * @param $manager_id [description]
+     * 
+     * @return [type]                  [description]
      */
-    public function mount()
+    public function mount($manager_id=false)
     {
         
         
-
     }
     /**
      * [render description]
@@ -89,7 +91,8 @@ class AccountManagerTable extends Component
         return view(
             'livewire.companies.account-manager-table',
             [
-                'results'=>Company::has('locations')
+                'results'=>Company::query()
+                    ->has('locations')
                     ->with('type', 'industryVertical')
                     ->when(
                         $this->type_id != 'All', function ($q) {
@@ -169,7 +172,8 @@ class AccountManagerTable extends Component
                     ->prepend('All', 'All')
                     ->toArray(),
 
-                'managers'=>Person::has('managesAccount')
+                'managers' => Person::query()
+                    ->has('managesAccount')
                     ->orderBy('lastname')
                     ->orderBy('firstname')
                     ->get()
@@ -177,13 +181,15 @@ class AccountManagerTable extends Component
                     ->prepend('All', 'All')
                     ->toArray(),
 
-                'types'=>AccountType::has('companies')
+                'types'=>AccountType::query()
+                    ->has('companies')
                     ->orderBy('type')
                     ->pluck('type', 'id')
                     ->prepend('All', 'All')
                     ->toArray(),
 
-                'activitytypes'=>ActivityType::orderBy('activity')
+                'activitytypes'=>ActivityType::query()
+                    ->orderBy('activity')
                     ->pluck('activity', 'id')
                     ->toArray(),
 

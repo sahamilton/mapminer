@@ -25,12 +25,13 @@
     </div>
     <div class="row mb-4">
         <div class="col form-inline">
+            @if(auth()->user()->person->id != $manager_id)
             <x-form-select wire:model="manager_id"
                 name="manager_id"
                 label=" Manager: "
                 :options="$managers"
                 />
-            
+            @endif
             
             <x-form-select wire:model="type_id"
                 name="type_id"

@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
 
-<livewire:account-manager-table />
+<livewire:account-manager-table :manager_id='$manager_id' />
 
 
 
