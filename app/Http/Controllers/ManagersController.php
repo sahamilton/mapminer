@@ -39,11 +39,9 @@ class ManagersController extends BaseController {
     public function manager()
     {
         
-        if (! $data = $this->_getManagersData()) {
-            return redirect()->route('home')->witherror('You do not have access to this view');
-        }
         
-        return response()->view('managers.manageaccounts', compact('data'));
+        
+        return response()->view('managers.manageaccounts');
         
         
     }

@@ -49,14 +49,29 @@ class Person extends NodeModel implements Auditable
         'firstname',
         'lastname'
     ];
-    public function getCompleteNameAttribute()
+    /**
+     * [getCompleteNameAttribute description]
+     * 
+     * @return string concatenated full name
+     */
+    public function getCompleteNameAttribute() :string
     {
         return $this->firstname . ' ' . $this->lastname;
     }
-    public function getPostNameAttribute()
+    /**
+     * [getPostNameAttribute description]
+     * 
+     * @return string concatenated name with lastname first
+     */
+    public function getPostNameAttribute() :string
     {
         return $this->lastname . ', ' . $this->firstname;
     }
+    /**
+     * [getPhoneNumberAttribute description]
+     * 
+     * @return string formatted phone number
+     */
     public function getPhoneNumberAttribute()
     {
         $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);
@@ -75,7 +90,11 @@ class Person extends NodeModel implements Auditable
     {
         return 'reports_to';
     }
-
+    /**
+     * [getFullNameAttribute duplicate of Complete Name attribute]
+     * 
+     * @return [type] [description]
+     */
     public function getFullNameAttribute()
     {
         return $this->firstname . ' ' . $this->lastname;
@@ -132,7 +151,11 @@ class Person extends NodeModel implements Auditable
             ->withPivot('role_id')
             ->orderBy('branchname');
     }
-
+    /**
+     * [fullEmail description]
+     * 
+     * @return [type] [description]
+     */
     public function fullEmail()
     {
         return ['name'=>$this->fullName(), 
@@ -141,10 +164,11 @@ class Person extends NodeModel implements Auditable
     /**
      * [scopeManagers description]
      * 
-     * @param [type] $query [description]
-     * @param [type] $roles [description]
+     * @param \Illuminate\Database\Eloquent\Builder $query        [description]
+     * @param Array|null                            $roles        [description]
+     * @param Array|null                            $servicelines [description]
      * 
-     * @return [type]        [description]
+     * @return \Illuminate\Database\Eloquent\Builder $query       [description]
      */
     public function scopeManagers(\Illuminate\Database\Eloquent\Builder $query, Array $roles=null, Array $servicelines=null)
     {
@@ -153,11 +177,11 @@ class Person extends NodeModel implements Auditable
             $roles = $this->managerRoles;
         }
         
-        if(! $servicelines) {
+        if (! $servicelines) {
             $servicelines = auth()->user()->serviceline()->pluck('id')->toArray();
         }
         
-        return $this->wherehas(
+        return $query->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
 
                     $q->whereIn('role_id', $roles);
@@ -207,6 +231,13 @@ class Person extends NodeModel implements Auditable
         ->orderBy('firstname')
         ->get();
     }
+    /**
+     * [_getAllBranches description]
+     * 
+     * @param Array|null $servicelines [description]
+     * 
+     * @return array                   array of branches in serviceline
+     */
     private function _getAllBranches(Array $servicelines=null) :array
     {   
         return Branch::when(
@@ -347,7 +378,11 @@ class Person extends NodeModel implements Auditable
             return $this->_getBranchesFromTeam($person);
         }
     }
-
+    /**
+     * [logins description]
+     * 
+     * @return [type] [description]
+     */
     public function logins()
     {
         return $this->hasMany(Track::class, 'user_id', 'user_id');
@@ -737,20 +772,16 @@ class Person extends NodeModel implements Auditable
                 }
             )->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
-    public function leads()
-    {
-        return $this->hasMany(Address::class, 'user_id', 'user_id');
-    }
     /**
      * [leads description]
      * 
      * @return [type] [description]
-    
+     */
     public function leads()
     {
-        return $this->belongsToMany(Address::class, 'address_person', 'person_id', 'address_id')
-            ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
-    } */
+        return $this->hasMany(Address::class, 'user_id', 'user_id');
+    }
+
     /**
      * [offeredleads description]
      * 
@@ -1104,10 +1135,11 @@ class Person extends NodeModel implements Auditable
     /**
      * [updatePersonsAddress description]
      * This should be in a controller!
+     * 
      * @param UserFormRequest $request [description]
      * 
      * @return [type]                   [description]
-     */
+     
     public function updatePersonsAddress(UserFormRequest $request)
     {
         if (request()->filled('address')) {
@@ -1118,6 +1150,7 @@ class Person extends NodeModel implements Auditable
         }
         return  $this->getGeoCode(app('geocoder')->geocode($address)->get());
     }
+     */
     /**
      * [myAddress description]
      * 
@@ -1241,13 +1274,19 @@ class Person extends NodeModel implements Auditable
         if (auth()->user()->hasRole('admin')) {
             return true;
         } elseif (auth()->user()->hasRole('serviceline_manager')) {
-            return $this->inMyServiceLine($person);
+            return $this->_inMyServiceLine($person);
         } else {
             return $person->isDescendantOf(auth()->user()->person);
         }
     }
-
-    private function inMyServiceLine(Person $person)
+    /**
+     * [_inMyServiceLine description]
+     * 
+     * @param Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
+    private function _inMyServiceLine(Person $person) :bool
     {
         $myServiceLines = auth()->user()->serviceline->pluck('id')->toArray();
         $personsServicelines = $person->userdetails->serviceline->pluck('id')->toArray();
@@ -1290,7 +1329,7 @@ class Person extends NodeModel implements Auditable
      *                       value is label for activi
      *                        
      * @return [type]         [description]
-    */
+     */
     public function scopeSummaryActivities($query, Array $period, Array $fields = null)
     {
        
