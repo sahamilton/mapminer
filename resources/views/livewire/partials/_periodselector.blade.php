@@ -1,7 +1,7 @@
 <div class="col form-inline" 
     title="Select time period"> 
-    @if( ! isset($timeperiods)) $timeperiods = config('mapminer.timeframes') @endif
-
+    @if( ! isset($timeperiods)) @php $timeperiods = config('mapminer.timeframes')@endphp @endif
+    
         @if(isset($title))
             {{$title}}
         @endif
