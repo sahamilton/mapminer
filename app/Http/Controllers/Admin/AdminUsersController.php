@@ -327,7 +327,14 @@ class AdminUsersController extends BaseController
             $user->save();
         }
     }
-
+    /**
+     * [_createPersonData description]
+     * 
+     * @param Request $request [description]
+     * @param User    $user    [description]
+     * 
+     * @return [type]           [description]
+     */
     private function _createPersonData(Request $request, User $user)
     {
         
@@ -335,7 +342,7 @@ class AdminUsersController extends BaseController
         if ($personName['phone']) {
             $personName['phone'] = preg_replace('/[\D]/m', '', $personName['phone']);
         }
-        $personGeo = $this->person->updatePersonsAddress($request);
+        $personGeo = $this->_updatePersonsAddress($request);
         return array_merge($personGeo, $personName, ['user_id'=>$user->id]);
         
     }
@@ -430,28 +437,28 @@ class AdminUsersController extends BaseController
 
     }
     /**
-     * [_updateAssociatedPerson description]
+     * [_updatePersonsAddress description]
      * 
-     * @param Person $person [description]
-     * @param [type] $data   [description]
+     * @param Request $request [description]
      * 
-     * @return [type]         [description]
+     * @return array $data     [description]
      */
-    private function _updateAssociatedPerson(Person $person, $data)
+    private function _updatePersonsAddress(Request $request) :array
     {
-       
-       
-        $geodata = $person->updatePersonsAddress($data);
         
-        $data = array_merge($data, $geodata);
-        $person->update($data);
-
-        if (isset($data['vertical']) && $data['vertical'][0]!=0) {
-            $person->industryfocus()->sync($data['vertical']);
+        if (request()->filled('address')) {
+            $data = $this->person->getGeoCode(app('geocoder')->geocode(request('address'))->get());
+            
+        } else {
+            $data['address'] = null;
+            $data['city'] = null;
+            $data['state'] = null;
+            $dta['zip'] = null;
+            $data['lat'] = null;
+            $data['lng'] = null;
         }
-
-
-        return $person;
+ 
+        return $data;
     }
     /**
      * [_getUsersBranches description]

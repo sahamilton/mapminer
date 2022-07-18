@@ -253,6 +253,7 @@ class Person extends NodeModel implements Auditable
         ->pluck('id')
         ->toArray();
     }
+    
     /**
      * GetMyBranches finds branch managers in reporting
      * strucuture and returns their branches as array]
@@ -1132,25 +1133,7 @@ class Person extends NodeModel implements Auditable
       
         return collect($salesrepmarkers)->toJson();
     }
-    /**
-     * [updatePersonsAddress description]
-     * This should be in a controller!
-     * 
-     * @param UserFormRequest $request [description]
-     * 
-     * @return [type]                   [description]
-     
-    public function updatePersonsAddress(UserFormRequest $request)
-    {
-        if (request()->filled('address')) {
-            
-            $address = request('address');
-        } else {
-            $address = config('mapminer.default_address');
-        }
-        return  $this->getGeoCode(app('geocoder')->geocode($address)->get());
-    }
-     */
+    
     /**
      * [myAddress description]
      * 

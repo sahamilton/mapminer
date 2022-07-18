@@ -60,7 +60,11 @@ class OracleController extends Controller
 
         return response()->view('oracle.index', compact('actions'));
     }
-
+    /**
+     * [showOracle description]
+     * 
+     * @return [type] [description]
+     */
     public function showOracle()
     {
         return response()->view('oracle.list');
@@ -68,7 +72,8 @@ class OracleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\oracle  $oracle
+     * @param \App\oracle $oracle 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function show(Oracle $oracle)
@@ -76,6 +81,13 @@ class OracleController extends Controller
         $oracle->load('teamMembers.mapminerUser.person', 'oracleManager', 'mapminerUser.person', 'mapminerManager.person');
         return response()->view('oracle.show', compact('oracle'));
     }
+    /**
+     * [addUser description]
+     * 
+     * @param Oracle $oracle [description]
+     *
+     * @return type 
+     */
     public function addUser(Oracle $oracle)
     {
         $oracle->load('branch', 'oracleManager.mapminerUser.person', 'mapminerRole');
@@ -84,13 +96,13 @@ class OracleController extends Controller
             if no branch association in Oracle set the persons
             address to the application default
         */
-        if(! $oracle->branch) {
+        if (! $oracle->branch) {
         
             $defaultAddress= $oracle->getGeoCode(app('geocoder')->geocode(config('mapminer.default_address'))->get());
             
         }
         if ($oracle->mapminerRole) {
-        
+            
             $data = [
                 'user'=>[
                     'employee_id'=>$oracle->person_number,
@@ -117,14 +129,15 @@ class OracleController extends Controller
                 'branch'=>$oracle->branch ? $oracle->branch : null,
                 
                 ];
-  
             // Check if the new user was previously deleted
             // or the email belonged to a deleted user
-            if ($olduser = User::withTrashed()
+            $olduser = User::query()
+                ->withTrashed()
                 ->where('employee_id', $oracle->person_number)
                 ->orWhere('email', $oracle->primary_email)
-                ->get()
-            ) {
+                ->get();
+            
+            if ($olduser) {
                 foreach ($olduser as $old) {
                     Person::withTrashed()
                         ->where('user_id', $old->id)
@@ -140,8 +153,10 @@ class OracleController extends Controller
          
             $user = User::create($data['user']);
             $user->roles()->attach($oracle->mapminerRole->role_id);
+            // hard coded serviceline;
+            $user->serviceline()->attach(['5']);
             $person = $user->person()->create($data['person']);
-            if($data['branch']) {
+            if ($data['branch']) {
                 $person->branchesServiced()->attach($data['branch']->id, ['role_id'=>$oracle->mapminerRole->role_id]);
                     
             }
@@ -153,6 +168,7 @@ class OracleController extends Controller
     }
     /**
      * [unmatched description]
+     * 
      * @return [type] [description]
      */
     public function unmatched()
@@ -161,18 +177,33 @@ class OracleController extends Controller
     }
     
     
-
+    /**
+     * [verify description]
+     * 
+     * @return [type] [description]
+     */
     public function verify()
     {
         
         return response()->view('oracle.verifiedemail');
     }
-
+    /**
+     * [matchManager description]
+     * 
+     * @return [type] [description]
+     */
     public function matchManager()
     {
         return response()->view('oracle.matchingManagers');
     }
-
+    /**
+     * [reassign description]
+     * 
+     * @param Person $person [description]
+     * @param Oracle $oracle [description]
+     * 
+     * @return [type]         [description]
+     */
     public function reassign(Person $person, Oracle $oracle)
     {
         $person->update(['reports_to'=>$oracle->mapminerUser->person->id]);
