@@ -77,7 +77,7 @@ class CompanyTable extends Component
         if ($accounttype) {
             $this->accounttype=$accounttype;
         }
-        $this->_getVerticalGroup();
+        //$this->_getVerticalGroup();
         
         
     }
