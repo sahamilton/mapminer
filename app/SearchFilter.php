@@ -85,6 +85,13 @@ class SearchFilter extends NodeModel
             ->pluck('filter', 'id')
             ->toArray();
     }
+    /**
+     * [scopeActive description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeActive($query)
     {
         return $query->where('inactive', 0);
@@ -118,11 +125,25 @@ class SearchFilter extends NodeModel
 
             ->where('inactive', '=', 0);
     }
+    /**
+     * [scopeTable description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $table [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeTable($query, $table)
     {
         return $query->where('searchtable', $table);
     }
-
+    /**
+     * [scopeIndustries description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeIndustries($query)
     {
         return $query->where('searchtable', '=', 'companies')
