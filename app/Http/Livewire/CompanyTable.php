@@ -20,7 +20,7 @@ class CompanyTable extends Component
     public $search = '';
     public $location;
     public String $address;
-    public Array $verticalGroup;
+    public $verticalGroup;
     public $vertical = 'all';
     public $distance = '25';
     public $accounttype='all';
