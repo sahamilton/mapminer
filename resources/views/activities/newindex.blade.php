@@ -2,7 +2,7 @@
 @section('content')
 
 
-@livewire('activities-table', ['branch'=>$branch->id, 'myBranches'=>$myBranches])
+<livewire:activities-table :branch='$branch->id'  :myBranches='$myBranches' />
 @include('partials._scripts')
 
 @endsection

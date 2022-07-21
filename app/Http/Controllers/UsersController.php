@@ -32,7 +32,7 @@ class UsersController extends Controller
             or auth()->user()->id == $user->id
             or in_array($user->id, auth()->user()->person->directReports->pluck('user_id')->toArray())
         ) {
-
+           
     
             $user->load(
                 'person',
@@ -41,18 +41,22 @@ class UsersController extends Controller
                 'manager',
                 'person.industryfocus',
                 'roles',
-                'scheduledReports' 
+                'scheduledReports',
+                'scheduledReports',
+                'oracleMatch',
+                'person.branchesServiced' 
             )->loadCount('usage');
             $branchmarkers = null;
             $branchesServiced =null;
+            $salesrepmarkers = null;
             if (count(array_intersect($user->currentRoleIds(), [3,6,7,9,14,17]))>0) {
-                $branchesServiced = Branch::whereIn('id', $user->person->getMyBranches())->get();
+                $branchesServiced = $user->person->branchesServiced;
                 
                 if ($branchesServiced->count()) {
                     $branchmarkers = $branchesServiced->toJson();
                 }
             }
-            if ($user->person->has('directReports')) {
+            if ($user->person->directReports->count()>0) {
                 $salesrepmarkers = $user->person->jsonify($user->person->directReports);
             }
 

@@ -2,8 +2,7 @@
 @section('content')
 <div class="container">
  
-@livewire('manager-table')
-
+<livewire:manager-table />
 
 </div>
 

@@ -112,11 +112,9 @@ class OpportunityTable extends Component
                         }
                     )
                     ->when(
-
                         $this->expected !='all', function ($q) {
                             $q->whereBetween('expected_close', [$this->expectedRange['from'], $this->expectedRange['to']]);
                         }
-
                     )
                     ->when(
                         $this->selectuser != 'All', function ($q) {

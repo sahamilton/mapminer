@@ -3,7 +3,7 @@
 {{-- Content --}}
 @section('content')
 <div class="container">
-@livewire('usertrack-table', ['managers'=>$managers]);
+<livewire:usertrack-table :managers='$managers' />
 
 </div>
 

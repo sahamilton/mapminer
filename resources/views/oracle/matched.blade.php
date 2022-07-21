@@ -2,7 +2,7 @@
 @section('content')
 
 
-@livewire('oracle-table')
+<livewire:oracle-table />
 @include('partials/_modal')   
 @include('partials/_scripts')
 @endsection

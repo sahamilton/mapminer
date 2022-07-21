@@ -34,7 +34,7 @@
 </nav>
 <div class="tab-content" id="nav-tabContent">
   <div id="locations" class="tab-pane show active">
-    @livewire('branch-locations-table', ['branch'=>$branch->id])
+    <livewire:branch-locations-table :branch='$branch->id' />
   </div>
   <div id="team" class="tab-pane fade">
  		@include('branches.partials._tabteam')

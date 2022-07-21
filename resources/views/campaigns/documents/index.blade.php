@@ -5,7 +5,7 @@
 
     
 
-    @livewire('campaign-documents-table')
+    <livewire:campaign-documents-table />
     
 
 @include('partials._modal')

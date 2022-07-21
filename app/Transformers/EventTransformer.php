@@ -32,9 +32,9 @@ class EventTransformer extends TransformerAbstract
      */
     public function transform(Activity $activity)
     {
-        $title = '';
         
-        $activity->relatesToAddress ? $title.=" " .$activity->relatesToAddress->businessname : $title.=' No Name';
+        
+        $activity->relatesToAddress ? $title=" " .$activity->relatesToAddress->businessname : $title.=' No Name';
         return [
             'id'      => (int) $activity->id,
             'title'   => $title,

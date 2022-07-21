@@ -2,6 +2,6 @@
 @section('content')
 
 
-@livewire('location-contacts');
+<livewire:location-contacts />
 
 @endsection

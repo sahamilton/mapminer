@@ -43,7 +43,8 @@ class PersonSearchController extends Controller
             ->find($person->user_id);
         // Modified to accomodate staffing specialists
         //$branches = $person->branchesManaged();
-        $branches = Branch::whereIn('id', $person->getMyBranches())
+        ////
+        $branchesServiced = Branch::whereIn('id', $person->getMyBranches())
             ->with('manager')
             ->get();
         
@@ -56,8 +57,8 @@ class PersonSearchController extends Controller
                 'industryfocus'
             );
         
-        if ($branches) {
-            $branchmarkers = $branches->toJson();
+        if ($branchesServiced) {
+            $branchmarkers = $branchesServiced->toJson();
         }
         if (count($person->directReports)>0) {
             $salesrepmarkers = $this->person->jsonify($person->directReports);
@@ -67,7 +68,7 @@ class PersonSearchController extends Controller
         } else {
             $addToMapminer = null;
         }
-        return response()->view('persons.details', compact('person', 'branches', 'branchmarkers',  'user', 'addToMapminer'));
+        return response()->view('persons.details', compact('person', 'branchesServiced', 'branchmarkers',  'user', 'addToMapminer'));
     }
 
     public function welcome(Person $person)

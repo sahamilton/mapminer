@@ -33,6 +33,7 @@ class Activity extends Model
 
     /**
      * [getId description]
+     * 
      * @return [type] [description]
      */
     public function getId()
@@ -61,6 +62,7 @@ class Activity extends Model
     }
     /**
      * [priorActivity description]
+     * 
      * @return [type] [description]
      */
     public function priorActivity()
@@ -69,6 +71,7 @@ class Activity extends Model
     }
     /**
      * [relatedActivity description]
+     * 
      * @return [type] [description]
      */
     public function followupActivity()
@@ -184,11 +187,13 @@ class Activity extends Model
     }
     /**
      * [scopeSearch description]
-     * @param  [type] $query  [description]
-     * @param  [type] $search [description]
+     * 
+     * @param [type] $query  [description]
+     * @param string $search [description]
+     * 
      * @return [type]         [description]
      */
-    public function scopeSearch($query, $search)
+    public function scopeSearch($query, string $search)
     {
         return  $query->whereIn(
             'address_id', function ($q) use ($search) {
@@ -197,8 +202,8 @@ class Activity extends Model
                         ->where('businessname', 'like', "%{$search}%")
                         ->orWhere('street', 'like', "%{$search}%")
                         ->orWhere('city', 'like', "%{$search}%");
-                }
-            );
+            }
+        );
     }
     /**
      * [relatedContact description]
@@ -367,7 +372,7 @@ class Activity extends Model
      * 
      * @return [type]         [description]
      */
-    public function scopePeriodActivities($query,Array $period)
+    public function scopePeriodActivities($query, Array $period)
     {
         return $query->whereBetween(
             'activity_date', [$period['from'], $period['to']]

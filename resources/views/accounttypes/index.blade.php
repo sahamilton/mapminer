@@ -1,5 +1,5 @@
 @extends('admin.layouts.default')
 @section('content')
-@livewire('accounttype-table')
+<livewire:accounttype-table />
 
 @endsection

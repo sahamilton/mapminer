@@ -106,11 +106,12 @@ Route::group(
         Route::get('dashboard', ['as'=>'dashboard', 'uses'=>'DashboardController@index']);
         Route::resource('branchdashboard', 'BranchDashboardController');
         
-        Route::resource('calendar', 'CalendarController')->except(['show']);
         Route::get('cal/{period}', ['as'=>'cal.month', 'uses'=>'CalendarController@getCalPeriod']);
+        Route::resource('calendar', 'CalendarController')->except(['show']);
+        
         //   Manager Dashboard
-        Route::get('dashboard/reset',['as'=>'dashboard.reset', 'uses'=> 'DashboardController@reset']);
-        Route::post('dashboard/setmanager',['as'=>'dashboard.setManager', 'uses'=> 'DashboardController@setManager']);
+        Route::get('dashboard/reset', ['as'=>'dashboard.reset', 'uses'=> 'DashboardController@reset']);
+        Route::post('dashboard/setmanager', ['as'=>'dashboard.setManager', 'uses'=> 'DashboardController@setManager']);
         Route::get('mgrsummary', ['as'=>'newmgrsummary', 'uses'=>'MgrDashboardController@mgrSummary']);
         Route::get('namsummary', ['as'=>'namsummary', 'uses'=>'NamDashboardController@show']);
         Route::get('mydashboard', ['as'=>'mydashboard', 'uses'=>'DashboardController@reset']);

@@ -24,7 +24,7 @@
             <i class="fas fa-filter text-danger"></i>
             State: &nbsp;
             <select wire:model="state" class="form-control">
-                <option value="All">All</option>
+               
                 @foreach ($allstates as $state)
                     <option value="{{$state->state}}">{{$state->state}}</option>
                 @endforeach

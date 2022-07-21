@@ -1,4 +1,4 @@
 @extends('admin.layouts.default')
 @section('content')
-@livewire('oracle-managers')
+<livewire:oracle-managers />
 @endsection
