@@ -10,19 +10,30 @@
     </div>
 
 @endif
-<div class="col-4">
-   @include('livewire.partials._search', ['placeholder'=>"Search opportunities"])
+<div class="row mb-4" >
+  <div class="col-4">
+     @include('livewire.partials._search', ['placeholder'=>"Search opportunities"])
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col form-inline">
 
-
-
-   
-    <x-form-select 
-      name="status"
-      wire:model='status'
-      label="Status:"
-      :options="$opportunityStatuses" 
-      />
-
+  <x-form-select 
+    class="mx-2"
+    name="status"
+    wire:model='status'
+    label="Status:"
+    :options="$opportunityStatuses" 
+    />
+  <x-form-select 
+    class="mx-2"
+    name="type"
+    wire:model='type'
+    label="Type:"
+    :options="$types" 
+    />
+    
+  </div>
 </div>           
                   
 <table class='table table-striped table-bordered table-condensed table-hover'>
@@ -37,7 +48,7 @@
       <th>Status</th>
       <th>Company</th>
       <th>Address</th>
-      <th>Top 25</th>
+      <th>Type</th>
       <th>Potential Headcount</th>
       <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
@@ -69,7 +80,7 @@
 
             {{$opportunityStatuses[$opportunity->closed]}}
           
-             @if($owned && $opportunity->closed ==0)
+             @if($owned && $opportunity->closed == 0)
            
             <button class="btn btn-danger" wire:click="editOpportunity({{$opportunity->id}}, 'close')" >
                     Close</button>
@@ -83,14 +94,28 @@
           </td>
           <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>
-
-            <input type="checkbox" 
+            
+            Top 25:<input type="checkbox" 
             id="Top25{{$opportunity->id}}" 
             wire:click ="changeOpportunityType({{$opportunity->id}}, 'Top25')"
             @if($opportunity->Top25)
-            checked/>
+            checked
             @endif
-            
+            @if($opportunity->closed !=0)
+            disabled
+            @endif
+            />
+            <br />
+            CSP:<input type="checkbox" 
+            id="CSP{{$opportunity->id}}" 
+            wire:click ="changeOpportunityType({{$opportunity->id}}, 'csp')"
+            @if($opportunity->csp)
+            checked
+            @endif
+            @if($opportunity->closed !=0)
+            disabled
+            @endif
+            />
           </td>
           <td>{{$opportunity->requirements}}</td>
           <td>{{$opportunity->duration}}</td>

@@ -18,14 +18,24 @@ class AuditTable extends Component
     public $setPeriod = 'thisWeek';
     public $activitytype = "All";
     public $model = 'All';
-    ;
 
 
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
-
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -36,7 +46,11 @@ class AuditTable extends Component
 
         $this->sortField = $field;
     }
-
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         $this->_setPeriod();

@@ -43,15 +43,31 @@ class AddressCard extends Component
     public $transferbranch;
     public array $myBranches;
 
-
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
+    /**
+     * [updatingView description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingView()
     {
         $this->resetPage();
     }
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -62,6 +78,14 @@ class AddressCard extends Component
 
         $this->sortField = $field;
     }
+    /**
+     * [mount description]
+     * 
+     * @param int         $address_id [description]
+     * @param string|null $view       [description]
+     * 
+     * @return [type]                  [description]
+     */
     public function mount(int $address_id, string $view=null)
     {
        
@@ -77,6 +101,11 @@ class AddressCard extends Component
         
       
     }
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         $this->location = Address::findOrFail($this->address_id);
@@ -108,7 +137,8 @@ class AddressCard extends Component
     /**
      * [changeview description]
      * 
-     * @param  [type] $view [description]
+     * @param [type] $view [description]
+     * 
      * @return [type]       [description]
      */
     public function changeView(string $view)
@@ -124,8 +154,8 @@ class AddressCard extends Component
     private function _checkIfOwned()
     {
         
-        if(auth()->user()->hasRole(['branch_manager', 'staffing_specialst'])) {
-           return array_intersect($this->location->claimedByBranch->pluck('id')->toArray(), $this->myBranches); 
+        if (auth()->user()->hasRole(['branch_manager', 'staffing_specialst'])) {
+            return array_intersect($this->location->claimedByBranch->pluck('id')->toArray(), $this->myBranches); 
         }
         return $owned =[];
 
@@ -144,7 +174,8 @@ class AddressCard extends Component
     /**
      * [changeCustomerType description]
      * 
-     * @param  Address $address [description]
+     * @param Address $address [description]
+     * 
      * @return [type]           [description]
      */
     public function changeCustomerType(Address $address)
@@ -155,36 +186,62 @@ class AddressCard extends Component
         $address->save();
 
     }
-    
+    /**
+     * [updateRating description]
+     * 
+     * @param [type] $ranked [description]
+     * 
+     * @return [type]         [description]
+     */
     public function updateRating($ranked)
     {
         
         $this->address->ranking()->sync(auth()->user()->person->id, ['ranking'=>$ranked]);
     }
     
-
+    /**
+     * [editAddress description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function editAddress(Address $address)
     {
         $this->location = $address;
         $this->doShow('addressModal');
 
     }
-
+    /**
+     * [updateAddress description]
+     * 
+     * @return [type] [description]
+     */
     public function updateAddress()
     {
         $this->validate();
         $geocode = app('geocoder')->geocode($this->location->fullAddress())->get();
        
-            if(count($geocode) > 0) {
-                 $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
-                 $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
-                
-            }
+        if (count($geocode) > 0) {
+             $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
+             $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
+            
+        }
+
+        if (isset($this->location->customer_id)) {
+            @ray($this->location);
+            $this->location->isCustomer =1;
+        }
         $this->doClose('addressModal');
         $this->location->save();
         $this->resetPage();
 
     }
+    /**
+     * [rules description]
+     * 
+     * @return [type] [description]
+     */
     public function rules()
     {
         return [
@@ -193,10 +250,19 @@ class AddressCard extends Component
             'location.city'=>'required',
             'location.state'=>'required',
             'location.zip'=>'required',
+            'location.phone'=>'sometimes',
+            'location.customer_id'=>'sometimes',
+            'location.isCustomer'=>'sometimes',
 
         ];
     }
-
+    /**
+     * [deleteAddress description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function deleteAddress(Address $address)
     {
         $address->loadCount('openOpportunities');
@@ -207,6 +273,13 @@ class AddressCard extends Component
         }
         
     }
+    /**
+     * [destroyAddress description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function destroyAddress(Address $address)
     {
        
@@ -218,7 +291,14 @@ class AddressCard extends Component
         $this->doClose('confirmModal');
 
     }
-
+    /**
+     * [claimLead description]
+     * 
+     * @param Branch  $branch  [description]
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function claimLead(Branch $branch, Address $address)
     {
         
@@ -227,23 +307,46 @@ class AddressCard extends Component
          @ray($this->owned, $branch->id);
 
     }
+    /**
+     * [requestTransfer description]
+     * 
+     * @return [type] [description]
+     */
     public function requestTransfer()
     {
        
-
-       $this->doShow('requestTransfer'); 
+        $this->doShow('requestTransfer'); 
     }
+    /**
+     * [processTransferRequest description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function processTransferRequest(Address $address)
     {
         TransferLeadRequestJob::dispatch($address, auth()->user());
             session()->flash('success', 'An email has been sent to the owning branch requesting that the lead be transferred');
         $this->doClose('requestTransfer');
     }
+    /**
+     * [reassignAddress description]
+     * 
+     * @return [type] [description]
+     */
     public function reassignAddress()
     {
        
         $this->doShow('transferModal');
     }
+    /**
+     * [transferLead description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function transferLead(Address $address)
     {
         
@@ -252,18 +355,31 @@ class AddressCard extends Component
         $pivot['comments'] = 'Transferred from branch '. $fromBranch .' to ' . $this->transferbranch . " on " . now()->format('Y-m-d');
         $this->owned = [];
         $address->claimedByBranch()->detach();
-        $address->claimedByBranch()->attach($this->transferbranch,$pivot);
+        $address->claimedByBranch()->attach($this->transferbranch, $pivot);
         $this->doClose('transferModal');
     }
-
+    /**
+     * [doClose description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
     public function doClose($form)
     {
         $this->$form = false;
     }
+    /**
+     * [doShow description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
     public function doShow($form)
     {
         $this->$form = true;
     }
     
     
-}   
+}
