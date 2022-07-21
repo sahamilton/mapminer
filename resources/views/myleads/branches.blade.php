@@ -16,7 +16,7 @@
 
 
 
-@livewire('lead-table', ['branch'=>$branch->id, 'search'=>$search])
+<livewire:lead-table :branch='$branch->id' :search='$search' />
 @include('addresses.partials._deleteleadmodal') 
 
 @include('branchleads.partials._branchcampaignmodal')

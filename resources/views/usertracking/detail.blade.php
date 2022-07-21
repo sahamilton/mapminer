@@ -10,19 +10,19 @@
         @switch (ucwords($model))
             
             @case ('Opportunity')
-                @livewire('usertrack-opportunities', ['period'=>$period, 'user'=>$user])
+                <livewire:usertrack-opportunities :period='$period'  user='$user' />
                 @break
             
             @case('Activity')
-                @livewire('usertrack-activities', ['period'=>$period, 'user'=>$user]) 
+                <livewire:usertrack-activities :period='$period', user='$user' />
                 @break
 
             @case ('Address') 
-                @livewire('usertrack-activities', ['period'=>$period, 'user'=>$user]) 
+                <livewire:usertrack-activities :period='$period', user='$user' />
                 @break
 
             @case ('Track')
-                @livewire('usertrack-logins', ['period'=>$period, 'user'=>$user])
+                <livewire:usertrack-logins :period='$period', user='$user' />
                 @break
 
         @endswitch

@@ -80,7 +80,7 @@ class NearbyPeople extends Component
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
                     'distances'=>['all'=>'All', 5=>5,10=>10,25=>25, 50=>50,100=>100],
-                    'roles'=>$this->_getRoles(),
+                    'roles'=>Role::pluck('display_name', 'id')->prepend('All','all')->toArray(),
                    
             ]
 
@@ -88,15 +88,7 @@ class NearbyPeople extends Component
         );
     }
     
-    private function _getRoles()
-    {
-        $roleslist =Role::pluck('display_name', 'id')->toArray();
-        $roles['all']='All';
-        $list = array_replace($roles , $roleslist);
-        asort($list);
-
-        return $list;
-    }
+   
 
    
 }

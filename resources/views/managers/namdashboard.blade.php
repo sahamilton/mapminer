@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
  
-@livewire('nam-dashboard')
+<livewire:nam-dashboard />
 
 
 </div>

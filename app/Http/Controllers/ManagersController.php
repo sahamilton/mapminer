@@ -39,11 +39,15 @@ class ManagersController extends BaseController {
     public function manager()
     {
         
-        if (! $data = $this->_getManagersData()) {
-            return redirect()->route('home')->witherror('You do not have access to this view');
+        if (auth()->user()->hasRole('national_account_manager')) {
+            $manager_id = auth()->user()->person->id;
+        } elseif (auth()->user()->hasRole(['admin', 'sales_operations'])) {
+            $manager_id = 'All';
+        } else {
+            return redirect()->back()->withError('You are not authorized to view this page');
         }
         
-        return response()->view('managers.manageaccounts', compact('data'));
+        return response()->view('managers.manageaccounts', compact('manager_id'));
         
         
     }

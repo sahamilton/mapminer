@@ -13,15 +13,26 @@
      @endif
     @endif
 </p>
-@if($owned && $location->user_id != auth()->user()->id)
+@if($owned && $location->user_id === auth()->user()->id)
 <!--- insert livewire addressbranch here ---->
 
   <livewire:address-branch :address="$location->id" />
 
-
+  
 @endif
 
+@if(auth()->user()->hasRole(['branch_manager', 'staffing_specialist', 'market_manager']))
+      
+  <p><a href="{{route('branch.leads')}}" >Return to branch leads</a></p>
+  
+  <a href="https://www.google.com/search?q={{$location->businessname. " " .$location->fullAddress()}} news" 
+    title="Google search for {{$location->businessname}}" 
+    target="_blank">
+    <img src="{{asset('/assets/icons/google.png')}}" width="25" height="25" 
+    title="Google search for {{$location->businessname}}" 
 
+  />Search for {{$location->businessname}}</a>
+@endif
 
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp

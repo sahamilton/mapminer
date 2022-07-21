@@ -629,7 +629,16 @@ class Company extends NodeModel
 
 
     }
-    public function scopeOpportunitySummary($query, $period, $branches, $fields = null)
+    /**
+     * [scopeOpportunitySummary description]
+     * 
+     * @param  [type] $query    [description]
+     * @param  array $period   [description]
+     * @param  array  $branches [description]
+     * @param  array $fields   [description]
+     * @return [type]           [description]
+     */
+    public function scopeOpportunitySummary($query, array $period, array $branches=null, array $fields = null)
     {
     
         if (! $fields) {
@@ -644,7 +653,11 @@ class Company extends NodeModel
                     [
                         'opportunities as active_opportunities'=>function ($q1) {
                             $q1->currentlyActive($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                         }
                     ]
                 );
@@ -655,7 +668,11 @@ class Company extends NodeModel
                     [
                         'opportunities as lost_opportunities'=>function ($q1) {
                             $q1->lost($this->period)
-                            ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                         }
                     ]
                 );
@@ -668,7 +685,11 @@ class Company extends NodeModel
                         'opportunities as new_opportunities'=>function ($q1) {
                 
                             $q1->newOpportunities($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                                 
                         }
                     ]
@@ -681,7 +702,11 @@ class Company extends NodeModel
                     [
                         'opportunities as open_opportunities'=>function ($q1) {
                             $q1->open($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                         }
                     ]
                 );
@@ -693,7 +718,11 @@ class Company extends NodeModel
                     [
                         'opportunities as top_25opportunities'=>function ($q1) {
                             $q1->top25($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                         }
                     ]
                 );
@@ -705,7 +734,11 @@ class Company extends NodeModel
                     [
                         'opportunities as won_opportunities'=>function ($q1) {
                             $q1->won($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                         }
                     ]
                 );
@@ -717,7 +750,11 @@ class Company extends NodeModel
                     [
                         'opportunities as active_value'=>function ($query) {
                             $query->activeValue($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                         }
                     ]
                 );
@@ -730,7 +767,11 @@ class Company extends NodeModel
                         'opportunities as lost_value'=>function ($query) {
                 
                             $query->lostValue($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                                 
                            
                         }
@@ -745,7 +786,11 @@ class Company extends NodeModel
                         'opportunities as new_value'=>function ($query) {
                 
                             $query->newValue($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                                 
                            
                         }
@@ -759,7 +804,11 @@ class Company extends NodeModel
                     [
                         'opportunities as open_value' => function ($q1) {
                             $q1->openValue($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                                 
                         }
                     ]
@@ -772,7 +821,11 @@ class Company extends NodeModel
                     [
                         'opportunities as top_25value'=>function ($query) {
                             $query->top25Value($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                         }
                     ]
                 );
@@ -785,7 +838,11 @@ class Company extends NodeModel
                         'opportunities as won_value'=>function ($query) {
                 
                             $query->wonValue($this->period)
-                                ->whereIn('opportunities.branch_id', $this->branches);;
+                                ->when(
+                                    $this->branches, function ($q) {
+                                        $q->whereIn('opportunities.branch_id', $this->branches);
+                                    }
+                                );
                                 
                            
                         }
@@ -872,6 +929,18 @@ class Company extends NodeModel
             ]
         );  
     }
+
+    public function assignedToBranch()
+    {
+        return $this->hasManyThrough(
+            Branch::class,
+            Address::class,
+            'company_id', // Foreign key on users table...
+            'address_id', // Foreign key on posts table...
+            'id', // Local key on branches table...
+            'id' // Local key on users table...
+        );
+    }
     public function activities()
     {
       
@@ -880,7 +949,7 @@ class Company extends NodeModel
             Address::class,
             'company_id', // Foreign key on users table...
             'address_id', // Foreign key on posts table...
-            'id', // Local key on countries table...
+            'id', // Local key on activities table...
             'id' // Local key on users table...
         );
     }
@@ -905,19 +974,46 @@ class Company extends NodeModel
             ]
         );
     }
-    public function scopeActivitySummaryByType($query, array $period, array $fields)
+    /**
+     * [scopeActivitySummary description]
+     * 
+     * @param  [type] $query  [description]
+     * @param  [type] $period [description]
+     * @return [type]         [description]
+     */
+    public function scopeActivitySummary($query, $period)
     {
-        return $query->with(
-            ['activities'=>function ($q) {
-                $q
-                    ->whereBetween('activity_date', [$period['from'], $period['to']])
-                    ->where('completed', 1)
-                    ->selectRaw('activitytype_id, count(activities.id)');
-            }
+        return $query->withCount(
+            [
+                'activities'=>function ($q) use ($period) {
+                    $q->whereBetween('activity_date', [$period['from'], $period['to']])
+                        ->where('completed', 1);
+                }
             ]
-        )
-        
-        ->groupBy('activitytype_id');
+        );
+    }
+    /**
+     * [scopeActivitySummaryByType description]
+     * 
+     * @param [type] $query  [description]
+     * @param array  $period [description]
+     * @param array  $fields [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeActivitySummaryByType($query, array $period, array $fields=null)
+    {
+        $this->period = $period;
+        return $query->with(
+            [
+                'activities'=>function ($q) {
+                    $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+                        ->where('completed', 1)
+                        ->selectRaw('activitytype_id, count(activities.id)')
+                        ->groupBy('activitytype_id');
+                }
+            ]
+        );
 
 
     }
@@ -927,16 +1023,18 @@ class Company extends NodeModel
     }
     public function scopeActivitiesTypeCount($query, $period)
     {
-      return $query->with(['activities'=>function ($q) use ($period) {
-            $q->periodActivities($period)
-                ->completed()
-                ->selectRaw("addresses.company_id, activity_type.activity,count(activities.id) as activities")
-                ->join('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
-               
-                ->groupBy(['addresses.company_id', 'activity_type.activity']);
+        return $query->with(
+            [
+                'activities'=>function ($q) use ($period) {
+                    $q->periodActivities($period)
+                        ->completed()
+                        ->selectRaw("addresses.company_id, activity_type.activity,count(activities.id) as activities")
+                        ->join('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
+                       
+                        ->groupBy(['addresses.company_id', 'activity_type.activity']);
 
-            }
-        ]
+                }
+            ]
         );
        
     }

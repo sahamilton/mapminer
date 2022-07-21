@@ -1,5 +1,6 @@
 <!-- companyname -->
 <div class="form-group row {{ $errors->has('companyname') ? ' has-error' : '' }}">
+   
     <label for="companyname" 
     class="col-sm-2 col-form-label">
         Company Name:   </label>
@@ -29,6 +30,20 @@
         placeholder="street address">
         <span class="help-block">
             <strong>{{ $errors->has('street') ? $errors->first('street') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<div class="form-group row{{ $errors->has('street') ? ' has-error' : '' }}">
+    <label for="address" class="col-md-2 control-label">Suite/ Unit: </label>
+     <div class="col-sm-8">
+        <input required type="text" 
+        class="form-control" 
+        name='address2' 
+        description="address2" 
+        value="{{ old('address2', isset($address) ? $address->address2 : '' )}}" 
+        placeholder="unit / suite">
+        <span class="help-block">
+            <strong>{{ $errors->has('address2') ? $errors->first('address2') : ''}}</strong>
         </span>
     </div>
 </div>

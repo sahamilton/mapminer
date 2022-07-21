@@ -119,11 +119,12 @@ class AddressController extends BaseController
         
         $geocode = app('geocoder')->geocode($this->_getAddress($request))->get();
         $data = $this->address->getGeoCode($geocode);
-
+        
         $data['businessname'] = request('companyname');
-      
+        $data['address2'] = request('address2');
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
         $data = $this->_setCustomer($request, $data);
+       
         $address->update($data);
   
         if (request()->filled('campaign') && request('campaign')!=0) {

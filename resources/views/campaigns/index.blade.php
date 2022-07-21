@@ -7,7 +7,7 @@
    		<a href="{{route('campaigns.create')}}" class="btn btn-info">Create New Campaign</a>
    </div>
 
-    @livewire('campaign-table')
+   <livewire:campaign-table />
     
 
 @include('partials._modal')

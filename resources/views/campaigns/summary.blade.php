@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="container">
-   @livewire('campaign-summary', ['campaign_id'=>$campaign->id])
+   <livewire:campaign-summary :campaign_id='$campaign->id' />
     
 </div>
 

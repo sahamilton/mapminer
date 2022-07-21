@@ -159,13 +159,13 @@ class Chart extends Model
     }
 
     /**
-     * [getTeamActivityByTypeChart description]
+     * [getBranchActivityByDateTypeChart description]
      * 
-     * @param array $data [description]
+     * @param Object $data [description]
      * 
-     * @return [type]       [description]
-    */
-    public function getBranchActivityByDateTypeChart(Object $data)
+     * @return array $chart [description]
+     */
+    public function getBranchActivityByDateTypeChart(Object $data):array
     {
         $labels = $data->pluck('day')->unique()->toArray();
         sort($labels);

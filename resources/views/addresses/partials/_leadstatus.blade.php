@@ -35,7 +35,7 @@
         <div class="col-sm-6">
           @foreach ($location->assignedToBranch as $branch)
             <p><strong>{{$statuses[$branch->pivot->status_id]}}</strong>
-              {{$branch->branchname}}
+              <a href="{{route('branches.show', $branch->id)}}">{{$branch->branchname}}</a>
             </p>
           @endforeach
         </div>
@@ -53,7 +53,7 @@
     @foreach ($location->assignedToBranch as $branch)
       @if($branch->pivot->status_id)
         <li><strong>{{$statuses[$branch->pivot->status_id]}}</strong>
-        {{$branch->branchname}}</li>
+        <a href="{{route('branches.show', $branch->id)}}">{{$branch->branchname}}</a></li>
       @endif
     @endforeach
   @endif

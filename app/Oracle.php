@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Oracle extends Model
 {
-    use HasFactory, SoftDeletes;
+    use  Geocode, HasFactory, SoftDeletes;
     public $table = 'oracle';
     
     public $fillable = [

@@ -1,5 +1,5 @@
 <div>
-    <h2>@if(isset($accounttype)) {{$types[$accounttype]}} @endif Companies</h2>
+    <h2>@if(isset($accounttype) && $accounttype !='all') {{$types[$accounttype]}} @else All @endif Companies</h2>
     @if($distance !='any')
     <h4>with locations within {{$distance}} miles</h4>
     of {{$address}}

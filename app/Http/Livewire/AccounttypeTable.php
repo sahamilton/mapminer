@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\AccountType;
 use App\Company;
+use App\Person;
 use Livewire\WithPagination;
 use Livewire\Component;
 
@@ -20,12 +21,23 @@ class AccounttypeTable extends Component
     public $activityTypeModal = false;
     public ActivityType $activityType;
 
-    
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
-    public function sortBy($field)
+    /**
+     * [sortBy description]
+     * 
+     * @param str $field [description]
+     * 
+     * @return null
+     */
+    public function sortBy(str $field)
     {
         if ($this->sortField === $field) {
             $this->sortAsc = ! $this->sortAsc;
@@ -35,20 +47,28 @@ class AccounttypeTable extends Component
 
         $this->sortField = $field;
     }
-
-    public function rules() {
+    /**
+     * [rules description]
+     * 
+     * @return [type] [description]
+     */
+    public function rules() 
+    {
         return [
 
             'activity.type'=>'required',
 
         ];
     }
-
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         return view(
             'livewire.accounttypes.accounttype-table',
-
             [
                 'companies' => Company::when(
                     $this->accounttype != 'All', function ($q) {
@@ -64,27 +84,38 @@ class AccounttypeTable extends Component
                 ->search($this->search)
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
-                'accounttypes'=>AccountType::orderBy('type')->pluck('type', 'id')->toArray(),
-                'managers' => Company::has('managedBy')
-                    ->with('managedBy')
+                
+                'accounttypes'=>AccountType::orderBy('type')
+                    ->pluck('type', 'id')
+                    ->prepend('All', 'All')
+                    ->toArray(),
+                
+                'managers' => Person::has('managesAccount')
+                    ->orderBy('lastname')
+                    ->orderBy('firstname')
                     ->get()
-                    ->map(
-                        function ($company) {
-                            return [$company->managedBy->id=> $company->managedBy->fullName()];
-                        }
-                    )
-                    ->unique(),            
+                    ->pluck('complete_name', 'id')
+                    ->prepend('All', 'All')
+                    ->toArray(),            
             ]
         );
     }
-
+    /**
+     * [addAccounttype description 
+     *
+     * @return null
+     */
     public function addAccounttype()
     {
-        $this->_createBlankAccountType();
+        $this->__createBlankAccountType();
 
         $this->activityTypeModal = true;
     }
-
+    /**
+     * [addActivityType description]
+     *
+     * @return null
+     */
     public function addActivityType()
     {
         $this->validate();
@@ -92,8 +123,12 @@ class AccounttypeTable extends Component
         $this->activityTypeModal = false;
 
     }
-
-    private function createBlankAccountType()
+    /**
+     * [_createBlankAccountType description]
+     * 
+     * @return [type] [description]
+     */
+    private function _createBlankAccountType()
     {
         $this->activityType = ActivityType::make();
     }

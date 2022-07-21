@@ -1,4 +1,4 @@
 @extends('site.layouts.default')
 @section('content')
-@livewire('manager-summary')
+<livewire:manager-summary />
 @endsection

@@ -2,5 +2,6 @@
 
 {{-- Content --}}
 @section('content')
-	@livewire('user-create')
+
+	<livewire:user-create />
 @endsection

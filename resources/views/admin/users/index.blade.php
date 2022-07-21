@@ -9,7 +9,7 @@
 	<div class="page-header">
 		
 
-		@livewire('user-table');	
+		<livewire:user-table />
 	</div>
     
 @include('partials/_modal')   

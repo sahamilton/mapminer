@@ -1,6 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
 
-    @livewire('namdashboard')
+    <livewire:namdashboard />
 
 @endsection

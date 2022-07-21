@@ -8,7 +8,7 @@
         $fields = ['open_opportunities', 'new_opportunities', 'open_value', 'won_opportunities', 'won_value']; 
     @endphp
 
-    @livewire('branch-opportunity-table')
+    <livewire:branch-opportunity-table />
     @include('partials._scripts')
 </div>
 @endsection

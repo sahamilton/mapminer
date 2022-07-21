@@ -6,7 +6,7 @@
     @else
     <p>Created in all time periods</p>
     @endif
-     @if ($expected != 'all')
+     @if (isset($expected) && $expected != 'all')
     <p class="bg-warning">Expected to close between  {{$expectedRange['from']->format('Y-m-d')}} to  {{$expectedRange['to']->format('Y-m-d')}}</p>
     
     @endif

@@ -1,6 +1,6 @@
 @extends('admin.layouts.default')
 @section('content')
 
-@livewire('oracle-list')
+<livewire:oracle-list />
 
 @endsection

@@ -512,9 +512,11 @@ trait Geocode
      * 
      * @return Object         [description]
      */
-    public function geoCodeAddress(string $address)
+    public function geoCodeAddress(string $address= null)
     {
-
+        if (! $address) {
+            $address = config('mapminer.default_address');
+        }
         $geoCode = app('geocoder')->geocode($address)->get();
         return $this->getGeoCode($geoCode);
     }

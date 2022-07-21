@@ -26,7 +26,7 @@
         @include('maps.partials._form')
 </div>
 
-@livewire('lead-table',['search'=>$search, 'branch'=>$branch])
+<livewire:lead-table :search='$search' :branch='$branch' />
 @include('myleads.partials._mylead')
   
 @include('partials._scripts')

@@ -2,7 +2,7 @@
 @section('content')
 <div class="container" name="selectManagerDashboard" >
     
-    @livewire('dashboard-table')
+    <livewire:dashboard-table />
    
 </div>
       

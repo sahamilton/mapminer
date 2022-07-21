@@ -76,7 +76,8 @@ class BranchesController extends BaseController
      */
     public function index(Request $request)
     {
-        if (request()->has('state')){
+        
+        if (request()->has('state')) {
             $state = request('state');
             return response()->view('branches.index', compact('state'));
         }

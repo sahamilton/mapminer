@@ -1,5 +1,5 @@
 @extends('admin.layouts.default')
 @section('content')
 
-@livewire('oracle-verify')
+<livewire:oracle-verify />
 @endsection

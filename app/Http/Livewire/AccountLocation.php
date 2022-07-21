@@ -29,10 +29,22 @@ class AccountLocation extends Component
 
 
 
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
+    /**
+     * [sortBy description]
+     * 
+     * @param STR $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -44,15 +56,19 @@ class AccountLocation extends Component
         $this->sortField = $field;
     }
     
-    
+    /**
+     * [updateAddress description]
+     * 
+     * @return [type] [description]
+     */
     public function updateAddress()
     {
         if ($this->address) {
             $geocode = app('geocoder')->geocode($this->address)->get();
            
-            
-            $this->latlng['lat'] = $geocode->first()->getCoordinates()->getLatitude();
-            $this->latlng['lng'] = $geocode->first()->getCoordinates()->getLongitude();
+            $coordinates = $geocode->first()->getCoordinates();
+            $this->latlng['lat'] = $coordinates->getLatitude();
+            $this->latlng['lng'] = $coordinates->getLongitude();
 
         } else {
             $this->latlng =null;
@@ -113,20 +129,17 @@ class AccountLocation extends Component
                     )
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage),
-                'accounttypes' => $this->_getaccountTypes(),
+                'accounttypes' => AccountType::orderBy('type')->pluck('type', 'id')->prepend('All', '0')->toArray(),
                 'distances'=>['10','20','50','100'],
                 
             ]
         );
     }
-    private function _getaccountTypes()
-    {
-        $types = AccountType::orderBy('type')->pluck('type', 'id')->toArray();
-        $types['all']='All';
-        sort($types);
-  
-        return $types;
-    }
+    /**
+     * [export description]
+     * 
+     * @return Excel [description]
+     */
     public function export()
     {
         
@@ -139,7 +152,11 @@ class AccountLocation extends Component
             ), 'companylocationcount.csv'
         );
     }
-
+    /**
+     * [_makeLocation description]
+     * 
+     * @return [type] [description]
+     */
     private function _makeLocation()
     {
         $this->location = new Address;

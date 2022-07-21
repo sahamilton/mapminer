@@ -168,10 +168,8 @@ class NearbyLocations extends Component
     
 
     private function _getCompanies() :array
-    {
-        
-      
-        $companies=Company::has('unassigned')
+    {      
+        return Company::has('unassigned')
         ->whereHas(
             'unassigned', function ($q) {
                 $q->nearby($this->location, $this->distance);
@@ -180,12 +178,8 @@ class NearbyLocations extends Component
 
         ->orderBy('companyname')
         ->pluck('companyname', 'id')
+        ->prepend('All Companies','all')
         ->toArray();
-        
-        asort($companies);
-        $all = ['all'=> 'All Companies'];
-        $companies = array_replace($all, $companies);
-        
-        return $companies;
+
     }
 }

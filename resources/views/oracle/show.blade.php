@@ -50,6 +50,10 @@
       </tr>
       <tr><td>Manager Email</td><td>{{$oracle->manager_email_address}}</td></tr>
       <tr><td>Last Update</td><td>{{$oracle->created_at->format('Y-m-d')}}</td></tr>
+      @if($oracle->mapminerUser)
+      <tr><td>Added to Mapminer</td><td>{{$oracle->mapminerUser->creationDate}}</td></tr>
+      <tr><td>Last Login</td><td>{{$oracle->mapminerUser->lastlogin}}</td></tr>
+      @endif
       
    </tbody>
 </table>  
@@ -86,9 +90,11 @@
           
       @endif
    </td>
-   <td>
-      {{$team->job_profile}}</td>
-      <td> {{$team->location_name}}</td>
+   <td>{{$team->job_profile}}</td>
+   <td> {{$team->location_name}}</td>
+   @if($team->mapminerUser)
+      {{$team->mapminerUser->lastlogin}}
+   @endif
    </tr>
 @endforeach
 </tbody>

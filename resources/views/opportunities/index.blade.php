@@ -4,7 +4,7 @@
 
     <div class="row">
 
-    @livewire('opportunity-table', ['branch'=>$branch])
+    <livewire:opportunity-table :branch = '$branch' />
 
     </div>
 </div>

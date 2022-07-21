@@ -1,5 +1,3 @@
-
-
 <!-- CSRF Token -->
 @csrf
 <!-- ./ csrf token -->
@@ -29,4 +27,3 @@
 
   </div>
 </div>
-@include('partials._scripts')

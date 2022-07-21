@@ -13,7 +13,7 @@
     </div>    
 
     @endif       
-    @livewire('documents-table')
+    <livewire:documents-table />
 
 </div> 
 @include('partials._modal')

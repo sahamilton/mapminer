@@ -31,30 +31,60 @@ class ActivitiesTable extends Component
     public $selectuser = 'All';
     public $paginationTheme = 'bootstrap';
 
-
+    /**
+     * [updatingSearch description]\
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
+    /**
+     * [updatedCampaignId description]
+     * 
+     * @return [type] [description]
+     */
     public function updatedCampaignId()
     {
        
         $this->_getCampaign();
         $this->resetPage();
     }
+    /**
+     * [updatingSetPeriod description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSetPeriod()
     {
         $this->resetPage();
     }
+    /**
+     * [updatingStatus description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingStatus()
     {
         $this->resetPage();
     }
-
+    /**
+     * [updatingActivitytype description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingActivitytype()
     {
         $this->resetPage();
     }
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -65,6 +95,14 @@ class ActivitiesTable extends Component
 
         $this->sortField = $field;
     }
+    /**
+     * [mount description]
+     * 
+     * @param string|null $branch [description]
+     * @param string|null $status [description]
+     * 
+     * @return [type]         [description]
+     */
     public function mount($branch=null, $status = null)
     {
         
@@ -172,12 +210,20 @@ class ActivitiesTable extends Component
             
         
     }
-
+    /**
+     * [_setBranchSession description]
+     *
+     * @return null
+     */
     private function _setBranchSession()
     {
         session(['branch'=>$this->branch_id]);
     }
-
+    /**
+     * [_getCampaign description]
+     * 
+     * @return [type] [description]
+     */
     private function _getCampaign()
     {
         

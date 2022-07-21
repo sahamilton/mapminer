@@ -8,7 +8,7 @@
 
 	{{-- Create User Form --}}
 	<form class="form-horizontal" method="post" action="{{ route('users.store') }}" autocomplete="off">
-	@include('admin.users.partials._form')
+		@include('admin.users.partials._form')
 
 		<!-- Form Actions -->
 		<div class="form-group">
