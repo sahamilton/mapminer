@@ -159,7 +159,7 @@ class BranchDashboardController extends DashboardController
     public function show(Branch $branch)
     {
        
-        $myBranches = $this->person->myBranches();
+        /*$myBranches = $this->person->myBranches();
 
         
         if (! array_key_exists($branch->id, $myBranches)) {
@@ -200,8 +200,10 @@ class BranchDashboardController extends DashboardController
         $data = $this->_getDashBoardData();
         $data['manager'] = $this->manager; 
         $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
-        return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
 
+        return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
+        */
+        return response()->view('branches.newdashboard', compact('branch'));
     }
    
     

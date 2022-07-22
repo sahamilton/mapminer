@@ -1,7 +1,8 @@
 <?php
-   
+
 namespace App\Http\Controllers;
-   
+
+use Illuminate\Support\Str;   
 use \Fractal;
 use App\Transformers\EventTransformer;
 use App\Activity;
@@ -28,6 +29,8 @@ class CalendarController extends Controller
     public function index(Request $request)
     {
         
+        $filters = ['status'=>request('status'), 'type'=>request('type')];
+        $branch = request('branch');
         if (request()->has('start') && request()->has('end')) {
             $period['from'] = Carbon::parse(request('start'));
             $period['to'] = Carbon::parse(request('end'));
@@ -37,7 +40,8 @@ class CalendarController extends Controller
             $period['to'] = $period['to']->endOfWeek();
         }
         
-        return $this->_getEventsToJson($period);
+        return $this->_getEventsToJson($period, $branch, $filters);
+       
          
     }
     
@@ -100,14 +104,32 @@ class CalendarController extends Controller
      * 
      * @return [type]         [description]
      */
-    private function _getEventsToJson(Array $period)
+    private function _getEventsToJson(Array $period, int $branch, $filters=null)
     {
-        
+       
         $activities = Activity::with('relatesToAddress', 'type')
+            ->when(
+                $filters['type']!=0, function ($q) use ($filters) {
+                    $q->where('activitytype_id', $filters['type']);
+
+                }
+            )
+            ->when(
+                $filters['status'] !=0, function ($q) use ($filters) {
+                    $q->when(
+                        $filters['status'] == 2, function ($q) use ($filters) {
+                            $q->whereNull('completed');
+                        }, function ($q) {
+                            $q->whereNotNull('completed');
+                        }
+                    );
+                }
+            ) 
             ->whereBetween('activity_date', [$period['from'], $period['to']])
-            ->where('branch_id', session('branch'))
+            ->where('branch_id', $branch)
             ->get();
         $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
-         return json_encode($activities['data']);
+        @ray($activities['data']);
+        return $activities['data'];
     }
 }

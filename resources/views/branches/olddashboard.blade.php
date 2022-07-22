@@ -1,4 +1,4 @@
-@extends('site.layouts.default')
+@extends('site.layouts.cal')
 @section('content')
 @include('partials._newsflash')
 
@@ -81,7 +81,7 @@
 
 	</p>
 		</div>
-
+		
 		<div id="calendar"  class="card-body" ></div>
 	</div>
 	<p>

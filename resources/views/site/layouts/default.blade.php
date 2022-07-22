@@ -15,7 +15,7 @@
 		<script src="https://kit.fontawesome.com/{{config('mapminer.fontawesome')}}.js" crossorigin="anonymous"></script>
 
 		<link href="{{asset('assets/css/summernote.css')}}" rel="stylesheet" />
-		<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" />  
+		
 		<link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}" />
 		<link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}" />
 
