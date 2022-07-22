@@ -50,8 +50,7 @@
         "spatie/laravel-sluggable": "^2.6",
         "spatie/icalendar-generator": "^2.3",
         "tightenco/quicksand": "^2.5",
-        "wire-elements/modal": "^1.0",
-        "joshhanley/livewire-autocomplete": "^0.1.7"
+        "wire-elements/modal": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

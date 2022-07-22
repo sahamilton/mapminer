@@ -64,13 +64,6 @@
       'Agent' => 'Jenssegers\\Agent\\Facades\\Agent',
     ),
   ),
-  'joshhanley/livewire-autocomplete' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'LivewireAutocomplete\\LivewireAutocompleteServiceProvider',
-    ),
-  ),
   'lab404/laravel-impersonate' => 
   array (
     'providers' => 
