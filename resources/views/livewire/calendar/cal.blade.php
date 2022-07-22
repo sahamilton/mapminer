@@ -1,5 +1,5 @@
 <div>
-{{$startdate}}
+
     <div class="row m-4">
     <div class="col form-inline">
       <x-form-select wire:model='type'
@@ -19,14 +19,14 @@
     <div
         x-data="{
             calendar: null,
-            events: {{json_encode($events)}},
+            
             startdate: '{{$startdate}}',
             newEventTitle: null,
             newEventStart: null,
             newEventEnd: null,
             init() {
                 this.calendar = new FullCalendar.Calendar(this.$refs.calendar, {
-                    events: (info, success) => success(this.events),
+                    
                     headerToolbar: {
                         left: 'prev,next today',
                         center: 'title',
@@ -50,8 +50,23 @@
                         this.events[index].end = info.event.endStr
                     },
                 })
+                this.calendar.addEventSource( {
+                    url: '/calendar',
+                    extraParams: function() {
+                        return {
+                            branch: @this.branch_id,
+                            status: @this.status,
+                            type: @this.type
+                        };
+                    }
+                })
 
                 this.calendar.render()
+
+                @this.on(`refreshCalendar`, () => {
+                    
+                    this.calendar.refetchEvents()
+                })
             },
             getEventIndex(info) {
                 return this.events.findIndex((event) => event.id == info.event.id)
@@ -59,7 +74,7 @@
             
         }"
     >
-        <div x-ref="calendar"></div>
+        <div x-ref="calendar" wire:ignore></div>
     </div>
    
 </div>

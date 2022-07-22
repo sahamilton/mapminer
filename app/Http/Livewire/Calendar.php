@@ -61,7 +61,7 @@ class Calendar extends Component
      */
     public function updatedStatus()
     {
-        @ray($this->status);
+        @ray('status', $this->status);
         $this->emit("refreshCalendar");
     }
     /**
@@ -71,7 +71,7 @@ class Calendar extends Component
      */
     public function updatedType()
     {
-        @ray($this->type);
+        @ray('type', $this->type);
         $this->emit("refreshCalendar");
     }
     /**
@@ -121,12 +121,7 @@ class Calendar extends Component
     {
          $this->_setPeriod();
        
-        return view(
-            'livewire.calendar.cal',
-            [
-                'events'=>$this->_getEvents(),
-            ]
-        );
+        return view('livewire.calendar.cal');
     }
 
     /**
@@ -138,7 +133,7 @@ class Calendar extends Component
     {
         
         $this->livewirePeriod($this->setPeriod);
-        @ray($this->period);
+  
         $this->startdate = $this->period['from']->startOfMonth()->format('Y-m-d');     
         
     }
