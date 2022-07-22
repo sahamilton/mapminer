@@ -121,7 +121,12 @@ class Calendar extends Component
     {
          $this->_setPeriod();
        
-        return view('livewire.calendar.cal');
+        return view(
+            'livewire.calendar.cal',
+            [
+                'events'=>$this->_getEvents(),
+            ]
+        );
     }
 
     /**
@@ -133,8 +138,36 @@ class Calendar extends Component
     {
         
         $this->livewirePeriod($this->setPeriod);
-        $this->startdate = $this->period['from']->format('Y-m-d');     
+        @ray($this->period);
+        $this->startdate = $this->period['from']->startOfMonth()->format('Y-m-d');     
         
     }
     
+    private function _getEvents()
+    {
+        $activities = Activity::with('relatesToAddress', 'type')
+            ->when(
+                $this->type  !=0, function ($q) {
+                    $q->where('activitytype_id', $this->type);
+
+                }
+            )
+            ->when(
+                $this->status !=0, function ($q) {
+                    $q->when(
+                        $this->status == 2, function ($q) {
+                            $q->whereNull('completed');
+                        }, function ($q) {
+                            $q->whereNotNull('completed');
+                        }
+                    );
+                }
+            ) 
+            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+            ->where('branch_id', $this->branch_id)
+            ->get();
+        $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
+ 
+        return $activities['data'];
+    }
 }

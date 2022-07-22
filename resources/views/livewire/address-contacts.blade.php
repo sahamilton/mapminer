@@ -37,7 +37,7 @@
                     </td>
                     <td>{{$person->title}}</td>
                     <td>
-                        @if(isset($contact->email))
+                        @if(isset($person->email))
                             <a href="mailto:{{$person->email}}">{{$person->email}}</a>
 
                         @endif

@@ -98,7 +98,7 @@ class AddressActivities extends Component
                     }
                 )
             
-                ->with('relatesToAddress.contacts')
+                ->with('user', 'branch', 'relatesToAddress', 'relatedContact', 'type')
                 ->search($this->search)
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
@@ -106,7 +106,7 @@ class AddressActivities extends Component
             'activityTypes' =>ActivityType::query()
                 ->orderBy('activity')
                 ->pluck('activity', 'id')
-                ->prepend('all', 'All')
+                ->prepend('All', 'all')
                 ->toArray(),
 
             ]

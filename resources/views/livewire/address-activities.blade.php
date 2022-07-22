@@ -14,7 +14,7 @@
                 <x-form-select name="activitytype_id"
                     wire:model="activitytype_id"
                     label="Type:"
-                    :optsion="$activityTypes" 
+                    :options="$activityTypes" 
                     />
             </div>
             <div class="col form-inline">
@@ -77,7 +77,7 @@
                                 {!! $acts->highlightWords($search) !!}
                             @else
 
-                                {{$acts->note}}
+                                {!! $acts->note !!}
                             @endif
                         </td>
                         <td>

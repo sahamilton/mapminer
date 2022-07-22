@@ -28,7 +28,7 @@ class CalendarController extends Controller
      */
     public function index(Request $request)
     {
-        
+        @ray(request()->all());
         $filters = ['status'=>request('status'), 'type'=>request('type')];
         $branch = request('branch');
         if (request()->has('start') && request()->has('end')) {

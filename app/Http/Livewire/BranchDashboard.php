@@ -16,7 +16,7 @@ class BranchDashboard extends Component
     public $sortAsc = false;
     public $search ='';
     public $setPeriod='thisMonth';
-
+    public $view = 'summary';
     public $branch_id;
 
     public $paginationTheme = 'bootstrap';
@@ -63,6 +63,19 @@ class BranchDashboard extends Component
         
 
     }
+
+    /**
+     * [changeview description]
+     * 
+     * @param [type] $view [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function changeView(string $view)
+    {
+        $this->view = $view;
+       
+    }
     /**
      * [render description]
      * 
@@ -91,6 +104,10 @@ class BranchDashboard extends Component
                     ],
 
             'myBranches'=>$this->_setMyBranches(),
+            'viewtypes'=>[
+                    'summary'=>'Summary', 
+                    'activities'=>'Activities', 
+                    'charts'=>'Charts'],
             ]
         );
     }

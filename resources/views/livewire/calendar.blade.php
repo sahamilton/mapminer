@@ -18,7 +18,9 @@
 
       </div>
     </div>
-  
+    <div id='calendar-container' class="border border-danger" wire:ignore>
+        <div id='calendar'></div>
+      </div>
    
     
   @push('scripts')
