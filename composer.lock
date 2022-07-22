@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "daf1bbcd48f63dd6a7229b2c11b4d101",
+    "content-hash": "1fb2ec7fbdff56bfc92e45d5f7c4c8af",
     "packages": [
         {
             "name": "askedio/laravel-soft-cascade",
@@ -2711,6 +2711,58 @@
                 "source": "https://github.com/jeroendesloovere/vcard/tree/v1.7.3"
             },
             "time": "2021-11-24T20:21:20+00:00"
+        },
+        {
+            "name": "joshhanley/livewire-autocomplete",
+            "version": "v0.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joshhanley/livewire-autocomplete.git",
+                "reference": "0740a625f3c8de5ff9437d423af95594dcba19f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joshhanley/livewire-autocomplete/zipball/0740a625f3c8de5ff9437d423af95594dcba19f7",
+                "reference": "0740a625f3c8de5ff9437d423af95594dcba19f7",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^8.0|^9.0|dev-master",
+                "livewire/livewire": "^2.3.6|dev-master",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "joshhanley/livewire-dusk-testbench": "^0.1.0",
+                "spatie/laravel-ray": "^1.19"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LivewireAutocomplete\\LivewireAutocompleteServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LivewireAutocomplete\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Hanley",
+                    "email": "josh@joshhanley.com.au"
+                }
+            ],
+            "description": "An autocomplete dropdown for Livewire",
+            "support": {
+                "source": "https://github.com/joshhanley/livewire-autocomplete/tree/v0.1.7"
+            },
+            "time": "2022-02-09T06:28:34+00:00"
         },
         {
             "name": "lab404/laravel-impersonate",

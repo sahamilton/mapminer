@@ -26,11 +26,20 @@ class SearchLeads extends Component
     public $distance;
     public Address $address;
     protected $paginationTheme = 'bootstrap';
-
+    /**
+     * [updatingLat description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingLat()
     {
         $this->resetPage();
     }
+    /**
+     * [updatedBranchId description]
+     * 
+     * @return [type] [description]
+     */
     public function updatedBranchId()
     {
         
@@ -39,18 +48,38 @@ class SearchLeads extends Component
 
         $this->resetPage();
     }
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
+    /**
+     * [updateSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updateSearch()
     {
         $this->resetPage();
     }
+    /**
+     * [updatingDistance description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingDistance()
     {
         $this->resetPage();
     }
+    /**
+     * [updateSearchAddress description]
+     * 
+     * @return [type] [description]
+     */
     public function updateSearchAddress()
     {
         
@@ -60,6 +89,11 @@ class SearchLeads extends Component
         $this->searchaddress  = $geoCode->first()->getFormattedAddress();
         
     }
+    /**
+     * [sortBy description]
+     * @param  [type] $field [description]
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -70,7 +104,13 @@ class SearchLeads extends Component
 
         $this->sortField = $field;
     }
-
+    /**
+     * [mount description]
+     * 
+     * @param Array  $myinfo [description]
+     * 
+     * @return [type]         [description]
+     */
     public function mount(Array $myinfo)
     {
         
@@ -84,22 +124,30 @@ class SearchLeads extends Component
         $this->_getBranch();
     }
 
-
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         
         
-        return view('livewire.search-leads',
+        return view(
+            'livewire.search-leads',
             [
                 'leads'=>$this->_getLeads(),
                     
                 'distances'=>[1=>'1 mile', 5=>'5 miles', 10=>'10 miles', 25=>'25 miles'],    
                     
             ]
-            
         );
     }
-    
+    /**
+     * [_initializeAddress description]
+     * 
+     * @return [type] [description]
+     */
     private function _initializeAddress()
     {
 
@@ -113,19 +161,28 @@ class SearchLeads extends Component
         );
  
     }
-
+    /**
+     * [_geoCodeAddress description]
+     * 
+     * @return [type] [description]
+     */
     private function _geoCodeAddress()
     {
         return app('geocoder')->geocode($this->searchaddress)->get();
     }
-
+    /**
+     * [_getLeads description]
+     * 
+     * @return [type] [description]
+     */
     private function _getLeads()
     {
         $address = $this->_initializeAddress();
         $addresses = Address::nearby($address, $this->distance)
             ->with('company')
-            ->where(function ($q) {
-                $q->doesntHave('assignedToBranch');
+            ->where(
+                function ($q) {
+                    $q->doesntHave('assignedToBranch');
                 }        
             )
             ->withCount('assignedToBranch')
@@ -133,23 +190,31 @@ class SearchLeads extends Component
             ->search($this->search)
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->paginate($this->perPage);
-        $addresses->map(function ($address)
-        {
-            $address['type'] = $this->_getType($address);
-            return $address;
-        });
 
-       return $addresses;
+        $addresses->map(
+            function ($address) {
+                $address['type'] = $this->_getType($address);
+                return $address;
+            }
+        );
+
+        return $addresses;
     }
-
+    /**
+     * [_getType description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     private function _getType(Address $address) :string
     {
         
-        if($address->open_opportunities_count > 0) {
+        if ($address->open_opportunities_count > 0) {
             return "opportunity";
         } elseif ($address->assigned_to_branch_count > 0) {
              return "branchlead";
-        } elseif (isset($address->isCustomer)){
+        } elseif (isset($address->isCustomer)) {
             return "customer";
         } elseif ($address->assigned_to_branch_count === 0) {
             return "lead";
@@ -157,7 +222,11 @@ class SearchLeads extends Component
             return "lead";
         }
     }
-
+    /**
+     * [_getbranch description]
+     * 
+     * @return [type] [description]
+     */
     private  function _getbranch()
     {
         $this->branch = Branch::findOrFail($this->branch_id);

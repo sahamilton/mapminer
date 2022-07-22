@@ -64,6 +64,7 @@
   'search-maps' => 'App\\Http\\Livewire\\SearchMaps',
   'serviceline-table' => 'App\\Http\\Livewire\\ServicelineTable',
   'training-table' => 'App\\Http\\Livewire\\TrainingTable',
+  'typeahead-search' => 'App\\Http\\Livewire\\TypeaheadSearch',
   'user-autocomplete' => 'App\\Http\\Livewire\\UserAutocomplete',
   'user-create' => 'App\\Http\\Livewire\\UserCreate',
   'user-logins' => 'App\\Http\\Livewire\\UserLogins',

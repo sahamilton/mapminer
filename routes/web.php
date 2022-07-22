@@ -1,7 +1,6 @@
 <?php
-use \Carbon\Carbon;
-use App\User;
-use App\Mail\SendWeeklyActivityReminder;
+
+
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -414,5 +413,8 @@ Route::group(
         Route::post('mobile/search', ['as'=>'mobile.search', 'uses'=>'MobileController@search']);
         Route::post('mobile/select', ['as'=>'mobile.select', 'uses'=>'MobileController@select']);
         Route::resource('mobile', 'MobileController');
+
+
+        Route::get('searchtest', ['as'=>'typeahead', 'uses'=>'SearchController@typeahead']);
     }
 );
