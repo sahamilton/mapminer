@@ -1,5 +1,5 @@
  <div>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
 
     <div x-data="{
         labels: {{json_encode($labels)}},
