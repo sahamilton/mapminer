@@ -42,7 +42,11 @@
                         this.newEventStart = info.startStr
                         this.newEventEnd = info.endStr
                     },
-                    
+                    dateClick: (info) =>{
+                        
+                        this.calendar.changeView('timeGridDay', info.dateStr);
+                        
+                    },
                     eventChange: (info) => {
                         const index = this.getEventIndex(info)
 
