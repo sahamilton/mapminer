@@ -17,6 +17,7 @@ class Calendar extends Component
     public $type = '0';
     public $status = '0';
     public $setPeriod;
+    public $teammember='all';
     public Branch $branch;
     public $statuses = ['0'=>'All',
                         '1'=>'Completed',
@@ -75,6 +76,16 @@ class Calendar extends Component
         $this->emit("refreshCalendar");
     }
     /**
+     * [updatedStatus description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatedTeammember()
+    {
+        @ray('status', $this->teammember);
+        $this->emit("refreshCalendar");
+    }
+    /**
      * [mount description]
      * 
      * @param [type] $branch_id [description]
@@ -84,6 +95,7 @@ class Calendar extends Component
     public function mount($branch_id)
     {
         $this->branch_id = $branch_id;
+        $this->teammember = auth()->user()->id;
         
         
     }
@@ -121,7 +133,17 @@ class Calendar extends Component
     {
          $this->_setPeriod();
        
-        return view('livewire.calendar.cal');
+        return view(
+            'livewire.calendar.cal',
+            [
+                'team'=>Branch::with('branchTeam')
+                    ->find($this->branch_id)
+                    ->branchTeam->pluck('completeName', 'user_id')
+                    ->prepend('All', 'all')
+                    ->toArray(),
+
+            ]
+        );
     }
 
     /**

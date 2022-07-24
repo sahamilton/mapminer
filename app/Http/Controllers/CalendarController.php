@@ -28,9 +28,8 @@ class CalendarController extends Controller
      */
     public function index(Request $request)
     {
-        @ray(request()->all());
-        $filters = ['status'=>request('status'), 'type'=>request('type')];
-        $branch = request('branch');
+       
+        
         if (request()->has('start') && request()->has('end')) {
             $period['from'] = Carbon::parse(request('start'));
             $period['to'] = Carbon::parse(request('end'));
@@ -40,7 +39,7 @@ class CalendarController extends Controller
             $period['to'] = $period['to']->endOfWeek();
         }
         
-        return $this->_getEventsToJson($period, $branch, $filters);
+        return $this->_getEventsToJson($period, $request);
        
          
     }
@@ -104,9 +103,15 @@ class CalendarController extends Controller
      * 
      * @return [type]         [description]
      */
-    private function _getEventsToJson(Array $period, int $branch, $filters=null)
+    private function _getEventsToJson(Array $period, Request $request)
     {
-       
+        $filters = [
+            'branch' => request('branch'),
+            'status'=>request('status'), 
+            'type'=>request('type'), 
+            'team'=>request('team')
+        ];
+        @ray($filters);
         $activities = Activity::with('relatesToAddress', 'type')
             ->when(
                 $filters['type']!=0, function ($q) use ($filters) {
@@ -124,9 +129,14 @@ class CalendarController extends Controller
                         }
                     );
                 }
-            ) 
+            )
+            ->when(
+                isset($filters['team']) && $filters['team'] !='all', function ($q) use ($filters) {
+                    $q->where('user_id', $filters['team']);
+                }
+            )  
             ->whereBetween('activity_date', [$period['from'], $period['to']])
-            ->where('branch_id', $branch)
+            ->where('branch_id', $filters['branch'])
             ->get();
         $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
         @ray($activities['data']);

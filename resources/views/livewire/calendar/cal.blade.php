@@ -1,20 +1,29 @@
 <div>
 
     <div class="row m-4">
-    <div class="col form-inline">
-      <x-form-select wire:model='type'
-        class="flex relative flex-grow items-center px-4 w-full max-w-full"
-        name='type'
-        label='Select type:'
-        :options="$types" />
+        <div class="col form-inline">
+            <x-form-select wire:model='type'
+                class="flex relative flex-grow items-center px-4 w-full max-w-full"
+                name='type'
+                label='Select type:'
+                :options="$types" />
 
-      <x-form-select wire:model='status'
-        class="flex relative flex-grow items-center px-4 w-full max-w-full"
-        name='status'
-        label='Status:'
-        :options="$statuses" />
+            <x-form-select wire:model='status'
+                class="flex relative flex-grow items-center px-4 w-full max-w-full"
+                name='status'
+                label='Status:'
+                :options="$statuses" />
 
-      </div>
+
+            @if(count($team) > 1)
+                <x-form-select wire:model='teammember'
+                class="flex relative flex-grow items-center px-4 w-full max-w-full"
+                name='teammember'
+                label='Team:'
+                :options="$team" />
+            @endif
+
+        </div>
     </div>
     <div
         x-data="{
@@ -60,7 +69,8 @@
                         return {
                             branch: @this.branch_id,
                             status: @this.status,
-                            type: @this.type
+                            type: @this.type,
+                            team: @this.teammember,
                         };
                     }
                 })

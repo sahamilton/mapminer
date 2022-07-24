@@ -67,6 +67,7 @@ class BranchActivityChart extends Component
     public function render()
     {
         $this->_setPeriod();
+        
         return view(
             'livewire.branch-activity-chart',
             [

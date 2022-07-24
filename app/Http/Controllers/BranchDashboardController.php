@@ -159,7 +159,7 @@ class BranchDashboardController extends DashboardController
     public function show(Branch $branch)
     {
        
-        /*$myBranches = $this->person->myBranches();
+        $myBranches = $this->person->myBranches();
 
         
         if (! array_key_exists($branch->id, $myBranches)) {
@@ -169,7 +169,7 @@ class BranchDashboardController extends DashboardController
         if (! session()->has('branch') or $branch->id != session('branch') ) {
             session(['branch'=>$branch->id]);
         }
-        
+        /*
         $this->period = $this->activity->getPeriod();
 
         $branch->load('manager.directReports', 'branchTeam');
