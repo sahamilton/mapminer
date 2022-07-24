@@ -11,6 +11,8 @@ class Activity extends Model
     protected $dates = ['activity_date','followup_date'];
     public $fillable = [
         'activity_date',
+        'starttime',
+        'endtime',
         'followup_date',
         'activitytype_id',
         'address_id','note',
@@ -19,7 +21,7 @@ class Activity extends Model
         'followup_activity',
         'branch_id'
     ];
-    //public $activities = ['phone','email','meeting','proposal','quote'];
+   
     
     public $activityTypes = [
               'Call',
@@ -29,9 +31,12 @@ class Activity extends Model
               'Stop By',
               'Left material',
               'Proposal'];
+    
     protected $casts = [
         'activity_date'  => 'date:Y-m-d',
         'followup_date'  => 'date:Y-m-d',
+        'starttime' =>  'date:G-i-s',
+        'endtime' =>  'date:G-i-s'
    
     ];
 

@@ -111,7 +111,7 @@ class CalendarController extends Controller
             'type'=>request('type'), 
             'team'=>request('team')
         ];
-        @ray($filters);
+      
         $activities = Activity::with('relatesToAddress', 'type')
             ->when(
                 $filters['type']!=0, function ($q) use ($filters) {
@@ -131,7 +131,7 @@ class CalendarController extends Controller
                 }
             )
             ->when(
-                isset($filters['team']) && $filters['team'] !='all', function ($q) use ($filters) {
+                isset($filters['team']) && $filters['team'] !='1', function ($q) use ($filters) {
                     $q->where('user_id', $filters['team']);
                 }
             )  
@@ -139,7 +139,7 @@ class CalendarController extends Controller
             ->where('branch_id', $filters['branch'])
             ->get();
         $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
-        @ray($activities['data']);
+      
         return $activities['data'];
     }
 }

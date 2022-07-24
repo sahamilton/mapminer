@@ -57,10 +57,8 @@
                         
                     },
                     eventChange: (info) => {
-                        const index = this.getEventIndex(info)
-
-                        this.events[index].start = info.event.startStr
-                        this.events[index].end = info.event.endStr
+                                               
+                        @this.eventDrop(info.event)
                     },
                 })
                 this.calendar.addEventSource( {

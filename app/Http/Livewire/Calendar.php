@@ -17,7 +17,7 @@ class Calendar extends Component
     public $type = '0';
     public $status = '0';
     public $setPeriod;
-    public $teammember='all';
+    public $teammember='1';
     public Branch $branch;
     public $statuses = ['0'=>'All',
                         '1'=>'Completed',
@@ -62,7 +62,7 @@ class Calendar extends Component
      */
     public function updatedStatus()
     {
-        @ray('status', $this->status);
+   
         $this->emit("refreshCalendar");
     }
     /**
@@ -72,7 +72,7 @@ class Calendar extends Component
      */
     public function updatedType()
     {
-        @ray('type', $this->type);
+       
         $this->emit("refreshCalendar");
     }
     /**
@@ -82,7 +82,7 @@ class Calendar extends Component
      */
     public function updatedTeammember()
     {
-        @ray('status', $this->teammember);
+      
         $this->emit("refreshCalendar");
     }
     /**
@@ -102,12 +102,13 @@ class Calendar extends Component
     /**
      * [eventDrop description]
      * 
-     * @param  [type] $event [description]
+     * @param [type] $event [description]
+     * 
      * @return [type]        [description]
      */
     public function eventDrop($event)
     {
-        
+       
         $activity = Activity::findOrFail($event['id']);
         if ($event['start'] > now()->endOfDay()) {
             $completed = null;  
@@ -115,13 +116,26 @@ class Calendar extends Component
         } else {
             $completed = $activity->completed;
         }
+        if (isset($event['end'])) {
+            $end =Carbon::parse($event['end'])->format('H:i:s');
+            $start =Carbon::parse($event['start'])->format('H:i:s');
+        } elseif (Carbon::parse($event['start'])->format('H:i:s') !== '00:00:00') {
+            
+            $start = Carbon::parse($event['start'])->format('G:i:s');
+            $end = Carbon::parse($event['start'])->addMinute(15)->format('H:i:s');
+        } else {
+            $start = null;
+            $end = null;
+        }
         $activity->update(
             [
-                'activity_date'=>Carbon::parse($event['start']), 
+                'activity_date'=>Carbon::parse($event['start'])->format('Y-m-d'),
+                'starttime' =>$start,
+                'endtime' =>$end,
                 'completed'=>$completed,
             ]
         );
-        
+      
         $this->emit("refreshCalendar");
     }
     /**
@@ -139,7 +153,7 @@ class Calendar extends Component
                 'team'=>Branch::with('branchTeam')
                     ->find($this->branch_id)
                     ->branchTeam->pluck('completeName', 'user_id')
-                    ->prepend('All', 'all')
+                    ->prepend('All', '1')
                     ->toArray(),
 
             ]

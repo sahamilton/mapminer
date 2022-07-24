@@ -16,7 +16,7 @@ class BranchDashboard extends Component
     public $sortAsc = false;
     public $search ='';
     public $setPeriod='thisMonth';
-    public $view = 'summary';
+    public $view = 'activities';
     public $branch_id;
 
     public $paginationTheme = 'bootstrap';
