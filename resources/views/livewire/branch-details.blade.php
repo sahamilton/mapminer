@@ -1,14 +1,16 @@
 <div>
-    <h2>Branch {{$branch->branchname}}</h2>
-    <p><a href="{{route('branches.index')}}">Return to All Branches</a></p>
-    <p>{{$branch->fullAddress()}}</p>
-    <p>Branch Phone:{{$branch->phone}}</p>
-    @if(auth()->user()->hasRole(['admin', 'sales_ops']))
-        <div class="row mb-4 ">
-            <div class="col form-inline">
-                <x-form-select name="branch_id" wire:model="branch_id" :options="$branches" label="Select branch" />
+    @if(! $noheading)
+        <h2>Branch {{$branch->branchname}}</h2>
+        <p><a href="{{route('branches.index')}}">Return to All Branches</a></p>
+        <p>{{$branch->fullAddress()}}</p>
+        <p>Branch Phone:{{$branch->phone}}</p>
+        @if(auth()->user()->hasRole(['admin', 'sales_ops']))
+            <div class="row mb-4 ">
+                <div class="col form-inline">
+                    <x-form-select name="branch_id" wire:model="branch_id" :options="$branches" label="Select branch" />
+                </div>
             </div>
-        </div>
+        @endif
     @endif
     <table class='table table-striped table-bordered table-condensed table-hover'>
         <thead><th colspan=5>Per Mapminer Data</th></thead></tr>
@@ -57,21 +59,21 @@
     <tr>
         @if(auth()->user()->hasRole(['admin', 'sales_ops']))
         <thead><th colspan=5>Per Oracle Data</th></thead></tr>
-    @foreach ($branch->oraclelocation as $location)
-        <tr>
-            <td>{{$location->fullName()}}</td>
-            <td>{{$location->job_profile}}</td>
-            <td>{{$location->phone}}</td>
-            <td><a href="mailto:{{$location->primary_email}}">{{$location->primary_email}}</td>
-            <td>{{$location->manager_name}}</td>
-            <td><a href="mailto:{{$location->manager_email_address}}">{{$location->manager_email_address}}</a></td>
+            @foreach ($branch->oraclelocation as $location)
+                <tr>
+                    <td>{{$location->fullName()}}</td>
+                    <td>{{$location->job_profile}}</td>
+                    <td>{{$location->phone}}</td>
+                    <td><a href="mailto:{{$location->primary_email}}">{{$location->primary_email}}</td>
+                    <td>{{$location->manager_name}}</td>
+                    <td><a href="mailto:{{$location->manager_email_address}}">{{$location->manager_email_address}}</a></td>
 
 
 
-        </tr>
-  
+                </tr>
+          
 
-   @endforeach 
+           @endforeach 
     @endif
 </tbody>
 </table>

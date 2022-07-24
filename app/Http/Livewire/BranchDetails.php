@@ -11,19 +11,20 @@ class BranchDetails extends Component
 
    
     public $branch_id;
-    
+    public $noheading=false;
     
     /**
      * [mount description]
      * 
-     * @param int    $branch_id [description]
+     * @param int  $branch_id [description]
+     * @param bool $noheading [description]
      * 
      * @return [type]            [description]
      */
-    public function mount(int $branch_id)
+    public function mount(int $branch_id, $noheading=null)
     {
         $this->branch_id = $branch_id; 
-
+        $this->noheading=$noheading;
     }
     /**
      * [render description]

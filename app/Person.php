@@ -669,41 +669,26 @@ class Person extends NodeModel implements Auditable
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryActivitiesByManager($query, $period)
+    public function scopeSummaryActivitiesByPerson($query, $period)
     {
         $this->period = $period;
-        
+       
         return $query->leftJoin(
-            'activities',
-            function ($join) {
-                $join->on(
-                    'activities.user',
-                    function ($q) {
-                        $q->whereIn(
-                            'activities.user_id', function ($q) {
-                                $q->select('user_id')
-                                    ->from('persons');
-                            }, 
-                            'reports'
-                        )
-
-                        ->where('reports.lft', '>=', 'persons.lft')
-                        ->where('reports.rgt', '<=', 'persons.rgt');
-                    }
-                );
-
+            'activities', function ($join) {
+                $join->on('persons.user_id', '=', 'activities.user_id');
             }
         )
+        ->where('completed', 1)
+        ->whereBetween('activity_date', [$period['from'], $period['to']])
+        ->select('persons.id')
+        ->selectRaw("concat_ws(' ', firstname,lastname) as fullName")
         ->selectRaw('COUNT(CASE when activitytype_id = 4  then 1 end) as sales_appointment')
         ->selectRaw('COUNT(CASE when activitytype_id = 5  then 1 end) as stop_by')
         ->selectRaw('COUNT(CASE when activitytype_id = 7  then 1 end) as proposal')
         ->selectRaw('COUNT(CASE when activitytype_id = 10  then 1 end) as site_visit')
-        ->selectRaw('COUNT(CASE when activitytype_id = 11  then 1 end) as log_a_call')
-        ->selectRaw('COUNT(CASE when activitytype_id = 131  then 1 end) as site_visit')
+        ->selectRaw('COUNT(CASE when activitytype_id = 13  then 1 end) as log_a_call')
         ->selectRaw('COUNT(CASE when activitytype_id = 14  then 1 end) as in_person')
-        ->selectRaw('COUNT(*) as all_activities')
-        ->whereBetween('activities.activity_date', [$this->period['from'], $this->period['to']])
-        ->whereCompleted(1);
+        ->groupBy('persons.user_id');
     }
     /**
      * [scopeLeadsByType description]
@@ -1315,11 +1300,11 @@ class Person extends NodeModel implements Auditable
      */
     public function scopeSummaryActivities($query, Array $period, Array $fields = null)
     {
-       
+        
         $this->period = $period;
         if (isset($fields)) {
-            $this->activityFields = $fields;
-            foreach ($this->activityFields as $key=>$field) {
+            
+            foreach ($fields as $key=>$field) {
                 $label = str_replace(" ", "_", strtolower($field));
                 $query->withCount(
                     [

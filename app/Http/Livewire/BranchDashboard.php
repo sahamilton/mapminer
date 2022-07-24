@@ -107,7 +107,9 @@ class BranchDashboard extends Component
             'viewtypes'=>[
                     'summary'=>'Summary', 
                     'activities'=>'Activities', 
-                    'charts'=>'Charts'],
+                    'charts'=>'Charts',
+                    'team'=>'Team'
+                    ],
             ]
         );
     }

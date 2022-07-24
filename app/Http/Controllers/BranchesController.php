@@ -213,7 +213,8 @@ class BranchesController extends BaseController
     {
         
         return response()->view(
-            'branches.detail',compact('branch'));
+            'branches.detail', compact('branch')
+        );
     }
     /**
      * [showSalesTeam description]

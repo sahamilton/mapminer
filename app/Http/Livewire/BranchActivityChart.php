@@ -4,7 +4,10 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Activity;
+use App\ActivityType;
+use App\Branch;
 use App\PeriodSelector;
+use App\Person;
 use Carbon\CarbonPeriod;
 
 class BranchActivityChart extends Component
@@ -67,8 +70,8 @@ class BranchActivityChart extends Component
         return view(
             'livewire.branch-activity-chart',
             [
-                'labels'=>$this->_getLabels(),
-                'values'=> $this->_getValues(),
+                'series'=>$this->_getSeries(),
+                'categories'=> $this->_getCategories(),
 
 
 
@@ -88,44 +91,40 @@ class BranchActivityChart extends Component
         $this->startdate = $this->period['from']->format('Y-m-d');     
         
     }
-    /**
-     * [_getLabels description]
-     * 
-     * @return [type] [description]
-     */
-    private function _getLabels()
-    {
-        
+    
 
-        $period = CarbonPeriod::create($this->period['from'], $this->period['to'])->toArray();
-        foreach ($period as $day) {
-            $labels[] = $day->format('Y-m-d');
-        }
-        return $labels;
-       
-        
+    private function _getCategories()
+    {
+        return Branch::with('branchTeam')->find($this->branch_id)->branchTeam->pluck('completeName')->toArray();
     }
     /**
-     * [_getValues description]
+     * [_getSeries description]
      * 
      * @return [type] [description]
      */
-    private function _getValues()
+    private function _getSeries()
     {
+
+        $team = Branch::with('branchTeam')
+            ->find($this->branch_id)
+            ->branchTeam->pluck('id')
+            ->toArray();
         
-
-        $activities = Activity::where('branch_id', $this->branch_id)
-            ->periodActivities($this->period)
-            ->completed()
-            ->typeDayCount()
+        $fields = ActivityType::all();
+        $result = Person::whereIn('persons.id', $team)
+            ->summaryActivitiesByPerson($this->period)
             ->get();
-           
-        $days = $this->_getLabels();
-        foreach ($days as $day) {
-            $values[] = $activities->where('day', $day)->sum('activities');
+        $data = [];
+        foreach ($fields as $field) {
+  
+            $data[] = ['name' =>$field->activity,
+            'data'=>$result->pluck($field->slug)->toArray(),
+            'color'=> "#".$field->color];
+  
         }
-        return $values;
-
+        
+        return collect($data)->toArray();
+       
 
     }
 

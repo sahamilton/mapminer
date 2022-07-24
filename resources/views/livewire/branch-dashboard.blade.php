@@ -38,16 +38,23 @@
         @case('summary')
             <livewire:branch-dashboard-summary :branch_id='$branch->id' :period='$period'  />
         @break;
+
         @case('activities')
         
             <livewire:calendar :branch_id='$branch->id' :period='$period'  />
         @break;
+
         @case('charts')
             <livewire:branch-activity-chart :branch_id='$branch->id' :period='$period'  />
         @break;
+
+        @case('team')
+            <livewire:branch-details :branch_id='$branch->id' :noheading='true'/>
+
+        @break;
     @endswitch
     
-
+    <div class="m-4 clear" />
     
     
 </div>
