@@ -19,6 +19,7 @@ class BranchTable extends Component
     public $distance = '25';
     public $sortAsc = true;
     public $search ='';
+    public $status = 'no';
     public $serviceline = 'All';
     public $userServiceLines;
     
@@ -66,6 +67,17 @@ class BranchTable extends Component
                         'manager', 
                         'relatedPeople.userdetails.roles', 
                         'servicelines'
+                    )
+                    ->when(
+                        $this->status != 'no', function ($q) {
+                            $q->when(
+                                $this->status=='yes', function ($q) {
+                                    $q->onlyTrashed();
+                                }, function ($q) {
+                                    $q->withTrashed();
+                                }
+                            );
+                        }
                     )
                     ->when(
                         $this->manager != 'All', function ($q) {
@@ -128,7 +140,7 @@ class BranchTable extends Component
                 ->get(),
             'regions' => Region::select('id', 'region')->has('branches')->orderBy('region')->get(),
             'distances'=>['all'=>'All', 5=>5,10=>10,25=>25, 50=>50,100=>100],
-               
+            'statuses'=>['yes'=>'Trashed', 'no'=>'Active', 'both'=>'Both']   ,
 
             ]
         );

@@ -57,6 +57,11 @@
                     <option value="without">Without manager</option>
                     
                 </select>
+                <x-form-select label="Status:"
+                    :options='$statuses'
+                    name="status"
+                    wire:model="status"
+                    />
             @endif
         </div>
 
