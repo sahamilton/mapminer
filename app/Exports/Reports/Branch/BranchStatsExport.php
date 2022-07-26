@@ -27,20 +27,19 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'country'=>'Country', 
         'id'=>'ID',
         'manager'=>'Manager',
+        'leads'=>'# Open Leads',
         'opened'=>'# Opportunities Opened in Period',
         'Top25'=>'# Open Top 25 Opportunities',
         'open'=>'# All Open Opportunities Count',
         'openvalue'=>'Sum All Open Opportunities Value',
-
         'lost'=>'# Opportunities Lost',
         'won'=>'# Opportunities Won',
-        'wonvalue'=>'Sum of Won Value',
-        'leads_count'=>'# Open Leads',
+        'won_value'=>'Sum of Won Value',
         'activities_count'=>'# Completed Activities',
         'salesappts'=>'# Completed Sales Appts',
-        'sitevisits'=>'# Completed Site Visits'
+        'sitesvisits'=>'# Completed Site Visits'
     ];
-
+    
     
     public function __construct(array $period, array $branches = null)
     {
@@ -102,7 +101,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public function query()
     {
-        return Branch::summaryStats($this->period)
+        return Branch::summaryStats($this->period, array_keys($this->fields))
             ->with('manager:id,firstname,lastname')
             ->when(
                 $this->branches, function ($q) {

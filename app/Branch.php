@@ -1770,6 +1770,23 @@ class Branch extends Model
                         ]
                     );
                 }
+            )
+            ->when(
+                in_array('openvalue', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as openvalue' => function ($query) {
+                                $query->whereClosed(0)        
+                                    ->OrWhere(
+                                        function ($q) {
+                                            $q->where('actual_close', '>', $this->period['to'])
+                                                ->orwhereNull('actual_close');
+                                        }
+                                    )->select(\DB::raw("SUM(value) as openvalue"));
+                            }
+                        ]
+                    );
+                }
             )->when(
                 in_array('wonvalue', $this->fields), function ($q) {
                     $q->withCount( 
