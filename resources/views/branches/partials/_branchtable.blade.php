@@ -1,10 +1,18 @@
 @foreach($branches as $branch)
     <tr>  
         <td>
-            <a href="{{route('branches.show',$branch->id)}}" 
-             title="See details of branch {{$branch->branchname}}">
-                {{$branch->branchname}}
-            </a>
+            @if(! $branch->deleted_at)
+                <a href="{{route('branches.show',$branch->id)}}" 
+                 title="See details of branch {{$branch->branchname}}">
+                    {{$branch->branchname}}
+                </a>
+            @else
+                <a href="#" wire:click= "restoreBranch({{$branch->id}})">
+                    {{$branch->branchname}}
+                    <i class="fa-solid fa-trash-can text-danger" title="Branch has been deleted"></i>
+                </a>
+            
+            @endif
         </td>
         
         
@@ -23,16 +31,7 @@
 
         <td>{{$branch->fullAddress()}}</td>
 
-        <td>
-                @if(!is_null($branch->region))
-                    <a href="{{route('region.show',$branch->region->id)}}"
-                    title="See all {{$branch->region->region}} region branches">
-                    {{$branch->region->region}}
-                    </a>
-                @endif
-                
-
-        </td>
+        
         <td>            
                 @if($branch->manager->count()>0)
                     

@@ -46,7 +46,19 @@ class BranchTable extends Component
 
         $this->sortField = $field;
     }
-
+    /**
+     * [restoreBranch description]
+     * 
+     * @param Branch $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function restoreBranch($branch_id)
+    {
+        $branch = Branch::withTrashed()->find($branch_id);
+        $branch->deleted_at=null;
+        $branch->save();
+    }
     public function mount($state = null)
     {
         if (isset($state)) {

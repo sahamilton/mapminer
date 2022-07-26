@@ -84,7 +84,7 @@
             <th>Service Line</th>
             <th>Branch Address</th>
             
-            <th>Region</th>
+            
             <th>Manager</th>
             <th>
                 <a wire:click.prevent="sortBy('distance')" role="button" href="#">
