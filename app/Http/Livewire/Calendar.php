@@ -18,6 +18,8 @@ class Calendar extends Component
     public $status = '0';
     public $setPeriod;
     public $teammember='1';
+    public $activityModalShow = false;
+    public $companyname;
     public Branch $branch;
     public $statuses = ['0'=>'All',
                         '1'=>'Completed',
@@ -200,5 +202,40 @@ class Calendar extends Component
         $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
  
         return $activities['data'];
+    }
+    /**
+     * [addActivity description]
+     * 
+     * @param Address $address [description]
+     *
+     * @return [type] [description] 
+     */
+    public function addActivity()
+    {
+       
+        $this->doShow('activityModalShow');
+   
+    }
+    /**
+     * [doClose description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function doClose($form)
+    {
+        $this->$form = false;
+    }
+    /**
+     * [doShow description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function doShow($form)
+    {
+        $this->$form = true;
     }
 }

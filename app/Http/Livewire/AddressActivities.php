@@ -125,7 +125,7 @@ class AddressActivities extends Component
     {
      
         // get contacts;
-        $this->resetActivities($address);
+        $this->_resetActivities($address);
         $this->doShow('activityModalShow');
        
         $this->address = $address;
@@ -168,20 +168,24 @@ class AddressActivities extends Component
     ];
     
     /**
-     * [resetActivities description]
+     * [_resetActivities description]
      * 
-     * @return [type] [description]
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
      */
-    private function resetActivities(Address $address)
+    private function _resetActivities(Address $address)
     {
-        $this->activity = Activity::make([
+        $this->activity = Activity::make(
+            [
               
                 'completed' => 1,
                 'activity_date' =>now(),
                 'branch_id' => $this->branch_id,
                 'user_id' => auth()->user()->id,
                 'address_id'=>$address->id,
-            ]);
+            ]
+        );
 
        
     }
@@ -194,7 +198,7 @@ class AddressActivities extends Component
     {
         $this->validate();
         $new = $this->_recordActivity();
-        if($this->activity->contact_id && $this->activity->contact_id !== 0) {
+        if ($this->activity->contact_id && $this->activity->contact_id !== 0) {
             $new->relatedContact()->attach($this->activity->contact_id);
         }
         $message =  ($this->activity->completed ? 'Completed ' : 'To do ') . ' activity added at '. $this->address->businessname;
@@ -203,7 +207,7 @@ class AddressActivities extends Component
             $followup = $this->_recordFollowUpactivity();
             $new->update(['relatedActivity'=>$followup->id]);
         }
-        $this->resetActivities($this->address);
+        $this->_resetActivities($this->address);
         $this->doClose('activityModalShow');
     }
    
@@ -212,7 +216,8 @@ class AddressActivities extends Component
      * 
      * @return [type] [description]
      */
-    private function _recordFollowUpactivity() {
+    private function _recordFollowUpactivity()
+    {
 
         $activity = [
             'address_id' => $this->address->id,
@@ -247,13 +252,16 @@ class AddressActivities extends Component
                 'address_branch_id'=>$this->address_branch_id,
             ];
 
-        return Activity::create(
-
-            $data
-
-        );
+        return Activity::create($data);
         
     }
+    /**
+     * [editActivity description]
+     * 
+     * @param Activity $activity [description]
+     * 
+     * @return [type]             [description]
+     */
     public function editActivity(Activity $activity)
     {
         @ray($activity);
@@ -261,12 +269,18 @@ class AddressActivities extends Component
         $this->doShow('activityEditModal');
     }
 
-
+    /**
+     * [updateActivity description]
+     * 
+     * @param Activity $activity [description]
+     * 
+     * @return [type]             [description]
+     */
     public function updateActivity(Activity $activity)
     {
         @ray($activity, $this->activity);
 
-         $data = [
+        $data = [
                 'activity_date'=>$this->activity->activity_date,
                 'activitytype_id'=>$this->activity->activitytype_id,
                
@@ -275,20 +289,41 @@ class AddressActivities extends Component
                 
             ];
         $activity->update($data);
-        if($this->activity->contact_id && $this->activity->contact_id !== 0) {
+
+        if ($this->activity->contact_id && $this->activity->contact_id !== 0) {
             $activity->relatedContact()->sync($this->activity->contact_id);
         }
         $this->doClose('activityEditModal');
     }
+    /**
+     * [doClose description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
     public function doClose($form)
     {
         $this->$form = false;
     }
+    /**
+     * [doShow description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
     public function doShow($form)
     {
         $this->$form = true;
     }
-
+    /**
+     * [delete description]
+     * 
+     * @param Activity $activity [description]
+     * 
+     * @return [type]             [description]
+     */
     public function delete(Activity $activity)
     {
 

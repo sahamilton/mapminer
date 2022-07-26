@@ -129,14 +129,13 @@ class BranchesController extends BaseController
     public function create()
     {
 
-        $branchRoles = Role::whereIn('id', $this->branch->branchRoles)
-        ->pluck('display_name', 'id');
-        $team = $this->person->personroles($this->branch->branchRoles);
-        $servicelines = $this->serviceline
-            ->whereIn('id', $this->userServiceLines)->get();
+        $servicelines = Serviceline::
+            whereIn('id', $this->userServiceLines)
+            ->pluck('Serviceline', 'id')
+            ->toArray();
         return response()->view(
             'branches.create', 
-            compact('servicelines', 'team', 'branchRoles')
+            compact('servicelines')
         );
 
     }
@@ -155,11 +154,11 @@ class BranchesController extends BaseController
         $geoCode = app('geocoder')->geocode($address)->get();
         $geodata = $this->branch->getGeoCode($geoCode);
         $input = array_merge(request()->all(), $geodata);
-    
+
         // add lat lng to location
         $branch = $this->branch->create($input);
 
-        $branch->associatePeople($request);
+        
         $branch->servicelines()->sync($input['serviceline']);
         //$this->_rebuildXMLfile();
 
@@ -285,24 +284,17 @@ class BranchesController extends BaseController
     public function edit(Branch $branch)
     {
         
+        $branch->load('servicelines');
 
-        $branchRoles = \App\Role::whereIn('id', $this->branch->branchTeamRoles)
-            ->pluck('display_name', 'id');
-
-        $team = $this->person->personroles($this->branch->branchTeamRoles);
-
-        //$branch = $this->branch->find($branch->id);    
-        $branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();
-        $servicelines = $this->serviceline->whereIn(
-            'id', $this->userServiceLines 
-        )->get();
-        $branchservicelines = $branch->servicelines()
-            ->pluck('servicelines.id')->toArray();
-
-        
+        $servicelines = Serviceline::
+            whereIn('id', $this->userServiceLines)
+            ->pluck('Serviceline', 'id')
+            ->toArray();
+        $states = State::orderby('country')->orderBy('statecode')->pluck('fullstate', 'id')->toArray();
+    
         return response()->view(
             'branches.edit', 
-            compact('branch', 'servicelines', 'branchRoles', 'team', 'branchteam', 'branchservicelines')
+            compact('branch', 'servicelines', 'states')
         );
 
     }
@@ -328,7 +320,7 @@ class BranchesController extends BaseController
         $data['lng']= $latlng['lng'];      
         
         $branch->update($data);
-        $branch->associatePeople($request);
+
         
         $branch->servicelines()->sync(request('serviceline'));
         //$this->_rebuildXMLfile();

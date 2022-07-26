@@ -46,7 +46,8 @@ class Branch extends Model
         'zip',
         'lat',
         'lng',
-        'position'
+        'position',
+        'branchemail'
     ];
 
     

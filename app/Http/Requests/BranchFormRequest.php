@@ -24,28 +24,30 @@ class BranchFormRequest extends FormRequest
     public function rules()
     {
         if ($this->method() == 'POST') {
-            return ['branchname'=>'required',
-            'id'=>'required|unique:branches,id',
-            'street'=>'required',
-            'city'=>'required',
-            'state'=>'required|exists:states,statecode',
-            'zip'=>'required',
-            'region_id'=>'required',
-            'radius'=>'required',
-            'serviceline'=>'required',
-            'roles'=>'required',
+            return [
+                'branchname'=>'required',
+                'id'=>'required|unique:branches,id',
+                'street'=>'required',
+                'city'=>'required',
+                'state'=>'required|exists:states,statecode',
+                'zip'=>'required',
+                'branchemail'=>'sometimes|email|unique:branches,branchemail',
+                'radius'=>'required',
+                'serviceline'=>'required',
+                
             ];
         } else {
-            return ['branchname'=>'required',
-            'id'=>'required|unique:branches,id,'.$this->id,
-            'street'=>'required',
-            'city'=>'required',
-            'state'=>'required|exists:states,statecode',
-            'zip'=>'required',
-            'region_id'=>'required',
-            'radius'=>'required',
-            'serviceline'=>'required',
-            'roles'=>'required',            ];
+            return [
+                'branchname'=>'required',
+                'id'=>'required|unique:branches,id,'.$this->id,
+                'street'=>'required',
+                'city'=>'required',
+                'state'=>'required|exists:states,statecode',
+                'zip'=>'required',
+                'branchemail'=>'sometimes|email|unique:branches,branchemail,'.$this->id,
+                'radius'=>'required',
+                'serviceline'=>'required',
+            ];
         }
     }
 }
