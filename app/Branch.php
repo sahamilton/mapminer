@@ -46,8 +46,7 @@ class Branch extends Model
         'zip',
         'lat',
         'lng',
-        'position',
-        'branchemail'
+        'position'
     ];
 
     
@@ -620,11 +619,11 @@ class Branch extends Model
         return LocationPresenter::class;
     }
     /**
-     * [branchemail description]
+     * [getBranchemailAttribute description]
      * 
      * @return [type] [description]
      */
-    public function branchemail()
+    public function getBranchemailAttribute()
     {
         return $this->id ."br@peopleready.com";
     }

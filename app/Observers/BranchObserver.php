@@ -7,24 +7,24 @@ use App\Jobs\RebuildBranchesXMLJob;
 
 class BranchObserver
 {
-    private $observableEventNames  = [
-            "created",
-            "updated",
-            "deleted",
-            "saved",
-            "restored",
+    public $observableEventNames  = [
+                "created",
+                "updated",
+                "deleted",
+                "saved",
+                "restored",
         ];
-     /*
+    /**
      * [created description]
      * 
      * @param Branch $branch [description]
-     *
+     * 
      * @return [type]         [description]
      */
     public function created(Branch $branch)
     {
         RebuildBranchesXMLJob::dispatch();
-        // return Mail::queue(new PersonNotification($person));
+        
     }
 
     /**

@@ -25,17 +25,33 @@ class BranchTable extends Component
     
     public $manager = 'All';
     public Location $location;
-    
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
+    /**
+     * [updatingDistance description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingDistance()
     {
         if ($this->distance === 'all') {
             $this->state='All';
         }
     }
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -59,6 +75,13 @@ class BranchTable extends Component
         $branch->deleted_at=null;
         $branch->save();
     }
+    /**
+     * [mount description]
+     * 
+     * @param [type] $state [description]
+     * 
+     * @return [type]        [description]
+     */
     public function mount($state = null)
     {
         if (isset($state)) {
@@ -68,6 +91,11 @@ class BranchTable extends Component
         $this->userServiceLines = auth()->user()->currentServiceLineIds();
         $this->_geoCodeHomeAddress();
     }
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         $this->updateAddress();

@@ -31,7 +31,7 @@ class BranchFormRequest extends FormRequest
                 'city'=>'required',
                 'state'=>'required|exists:states,statecode',
                 'zip'=>'required',
-                'branchemail'=>'sometimes|email|unique:branches,branchemail',
+                
                 'radius'=>'required',
                 'serviceline'=>'required',
                 
@@ -44,7 +44,7 @@ class BranchFormRequest extends FormRequest
                 'city'=>'required',
                 'state'=>'required|exists:states,statecode',
                 'zip'=>'required',
-                'branchemail'=>'sometimes|email|unique:branches,branchemail,'.$this->id,
+                
                 'radius'=>'required',
                 'serviceline'=>'required',
             ];

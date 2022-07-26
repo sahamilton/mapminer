@@ -4,14 +4,14 @@
         <p><a href="{{route('branches.index')}}">Return to All Branches</a></p>
         <p>{{$branch->fullAddress()}}</p>
         <p>Branch Phone:{{$branch->phone}}</p>
-        @if($branch->branchemail)
-            <p>Branch Email:
-                <a href="mailto:{{$branch->branchemail}}"
-                         title="Email {{$branch->branchname}}">
-                    {{$branch->branchemail}}
-                </a>
-            </p>
-        @endif
+        
+        <p>Branch Email:
+            <a href="mailto:{{$branch->branchemail}}"
+                     title="Email {{$branch->branchname}}">
+                {{$branch->branchemail}}
+            </a>
+        </p>
+        
         @if(auth()->user()->hasRole(['admin', 'sales_ops']))
             <div class="row mb-4 ">
                 <div class="col form-inline">
