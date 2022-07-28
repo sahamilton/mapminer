@@ -31,7 +31,7 @@ class BranchTeam extends Component
     public function render()
     {
         return view(
-            'livewire.branch-team',
+            'livewire.branch.branch-team',
             [
 
                 'branch'=>Branch::with(

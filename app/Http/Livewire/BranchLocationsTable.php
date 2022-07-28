@@ -60,7 +60,7 @@ class BranchLocationsTable extends Component
     {
         $this->_checkDistance();
         return view(
-            'livewire.branch-locations-table', [
+            'livewire.branch.branch-locations-table', [
             'addresses'=>
                 Address::query()
                     ->search($this->search)

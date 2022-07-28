@@ -91,7 +91,7 @@ class BranchCampaign extends Component
         $this->_setCampaignPeriod(); 
         //$this->_test();
         return view(
-            'livewire.branch-campaign',
+            'livewire.branch.branch-campaign',
             [
                 'data'=>$this->_getData()
                     ->search($this->search)

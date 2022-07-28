@@ -99,7 +99,7 @@ class BranchDashboardSummary extends Component
         $this->_setPeriod();
         
         return view(
-            'livewire.branch-summary', [
+            'livewire.branch.branch-summary', [
                 'branches'=>Branch::query()
                     ->summaryStats($this->period, $this->fields)
                     ->when(

@@ -16,7 +16,7 @@ class BranchReassign extends Component
 
     public function render()
     {
-        return view('livewire.branch-reassign', 
+        return view('livewire.branch.branch-reassign', 
             [
 
                 'oldbranch' => $this->branch->load('openActivities', 'openOpportunities', 'allLeads', 'branchTeam'),

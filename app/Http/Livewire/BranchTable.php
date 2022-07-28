@@ -100,7 +100,7 @@ class BranchTable extends Component
     {
         $this->updateAddress();
         return view(
-            'livewire.branch-table', [
+            'livewire.branch.branch-table', [
                 'branches'=>Branch::query()
                     ->with(
                         'region', 

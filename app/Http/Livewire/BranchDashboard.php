@@ -85,7 +85,7 @@ class BranchDashboard extends Component
     {   
         $this->_setPeriod();
         return view(
-            'livewire.branch-dashboard', [
+            'livewire.branch.branch-dashboard', [
             'branch'=>$this->_getBranch(),
             'timeperiods'=>[
                         

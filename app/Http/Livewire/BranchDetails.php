@@ -35,7 +35,7 @@ class BranchDetails extends Component
     {
        
         return view(
-            'livewire.branch-details',
+            'livewire.branch.branch-details',
             [
                 'branch'=>Branch::query()
                     ->with('branchteam.reportsto', 'oraclelocation.mapminerUser')

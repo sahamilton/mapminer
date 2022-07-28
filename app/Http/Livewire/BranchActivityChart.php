@@ -69,7 +69,7 @@ class BranchActivityChart extends Component
         $this->_setPeriod();
         
         return view(
-            'livewire.branch-activity-chart',
+            'livewire.branch.branch-activity-chart',
             [
                 'series'=>$this->_getSeries(),
                 'categories'=> $this->_getCategories(),

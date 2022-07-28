@@ -56,7 +56,7 @@ class BranchOpportunityTable extends Component
         $this->_setPeriod(); 
         
         
-        return view('livewire.branch-opportunity-table',
+        return view('livewire.branch.branch-opportunity-table',
             ['branches'=>Branch::summaryOpportunities($this->period)
                 ->whereIn('branches.id', array_keys($this->myBranches))
                 ->search($this->search)
