@@ -7,7 +7,7 @@
         @endif
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-        </div>
+       
         <select wire:model="setPeriod" class="form-control">
             @if (isset($all)) <option
                 value="allDates">All</option>
@@ -17,5 +17,5 @@
                 value="{{$key}}">{{$per}}</option>
             @endforeach
         </select>   
- 
+        </div>
 </div>

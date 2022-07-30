@@ -45,11 +45,17 @@
     <p><a href="{{route('branchdashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
     <div class="row" style="margin-bottom:10px">
         <div class="col form-inline">
-            @include('livewire.partials._perpage')
+            @include('livewire.partials._perpage') 
+            @include('livewire.partials._search', ['placeholder'=>"Search leads"])
+        </div>
+    </div>
+    <div class="row" style="margin-bottom:10px">
+        <div class="col form-inline">
+            <label>Branch: </label>
             @include('livewire.partials._branchselector')
             
             <label>Lead Created</label>@include('livewire.partials._periodselector', ['all'=>true])
-            @include('livewire.partials._search', ['placeholder'=>"Search leads"])
+           
         </div>
     </div>
     <div class="row mb-4">
@@ -70,15 +76,16 @@
     
             <label>With / Without Opportunities</label>
              <div class="input-group-prepend">
-                <span class="input-group-text h-38" title="With or Without Opportunities">
+                <span class="input-group-text" title="With or Without Opportunities">
                     <i class="fas fa-funnel-dollar"></i>
                 </span>
+            
+                 <select wire:model="withOps" class="form-control" title="With or Without Opportunities">
+                    @foreach ($opstatus as $key)
+                        <option value="{{$key}}">{{$key}}</option>
+                    @endforeach
+                </select>
             </div>
-             <select wire:model="withOps" class="form-control" title="With or Without Opportunities">
-                @foreach ($opstatus as $key)
-                    <option value="{{$key}}">{{$key}}</option>
-                @endforeach
-            </select>
         </div>
     </div>
     <div class="row" style="margin-bottom:10px">
