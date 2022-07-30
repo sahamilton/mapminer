@@ -69,10 +69,10 @@ class BranchActivityChart extends Component
         $this->_setPeriod();
         
         return view(
-            'livewire.branch.branch-activity-chart',
+            'livewire.branch.branch-team-activity-chart',
             [
-                'series'=>$this->_getSeries(),
-                'categories'=> $this->_getCategories(),
+                'series'=>$this->_getTeamSeries(),
+                'categories'=> $this->_getTeamCategories(),
 
 
 
@@ -94,7 +94,7 @@ class BranchActivityChart extends Component
     }
     
 
-    private function _getCategories()
+    private function _getTeamCategories()
     {
         return Branch::with('branchTeam')->find($this->branch_id)->branchTeam->pluck('completeName')->toArray();
     }
@@ -103,7 +103,7 @@ class BranchActivityChart extends Component
      * 
      * @return [type] [description]
      */
-    private function _getSeries()
+    private function _getTeamSeries()
     {
 
         $team = Branch::with('branchTeam')
