@@ -50,7 +50,7 @@ class UserLogins implements ShouldQueue
         foreach ($this->distribution as $recipient) {
             $this->file = $this->_makeFileName($recipient);
             //$branches = $this->_getReportBranches($recipient); 
-            (new UserLoginsExport($this->period,$this->manager))
+            (new UserLoginsExport($this->period, $this->manager))
                 ->store($this->file, 'reports')
                 ->chain(
                     [

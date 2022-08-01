@@ -326,10 +326,15 @@ class ReportsController extends Controller {
 
     private function _getManager(Request $request)
     {
+        
+        // when report is run from schedule
         if (! request()->filled('manager') && ! auth()->user()->id) {
-            return $this->person->getCapoDiCapo()->id;
-        } elseif (! request()->filled('manager') && auth()->user()->id) {
+            return $this->person->getCapoDiCapo();
+        } elseif (! request()->filled('manager') && auth()->user()->id && auth()->user()->hasRole(['sales_operations', 'admin'])) {
+            return $this->person->getCapoDiCapo();
             
+        } else {
+
             return Person::where('user_id', auth()->user()->id)->first();
         }
        
