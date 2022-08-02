@@ -6,9 +6,9 @@
             </th>
             <tr align="center">
                 <th></th>
-                <th colspan="2">Leads</th>
-                <th >Activities</th>
-                <th colspan="4">Opportunities</th>
+                <th colspan="2"><a href="{{route('branch.leads', $branch_id)}}">Leads</a></th>
+                <th><a href="{{route('branch.activity', $branch_id)}}">Activities</a></th>
+                <th colspan="4"><a href="{{route('opportunities.branch', $branch_id)}}">Opportunities</a></th>
             </tr>
             <tr>
                 <th>Branch</th>
