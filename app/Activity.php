@@ -253,9 +253,18 @@ class Activity extends Model
      */
     public function scopeSevenDayCount($query)
     {
-        return $query->selectRaw('FROM_DAYS(TO_DAYS(activity_date) -MOD(TO_DAYS(activity_date) -2, 7)) as yearweek,count(*) as activities')
-            ->groupBy(['yearweek']);
+        return $query->selectRaw("concat_ws('-',YEAR(activity_date) , WEEK(activity_date))  as yearweek,`activitytype_id`,count(activities.id) as activities")
+            ->groupBy(['branch_id','activitytype_id','yearweek']);
     }
+
+    /*
+        SELECT YEAR(invoice_date) AS Year, 
+      WEEK(invoice_date) AS Week, 
+      COUNT(*) AS Total
+    FROM Invoices
+    GROUP BY Year, Week
+    */
+
     /**
      * [scopePeriodTypeCount description]
      * 

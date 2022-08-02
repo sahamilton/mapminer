@@ -17,6 +17,10 @@ class BranchActivityChart extends Component
     
     public $branch_id;
 
+    public $view = 'period';
+
+    public $selectPeriod;
+
     protected $listeners = ['refreshBranch'=>'changeBranch', 'refreshPeriod'=>'changePeriod'];
     /**
      * [changeBranch description]
@@ -71,9 +75,10 @@ class BranchActivityChart extends Component
         return view(
             'livewire.branch.branch-team-activity-chart',
             [
-                'series'=>$this->_getTeamSeries(),
-                'categories'=> $this->_getTeamCategories(),
-
+                'series'=>$this->_getSeries(),
+                'categories'=> $this->_getCategories(),
+                'title'=>$this->_getTitle(),
+                'views'=>['team'=>'By Team', 'period'=>'By Period'],
 
 
             ]
@@ -89,11 +94,56 @@ class BranchActivityChart extends Component
     {
         
         $this->livewirePeriod($this->setPeriod);
-        $this->startdate = $this->period['from']->format('Y-m-d');     
+        $this->startdate = $this->period['from']->format('Y-m-d'); 
+        $this->days = $this->period['from']->diff($this->period['to'])->days;
+        if ($this->days > 30) {
+            $this->selectPeriod = 'yearweek';
+        } else {
+            $this->selectPeriod = 'day';
+        }
         
     }
     
+    private function _getSeries()
+    {
+        switch($this->view) {
 
+        case 'team':
+            return $this->_getTeamSeries();
+            break;
+
+
+        case 'period':
+            return $this->_getPeriodSeries();
+            break;
+
+
+        }
+    }
+
+
+    private function _getCategories()
+    {
+        switch($this->view) {
+
+        case 'team':
+            return $this->_getTeamCategories();
+            break;
+
+
+        case 'period':
+            return $this->_getPeriodCategories();
+           
+            break;
+
+
+        }
+    }
+    /**
+     * [_getTeamCategories description]
+     * 
+     * @return [type] [description]
+     */
     private function _getTeamCategories()
     {
         return Branch::with('branchTeam')->find($this->branch_id)->branchTeam->pluck('completeName')->toArray();
@@ -108,25 +158,118 @@ class BranchActivityChart extends Component
 
         $team = Branch::with('branchTeam')
             ->find($this->branch_id)
-            ->branchTeam->pluck('id')
+            ->branchTeam->pluck('completeName', 'id')
             ->toArray();
+          $data['categories'] =  $team;
         
         $fields = ActivityType::all();
-        $result = Person::whereIn('persons.id', $team)
+        $result = Person::whereIn('persons.id', array_keys($team))
             ->summaryActivitiesByPerson($this->period)
             ->get();
-        $data = [];
+      
         foreach ($fields as $field) {
   
-            $data[] = ['name' =>$field->activity,
+            $data['series'][] = ['name' =>$field->activity,
             'data'=>$result->pluck($field->slug)->toArray(),
             'color'=> "#".$field->color];
   
         }
-        
-        return collect($data)->toArray();
+
+        return collect($data['series']);
        
 
+    }
+    /**
+     * [_getPeriodSeries description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getPeriodSeries()
+    {
+        $activities = $this->_getRawPeriodActivityData();
+       
+            
+        $typeids = $activities->map(
+            function ($activity) {
+                return $activity->activitytype_id;
+            }
+        );
+        $typeids = array_unique($typeids->toArray());
+        $fields = ActivityType::whereIn('id', $typeids)->get();
+        $categories = $this->_getPeriodCategories();
+        $data['series'] = $fields->map(
+            function ($type) use ($activities, $categories) {
+
+                $result=[];
+                
+                foreach ($categories as $day) {
+                        $result[]=$activities
+                            ->whereStrict('activitytype_id', $type->id)
+                            ->whereStrict($this->selectPeriod, $day)->sum('activities');
+                }
+
+                return ['name'=>$type->activity, 'color'=>"#".$type->color, 'data'=>$result];
+
+
+            }
+        );
+
+        return collect($data['series']);
+    }
+
+    private function _getPeriodCategories()
+    {
+        $activities = $this->_getRawPeriodActivityData();
+        $labels = $activities->map(
+            function ($activity) {
+                if ($this->selectPeriod === 'yearweek') {
+
+                    return $activity->yearweek;
+                } else {
+                     return $activity->day;
+
+                }
+                
+                
+                
+            }
+        );
+        $labels = array_values(array_unique($labels->toArray()));
+        //json_encode(array_values($arr)))
+       
+        return collect($labels);
+        
+    }
+
+    private function _getRawPeriodActivityData()
+    {
+       
+        $activities = Activity::whereIn('branch_id', [$this->branch_id])
+            ->periodActivities($this->period)
+            ->completed()
+            ->when(
+                $this->selectPeriod === 'yearweek', function ($q) {
+                    $q->sevenDayCount();
+                }, function ($q) {
+                    $q->typeDayCount();
+                }
+            )->get();
+        return $activities;
+    }
+
+    private function _getTitle()
+    {
+        if ($this->view == 'team') {
+            return 'Branch Activities by Team Members for the period from ' 
+            . $this->period['from']->format('Y-m-d') 
+            . ' to ' . $this->period['to']->format('Y-m-d');
+        } else {
+            $period = $this->selectPeriod === 'yearweek' ? ' Week# ' : ' Day ' ;
+            return 'Branch Activities by '  . ($period) . '  for the period from ' 
+            . $this->period['from']->format('Y-m-d') 
+            . ' to ' . $this->period['to']->format('Y-m-d');
+
+        }
     }
 
 }
