@@ -106,7 +106,7 @@ class Kernel extends ConsoleKernel
             $period['to'] = Carbon::now()->subMonth()->endOfMOnth();
            
             $schedule->job(new UserLogins($period))
-                ->monthlyOn(2, '3:00');
+                ->monthlyOn(2, '8:00');
 
 
             //********* Excel Reports ************//

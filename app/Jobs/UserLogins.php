@@ -7,7 +7,7 @@ use App\Report;
 use App\Person;
 use App\User;
 
-use App\Exports\Reports\Users\UserLoginsExport;
+use App\Exports\Reports\User\UserLoginsExport;
 
 use Illuminate\Support\Str;
 
