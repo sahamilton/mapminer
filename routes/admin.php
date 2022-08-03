@@ -32,6 +32,10 @@ use Illuminate\Http\Request;
         Route::get('campaigns/{campaign}/company/{company}', ['as'=>'campaigns.company.detail', 'uses'=>'CampaignTrackingController@detailByCompany']);
         Route::get('campaigns/populate', ['as'=>'campaigns.populate', 'uses'=>'CampaignController@populateAddressCampaign']);
 
+
+        Route::get('manager/stats', ['as'=>'manager.stats', 'uses'=>'ManagersController@stats']);
+
+
         Route::resource('campaigns', 'CampaignController');
 
         Route::resource('campaigndocuments', 'CampaignDocumentsController');

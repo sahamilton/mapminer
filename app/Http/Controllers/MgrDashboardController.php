@@ -19,7 +19,7 @@ use \Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 
-class MgrDashboardController extends DashboardController
+class MgrDashboardController
 {
     public $activity;
     public $address;
@@ -105,6 +105,13 @@ class MgrDashboardController extends DashboardController
 
             return $this->_displayDashboard();
         }
+    }
+
+    public function show(Person $person)
+    {
+        $myBranches = $person->mybranches($person);
+        return response()->view('dashboards.managerdashboard', compact('person', 'myBranches'));
+
     }
     /**
      * [_setPeriod description]

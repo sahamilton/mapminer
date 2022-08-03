@@ -190,7 +190,7 @@ class NewDashboardController extends Controller
                 break;
 
             default:
-              
+                
                 return redirect()->route('mgrdashboard.index');
                 break;
 

@@ -33,38 +33,21 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
         // we should be able to delete all these as Laravel now 
         // does implicit route model binding.
-        Route::model('activity', \App\Activity::class);
-        Route::model('activitytype', \App\ActivityType::class);
-        Route::model('accounttype', \App\AccountType::class);
-        Route::model('address', \App\Address::class);
-        Route::model('branch', \App\Branch::class);
+
         Route::model('branchdashboard', \App\Branch::class);
-        Route::model('branchlead', \App\BranchLead::class);
-        Route::model('company', \App\Company::class);
-        Route::model('contact', \App\Contact::class);
-        Route::model('customer', \App\Customer::class);
+
         Route::model('dashboard', \App\Branch::class);
-        Route::model('feedback', \App\Feedback::class);
-        Route::model('feedback_comment', \App\FeedbackComments::class);
+       
         Route::model('branchsummary', \App\Branch::class);
-        Route::model('lead', \App\Lead::class);
-        Route::model('leadsource', \App\LeadSource::class);
-        Route::model('location', \App\Location::class);
+        
+       
         Route::model('mobile', \App\Address::class);
-        Route::model('mylead', \App\MyLead::class);
-        Route::model('myleadsactivity', \App\MyLeadActivity::class);
-        Route::model('news', \App\News::class);
-        Route::model('note', \App\Note::class);
-        Route::model('opportunity', \App\Opportunity::class);
-        Route::model('permission', \App\Permission::class);
-        Route::model('person', \App\Person::class);
-        Route::model('role', \App\Role::class);
-        Route::model('salesactivity', \App\Salesactivity::class);
+        Route::model('mgrdashboard', \App\Person::class);
+        
         Route::model('salesnote', \App\Company::class);
         Route::model('salesorg', \App\Person::class);
         Route::model('team', \App\Person::class);
-        Route::model('track', \App\Track::class);
-        Route::model('user', \App\User::class);
+        
     }
 
     /**

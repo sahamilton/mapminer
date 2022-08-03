@@ -168,6 +168,11 @@ class ManagersController extends BaseController {
         
     }
     
+
+    public function stats()
+    {
+        return response()->view('managers.stats');
+    }
     
     /**
      * [showManagerNotes description]

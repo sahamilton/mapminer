@@ -29,6 +29,15 @@ class AuditTable extends Component
     {
         $this->resetPage();
     }
+
+    public function changePeriod($setPeriod)
+    {
+
+        $this->setPeriod = $setPeriod;
+        $this->_setPeriod();
+    }
+
+
     /**
      * [sortBy description]
      * 

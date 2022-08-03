@@ -8,6 +8,9 @@ class Role extends Model
 {
     public $fillable = ['name', 'display_name'];
 
+    public array $salesRoles =[3, 6,7,9,14];
+    public array $adminRoles =[1,12];
+
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
@@ -44,5 +47,24 @@ class Role extends Model
     public function scopeSearch($query, $search)
     {
         $query->where('display_name',  'like', "%{$search}%");
+    }
+
+    public function scopeTYpe($query, $type)
+    {
+        switch($type) {
+        case 'sales':
+            return $query->whereIn('id', $this->salesRoles);
+
+            break;
+
+        case 'system':
+            return $query->whereIn('id', $this->adminRoles);
+            break;
+
+        default:
+            return $query;
+
+
+        }
     }
 }

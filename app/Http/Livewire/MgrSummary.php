@@ -11,7 +11,7 @@ use App\Address;
 use App\Activity;
 use App\ActivityType;
 use App\Opportunity;
-
+Use App\Person;
 
 class MgrSummary extends Component
 {
@@ -34,10 +34,34 @@ class MgrSummary extends Component
     public $search ='';
     public $branch_id;
     public $myBranches;
-
+    public $summaryview = 'summary';
+    public $manager;
    
     public array $fields=[];
     public array $activity_types;
+
+    protected $listeners = ['changeBranch', 'refreshPeriod'=>'changePeriod'];
+
+    public function changeBranch($branch_id)
+    {
+         
+         $this->branch_id = $branch_id;
+         
+
+    }
+
+    /**
+     * [changePeriod description]
+     * 
+     * @param [type] $setPeriod [description]
+     * 
+     * @return [type]            [description]
+     */
+    public function changePeriod($setPeriod)
+    {
+        
+        $this->setPeriod = $setPeriod;
+    }
 
     public function updatingSearch()
     {
@@ -58,9 +82,17 @@ class MgrSummary extends Component
 
         $this->sortField = $field;
     }
-    public function mount()
+    public function mount($manager=null)
     {
-        $this->myBranches = auth()->user()->person->myBranches();
+        
+        if (! $manager) {
+            $this->myBranches = auth()->user()->person->myBranches($this->manager);
+        } else {
+            @ray('hrererere');
+            $this->manager = Person::findOrFail($manager);
+            $this->myBranches = $this->manager->myBranches($this->manager);
+        }
+     
         $this->branch_id = array_key_first($this->myBranches);
         $this->activity_types = ActivityType::pluck('slug', 'id')->toArray();
         if (! session()->has('period')) {
@@ -85,8 +117,25 @@ class MgrSummary extends Component
     private function _getViewData()
     {
         $this->_setPeriod();
-        switch($this->view) {
+        switch($this->summaryview) {
+        case 'summary':
+            $this->fields =  [
+                'newbranchleads',
+                'touched_leads',
+                'activities_count',
+                'opened',
+                'Top25',
+                'won',
+                'wonvalue',
+            ];
+            $branches =  Branch::query()
+                ->summaryStats($this->period, $this->fields)
+                ->whereIn('id', array_keys($this->myBranches))
+                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                ->paginate();
+                $this->route = 'branchdashboard.show';
 
+            break;
         case 'activities':
             
             $this->fields = [
@@ -133,8 +182,8 @@ class MgrSummary extends Component
                             "new_value",
                             "open_opportunities",
                             "open_value",
-                            "won_opportunities",
-                            "won_value"];
+                            "won",
+                            "wonvalue"];
             $this->route = 'opportunities.branch';
             $branches= Branch::query()
                 ->summaryOpportunities($this->period, $this->fields)
@@ -144,7 +193,7 @@ class MgrSummary extends Component
                 ->paginate($this->perPage);
             break;
         }
-
+        
         return $branches;
     }
     /**

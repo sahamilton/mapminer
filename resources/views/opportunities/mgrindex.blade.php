@@ -52,7 +52,7 @@
       @include('branches.partials._dashboard')
     </div>
     <div id="summary" class="tab-pane fade">
-      <livewire:mgr-summary />
+      <livewire:mgr-summary :manager="$data['me']->id" />
     </div>
 
     <div id="reports" class="tab-pane fade">

@@ -21,7 +21,7 @@
     </div>
 
     <div class="row">
-        <table
+         <table class='table table-striped table-bordered table-condensed table-hover'
             name="selectManager"
             >
             <thead>
