@@ -5,10 +5,12 @@ namespace App\Http\Livewire;
 use App\Branch;
 use Livewire\Component;
 use App\PeriodSelector;
+use Livewire\WithPagination;
+
 
 class BranchDashboard extends Component
 {
-    use PeriodSelector;
+    use WithPagination, PeriodSelector;
 
     public $perPage = 10;
     public $sortField = 'activity_date';
@@ -26,6 +28,14 @@ class BranchDashboard extends Component
     {
          
          $this->branch_id = $branch_id;
+         $this->emit('changeBranch', $this->branch_id);
+
+    }
+
+    public function changeView($view)
+    {
+         $this->view = $view;    
+         
 
     }
     public function refreshChildren()
@@ -64,18 +74,7 @@ class BranchDashboard extends Component
 
     }
 
-    /**
-     * [changeview description]
-     * 
-     * @param [type] $view [description]
-     * 
-     * @return [type]       [description]
-     */
-    public function changeView(string $view)
-    {
-        $this->view = $view;
-       
-    }
+    
     /**
      * [render description]
      * 

@@ -1,5 +1,5 @@
 <div>
-    <h2>{{ucwords($view)}}</h2>
+    <h2>{{ucwords($summaryview)}}</h2>
     <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
     <p>
     <div class="row mb4" style="padding-bottom: 10px"> 
@@ -13,11 +13,11 @@
     </div>
 
     <div class="row mb-4">
-       <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
-        @include('livewire.partials._periodselector')
+       
+        
         <div class="col form-inline">
             <label for="status">View:</label>
-            <select wire:model="view" 
+            <select wire:model="summaryview" 
             class="form-control">
                 @foreach ($views as $value)
                     <option value="{{$value}}">{{ucwords($value)}}</option>

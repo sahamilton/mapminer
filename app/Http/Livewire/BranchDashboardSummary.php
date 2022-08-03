@@ -24,7 +24,7 @@ class BranchDashboardSummary extends Component
     public $manager = 'All';
     public $fields;
     public $branch_id;
-    public $view = 'summary';
+    public $summaryview = 'summary';
     public $route;
     public $myBranches;
 
@@ -42,6 +42,8 @@ class BranchDashboardSummary extends Component
          $this->branch_id = $branch_id;
 
     }
+
+
     /**
      * [changePeriod description]
      * 
@@ -64,6 +66,17 @@ class BranchDashboardSummary extends Component
         $this->resetPage();
     }
    
+
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatedBranch()
+    {
+        $this->emit('changebranch', $this->branch_id);
+
+    }
     /**
      * [sortBy description]
      * 
@@ -124,7 +137,7 @@ class BranchDashboardSummary extends Component
     public function selectBranch($branch_id)
     {
         $this->branch_id = $branch_id;
-        $this->emitUp('changeBranch', $branch_id);
+        $this->emit('changeBranch', $branch_id);
     }
     /**
      * [_setPeriod description]
@@ -142,7 +155,7 @@ class BranchDashboardSummary extends Component
     private function _getViewData()
     {
         $this->_setPeriod();
-        switch($this->view) {
+        switch($this->summaryview) {
         case 'summary':
             $this->fields =  [
                 'newbranchleads',
@@ -151,7 +164,7 @@ class BranchDashboardSummary extends Component
                 'opened',
                 'Top25',
                 'won',
-                'won_value',
+                'wonvalue',
             ];
             $branches =  Branch::query()
                 ->summaryStats($this->period, $this->fields)
@@ -164,7 +177,7 @@ class BranchDashboardSummary extends Component
                 )
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate();
-                $this->route = 'branch.activity';
+                $this->route = 'branchdashboard.show';
 
             break;
         case 'activities':
@@ -179,7 +192,7 @@ class BranchDashboardSummary extends Component
             ];
             $this->route = 'branch.activity';
             $branches= Branch::query()
-                ->summaryActivities($this->period, $this->fields)
+                ->summaryStats($this->period, $this->fields)
                 ->when(
                     $this->branch_id != 'all', function ($q) {
                         $q->where('id', $this->branch_id);
@@ -202,7 +215,7 @@ class BranchDashboardSummary extends Component
             ];
             $this->route = 'branch.leads';
             $branches = Branch::query()
-                ->summaryLeadStats($this->period, $this->fields)
+                ->summaryStats($this->period, $this->fields)
                 ->search($this->search)
                 ->when(
                     $this->branch_id != 'all', function ($q) {
@@ -224,12 +237,18 @@ class BranchDashboardSummary extends Component
                             "open_opportunities",
                             "open_value",
                             "won_opportunities",
-                            "won_value"];
+                            "wonvalue"];
             $this->route = 'opportunities.branch';
             $branches= Branch::query()
-                ->summaryOpportunities($this->period, $this->fields)
+                ->summaryStats($this->period, $this->fields)
                 ->search($this->search)
-                ->whereIn('id', array_keys($this->myBranches))
+                ->when(
+                    $this->branch_id != 'all', function ($q) {
+                        $q->where('id', $this->branch_id);
+                    }, function ($q) {
+                         $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
+                    }
+                )
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage);
             break;
