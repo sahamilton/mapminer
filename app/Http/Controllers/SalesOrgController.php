@@ -160,7 +160,7 @@ class SalesOrgController extends BaseController
     {
         
         //Note this is hard coded to the first person with the EVP role  
-        return $this->person->getPersonsWithRole([14])->first();
+        return $this->person->getCapoDicapo();
 
         
     }
