@@ -55,9 +55,10 @@ class ManagerStats extends Component
         $this->sortField = $field;
     }
 
-    public function setManager(Person $person)
+    public function setManager($person)
     {
-        $this->manager_id = $person->id;
+        
+        $this->manager_id = $person;
 
     }
 
@@ -114,7 +115,9 @@ class ManagerStats extends Component
                 ]
             )
             ->findOrFail($this->manager_id);
-             $people = $this->person->directReports;
+            $people = $this->person->directReports;
+            
+             
             
         } else {
             $people = Person::wherehas(
@@ -130,52 +133,52 @@ class ManagerStats extends Component
         foreach ($people as $person) {
 
             $branches = $person->getMyBranches();
-            if (count($branches)==0) {
-                dd($person, $branches);
-            }
-            foreach ($this->fields as $field) {
-
-                switch($field) {
-                case 'activitystats':
-                    $activities = Activity::completed()
-                        ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-                        ->whereIn('branch_id', $branches)
-                        ->count();
-
-                        $person->activitystats = $activities / (count($branches)*$this->days);
-
-                    break;
-                case 'leadstats':
-
-                    $leads = AddressBranch::whereBetween('created_at', [$this->period['from'], $this->period['to']])
-                        ->whereIn('branch_id', $branches)
-                        ->count();
-                    $person->leadstats = $leads / (count($branches)*$this->days);
-                    break;
+            if (count($branches)>0) {
                 
-                case 'opportunitystats':
-                    $opportunities = Opportunity::whereBetween('created_at', [$this->period['from'], $this->period['to']])
-                        ->whereIn('branch_id', $branches)
-                        ->count();
-                    $person->opportunitystats = $opportunities / (count($branches)*$this->days);
+            
+                foreach ($this->fields as $field) {
 
-                    break;
-                
+                    switch($field) {
+                    case 'activitystats':
+                        $activities = Activity::completed()
+                            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+                            ->whereIn('branch_id', $branches)
+                            ->count();
 
-                case 'opportunitywinvalue':
-                case 'opportunitywincount':
-                    $wins = Branch::whereIn('id', $branches)->summaryOpportunities($this->period, ['won_value', 'won_opportunities'])->get();
-                        
-                    $person->opportunitywinvalue = $wins->sum('won_value') / (count($branches)*$this->days);
-                    $person->opportunitywincount = $wins->sum('won_opportunities') / (count($branches)*$this->days);
+                            $person->activitystats = $activities / (count($branches)*$this->days);
 
-                    break;
+                        break;
+                    case 'leadstats':
+
+                        $leads = AddressBranch::whereBetween('created_at', [$this->period['from'], $this->period['to']])
+                            ->whereIn('branch_id', $branches)
+                            ->count();
+                        $person->leadstats = $leads / (count($branches)*$this->days);
+                        break;
+                    
+                    case 'opportunitystats':
+                        $opportunities = Opportunity::whereBetween('created_at', [$this->period['from'], $this->period['to']])
+                            ->whereIn('branch_id', $branches)
+                            ->count();
+                        $person->opportunitystats = $opportunities / (count($branches)*$this->days);
+
+                        break;
+                    
+
+                    case 'opportunitywinvalue':
+                    case 'opportunitywincount':
+                        $wins = Branch::whereIn('id', $branches)->summaryOpportunities($this->period, ['won_value', 'won_opportunities'])->get();
+                            
+                        $person->opportunitywinvalue = $wins->sum('won_value') / (count($branches)*$this->days);
+                        $person->opportunitywincount = $wins->sum('won_opportunities') / (count($branches)*$this->days);
+
+                        break;
 
 
+                    }
                 }
-            }
 
-           
+           }
 
         }
        
