@@ -30,7 +30,7 @@
     26 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
     27 => 'Intervention\\Image\\ImageServiceProvider',
     28 => 'Jenssegers\\Agent\\AgentServiceProvider',
-    29 => 'LivewireAutocomplete\\LivewireAutocompleteServiceProvider',
+
     30 => 'Lab404\\Impersonate\\ImpersonateServiceProvider',
     31 => 'Laracasts\\Generators\\GeneratorsServiceProvider',
     32 => 'Laravel\\Horizon\\HorizonServiceProvider',
