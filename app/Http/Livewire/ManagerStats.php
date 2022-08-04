@@ -66,9 +66,14 @@ class ManagerStats extends Component
     {
         $this->manager_id = null;
     }
-    public function mount()
+    public function mount($manager=null)
     {
-
+        if ($manager) {
+            $this->manager_id =$manager;
+        } else {
+            $this->manager_id = config('mapminer.topdog');
+        }
+        
     }
 
 

@@ -1,4 +1,5 @@
 <div>
+    
     <h2>
         @if ($this->person) 
             {{$person->completeName}}'s Teams
@@ -13,6 +14,7 @@
     <div class="row mb-4">
         <div class="col form-inline">
              @include('livewire.partials._periodselector')
+             @include('livewire.partials._perpage')
              <x-form-select name="role_id"
                 wire:model="role_id"
                 label="Roles:"
@@ -57,7 +59,7 @@
                     @endforeach
                 </td>
                 <td>
-                    @if($person->reports_to)
+                    @if($person->ReportsTo->reports_to)
                     <a href='#' wire:click.prevent="setManager({{$person->reportsTo->reports_to }})">
                         {{$person->reportsTo->completeName}}
                     </a>
