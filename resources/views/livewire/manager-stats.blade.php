@@ -5,7 +5,7 @@
 
         @else
 
-            {{$roles[$role_id]}} Mapminer Statistics
+            {{$roles[$role_id]}}
 
         @endif
          Mapminer Statistics </h2>
