@@ -71,6 +71,7 @@ return [
        // 'thisQuarterToDate'=>'This Quarter To Date',
         'lastQuarter'=>'Last Quarter',
         'lastSixMonths'=>'Last Six Months',
+        'lastTwelveMonth'=>'Last Year',
 
     ],
 

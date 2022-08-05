@@ -24,6 +24,14 @@ class BranchDashboard extends Component
     public $paginationTheme = 'bootstrap';
     protected $listeners = ['changeBranch'];
     
+
+    /**
+     * [changeBranch description]
+     * 
+     * @param [type] $branch_id [description]
+     * 
+     * @return [type]            [description]
+     */
     public function changeBranch($branch_id)
     {
          
@@ -31,24 +39,45 @@ class BranchDashboard extends Component
          $this->emit('changeBranch', $this->branch_id);
 
     }
-
+    /**
+     * [changeView description]
+     * 
+     * @param [type] $view [description]
+     * 
+     * @return [type]       [description]
+     */
     public function changeView($view)
     {
          $this->view = $view;    
          
 
     }
+    /**
+     * [refreshChildren description]
+     * 
+     * @return [type] [description]
+     */
     public function refreshChildren()
     {
         $this->emit('refreshChildren');
 
     }
+    /**
+     * [updatedBranchId description]
+     * 
+     * @return [type] [description]
+     */
     public function updatedBranchId()
     {
         
         $this->emit('refreshBranch', $this->branch_id);
         
     }
+    /**
+     * [updatedSetPeriod description]
+     * 
+     * @return [type] [description]
+     */
     public function updatedSetPeriod()
     {
         
@@ -125,6 +154,11 @@ class BranchDashboard extends Component
             
         
     }
+    /**
+     * [_getBranch description]
+     * 
+     * @return [type] [description]
+     */
     private function _getBranch()
     {
         
@@ -139,6 +173,13 @@ class BranchDashboard extends Component
             )   
         ->first();
     }
+    /**
+     * [_setBranch description]
+     * 
+     * @param [type] $branch [description]
+     *
+     * @return _setbranch   
+     */
     private function _setBranch($branch=null)
     {
         
@@ -149,8 +190,12 @@ class BranchDashboard extends Component
         }
     
     }
-
-    private function _setMyBranches()
+    /**
+     * [_setMyBranches description]
+     *
+     * @return array
+     */
+    private function _setMyBranches() : \Illuminate\Support\Collection
     {
         $myBranches = collect(auth()->user()->person->myBranches());
         

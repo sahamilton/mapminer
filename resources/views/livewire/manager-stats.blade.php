@@ -23,6 +23,10 @@
              @include('livewire.partials._search', ['placeholder'=>'Search Managers'])
              
         </div>
+
+    </div>
+    <div  wire:loading>
+                <div class="col spinner-border text-danger"></div>
     </div>
     <table class="table">
         <thead>
@@ -35,10 +39,10 @@
             </th>
             <th>Role(s)</th>
             <th>Reports To</th>
-            @foreach ($fields as $field)
+            @foreach ($fields as $field=>$label)
                 <th>
                     <a wire:click.prevent="sortBy('{{$field}}')" role="button" href="#">
-                       {{$field}}
+                       {{$label}}
                         @include('includes._sort-icon', ['field' => '{{$field}}'])
                     </a>
                </th>
@@ -50,7 +54,16 @@
 
             <tr>
                 <td>
-                    <a href="#" wire:click.prevent= "setManager({{$person->id}})" >{{$person->completeName}}</a>
+                    @if(! $person->userdetails->hasRole('branch_manager'))
+                        <a href="#" wire:click.prevent= "setManager({{$person->id}})" >{{$person->completeName}}</a>
+                    
+                    @else
+                        
+                        <a href="{{route('newdashboard.manager', $person->id)}}" 
+                                title="Review {{$person->completeName}}'s dashboard">
+                            {{$person->completeName}}
+                        </a>
+                    @endif
 
                 </td>
                 <td>
@@ -65,7 +78,7 @@
                     </a>
                     @endif
                 </td>
-                @foreach($fields as $field)
+                @foreach($fields as $field=>$label)
                     <td>{{number_format($person->$field,2)}}</td>
                 @endforeach
             </tr>

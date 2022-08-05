@@ -22,12 +22,63 @@ class BranchDashboardSummary extends Component
     public $userServiceLines;
     public $paginationTheme = 'bootstrap';
     public $manager = 'All';
-    public $fields;
+    public $displayFields;
+    public $routes = [
+        'summary'=>['branchdashboard.show'],
+        'leads'=>['branch.leads'],
+        'activities'=>['branch.activity'],
+        'opportunities'=>['opportunities.branch']
+        ];
     public $branch_id;
     public $summaryview = 'summary';
     public $route;
     public $myBranches;
+    
+    public $fields =[
+        'summary'=>[
+                    "newbranchleads",
+                    "active_leads",
+                    'activities_count',
+                    "new_opportunities",
+                    "top25_opportunities",
+                    "won_opportunities",
+                    "won_value"
+                ], 
+        'activities'=>[
 
+                    '4'=>'sales_appointment',
+                    '5'=>'stop_by',
+                    '7'=>'proposal',
+                    '10'=>'site_visit',
+                    '13'=>'log_a_call',
+                    '14'=>'in_person',
+                ],
+        'leads'=>[
+                'leads',
+                'newbranchleads',
+                'touched_leads',
+                'customer',
+                'active_customer'
+                ],
+        'opportunities'=>[
+                "active_opportunities",
+                "active_value",
+                "new_opportunities",
+                "new_value",
+                "open_opportunities",
+                "open_value",
+                "won_opportunities",
+                "won_value"
+
+
+                ]
+            ];
+    public $views =  [
+                    'summary',
+                    'activities', 
+                    'leads', 
+                    'opportunities'
+                        ];
     protected $listeners = ['refreshBranch'=>'changeBranch', 'refreshPeriod'=>'changePeriod'];
     /**
      * [changeBranch description]
@@ -105,10 +156,14 @@ class BranchDashboardSummary extends Component
     public function mount(int $branch_id, array $period)
     {
         
-        $this->branch_id = $branch_id;
         $this->setPeriod = $period['period'];
         $this->myBranches = auth()->user()->person->myBranches();
-        $this->branch_id = array_key_first($this->myBranches);
+        if ($branch_id) {
+            $this->branch_id = $branch_id;
+        } else {
+             $this->branch_id = array_key_first($this->myBranches); 
+        }
+       
 
 
     }
@@ -124,16 +179,19 @@ class BranchDashboardSummary extends Component
         return view(
             'livewire.mgr-summary', [
                 'branches'=>$this->_getViewData(),
-                'views' => [
-                    'summary',
-                    'activities', 
-                    'leads', 
-                    'opportunities'
-                        ],
+                
+                
             ]
         );
         
     }
+    /**
+     * [selectBranch description]
+     * 
+     * @param [type] $branch_id [description]
+     * 
+     * @return [type]            [description]
+     */
     public function selectBranch($branch_id)
     {
         $this->branch_id = $branch_id;
@@ -151,11 +209,31 @@ class BranchDashboardSummary extends Component
             
         
     }
-
+    /**
+     * [_getViewData description]
+     * 
+     * @return [type] [description]
+     */
     private function _getViewData()
     {
+        
+        
         $this->_setPeriod();
-        switch($this->summaryview) {
+        $this->displayFields = $this->fields[$this->summaryview];
+        $branches =  Branch::query()
+            ->summaryStats($this->period, $this->displayFields)
+            ->when(
+                $this->branch_id != 'all', function ($q) {
+                    $q->where('id', $this->branch_id);
+                }, function ($q) {
+                     $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
+                }
+            )
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->paginate();
+        $this->route = $this->routes[$this->summaryview];
+        
+        /*switch($this->summaryview) {
         case 'summary':
             $this->fields =  [
                 'newbranchleads',
@@ -164,7 +242,7 @@ class BranchDashboardSummary extends Component
                 'opened',
                 'Top25',
                 'won',
-                'wonvalue',
+                'won_value',
             ];
             $branches =  Branch::query()
                 ->summaryStats($this->period, $this->fields)
@@ -253,7 +331,7 @@ class BranchDashboardSummary extends Component
                 ->paginate($this->perPage);
             break;
         }
-
+        */
         return $branches;
     }
 }
