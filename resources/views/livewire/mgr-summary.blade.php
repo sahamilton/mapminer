@@ -38,7 +38,7 @@
             </th>
             <th>Manager</th>
             </th>
-            @foreach($displayFields as $key=>$value)
+            @foreach($fields as $key=>$value)
             <th>
                 <a wire:click.prevent="sortBy('{{$value}}')" 
                 role="button" href="#">
@@ -54,11 +54,11 @@
         <tbody>
 
         @foreach ($branches as $branch)
-        
+
         
             <tr>
                <td>
-                    <a href="{{route(implode('',$route), $branch->id)}}">
+                    <a href="{{route($route, $branch->id)}}">
                         {{$branch->branchname}}
                     </a>
                 </td>
@@ -68,7 +68,7 @@
 
                     @endforeach
                </td>
-                @foreach($displayFields as $value)
+                @foreach($fields as $value)
                     @if(isset($value) && strpos($value, 'value'))
                         <td align='right'>${{number_format($branch->$value,0)}}</th>
                     @else
