@@ -1,6 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
 
-<livewire:manager-dashboard :manager='$person->id' />
+<livewire:manager-dashboard :manager='$manager' />
 
 @endsection

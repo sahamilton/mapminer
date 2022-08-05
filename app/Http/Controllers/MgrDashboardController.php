@@ -101,9 +101,10 @@ class MgrDashboardController
         if (count($this->myBranches) < 2) {
                     return $this->_checkBranches();
 
-        } else {  
-
-            return $this->_displayDashboard();
+        } else { 
+            $manager = Person::where('user_id', session('manager'))->first();
+            return response()->view('dashboards.managerdashboard', ['manager'=>$manager->id]);
+            //return $this->_displayDashboard();
         }
     }
 

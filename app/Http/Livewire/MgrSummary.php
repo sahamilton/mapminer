@@ -121,12 +121,11 @@ class MgrSummary extends Component
         case 'summary':
             $this->fields =  [
                 'newbranchleads',
-                'touched_leads',
+                'active_leads',
                 'activities_count',
-                'opened',
-                'Top25',
-                'won',
-                'wonvalue',
+                'new_opportunities',
+                'won_opportunities',
+                'won_value',
             ];
             $branches =  Branch::query()
                 ->summaryStats($this->period, $this->fields)
