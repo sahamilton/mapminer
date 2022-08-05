@@ -18,6 +18,7 @@ use App\Jobs\BranchReportJob;
 
 use App\Jobs\RebuildPeople;
 
+use App\Jobs\UserLogins;
 use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\WeeklySummary;
 use App\Jobs\NotifyMarketManagersMissingBranchManagersJob;
@@ -94,11 +95,19 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->mondays()
                 ->at('3:12');
-
+            // Weekly Missing Branch Managers
             $schedule->job(new NotifyMarketManagersMissingBranchManagersJob())
                 ->weekly()
                 ->mondays()
                 ->at('18:00');
+
+            // Monthly loggins
+            $period['from'] = Carbon::now()->subMOnth()->startOfMonth();
+            $period['to'] = Carbon::now()->subMonth()->endOfMOnth();
+           
+            $schedule->job(new UserLogins($period))
+                ->monthlyOn(2, '8:00');
+
 
             //********* Excel Reports ************//
             

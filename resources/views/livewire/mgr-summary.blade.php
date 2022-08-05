@@ -54,7 +54,7 @@
         <tbody>
 
         @foreach ($branches as $branch)
-        
+
         
             <tr>
                <td>
