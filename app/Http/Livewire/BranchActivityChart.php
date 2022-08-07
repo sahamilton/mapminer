@@ -179,7 +179,7 @@ class BranchActivityChart extends Component
     private function _getTeamSeries()
     {
         if ($this->branch_id === 'all') {
-            $branches = App\Branch::with('managers')
+            $branches = Branch::with('managers')
                 ->whereIn('id', $myBranches)
                 ->get(); 
             $managers = $branches->map(
