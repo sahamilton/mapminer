@@ -30,6 +30,7 @@ class MgrSummary extends Component
             'leads', 
             'opportunities'
         ];
+        public array $displayfields;
     public $sortAsc = true;
     public $search ='';
     public $branch_id;
@@ -117,9 +118,24 @@ class MgrSummary extends Component
     private function _getViewData()
     {
         $this->_setPeriod();
-        switch($this->summaryview) {
+       
+        $this->displayFields = $this->fields[$this->summaryview];
+        $branches =  Branch::query()
+            ->summaryStats($this->period, $this->displayFields)
+            ->when(
+                $this->branch_id != 'all', function ($q) {
+                    $q->where('id', $this->branch_id);
+                }, function ($q) {
+                     $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
+                }
+            )
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->paginate();
+        $this->route = $this->routes[$this->summaryview];
+        
+        /*switch($this->summaryview) {
         case 'summary':
-            $this->fields =  [
+            $this->displayfields =  [
                 'newbranchleads',
                 'active_leads',
                 'activities_count',
@@ -127,6 +143,7 @@ class MgrSummary extends Component
                 'won_opportunities',
                 'won_value',
             ];
+            @ray($this->sortField);
             $branches =  Branch::query()
                 ->summaryStats($this->period, $this->fields)
                 ->whereIn('id', array_keys($this->myBranches))
@@ -137,7 +154,7 @@ class MgrSummary extends Component
             break;
         case 'activities':
             
-            $this->fields = [
+            $this->displayfields = [
                 '4'=>'sales_appointment',
                 '5'=>'stop_by',
                 '7'=>'proposal',
@@ -157,7 +174,7 @@ class MgrSummary extends Component
             break;
 
         case 'leads':
-            $this->fields = [
+            $this->displayfields = [
                 'leads',
                 'newbranchleads',
                 'active_leads',
@@ -175,7 +192,7 @@ class MgrSummary extends Component
             break;
 
         case 'opportunities':
-            $this->fields = ["active_opportunities",
+            $this->displayfields = ["active_opportunities",
                             "active_value",
                             "new_opportunities",
                             "new_value",
@@ -191,7 +208,7 @@ class MgrSummary extends Component
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage);
             break;
-        }
+        }*/
         
         return $branches;
     }

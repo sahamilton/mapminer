@@ -1,5 +1,6 @@
 <div>
-
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <h2>{{$manager->completename}}' Dashboard</h2>
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')
@@ -28,13 +29,15 @@
     <div>
         @switch ($view)
             @case('summary')
-                <livewire:mgr-summary :manager='$manager->id'  />
+                <div><livewire:branch-dashboard-summary :manager='$manager->id'  /></div>
             @break;
 
             
 
             @case('charts')
-                <livewire:branch-activity-chart :branch_id='$branch->id' :period='$period'  />
+                {{isset($branch) ? $branch_id = $branch->id : $branch = null}}
+               
+                <livewire:branch-activity-chart :period='$period'  :branch_id='$branch_id' />
             @break;
 
             

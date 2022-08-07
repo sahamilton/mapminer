@@ -1,7 +1,10 @@
 <div>
+
     <h2>{{ucwords($summaryview)}}</h2>
+
+    {{$sortField}}
     <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
-    <p>
+
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')
@@ -38,7 +41,7 @@
             </th>
             <th>Manager</th>
             </th>
-            @foreach($fields as $key=>$value)
+            @foreach($displayFields as $key=>$value)
             <th>
                 <a wire:click.prevent="sortBy('{{$value}}')" 
                 role="button" href="#">
@@ -52,13 +55,12 @@
          
         </thead>
         <tbody>
-
         @foreach ($branches as $branch)
 
-        
+
             <tr>
                <td>
-                    <a href="{{route($route, $branch->id)}}">
+                    <a href="{{route(implode('',$route), $branch->id)}}">
                         {{$branch->branchname}}
                     </a>
                 </td>
@@ -68,11 +70,11 @@
 
                     @endforeach
                </td>
-                @foreach($fields as $value)
+                @foreach($displayFields as $value)
                     @if(isset($value) && strpos($value, 'value'))
-                        <td align='right'>${{number_format($branch->$value,0)}}</th>
+                        <td align='right'>${{number_format($branch->$value,0)}}</td>
                     @else
-                        <td align='center'>{{$branch->$value}}</th>
+                        <td align='center'>{{$branch->$value}}</td>
                     @endif
                 @endforeach
 
@@ -82,13 +84,12 @@
 
     </table>
     <div class="row">
-            <div class="col">
-                {{ $branches->links() }}
-            </div>
+        <div class="col">
+            {{ $branches->links() }}
+        </div>
 
-            <div class="col text-right text-muted">
-                Showing {{ $branches->firstItem() }} to {{ $branches->lastItem() }} out of {{ $branches->total() }} results
-            </div>
+        <div class="col text-right text-muted">
+            Showing {{ $branches->firstItem() }} to {{ $branches->lastItem() }} out of {{ $branches->total() }} results
         </div>
     </div>
 </div>

@@ -138,7 +138,11 @@ class Branch extends Model
         return $this->belongsToMany(Address::class);
     }
 
-   
+    public function managers()
+    {
+        return $this->belongsToMany(Person::class)
+            ->wherePivot('role_id', '=', 9);
+    }
     /**
      * [region description]
      * 
@@ -1359,6 +1363,36 @@ class Branch extends Model
         );
 
     }
+
+    /**
+     * [scopeSummaryActivitiesByBranch description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSummaryActivitiesByBranch($query, $period)
+    {
+        $this->period = $period;
+       
+        return $query->join(
+            'activities', function ($join) {
+                $join->on('branches.id', '=', 'activities.branch_id');
+            }
+        )
+        ->select('branches.id')
+        ->where('completed', 1)
+        ->whereBetween('activity_date', [$period['from'], $period['to']])
+        ->selectRaw("branchname")
+        ->selectRaw('COUNT(CASE when activitytype_id = 4  then 1 else 0 end) as sales_appointment')
+        ->selectRaw('COUNT(CASE when activitytype_id = 5  then 1 else 0 end) as stop_by')
+        ->selectRaw('COUNT(CASE when activitytype_id = 7  then 1 else 0 end) as proposal')
+        ->selectRaw('COUNT(CASE when activitytype_id = 10  then 1 else 0 end) as site_visit')
+        ->selectRaw('COUNT(CASE when activitytype_id = 13  then 1 else 0 end) as log_a_call')
+        ->selectRaw('COUNT(CASE when activitytype_id = 14  then 1 else 0 end) as in_person')
+        ->groupBy('branches.id');
+    }
     /**
      * [scopeSummaryActivities description]
      * 
@@ -1376,13 +1410,14 @@ class Branch extends Model
         $this->period = $period;
         if (isset($fields)) {
             $this->activityFields = $fields;
+           
             foreach ($this->activityFields as $key=>$field) {
                 $label = str_replace(" ", "_", strtolower($field));
                 $query->withCount(
                     [
                         'activities as '.$label => function ($query) use ($key) {
                             $query->whereBetween(
-                                'activity_date', [$this->period['from'],$this->period['to']]
+                                'activity_date', [$this->period['from'], $this->period['to']]
                             )->where('completed', 1)
                                 ->where('activitytype_id', $key);
                         }

@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Branch;
 use App\PeriodSelector;
-
+use App\Person;
 
 
 class BranchDashboardSummary extends Component
@@ -21,7 +21,7 @@ class BranchDashboardSummary extends Component
     public $serviceline = 'All';
     public $userServiceLines;
     public $paginationTheme = 'bootstrap';
-    public $manager = 'All';
+    public $manager;
     public $displayFields;
     public $routes = [
         'summary'=>['branchdashboard.show'],
@@ -29,10 +29,11 @@ class BranchDashboardSummary extends Component
         'activities'=>['branch.activity'],
         'opportunities'=>['opportunities.branch']
         ];
-    public $branch_id;
+    public $branch_id ='all';
     public $summaryview = 'summary';
     public $route;
     public $myBranches;
+
     
     public $fields =[
         'summary'=>[
@@ -56,7 +57,7 @@ class BranchDashboardSummary extends Component
         'leads'=>[
                 'leads',
                 'newbranchleads',
-                'touched_leads',
+                'active_leads',
                 'customer',
                 'active_customer'
                 ],
@@ -148,21 +149,18 @@ class BranchDashboardSummary extends Component
     /**
      * [mount description]
      * 
-     * @param string $branch_id [description]
-     * @param array  $period    [description]
+     * @param [type] $manager [description]
      * 
-     * @return [type]            [description]
+     * @return [type]          [description]
      */
-    public function mount(int $branch_id, array $period)
+    public function mount($manager)
     {
         
-        $this->setPeriod = $period['period'];
-        $this->myBranches = auth()->user()->person->myBranches();
-        if ($branch_id) {
-            $this->branch_id = $branch_id;
-        } else {
-             $this->branch_id = array_key_first($this->myBranches); 
-        }
+        $this->livewirePeriod(session('period.period'));
+        $this->manager = Person::findOrFail($manager);
+        $this->myBranches = $this->manager->myBranches();
+        
+        
        
 
 
@@ -229,109 +227,15 @@ class BranchDashboardSummary extends Component
                      $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
                 }
             )
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->paginate();
+            ->get();
         $this->route = $this->routes[$this->summaryview];
         
-        /*switch($this->summaryview) {
-        case 'summary':
-            $this->fields =  [
-                'newbranchleads',
-                'touched_leads',
-                'activities_count',
-                'opened',
-                'Top25',
-                'won',
-                'won_value',
-            ];
-            $branches =  Branch::query()
-                ->summaryStats($this->period, $this->fields)
-                ->when(
-                    $this->branch_id != 'all', function ($q) {
-                        $q->where('id', $this->branch_id);
-                    }, function ($q) {
-                         $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
-                    }
-                )
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                ->paginate();
-                $this->route = 'branchdashboard.show';
-
-            break;
-        case 'activities':
-            
-            $this->fields = [
-                '4'=>'sales_appointment',
-                '5'=>'stop_by',
-                '7'=>'proposal',
-                '10'=>'site_visit',
-                '13'=>'log_a_call',
-                '14'=>'in_person'
-            ];
-            $this->route = 'branch.activity';
-            $branches= Branch::query()
-                ->summaryStats($this->period, $this->fields)
-                ->when(
-                    $this->branch_id != 'all', function ($q) {
-                        $q->where('id', $this->branch_id);
-                    }, function ($q) {
-                         $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
-                    }
-                )
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                ->paginate();
-            
-            break;
-
-        case 'leads':
-            $this->fields = [
-                'leads',
-                'newbranchleads',
-                'active_leads',
-                'customer',
-                'active_customer'
-            ];
-            $this->route = 'branch.leads';
-            $branches = Branch::query()
-                ->summaryStats($this->period, $this->fields)
-                ->search($this->search)
-                ->when(
-                    $this->branch_id != 'all', function ($q) {
-                        $q->where('id', $this->branch_id);
-                    }, function ($q) {
-                         $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
-                    }
-                )
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                ->paginate($this->perPage);
-
-            break;
-
-        case 'opportunities':
-            $this->fields = ["active_opportunities",
-                            "active_value",
-                            "new_opportunities",
-                            "new_value",
-                            "open_opportunities",
-                            "open_value",
-                            "won_opportunities",
-                            "wonvalue"];
-            $this->route = 'opportunities.branch';
-            $branches= Branch::query()
-                ->summaryStats($this->period, $this->fields)
-                ->search($this->search)
-                ->when(
-                    $this->branch_id != 'all', function ($q) {
-                        $q->where('id', $this->branch_id);
-                    }, function ($q) {
-                         $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
-                    }
-                )
-                ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                ->paginate($this->perPage);
-            break;
+        
+        if (! $this->sortAsc) {
+            return $branches->sortByDesc($this->sortField)->paginate($this->perPage);
+        } else {
+            return $branches->sortBy($this->sortField)->paginate($this->perPage);
         }
-        */
-        return $branches;
+        
     }
 }

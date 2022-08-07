@@ -18,6 +18,8 @@ class BranchActivityChart extends Component
     public $branch_id;
 
     public $view = 'period';
+    
+    public $myBranches;
 
     public $selectPeriod;
 
@@ -55,12 +57,19 @@ class BranchActivityChart extends Component
      * 
      * @return [type]            [description]
      */
-    public function mount(int $branch_id, array $period)
+    public function mount(array $period, $branch_id=null)
     {
         
-        $this->branch_id = $branch_id;
-        $this->setPeriod = $period['period'];
+        $this->myBranches = auth()->user()->person->getMyBranches();
 
+        if (! $branch_id) {
+            $this->branch_id = 'all';
+
+        } else {
+            $this->branch_id = $branch_id;
+        }
+        $this->setPeriod = $period['period'];
+        
 
     }
     /**
@@ -71,14 +80,18 @@ class BranchActivityChart extends Component
     public function render()
     {
         $this->_setPeriod();
-        
+
+        if ($this->view === 'branch' && $this->branch_id != 'all') {
+            $this->view = 'period';
+        }
+        @ray('72 Branch ID', $this->branch_id, $this->view);
         return view(
             'livewire.branch.branch-team-activity-chart',
             [
                 'series'=>$this->_getSeries(),
                 'categories'=> $this->_getCategories(),
                 'title'=>$this->_getTitle(),
-                'views'=>['team'=>'By Team', 'period'=>'By Period'],
+                'views'=>['team'=>'By Team', 'period'=>'By Period', 'branch'=>'By Branch'],
 
 
             ]
@@ -106,6 +119,8 @@ class BranchActivityChart extends Component
     
     private function _getSeries()
     {
+        
+        
         switch($this->view) {
 
         case 'team':
@@ -117,13 +132,18 @@ class BranchActivityChart extends Component
             return $this->_getPeriodSeries();
             break;
 
+        case 'branch':
+            return $this->_getBranchData();
 
+            break;
         }
     }
 
 
     private function _getCategories()
     {
+        
+
         switch($this->view) {
 
         case 'team':
@@ -136,6 +156,9 @@ class BranchActivityChart extends Component
            
             break;
 
+        case 'branch':
+            return $this->_getBranchCategories();
+            break;
 
         }
     }
@@ -155,12 +178,31 @@ class BranchActivityChart extends Component
      */
     private function _getTeamSeries()
     {
+        if ($this->branch_id === 'all') {
+            $branches = App\Branch::with('managers')
+                ->whereIn('id', $myBranches)
+                ->get(); 
+            $managers = $branches->map(
+                function ($branch) {
 
-        $team = Branch::with('branchTeam')
-            ->find($this->branch_id)
-            ->branchTeam->pluck('completeName', 'id')
-            ->toArray();
-          $data['categories'] =  $team;
+                    return $branch->managers->pluck('completename', 'id')->toArray();
+                }
+            ); 
+            foreach ($managers as $mgr) {
+                foreach ($mgr as $id=>$m) {
+                    $team[$id]=$m;
+                }
+            }
+        } else {
+            $team = Branch::with('branchTeam')
+                ->find($this->branch_id)
+                ->branchTeam->pluck('completeName', 'id')
+                ->toArray();
+           
+
+        }
+        
+        $data['categories'] =  $team;
         
         $fields = ActivityType::all();
         $result = Person::whereIn('persons.id', array_keys($team))
@@ -178,6 +220,71 @@ class BranchActivityChart extends Component
         return collect($data['series']);
        
 
+    }
+
+    /**
+     * [_getTeamPeriodSeries description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getBranchData()
+    {
+
+        $data['categories'] = Branch::when(
+            $this->branch_id === 'all', function ($q) {
+                $q->whereIn('branches.id', $this->myBranches);
+            }, function ($q) {
+                $q->where('branches.id', $this->branch_id);
+            }
+        )
+        ->pluck('branchname')
+        ->toArray();
+        
+        $fields = ActivityType::all();
+        $result = Branch::summaryActivities(
+            $this->period, $fields->pluck('activity', 'id')
+                ->toArray()
+        )
+        ->when(
+            $this->branch_id === 'all', function ($q) {
+                $q->whereIn('branches.id', $this->myBranches);
+            }, function ($q) {
+                $q->where('branches.id', $this->branch_id);
+            }
+        )->get();
+      
+        foreach ($fields as $field) {
+  
+            $data['series'][] = ['name' =>$field->activity,
+            'data'=>$result->pluck($field->slug)->toArray(),
+            'color'=> "#".$field->color];
+  
+        }
+
+        return collect($data['series']);
+       
+
+    }
+
+    /**
+     * [_getTeamCategories description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getBranchCategories()
+    {
+        
+        @ray('246 Branch Id', $this->branch_id);
+        $data['categories'] = Branch::when(
+            $this->branch_id === 'all', function ($q) {
+                $q->whereIn('branches.id', $this->myBranches);
+            }, function ($q) {
+                $q->where('branches.id', $this->branch_id);
+            }
+        )
+        ->pluck('branchname')
+        ->toArray();
+        return collect($data['categories']);
     }
     /**
      * [_getPeriodSeries description]
@@ -244,16 +351,22 @@ class BranchActivityChart extends Component
     private function _getRawPeriodActivityData()
     {
        
-        $activities = Activity::whereIn('branch_id', [$this->branch_id])
-            ->periodActivities($this->period)
-            ->completed()
-            ->when(
-                $this->selectPeriod === 'yearweek', function ($q) {
-                    $q->sevenDayCount();
-                }, function ($q) {
-                    $q->typeDayCount();
-                }
-            )->get();
+        $activities = Activity::when(
+            $this->branch_id === 'all', function ($q) {
+                $q->whereIn('branch_id', $this->myBranches);
+            }, function ($q) {
+                $q->where('branch_id', $this->branch_id);
+            }
+        )
+        ->periodActivities($this->period)
+        ->completed()
+        ->when(
+            $this->selectPeriod === 'yearweek', function ($q) {
+                $q->sevenDayCount();
+            }, function ($q) {
+                $q->typeDayCount();
+            }
+        )->get();
         return $activities;
     }
 

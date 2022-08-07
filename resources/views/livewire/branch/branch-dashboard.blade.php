@@ -38,7 +38,9 @@
     <div>
         @switch ($view)
             @case('summary')
+
                 <livewire:branch-dashboard-summary :branch_id='$branch->id' :period='$period'  />
+            
             @break;
 
             @case('activities')

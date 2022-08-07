@@ -71,8 +71,10 @@ class ManagerStats extends Component
     {
         if ($manager) {
             $this->manager_id =$manager;
-        } else {
+        } elseif (auth()->user()->hasRole(['admin'])) {
             $this->manager_id = config('mapminer.topdog');
+        } else {
+            $this->manager_id = auth()->user()->person->id;
         }
         
     }
@@ -153,9 +155,8 @@ class ManagerStats extends Component
 
                     switch($field) {
                     case 'activitystats':
-                         $activities = $this->_getActivityStats($branches);
-
-                            $person->activitystats = $activities / (count($branches)*$this->days);
+                        $activities = $this->_getActivityStats($branches);
+                        $person->activitystats = $activities / (count($branches)*$this->days);
 
                         break;
                     case 'leadstats':

@@ -275,7 +275,7 @@ class Activity extends Model
     public function scopeTypeDayCount($query)
     {
 
-        return $query->selectRaw("DATE_FORMAT(`activity_date`,'%Y-%m-%d') as day,`activitytype_id`,count(activities.id) as activities")
+        return $query->selectRaw("branch_id, DATE_FORMAT(`activity_date`,'%Y-%m-%d') as day,`activitytype_id`,count(activities.id) as activities")
             ->groupBy(['branch_id','activitytype_id','day'])
             ->orderBy('activitytype_id')
             ->orderBy('day');
