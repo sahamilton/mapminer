@@ -1558,6 +1558,7 @@ class Branch extends Model
         if (! $fields) {
             $fields = array_merge($this->leadFields, $this->activityFields, $this->opportunityFields);
         }
+
         $this->fields = $fields;
         
         return $query
@@ -1655,10 +1656,11 @@ class Branch extends Model
                     );
                 }
             )->when(
-                in_array('saleappts', $this->fields), function ($q) {
+                in_array('sales_appointment', $this->fields), function ($q) {
+                    
                     $q->withCount( 
                         [
-                            'activities as salesappts'=>function ($query) {
+                            'activities as sales_appointment'=>function ($query) {
                                 $query->whereBetween(
                                     'activity_date', [$this->period['from'],$this->period['to']]
                                 )->where('activitytype_id', 4);
@@ -1667,10 +1669,10 @@ class Branch extends Model
                     );
                 }
             )->when(
-                in_array('sitevisits', $this->fields), function ($q) {
+                in_array('site_visit', $this->fields), function ($q) {
                     $q->withCount( 
                         [
-                            'activities as sitevisits'=>function ($query) {
+                            'activities as site_visit'=>function ($query) {
                                 $query->whereBetween(
                                     'activity_date', [$this->period['from'],$this->period['to']]
                                 )
