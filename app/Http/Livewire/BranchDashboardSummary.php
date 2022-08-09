@@ -153,12 +153,19 @@ class BranchDashboardSummary extends Component
      * 
      * @return [type]          [description]
      */
-    public function mount($manager)
+    public function mount($branch_id=null, $manager=null)
     {
         
         $this->livewirePeriod(session('period.period'));
-        $this->manager = Person::findOrFail($manager);
-        $this->myBranches = $this->manager->myBranches();
+        if (! $manager) {
+            $this->branch_id = $branch_id;
+             $this->myBranches = auth()->user()->person->getMyBranches();
+        } else {
+            $this->manager = Person::findOrFail($manager); 
+            $this->myBranches = $this->manager->myBranches();
+        }
+        
+       
         
         
        

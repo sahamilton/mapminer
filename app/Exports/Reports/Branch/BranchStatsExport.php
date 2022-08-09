@@ -40,7 +40,12 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'sitesvisits'=>'# Completed Site Visits'
     ];
     
-    
+    /**
+     * [__construct description]
+     * 
+     * @param array      $period   [description]
+     * @param array|null $branches [description]
+     */
     public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
@@ -48,7 +53,11 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         $this->report = Report::where('export', class_basename($this))->firstOrFail();
         
     }
-
+    /**
+     * [headings description]
+     * 
+     * @return [type] [description]
+     */
     public function headings(): array
     {
         return [
@@ -60,9 +69,14 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
             $this->fields
         ];
     }
-    
-    
-    public function map($branch): array
+    /**
+     * [map description]
+     * 
+     * @param Branch $branch [description]
+     * 
+     * @return array         [description]
+     */
+    public function map(Branch $branch): array
     {
         foreach ($this->fields as $key=>$field) {
             switch($key) {
@@ -87,7 +101,11 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         return $detail;
        
     }
-
+    /**
+     * [columnFormats description]
+     * 
+     * @return [type] [description]
+     */
     public function columnFormats(): array
     {
         return [
