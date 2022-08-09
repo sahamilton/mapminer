@@ -1,5 +1,6 @@
 <div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <h2>{{$manager->completename}}' Dashboard</h2>
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
@@ -8,7 +9,7 @@
             @include('livewire.partials._periodselector')
 
             <div  wire:loading>
-            <div class="col spinner-border text-danger"></div>
+                <div class="col spinner-border text-danger"></div>
             </div>
         </div>
     </div>
@@ -28,6 +29,11 @@
     </nav>
     <div>
         @switch ($view)
+
+            @case('dashboard')
+                @include('dashboards.partials._mgrdashboard')
+            @break;
+
             @case('summary')
                 <div><livewire:branch-dashboard-summary :manager='$manager->id'  /></div>
             @break;

@@ -3,14 +3,14 @@
 namespace App\Http\Livewire;
 use App\Person;
 use Livewire\Component;
-
+use App\Branch;
 use App\PeriodSelector;
-
+use Livewire\WithPagination;
 class ManagerDashboard extends Component
 {
-    use PeriodSelector;
+    use PeriodSelector, WithPagination;
     public $perPage = 10;
-    public $sortField = 'activity_date';
+    public $sortField = 'branchname';
     public $activitytype='All';
     public $sortAsc = false;
     public $search ='';
@@ -22,6 +22,31 @@ class ManagerDashboard extends Component
     public $paginationTheme = 'bootstrap';
     protected $listeners = ['changeBranch'];
     
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortAsc = ! $this->sortAsc;
+        } else {
+            $this->sortAsc = true;
+        }
+
+        $this->sortField = $field;
+    }
+
+    /**
+     * [changeBranch description]
+     * 
+     * @param [type] $branch_id [description]
+     * 
+     * @return [type]            [description]
+     */
     public function changeBranch($branch_id)
     {
          
@@ -29,24 +54,44 @@ class ManagerDashboard extends Component
          $this->emit('changeBranch', $this->branch_id);
 
     }
-
+    /**
+     * [changeView description]
+     * 
+     * @param  [type] $view [description]
+     * @return [type]       [description]
+     */
     public function changeView($view)
     {
          $this->view = $view;    
          
 
     }
+    /**
+     * [refreshChildren description]
+     * 
+     * @return [type] [description]
+     */
     public function refreshChildren()
     {
         $this->emit('refreshChildren');
 
     }
+    /**
+     * [updatedBranchId description]
+     * 
+     * @return [type] [description]
+     */
     public function updatedBranchId()
     {
         
         $this->emit('refreshBranch', $this->branch_id);
         
     }
+    /**
+     * [updatedSetPeriod description]
+     * 
+     * @return [type] [description]
+     */
     public function updatedSetPeriod()
     {
         
@@ -56,12 +101,11 @@ class ManagerDashboard extends Component
     /**
      * [mount description]
      * 
-     * @param string|null $branch [description]
-     * @param string|null $status [description]
+     * @param int $manager [description]
      * 
-     * @return [type]         [description]
+     * @return [type]          [description]
      */
-    public function mount($manager)
+    public function mount(int $manager)
     {
         $this->manager = Person::findOrFail($manager);
         
@@ -77,7 +121,7 @@ class ManagerDashboard extends Component
     /**
      * [render description]
      * 
-     * @return [type] [description]
+     * @return view [description]
      */
     public function render()
     {   
@@ -100,9 +144,11 @@ class ManagerDashboard extends Component
                         'lastSixMonths'=>'Last Six Months',
 
                     ],
-
+            'data'=>$this->_getData(),
             'myBranches'=>$this->_setMyBranches(),
             'viewtypes'=>[
+                    'dashboard'=>'Dashboard', 
+
                     'summary'=>'Summary', 
                     
                     'charts'=>'Charts',
@@ -124,6 +170,11 @@ class ManagerDashboard extends Component
             
         
     }
+    /**
+     * [_getBranch description]
+     * 
+     * @return [type] [description]
+     */
     private function _getBranch()
     {
         
@@ -138,6 +189,13 @@ class ManagerDashboard extends Component
             )   
         ->first();
     }
+    /**
+     * [_setBranch description]
+     * 
+     * @param [type] $branch [description]
+     *
+     * @return set branch _id 
+     */
     private function _setBranch($branch=null)
     {
         
@@ -149,7 +207,11 @@ class ManagerDashboard extends Component
         }
     
     }
-
+    /**
+     * [_setMyBranches description]
+     *
+     * @return array my branches
+     */
     private function _setMyBranches()
     {
         $myBranches = collect($this->manager->myBranches($this->manager));
@@ -159,5 +221,41 @@ class ManagerDashboard extends Component
         }
         return $myBranches;
     }
+    /**
+     * [_getData description]
+     * 
+     * @return [type] [description]
+     */
+    public function _getData()
+    {
 
+        if ($this->view !== 'dashboard') {
+            return null;
+        } else {
+            $myBranches = $this->_setMyBranches()->toArray();
+
+            $fields = ['4'=>'sales_appointment','won_opportunities','won_value'];
+            $branches = Branch::whereIn('id', array_keys($myBranches))
+                ->summaryStats($this->period, $fields)
+                ->get();
+
+            $string = '';
+        
+            foreach ($branches  as $branch) {
+          
+                $string = $string . "[\"".$branch->branchname ."\",  ".$branch->sales_appointment .",  ".$branch->won_opportunities.", ". ($branch->won_value ? $branch->won_value : 0) ."],";
+             
+            }
+            $data['charts']['bubble'] = $string;
+
+            if (! $this->sortAsc) {
+                $data['branches'] = $branches->sortByDesc($this->sortField)->paginate($this->perPage);
+            } else {
+                $data['branches'] = $branches->sortBy($this->sortField)->paginate($this->perPage);
+            }
+            return $data;
+        
+        
+        }
+    }
 }

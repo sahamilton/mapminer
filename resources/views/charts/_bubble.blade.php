@@ -1,5 +1,4 @@
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawSeriesChart);
@@ -12,7 +11,7 @@
       ]);
 
       var options = {
-        title: 'TAHA Report : Correlation closes / won to sales appointments and opportunities',
+        title: 'TAHA Report : Correlating closes / won to sales appointments and opportunities',
        
         hAxis: {title: 'Sales Appts',
           viewWindow: {
