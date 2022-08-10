@@ -35,8 +35,8 @@ class Activity extends Model
     protected $casts = [
         'activity_date'  => 'date:Y-m-d',
         'followup_date'  => 'date:Y-m-d',
-        'starttime' =>  'date:G-i-s',
-        'endtime' =>  'date:G-i-s'
+        'starttime' =>  'date:H-i-s',
+        'endtime' =>  'date:H-i-s'
    
     ];
 

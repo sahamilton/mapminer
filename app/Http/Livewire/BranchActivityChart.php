@@ -8,7 +8,9 @@ use App\ActivityType;
 use App\Branch;
 use App\PeriodSelector;
 use App\Person;
+use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Collection; 
 
 class BranchActivityChart extends Component
 {
@@ -84,7 +86,7 @@ class BranchActivityChart extends Component
         if ($this->view === 'branch' && $this->branch_id != 'all') {
             $this->view = 'period';
         }
-        @ray('72 Branch ID', $this->branch_id, $this->view);
+       
         return view(
             'livewire.branch.branch-team-activity-chart',
             [
@@ -116,10 +118,13 @@ class BranchActivityChart extends Component
         }
         
     }
-    
+    /**
+     * [_getSeries description]
+     * 
+     * @return [type] [description]
+     */
     private function _getSeries()
     {
-        
         
         switch($this->view) {
 
@@ -129,6 +134,7 @@ class BranchActivityChart extends Component
 
 
         case 'period':
+          
             return $this->_getPeriodSeries();
             break;
 
@@ -139,7 +145,11 @@ class BranchActivityChart extends Component
         }
     }
 
-
+    /**
+     * [_getCategories description]
+     * 
+     * @return [type] [description]
+     */
     private function _getCategories()
     {
         
@@ -274,7 +284,7 @@ class BranchActivityChart extends Component
     private function _getBranchCategories()
     {
         
-        @ray('246 Branch Id', $this->branch_id);
+       
         $data['categories'] = Branch::when(
             $this->branch_id === 'all', function ($q) {
                 $q->whereIn('branches.id', $this->myBranches);
@@ -366,10 +376,15 @@ class BranchActivityChart extends Component
             }, function ($q) {
                 $q->typeDayCount();
             }
-        )->get();
+        )->orderBy('activity_date')
+        ->get();
         return $activities;
     }
-
+    /**
+     * [_getTitle description]
+     * 
+     * @return [type] [description]
+     */
     private function _getTitle()
     {
         if ($this->view == 'team') {
@@ -377,12 +392,27 @@ class BranchActivityChart extends Component
             . $this->period['from']->format('Y-m-d') 
             . ' to ' . $this->period['to']->format('Y-m-d');
         } else {
-            $period = $this->selectPeriod === 'yearweek' ? ' Week# ' : ' Day ' ;
+            $period = $this->selectPeriod === 'yearweek' ? ' Week beginning ' : ' Day ' ;
             return 'Branch Activities by '  . ($period) . '  for the period from ' 
             . $this->period['from']->format('Y-m-d') 
             . ' to ' . $this->period['to']->format('Y-m-d');
 
         }
     }
-
+    /**
+     * [_getYearWeekDate description]
+     * 
+     * @param  Collection $categories [description]
+     * @return [type]                 [description]
+     */
+    private function _getYearWeekDate(Collection $categories) : Collection
+    {
+        foreach ($categories as $category) { 
+            list ( $year,$week) = explode('-', $category);
+            $d = new \DateTime;
+            $data[] = $d->setISODate($year, $week)->format('Y-m-d');
+        }
+        return collect($data);
+    }
+    
 }

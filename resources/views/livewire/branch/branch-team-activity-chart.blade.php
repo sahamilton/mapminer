@@ -1,7 +1,7 @@
 <div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-    @ray($title);
+   
     <div class="row">
       <div class="col-sm form-inline">
         <x-form-select 
