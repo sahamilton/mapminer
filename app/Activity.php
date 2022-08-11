@@ -281,6 +281,13 @@ class Activity extends Model
             ->orderBy('day');
             
     }
+    /**
+     * [scopeTypeCount description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeTypeCount($query)
     {
         return $query->selectRaw("activity_type.activity,count(activities.id) as activities")

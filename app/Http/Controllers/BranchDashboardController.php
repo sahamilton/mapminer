@@ -169,40 +169,8 @@ class BranchDashboardController extends DashboardController
         if (! session()->has('branch') or $branch->id != session('branch') ) {
             session(['branch'=>$branch->id]);
         }
-        /*
-        $this->period = $this->activity->getPeriod();
-
-        $branch->load('manager.directReports', 'branchTeam');
-
-        if ($branch->manager->count() > 1 
-            && $branch->manager->where(
-                'user_id', '=', auth()->user()->id
-            )->count()==1 
-        ) {
-            $this->manager = $branch->manager->where(
-                'user_id', '=', auth()->user()->id
-            )->first();
-        } else {
-            $this->manager = $branch->manager->first();
-        } 
        
-        if (! $this->manager) {
-            return redirect()->route('dashboard.index')
-                ->withWarning(
-                    "There is no manager assigned to branch "
-                    . $branch->branchname 
-                    . ". Notify Sales Opersations"
-                );
-        }
-        $campaigns = Campaign::currentOpen([$branch->id])->get();
-        $this->myBranches = [$branch->id];
         
-        $data = $this->_getDashBoardData();
-        $data['manager'] = $this->manager; 
-        $data['mybranches'] = Branch::whereIn('id', array_keys($myBranches))->pluck('branchname', 'id');
-
-        return response()->view('branches.dashboard', compact('data', 'branch', 'campaigns', 'myBranches'));
-        */
         return response()->view('branches.newdashboard', compact('branch'));
     }
    

@@ -439,19 +439,22 @@ class User extends Authenticatable implements Auditable
      * @param bool $ifValid
      * @return mixed
      */
-    public static function checkAuthAndRedirect($redirect, $ifValid=false)
+    public static function checkAuthAndRedirect($redirect, $ifValid=false) :array
     {
         // Get the user information
         $user = \Auth::user();
         $redirectTo = false;
 
-        if (empty($user->id) && ! $ifValid) // Not logged in redirect, set session.
-        {
+        if (empty($user->id) && ! $ifValid) {
+            // Not logged in redirect, set session.
             \Session::put('loginRedirect', $redirect);
             $redirectTo = \Redirect::to('user/login')
                 ->with('notice', \Lang::get('user/user.login_first'));
         } elseif (!empty($user->id) && $ifValid) {
-        // Valid user, we want to redirect.
+        
+            /*
+                invalid user redirect
+             */
         
             $redirectTo = \Redirect::to($redirect);
         }
@@ -473,8 +476,12 @@ class User extends Authenticatable implements Auditable
     {
         return $this->email;
     }
-
-    public function getFormattedEmail()
+    /**
+     * [getFormattedEmail description]
+     * 
+     * @return array email with name
+     */
+    public function getFormattedEmail() :array
     {
         return ['email'=>$this->email, 'name'=>$this->person->fullName()];
     }
@@ -493,9 +500,11 @@ class User extends Authenticatable implements Auditable
 
     }
     /**
-     * scopeWithRole Select User by role
-     * @param  QueryBuilder $query [description]
-     * @param  int $role  Role id
+     * ScopeWithRole Select User by role
+     * 
+     * @param QueryBuilder $query [description]
+     * @param int $role  Role id
+     * 
      * @return QueryBuilder        [description]
      */
     public function scopeWithRole($query,$role) 

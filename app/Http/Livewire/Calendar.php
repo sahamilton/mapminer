@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 use App\Activity;
+use App\ActivityType;
 use Livewire\Component;
 use App\Branch;
 use Carbon\Carbon;
@@ -13,15 +14,16 @@ class Calendar extends Component
 
     use PeriodSelector;
     
-    public $branch_id;
-    public $type = '0';
-    public $status = '0';
+    public $branch_id = 'all';
+    public $type = 'All';
+    public $status = 'All';
     public $setPeriod;
     public $teammember='1';
     public $activityModalShow = false;
     public $companyname;
+    public $myBranches;
     public Branch $branch;
-    public $statuses = ['0'=>'All',
+    public $statuses = ['All'=>'All',
                         '1'=>'Completed',
                         '2'=>'Not Completed',];
     public $types = [
@@ -39,6 +41,7 @@ class Calendar extends Component
     {
        
         $this->branch_id = $branch_id;
+        $this->emit("refreshCalendar");
 
     }
     public function changePeriod($setPeriod)
@@ -57,6 +60,7 @@ class Calendar extends Component
         $this->emit("refreshCalendar");
 
     }
+   
     /**
      * [updatedStatus description]
      * 
@@ -96,9 +100,9 @@ class Calendar extends Component
      */
     public function mount($branch_id)
     {
-        $this->branch_id = $branch_id;
+     
         $this->teammember = auth()->user()->id;
-        
+        $this->myBranches = auth()->user()->person->getMyBranches();
         
     }
     /**
@@ -152,11 +156,9 @@ class Calendar extends Component
         return view(
             'livewire.calendar.cal',
             [
-                'team'=>Branch::with('branchTeam')
-                    ->find($this->branch_id)
-                    ->branchTeam->pluck('completeName', 'user_id')
-                    ->prepend('All', '1')
-                    ->toArray(),
+                'team'=>$this->_getBranchTeam(),
+                'activitytypes'=>ActivityType::all(),
+                'types'=>ActivityType::all()->pluck('activity', 'id')->prepend('All', 'All')->toArray(),
 
             ]
         );
@@ -175,7 +177,40 @@ class Calendar extends Component
         $this->startdate = $this->period['from']->startOfMonth()->format('Y-m-d');     
         
     }
-    
+    /**
+     * [_getBranchTeam description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getBranchTeam()
+    {
+        
+        if ($this->branch_id != 'all') {
+                return Branch::with('branchTeam')
+                    ->find($this->branch_id)
+                    ->branchTeam
+                    ->pluck('completeName', 'user_id')
+                    ->prepend('All', 'All')
+                    ->toArray();
+        } else {
+            $branches = Branch::with('branchTeam')->whereIn('branches.id', $this->myBranches)->get();
+            return $branches->flatMap(
+                function ($branch) {
+                    return $branch->branchTeam;
+                }
+            )->unique('id')
+            ->pluck('completeName', 'user_id')
+            ->prepend('All', 'All')
+            ->toArray();
+         
+        }
+
+    }
+    /**
+     * [_getEvents description]
+     * 
+     * @return [type] [description]
+     */
     private function _getEvents()
     {
         $activities = Activity::with('relatesToAddress', 'type')
@@ -197,11 +232,17 @@ class Calendar extends Component
                 }
             ) 
             ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
-            ->where('branch_id', $this->branch_id)
+            ->when(
+                $this->branch_id != 'All', function ($q) {
+                    $q->whereIn('branch_id', [$this->branch_id]);
+                }, function ($q) {
+                     $q->whereIn('branch_id', $this->myBranches);
+                }
+            )
             ->get();
         $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
  
-        return $activities['data'];
+        return collect($activities['data']);
     }
     /**
      * [addActivity description]

@@ -25,6 +25,18 @@
 
         </div>
     </div>
+    <div class="row m-4">
+        <div class='col form-inline mx-4'>
+            @foreach ($activitytypes as $type)
+                <span class="rounded mx-2" style="padding: 4px;border: 1px solid #{{$type->color}}">
+                    <i class="fa-solid fa-circle-small" style="color:#{{$type->color}}"></i>
+                    {{$type->activity}}
+                </span>  |
+            @endforeach
+            <span class="rounded mx-2" style="padding: 4px;background-color:#cccccc;">Completed</span> |
+            <span class="rounded mx-2" style="padding: 4px;background-color:#cceecc;">Not Completed</span>
+        </div>
+    </div>
     <div
         x-data="{
             calendar: null,

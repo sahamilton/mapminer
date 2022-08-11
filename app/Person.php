@@ -253,6 +253,8 @@ class Person extends NodeModel implements Auditable
         ->pluck('id')
         ->toArray();
     }
+
+    
     
     /**
      * GetMyBranches finds branch managers in reporting
@@ -758,15 +760,7 @@ class Person extends NodeModel implements Auditable
                 }
             )->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
-    /**
-     * [leads description]
-     * 
-     * @return [type] [description]
-     */
-    public function leads()
-    {
-        return $this->hasMany(Address::class, 'user_id', 'user_id');
-    }
+   
 
     /**
      * [offeredleads description]
@@ -970,7 +964,10 @@ class Person extends NodeModel implements Auditable
         return $result;
 
     }
-
+    public function leads()
+    {
+        return $this->hasMany(AddressBranch::class, 'person_id', 'id');
+    }
     /**
      * [activities description]
      * 
@@ -1278,15 +1275,7 @@ class Person extends NodeModel implements Auditable
         return auth()->user()->person->managesAccount->contains('id', $company->id);
 
     }
-    /**
-     * [scopeSummaryActivities description]
-     * 
-     * @param [type] $query  [description]
-     * @param [type] $period [description]
-     * 
-     * @return [type]         [description]
-     */
-
+   
     /**
      * [scopeSummaryActivities description]
      * 
@@ -1297,7 +1286,7 @@ class Person extends NodeModel implements Auditable
      *                       value is label for activi
      *                        
      * @return [type]         [description]
-     */
+    
     public function scopeSummaryActivities($query, Array $period, Array $fields = null)
     {
         
@@ -1330,22 +1319,24 @@ class Person extends NodeModel implements Auditable
         );
 
     }
+    */
 
+    
 
     /**
-     * [scopeSummaryOpportunities description]
+     * [scopeSummaryActivities description]
      * 
      * @param [type] $query  [description]
      * @param [type] $period [description]
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryOpportunities($query, $period)
+    public function scopeSummaryActivities($query, $period)
     {
         
         $this->period = $period;
 
-        $query->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+        $query->selectRaw('persons.id, concat_ws(" ",persons.firstname, persons.lastname) as manager')
             ->join(
                 'persons as reports', function ($join) {
                     $join->on('reports.lft', '>=', 'persons.lft')
@@ -1366,5 +1357,53 @@ class Person extends NodeModel implements Auditable
         ->selectRaw('COUNT(*) AS all_activities')
         ->groupBy('manager');
         
+    }
+
+
+    public function scopeSummaryOpportunities($query, $period)
+    {
+        $this->period = $period;
+        $query->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+            ->join('opportunities', 'persons.user_id', '=', 'opportunities.user_id')
+            ->where(
+                function ($q) {
+                    $q->whereBetween('opportunities.updated_at', [$this->period['from'], $this->period['to']])
+                        ->orWhereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']]);
+                }
+            )
+            ->selectRaw('COUNT( CASE WHEN closed = 1 THEN 1  END) AS won_opportunities')
+            ->selectRaw('COUNT(CASE WHEN closed = 0 THEN 1 END) AS new_opportunities')
+            ->selectRaw('COUNT(CASE WHEN closed = 2 THEN 1 END) AS lost_opportunities')
+            
+            ->selectRaw('COUNT(*) AS all_opportunities')
+            ->groupBy('manager');
+    }
+
+    public function scopeSummaryStats($query, $period)
+    {
+        $this->period = $period;
+        $query->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
+            ->leftjoin('opportunities', 'persons.user_id', '=', 'opportunities.user_id')
+            ->leftjoin('activities', 'persons.user_id', '=', 'activities.user_id')
+            ->where(
+                function ($q) {
+                    $q->whereBetween('opportunities.updated_at', [$this->period['from'], $this->period['to']])
+                        ->orWhereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']]);
+                }
+            )
+            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+            ->selectRaw('COUNT( CASE WHEN closed = 1 THEN 1  END) AS won_opportunities')
+            ->selectRaw('COUNT(CASE WHEN closed = 0 THEN 1 END) AS new_opportunities')
+            ->selectRaw('COUNT(CASE WHEN closed = 2 THEN 1 END) AS lost_opportunities')
+            
+            ->selectRaw('COUNT(opportunities.*) AS all_opportunities')
+            ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 5 THEN 1 END) AS stop_by')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 7 THEN 1 END) AS proposal')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 10 THEN 1 END ) AS site_visit')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 13 THEN 1 END) AS log_a_call')
+            ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
+            ->selectRaw('COUNT(activities.*) AS all_activities')
+            ->groupBy('manager');
     }
 }

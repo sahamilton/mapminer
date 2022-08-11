@@ -41,13 +41,11 @@ class TeamActivityController extends Controller
      */
     public function show(Person $person)
     {
-  
-        if ($people = $this->_getTeamLogins($person)) {
-        
-            return response()->view('team.activity', compact('people'));
-        } else {
+        if (! $this->_inMyTeam($person)) {
             return redirect()->route('home')
                 ->withWarning($person->fullName() . " is not a member of your team");
+        } else {
+            return response()->view('team.activity', compact('person'));
         }
     }
 
@@ -92,6 +90,12 @@ class TeamActivityController extends Controller
             );
         dd($persons->first());
     }
+    /**
+     * [_inMyTeam description]
+     * 
+     * @param  Person $person [description]
+     * @return [type]         [description]
+     */
     private function _inMyTeam(Person $person)
     {
         if (! auth()->user()->hasRole('admin')) {
