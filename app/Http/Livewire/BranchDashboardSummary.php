@@ -232,7 +232,7 @@ class BranchDashboardSummary extends Component
                 $this->branch_id != 'all', function ($q) {
                     $q->where('id', $this->branch_id);
                 }, function ($q) {
-                     $q->whereIn('id', $this->myBranches());
+                     $q->whereIn('id', $this->myBranches);
                 }
             )
             ->get();
