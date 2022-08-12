@@ -26,14 +26,7 @@ class Calendar extends Component
     public $statuses = ['All'=>'All',
                         '1'=>'Completed',
                         '2'=>'Not Completed',];
-    public $types = [
-        '0'=>'All',
-        '4'=> 'Sales Appointment',
-        '5' => 'Stop By',
-        '7' => 'Proposal',
-        '10' => 'Site Visit',
-        '13'=> 'Log a Call',
-        '14' => 'In Person'];
+
 
     protected $listeners = ['refreshBranch'=>'changeBranch', 'refreshPeriod'=>'changePeriod'];
 
@@ -44,10 +37,35 @@ class Calendar extends Component
         $this->emit("refreshCalendar");
 
     }
+    /**
+     * [changePeriod description]
+     * 
+     * @param [type] $setPeriod [description]
+     * 
+     * @return [type]            [description]
+     */
     public function changePeriod($setPeriod)
     {
        
         $this->setPeriod = $setPeriod;
+    }
+    /**
+     * [changeType description]
+     * 
+     * @param [type] $type [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function changeType($type)
+    {
+        $this->type=$type;
+        $this->emit("refreshCalendar");
+    }
+
+    public function changeStatus($status)
+    {
+        $this->status = $status;
+        $this->emit("refreshCalendar");
     }
     
     /**
@@ -104,6 +122,7 @@ class Calendar extends Component
         $this->teammember = auth()->user()->id;
         $this->myBranches = auth()->user()->person->getMyBranches();
         
+        
     }
     /**
      * [eventDrop description]
@@ -158,7 +177,7 @@ class Calendar extends Component
             [
                 'team'=>$this->_getBranchTeam(),
                 'activitytypes'=>ActivityType::all(),
-                'types'=>ActivityType::all()->pluck('activity', 'id')->prepend('All', 'All')->toArray(),
+                'types' => ActivityType::all()->pluck('activity', 'id')->prepend('All', 'All')->toArray(),
 
             ]
         );

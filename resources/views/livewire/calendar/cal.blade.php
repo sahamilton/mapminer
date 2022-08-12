@@ -26,15 +26,20 @@
         </div>
     </div>
     <div class="row m-4">
+      
         <div class='col form-inline mx-4'>
-            @foreach ($activitytypes as $type)
-                <span class="rounded mx-2" style="padding: 4px;border: 1px solid #{{$type->color}}">
-                    <i class="fa-solid fa-circle-small" style="color:#{{$type->color}}"></i>
-                    {{$type->activity}}
-                </span>  |
+            @foreach ($activitytypes as $acttype)
+               <a href="#" wire:click.prevent="changeType({{$acttype->id}})">
+                <span class="rounded mx-2" style="padding: 4px;border: {{$type == $acttype->id ? '3px': '1px'}} solid #{{$acttype->color}};background-color:#eeeeee">
+                    <i class="fa-solid fa-circle-small" style="color:#{{$acttype->color}}"></i>
+                    {{$acttype->activity}}
+                </span> 
+                </a> |
             @endforeach
-            <span class="rounded mx-2" style="padding: 4px;background-color:#cccccc;">Completed</span> |
-            <span class="rounded mx-2" style="padding: 4px;background-color:#cceecc;">Not Completed</span>
+            |<a href="#" wire:click.prevent="changeStatus(1)">
+            <span class="rounded mx-2" style="padding: 4px;background-color:#cccccc;border: {{$status == 1 ? '3px': '1px'}} solid #999999">Completed</span></a> |
+            <a href="#" wire:click.prevent="changeStatus(2)">
+            <span class="rounded mx-2" style="padding: 4px;background-color:#cceecc;border: {{$status == 2 ? '3px': '1px'}} solid #999999"">Not Completed</span></a>
         </div>
     </div>
     <div
