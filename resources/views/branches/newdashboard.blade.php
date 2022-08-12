@@ -3,5 +3,5 @@
 
 
 <livewire:branch-dashboard :branch='$branch' />
-
+@include('partials._scripts')
 @endsection

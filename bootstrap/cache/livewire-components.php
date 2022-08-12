@@ -36,6 +36,7 @@
   'documents-table' => 'App\\Http\\Livewire\\DocumentsTable',
   'feedback-table' => 'App\\Http\\Livewire\\FeedbackTable',
   'git-table' => 'App\\Http\\Livewire\\GitTable',
+  'lead-search' => 'App\\Http\\Livewire\\LeadSearch',
   'lead-source-table' => 'App\\Http\\Livewire\\LeadSourceTable',
   'lead-table' => 'App\\Http\\Livewire\\LeadTable',
   'leadsource-show' => 'App\\Http\\Livewire\\LeadsourceShow',

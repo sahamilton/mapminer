@@ -107,7 +107,8 @@ class CalendarController extends Controller
      */
     private function _getEventsToJson(Array $period, Request $request)
     {
-        $me = $this->_getMyInfo();
+        $me = $this->_getMyInfo(request('branch'));
+  
         $filters = [
             'branch' => request('branch'),
             'status'=>request('status'), 
@@ -150,7 +151,7 @@ class CalendarController extends Controller
             ->whereBetween('activity_date', [$period['from'], $period['to']])
             
             ->get();
-            @ray($activities, $filters);
+            
         $activities =  \Fractal::create()->collection($activities)->transformWith(EventTransformer::class)->toArray();
         
         return $activities['data'];
@@ -161,11 +162,11 @@ class CalendarController extends Controller
      * 
      * @return [type] [description]
      */
-    private function _getMyInfo()
+    private function _getMyInfo($branch_id)
     {
 
-        $data['branches'] = Person::find(3806)->getMyBranches();
-        $data['team'] = Branch::with('branchTeam')->whereIn('branches.id', $data['branches'])->get()->flatMap(
+        $data['branches'] = Person::find(auth()->user()->person->id)->getMyBranches();
+        $data['team'] = Branch::with('branchTeam')->whereIn('branches.id', [ $branch_id])->get()->flatMap(
             function ($branch) {
                 return $branch->branchTeam;
             }

@@ -1,34 +1,3 @@
-<div>
-
-    <h2>{{ucwords($summaryview)}}</h2>
-
-    <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
-
-    <div class="row mb4" style="padding-bottom: 10px"> 
-        <div class="col form-inline">
-            @include('livewire.partials._perpage')
-            @include('livewire.partials._search', ['placeholder'=>'Search Branches'])
-            <div  wire:loading>
-                <div class="col spinner-border text-danger"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-       
-        
-        <div class="col form-inline">
-            <label for="status">View:</label>
-            <select wire:model="summaryview" 
-            class="form-control">
-                @foreach ($views as $value)
-                    <option value="{{$value}}">{{ucwords($value)}}</option>
-                @endforeach
-                
-            </select>
-        </div>
-    </div>
-
     <table  class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
             <th>
@@ -91,4 +60,3 @@
             Showing {{ $branches->firstItem() }} to {{ $branches->lastItem() }} out of {{ $branches->total() }} results
         </div>
     </div>
-</div>

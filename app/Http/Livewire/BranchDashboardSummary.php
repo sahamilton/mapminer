@@ -75,10 +75,10 @@ class BranchDashboardSummary extends Component
                 ]
             ];
     public $views =  [
-                    'summary',
-                    'activities', 
-                    'leads', 
-                    'opportunities'
+                    'summary'=>'Summary',
+                    'activities'=>'Activities', 
+                    'leads'=>'Leads', 
+                    'opportunities'=>'Opportunities'
                         ];
     protected $listeners = ['refreshBranch'=>'changeBranch', 'refreshPeriod'=>'changePeriod'];
     /**
@@ -153,20 +153,20 @@ class BranchDashboardSummary extends Component
      * 
      * @return [type]          [description]
      */
-    public function mount($branch_id=null, $manager=null)
+    public function mount($branch_id=null, $manager=null, $period = null)
     {
         
-        $this->livewirePeriod(session('period.period'));
+        
         if (! $manager) {
             $this->branch_id = $branch_id;
-             $this->myBranches = auth()->user()->person->getMyBranches();
+            $this->myBranches = auth()->user()->person->getMyBranches();
         } else {
             $this->manager = Person::findOrFail($manager); 
             $this->myBranches = $this->manager->myBranches();
         }
-        
+        $this->setPeriod = $period['period'];
        
-        
+        @ray($period);
         
        
 
@@ -182,8 +182,9 @@ class BranchDashboardSummary extends Component
         $this->_setPeriod();
         
         return view(
-            'livewire.mgr-summary', [
+            'livewire.dashboards.mgr-summary', [
                 'branches'=>$this->_getViewData(),
+                'team'=>$this->_getTeamData(),
                 
                 
             ]
@@ -231,7 +232,7 @@ class BranchDashboardSummary extends Component
                 $this->branch_id != 'all', function ($q) {
                     $q->where('id', $this->branch_id);
                 }, function ($q) {
-                     $q->whereIn('id', array_keys(auth()->user()->person->myBranches()));
+                     $q->whereIn('id', $this->myBranches());
                 }
             )
             ->get();
@@ -245,4 +246,34 @@ class BranchDashboardSummary extends Component
         }
         
     }
+    /**
+     * [_getTeamData description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getTeamData()
+    {
+
+        if ($this->branch_id != 'all' && $this->summaryview == 'activities') {
+            $team = Branch::with('branchteam')
+                ->find($this->branch_id)
+                ->branchteam
+                ->pluck('user_id')
+                ->toArray();
+            $people = Person::query()
+                ->whereIn('persons.user_id', $team)
+                ->summaryActivities($this->period, [$this->branch_id])
+                ->get();
+            if (! $this->sortAsc) {
+                return $people->sortByDesc($this->sortField)->paginate($this->perPage);
+            } else {
+                return $people->sortBy($this->sortField)->paginate($this->perPage);
+            }
+        } else {
+            return null;
+        }
+    }
+    /*
+        
+     */
 }

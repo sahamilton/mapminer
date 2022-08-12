@@ -17,7 +17,7 @@ class PersonSummary extends Component
     public $sortAsc = false;
     public $search ='';
     public $branch;
-    public $period;
+
     public $setPeriod='lastWeek';
     public $status='All';
     public $user;

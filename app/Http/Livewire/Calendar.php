@@ -18,7 +18,7 @@ class Calendar extends Component
     public $type = 'All';
     public $status = 'All';
     public $setPeriod;
-    public $teammember='1';
+    public $teammember='All';
     public $activityModalShow = false;
     public $companyname;
     public $myBranches;
@@ -58,13 +58,27 @@ class Calendar extends Component
      */
     public function changeType($type)
     {
-        $this->type=$type;
+        if ($type === $this->type) {
+            $this->type='All';
+        } else {
+            $this->type = $type;
+        }
         $this->emit("refreshCalendar");
     }
-
+    /**
+     * [changeStatus description]
+     * 
+     * @param [type] $status [description]
+     * 
+     * @return [type]         [description]
+     */
     public function changeStatus($status)
     {
-        $this->status = $status;
+        if ($this->status === $status) {
+            $this->status= 'All';
+        } else {
+            $this->status = $status;
+        }
         $this->emit("refreshCalendar");
     }
     
@@ -118,8 +132,7 @@ class Calendar extends Component
      */
     public function mount($branch_id)
     {
-     
-        $this->teammember = auth()->user()->id;
+    
         $this->myBranches = auth()->user()->person->getMyBranches();
         
         
@@ -133,33 +146,39 @@ class Calendar extends Component
      */
     public function eventDrop($event)
     {
-       
+        
         $activity = Activity::findOrFail($event['id']);
-        if ($event['start'] > now()->endOfDay()) {
-            $completed = null;  
+        if ($activity->user_id === auth()->user()->id) {
+            if ($event['start'] > now()->endOfDay()) {
+                $completed = null;  
            
+            } else {
+                $completed = $activity->completed;
+            }
+            if (isset($event['end'])) {
+                $end =Carbon::parse($event['end'])->format('H:i:s');
+                $start =Carbon::parse($event['start'])->format('H:i:s');
+            } elseif (Carbon::parse($event['start'])->format('H:i:s') !== '00:00:00') {
+                
+                $start = Carbon::parse($event['start'])->format('G:i:s');
+                $end = Carbon::parse($event['start'])->addMinute(15)->format('H:i:s');
+            } else {
+                $start = null;
+                $end = null;
+            }
+            $activity->update(
+                [
+                    'activity_date'=>Carbon::parse($event['start'])->format('Y-m-d'),
+                    'starttime' =>$start,
+                    'endtime' =>$end,
+                    'completed'=>$completed,
+                ]
+            );
         } else {
-            $completed = $activity->completed;
+             session()->flash('warning', 'You cannot edit this activity.');
         }
-        if (isset($event['end'])) {
-            $end =Carbon::parse($event['end'])->format('H:i:s');
-            $start =Carbon::parse($event['start'])->format('H:i:s');
-        } elseif (Carbon::parse($event['start'])->format('H:i:s') !== '00:00:00') {
-            
-            $start = Carbon::parse($event['start'])->format('G:i:s');
-            $end = Carbon::parse($event['start'])->addMinute(15)->format('H:i:s');
-        } else {
-            $start = null;
-            $end = null;
-        }
-        $activity->update(
-            [
-                'activity_date'=>Carbon::parse($event['start'])->format('Y-m-d'),
-                'starttime' =>$start,
-                'endtime' =>$end,
-                'completed'=>$completed,
-            ]
-        );
+
+        
       
         $this->emit("refreshCalendar");
     }

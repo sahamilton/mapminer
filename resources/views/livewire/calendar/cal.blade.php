@@ -1,20 +1,7 @@
 <div>
-
+    @include('notifications')
     <div class="row m-4">
         <div class="col form-inline">
-            <x-form-select wire:model='type'
-                class="flex relative flex-grow items-center px-4 w-full max-w-full"
-                name='type'
-                label='Select type:'
-                :options="$types" />
-
-            <x-form-select wire:model='status'
-                class="flex relative flex-grow items-center px-4 w-full max-w-full"
-                name='status'
-                label='Status:'
-                :options="$statuses" />
-
-
             @if(count($team) > 1)
                 <x-form-select wire:model='teammember'
                 class="flex relative flex-grow items-center px-4 w-full max-w-full"
@@ -22,8 +9,15 @@
                 label='Team:'
                 :options="$team" />
             @endif
-
         </div>
+        <div class="float.right">
+             <button class="btn btn-info" href="#" wire:click.prevent="addActivity()">
+                <i class="fa-solid fa-calendar-lines-pen"></i>
+                Add Activity
+            </button>   
+        </div>
+
+
     </div>
     <div class="row m-4">
       

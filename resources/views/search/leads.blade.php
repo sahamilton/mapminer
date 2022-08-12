@@ -1,12 +1,8 @@
-@extends('site.layouts.default')
+@extends('site.layouts.newdefault')
 
 @section('content')
 <div class="container">
-<h2>Search My Leads</h2>
 
-    <livewire:'lead-table :branch='$branch->id' />
-
-</h2>
-
+    <livewire:lead-search :branch='$branch->id' />
 
 @endsection
