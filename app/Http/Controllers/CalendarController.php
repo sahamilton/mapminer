@@ -165,14 +165,23 @@ class CalendarController extends Controller
     private function _getMyInfo($branch_id)
     {
 
+        
         $data['branches'] = Person::find(auth()->user()->person->id)->getMyBranches();
-        $data['team'] = Branch::with('branchTeam')->whereIn('branches.id', [ $branch_id])->get()->flatMap(
-            function ($branch) {
-                return $branch->branchTeam;
-            }
-        )->unique('id')
-        ->pluck('user_id')
-        ->toArray();
+        $data['team'] = Branch::with('branchTeam')
+            ->when(
+                $branch_id != 'all', function ($q) use ($branch_id) {
+                    $q->whereIn('branches.id', [$branch_id]);
+                }, function ($q) use ($data) {
+                    $q->whereIn('branches.id', $data['branches']);
+                }
+            )
+            ->get()->flatMap(
+                function ($branch) {
+                    return $branch->branchTeam;
+                }
+            )->unique('id')
+            ->pluck('user_id')
+            ->toArray();
     
 
         return $data;
