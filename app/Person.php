@@ -532,7 +532,8 @@ class Person extends NodeModel implements Auditable
     {
         
         if ($person) {
-            return $person->descendantsAndSelf()->with('branchesServiced');
+            return $person->descendantsAndSelf()
+                ->with('branchesServiced');
         }
        
         return $this->where('user_id', '=', auth()->user()->id)->firstOrFail()
@@ -671,8 +672,9 @@ class Person extends NodeModel implements Auditable
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryActivitiesByPerson($query, $period)
+    public function scopeSummaryActivitiesByPerson($query, $period, array $branches=null)
     {
+     
         $this->period = $period;
        
         return $query->leftJoin(
@@ -681,6 +683,11 @@ class Person extends NodeModel implements Auditable
             }
         )
         ->where('completed', 1)
+        ->when(
+            $branches, function ($q) use ($branches) {
+                $q->whereIn('branch_id', $branches);
+            }
+        )
         ->whereBetween('activity_date', [$period['from'], $period['to']])
         ->select('persons.id')
         ->selectRaw("concat_ws(' ', firstname,lastname) as fullName")
@@ -1331,12 +1338,12 @@ class Person extends NodeModel implements Auditable
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryActivities($query, $period)
+    public function scopeSummaryActivities($query, $period, array $branches=null)
     {
-        
+        @ray($period, $branches);
         $this->period = $period;
-
-        $query->selectRaw('persons.id, concat_ws(" ",persons.firstname, persons.lastname) as manager')
+        $this->branches = $branches;
+        return $query->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
             ->join(
                 'persons as reports', function ($join) {
                     $join->on('reports.lft', '>=', 'persons.lft')
@@ -1344,8 +1351,11 @@ class Person extends NodeModel implements Auditable
                         ->join('activities', 'reports.user_id', '=', 'activities.user_id');
                 }
             )
-        
-        ->where('completed', 1)
+        ->when(
+            $this->branches, function ($q) {
+                $q->whereIn('branch_id', $this->branches);
+            }
+        )->where('completed', '1')
         ->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
         ->selectRaw('concat_ws(" ",persons.firstname, persons.lastname) as manager')
         ->selectRaw('COUNT( CASE WHEN activitytype_id = 4 THEN 1  END) AS sales_appointment')
@@ -1356,6 +1366,7 @@ class Person extends NodeModel implements Auditable
         ->selectRaw('COUNT(CASE WHEN activitytype_id = 14 THEN 1 END) AS in_person')
         ->selectRaw('COUNT(*) AS all_activities')
         ->groupBy('manager');
+        @ray('all ok');
         
     }
 

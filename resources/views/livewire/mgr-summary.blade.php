@@ -2,7 +2,6 @@
 
     <h2>{{ucwords($summaryview)}}</h2>
 
-    {{$sortField}}
     <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to  {{$period['to']->format('Y-m-d')}}</p>
 
     <div class="row mb4" style="padding-bottom: 10px"> 

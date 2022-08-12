@@ -133,8 +133,16 @@ class BranchActivityChart extends Component
 
         case 'team':
             $team =  $this->_getTeam()->pluck('id')->toArray();
-            
-            return Person::whereIn('persons.id', $team)->summaryActivities($this->period)->get();
+          
+            return Person::whereIn('persons.id', $team)
+                ->when(
+                    $this->branch_id != 'all', function ($q) {
+                        $q->summaryActivities($this->period, [$this->branch_id]);
+                    }, function ($q) {
+                        $q->summaryActivities($this->period, $this->myBranches);
+                    }
+                )
+                ->get();
             break;
 
         case 'branch':
