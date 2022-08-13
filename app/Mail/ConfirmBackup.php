@@ -11,15 +11,17 @@ class ConfirmBackup extends Mailable
 {
     use Queueable, SerializesModels;
     public $backup;
+    public $type;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($filename)
+    public function __construct($filename, $type='database')
     {
         $this->backup = $filename;
+        $this->type = $type;
     }
 
     /**

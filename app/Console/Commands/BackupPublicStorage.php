@@ -54,7 +54,7 @@ class BackupPublicStorage extends Command
             $this->process->mustRun();
             $this->info('The backup has been processed successfully.');
             new UploadToDropbox($this->filename);
-            Mail::queue(new ConfirmBackup($this->filename));           
+            Mail::queue(new ConfirmBackup($this->filename, $type='storage'));           
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.'. $exception);
             Mail::queue(new FailedBackup($this->filename));
