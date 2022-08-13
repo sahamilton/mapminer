@@ -52,10 +52,10 @@
                         '<div class="list-group search-results-dropdown">'
                     ],
                     suggestion: function(data) {
+                    
                         
-                        
-                    return '<div font-weight:bold; margin-top:-10px ! important;" class="list-group-item"><a style="color:orange" href="#" wire:click="setLead('+data.id+')">'
-                         + data.businessname + ', ' + data.city +   '</a></div></div>'
+                    return '<div style="font-weight:bold; margin-top:-10px ! important;" class="list-group-item"><a style="color:orange" href="#" >'
+                         + data.businessname + ', ' + data.city +   '</a></div>'
                     }
                 }
             });
