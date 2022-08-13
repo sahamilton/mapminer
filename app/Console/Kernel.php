@@ -73,6 +73,8 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
+            $schedule->command('backup:storage')
+                ->dailyAt('23:58');
             
             //********* Email reports *****************//
 
