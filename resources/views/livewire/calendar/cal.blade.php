@@ -1,5 +1,6 @@
 <div>
     @include('notifications')
+
     <div class="row m-4">
         <div class="col form-inline">
             @if(count($team) > 1)
@@ -10,12 +11,7 @@
                 :options="$team" />
             @endif
         </div>
-        <div class="float.right">
-             <button class="btn btn-info" href="#" wire:click.prevent="addActivity()">
-                <i class="fa-solid fa-calendar-lines-pen"></i>
-                Add Activity
-            </button>   
-        </div>
+        
 
 
     </div>
