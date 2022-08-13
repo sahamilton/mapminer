@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\BackupRestore',
         'App\Console\Commands\BackupPublicStorage',
         'App\Console\Commands\FlushRedis',
+        
     ];
 
     /**
