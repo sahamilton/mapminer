@@ -35,7 +35,7 @@ class BackupPublicStorage extends Command
         parent::__construct();
         
         $this->filename = env('DB_DATABASE')."-storage-".now()->format('Y-m-d-H-i-s');
-        $this->directory = public_path('storage/');
+        $this->directory = public_path('storage/avatars');
         
         
     }
