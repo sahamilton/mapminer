@@ -54,7 +54,7 @@ class BackupDatabase extends Command
             Mail::queue(new ConfirmBackup($this->filename, $type='database')); 
             ZipBackUp::withChain(
                 [
-                    new UploadToDropbox($this->filename, $directory='backups'),
+                    new UploadToDropbox($this->filename.'.zip', $directory='backups'),
                     new TransferFileJob($this->filename.'.zip'),
                     
                 ]
