@@ -15,7 +15,7 @@
     <div class="modal-content">
       <div class="modal-header">
 
-        <h4 class="modal-title">Transfer {!! $address->businessname !!} :-)  </h4>
+        <h4 class="modal-title">Transfer {!! $address->businessname !!}  </h4>
         <button wire:click="doClose('transferModal')">&times;</button>
       </div>
       <div class="modal-body">

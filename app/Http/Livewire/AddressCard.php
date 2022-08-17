@@ -110,7 +110,7 @@ class AddressCard extends Component
     {
         $this->location = Address::findOrFail($this->address_id);
         $this->owned = $this->_checkIfOwned();
-        @ray($owned);
+
         return view(
             'livewire.address-card',
             [

@@ -1,8 +1,8 @@
 <div id="map-container">
 	<div style="float:left;width:300px">
 
-
-			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
+		@ray($owned)
+		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			@if($address->assignedToBranch)
 				@php $branch = $address->assignedToBranch->first() @endphp
 
@@ -34,8 +34,8 @@
 				
 			</p>
 			
-			</fieldset>
-			<fieldset style="border:solid 1px grey;width:90%;padding:5px">
+		</fieldset>
+		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 						<p>
 			    @if($address->company)
 			      <i>A location of <a href="{{ route('company.show', $address->company->id) }}">{{$address->company->companyname}}</a></a></i>
@@ -65,7 +65,7 @@
 				<div class="mt-0 bg-warning">
 					<strong>Lead</strong>
 			      @if($owned)
-			      <button wire:click="changeCustomerType({{$address->id}})" title="Mark as customer" class="float-right fa-light fa-arrow-rotate-right bg-warning"></button>
+			      <a wire:click="changeCustomerType({{$address->id}})" title="Mark as customer" ><i class="float-right fa-light fa-arrow-rotate-right bg-warning"></i></a>
 			      @endif
 			  </div>
 			@else
@@ -73,7 +73,7 @@
 				<div class="mt-0 bg-success">
 					<strong>Customer </strong>
 			    @if($owned)
-			      <button wire:click="changeCustomerType({{$address->id}})" title="Mark as lead" class="float-right fa-light fa-arrow-rotate-left bg-success"></button>
+			      <a wire:click="changeCustomerType({{$address->id}})" title="Mark as lead"><i class="float-right fa-light fa-arrow-rotate-left bg-success"></i></a>
 			    @endif
 			  </div>
 			@endif 
@@ -89,15 +89,18 @@
 				
 
 
-		@if(count($owned)>0)
+		@if(count($owned) > 0)
 			
-			<a   wire:click="editAddress('{{$address->id}}')" 
-			class="fa-solid fa-pen-to-square text-info"
-			title="Edit this location"></i>
+			<a wire:click="editAddress('{{$address->id}}')" 
+				
+				title="Edit this location">
+				<i class="fa-solid fa-pen-to-square text-info">
+				</i>Edit
 			</a>
 			<a  wire:click="deleteAddress('{{$address->id}}')" 
-			class="far fa-trash-alt text-danger"
-			title="Remove this location from your branch"></i>
+				
+				title="Remove this location from your branch"><i class="far fa-trash-alt text-danger"></i>
+				Delete
 			</a>
 			
 	
@@ -113,7 +116,7 @@
 		</fieldset>
 	</div>
 
-		<div id = "map" style="height: 600px;width: 700px;border:solid 1px red" ></div>
+		<div id = "map" wire:ignore style="height: 600px;width: 700px;border:solid 1px red" ></div>
 	 	@include('addresses.partials.lwmap')
 	
 </div>
