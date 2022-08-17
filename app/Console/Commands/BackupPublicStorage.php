@@ -51,7 +51,7 @@ class BackupPublicStorage extends Command
             ZipDirectory::withChain(
                 [
                     new UploadToDropbox($this->filename.'.zip', 'filebackups'),
-                    new TransferFileJob($this->filename.'.zip', 'filebackups'),
+                    //new TransferFileJob($this->filename.'.zip', 'filebackups'),
                     
                 ]
             )->dispatch($this->filename, $this->directory);
