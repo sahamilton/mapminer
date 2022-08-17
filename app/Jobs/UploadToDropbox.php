@@ -15,17 +15,20 @@ class UploadToDropbox implements ShouldQueue
     public $filesystem;
     public $file;
     public $path;
-
+    public $tgtdir = '';
     /**
-     * [__construct description].
-     *
-     * @param string $file [description]
+     * [__construct description]
+     * 
+     * @param [type] $file      [description]
+     * @param string $directory [description]
      */
     public function __construct($file, $directory = 'backups')
     {
         $this->file = $file;
         $this->path = storage_path($directory.'/');
-    
+        if ($directory === 'storage') {
+            $this->tgtdir = $directory.'/';
+        }
     }
 
     /**
@@ -36,6 +39,6 @@ class UploadToDropbox implements ShouldQueue
     public function handle()
     {
         \Storage::disk('dropbox')
-            ->put('mapminer/'.$this->file, fopen($this->path.$this->file, 'r+'));
+            ->put('mapminer/'.$this->tgtdir.$this->file, fopen($this->path.$this->file, 'r+'));
     }
 }
