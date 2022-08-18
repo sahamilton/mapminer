@@ -22,9 +22,9 @@ class TransferFileJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($file)
+    public function __construct($file, $directory='backups')
     {
-        $this->file =  storage_path('backups/'.$file);
+        $this->file =  storage_path($directory.'/'.$file);
         $this->path =  env('sftp_host') ."/storage/transfers/". $file;
        
     }

@@ -31,13 +31,14 @@ class BranchTeam extends Component
     public function render()
     {
         return view(
-            'livewire.branch.branch-team',
+            'livewire.branch-team',
             [
 
-                'branch'=>Branch::with(
-                    'manager.directReports.userdetails.oracleMatch', 
-                    'manager.reportsTo.directReports.userdetails.roles'
-                )->findOrFail($this->branch_id),
+                'branch'=>Branch::with('manager.directReports.userdetails.oracleMatch', 'manager.reportsTo.directReports.userdetails.roles')
+                    ->findOrFail($this->branch_id),
+
+                
+
             ]
         );
     }

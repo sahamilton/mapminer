@@ -40,8 +40,11 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         'App\Console\Commands\BackupDatabase',
+        'App\Console\Commands\BackupPublicStorage',
         'App\Console\Commands\BackupRestore',
-        '\App\Console\Commands\FlushRedis',
+        'App\Console\Commands\BackupPublicStorage',
+        'App\Console\Commands\FlushRedis',
+        
     ];
 
     /**
@@ -73,6 +76,8 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
+            $schedule->command('backup:storage')
+                ->dailyAt('23:58');
             
             //********* Email reports *****************//
 

@@ -20,10 +20,10 @@ class ZipBackUp implements ShouldQueue
      *
      * @param [type] $file [description]
      */
-    public function __construct($file)
+    public function __construct($file, $directory='backups')
     {
         $this->file = $file;
-        $this->path = storage_path('backups/');
+        $this->path = storage_path($directory."/");
         $this->db = env('DB_DATABASE');
     }
 

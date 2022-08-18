@@ -70,12 +70,37 @@ class ManageTeam extends Component
             ]
         );
     }
-
+    /**
+     * [changeUser description]
+     * 
+     * @param User   $user [description]
+     * 
+     * @return [type]       [description]
+     */
     public function changeUser(User $user)
     {
         $this->user = $this->_validateUser($user);
     }
-
+    /**
+     * [deleteUser description]
+     * 
+     * @param User $user [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function deleteUser(User $user)
+    {
+       
+        $user->delete();
+        session()->flash('Warning', 'User has been deactivated in Mapminer');
+    }
+    /**
+     * [_validateUser description]
+     * 
+     * @param User $user [description]
+     * 
+     * @return [type]       [description]
+     */
     private function _validateUser(User $user)
     {
         $myTeam = auth()->user()->person->descendants()->pluck('user_id')->toArray();
@@ -88,7 +113,11 @@ class ManageTeam extends Component
                 ->load('person.reportsTo');
         }
     }
-
+    /**
+     * [_getJobCodes description]
+     * 
+     * @return [type] [description]
+     */
     private function _getJobCodes()
     {
         $job_codes = Oracle::whereHas(
@@ -101,4 +130,7 @@ class ManageTeam extends Component
         $job_codes['all']='All';
         return $job_codes;
     }
+
+
 }
+

@@ -21,7 +21,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     public $branches;
     public $report;
 
-    public $fields = [
+    public $branchfields = [
         'branchname'=>'Branch',
         'state'=>'State',
         'country'=>'Country', 
@@ -36,28 +36,23 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'won'=>'# Opportunities Won',
         'won_value'=>'Sum of Won Value',
         'activities_count'=>'# Completed Activities',
-        'salesappts'=>'# Completed Sales Appts',
-        'sitesvisits'=>'# Completed Site Visits'
     ];
+    public $activityFields = [
+        '4'=>'sales_appointment',
+        '10'=>'site_visit',
+    ];
+    public $fields;
+
     
-    /**
-     * [__construct description]
-     * 
-     * @param array      $period   [description]
-     * @param array|null $branches [description]
-     */
     public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
         $this->report = Report::where('export', class_basename($this))->firstOrFail();
+        $this->fields = array_replace($this->branchfields, $this->activityFields);
         
     }
-    /**
-     * [headings description]
-     * 
-     * @return [type] [description]
-     */
+
     public function headings(): array
     {
         return [
@@ -69,16 +64,13 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
             $this->fields
         ];
     }
-    /**
-     * [map description]
-     * 
-     * @param Branch $branch [description]
-     * 
-     * @return array         [description]
-     */
-    public function map(Branch $branch): array
+    
+    
+    public function map($branch): array
     {
+        
         foreach ($this->fields as $key=>$field) {
+           
             switch($key) {
             case 'manager':
                 $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'No Branch Manager';
@@ -91,6 +83,13 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
                         $detail[] = 'No direct reporting manager';
                 }
                 break;
+            case '4':
+                $detail[]=$branch->$field;
+
+                break;
+            case '10':
+                $detail[]=$branch->$field;
+                break;
             default:
                 $detail[]=$branch->$key;
                 break;
@@ -101,11 +100,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         return $detail;
        
     }
-    /**
-     * [columnFormats description]
-     * 
-     * @return [type] [description]
-     */
+
     public function columnFormats(): array
     {
         return [
@@ -119,7 +114,8 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public function query()
     {
-        return Branch::summaryStats($this->period, array_keys($this->fields))
+        return Branch::summaryStats($this->period, array_keys($this->branchfields))
+            ->summaryActivities($this->period, $this->activityFields)
             ->with('manager:id,firstname,lastname')
             ->when(
                 $this->branches, function ($q) {

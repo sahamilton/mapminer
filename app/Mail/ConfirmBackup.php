@@ -18,7 +18,7 @@ class ConfirmBackup extends Mailable
      *
      * @return void
      */
-    public function __construct($filename. $type='database')
+    public function __construct($filename, $type='database')
     {
         $this->backup = $filename;
         $this->type = $type;

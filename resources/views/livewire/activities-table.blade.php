@@ -99,8 +99,16 @@
                <td>{{$activity->note}}</td> 
                <td> 
                     {{$activity->completed ==1 ? 'Completed' : 'Planned'}}
-                    @if($activity->completed !=1 && $activity->activity_date < now())
+                    @if($activity->completed !=1 && $activity->activity_date < now()->subDay())
                         <i class="fas fa-exclamation-triangle text-danger" title="Overdue activity"></i>
+                    @endif   
+                    @if ($activity->completed !=1 && $activity->activity_date < now()->addDay())
+                        <a href="" 
+                            wire:click.prevent="completed({{$activity->id}})"
+                            title="Mark as completed today">
+
+                            <i class="fa-solid fa-clipboard-list-check text-info"></i>
+                        </a>
                     @endif
                </td> 
                <td>{{$activity->type->activity}}</td>
