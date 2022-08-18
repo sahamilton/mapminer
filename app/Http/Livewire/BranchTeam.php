@@ -17,24 +17,30 @@ class BranchTeam extends Component
         
         $this->branches = auth()->user()->person->getMyBranches();
         
-        if(isset($branch_id))
-        {
+        if (isset($branch_id)) {
             $this->branch = Branch::findOrFail($branch_id);
         } else {
             $this->branch = Branch::findOrFail(reset($this->branches));
         }
         
     }
-
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
-        return view('livewire.branch-team',
+        return view(
+            'livewire.branch-team',
             [
 
-                'branch'=>Branch::with('manager.directReports.userdetails.oracleMatch','manager.reportsTo.directReports.userdetails.roles')->findOrFail($this->branch_id),
+                'branch'=>Branch::with('manager.directReports.userdetails.oracleMatch', 'manager.reportsTo.directReports.userdetails.roles')
+                    ->findOrFail($this->branch_id),
 
                 
 
-            ]);
+            ]
+        );
     }
 }
