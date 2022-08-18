@@ -69,6 +69,10 @@
                             title= "{{$member->fullName()}} is registered in Mapminer">
                         </i>
                         <a href=""
+                            wire:click.prevent = deleteUser({{$member->mapminerUser->id}})>
+                            <i class="fa-solid fa-trash-can text-danger" title= "Delete {{$member->fullName()}} from Mapminer"></i>
+                        </a>
+                        <a href=""
                             wire:click.prevent = changeUser({{$member->mapminerUser->id}})
                              title= "See {{$member->fullName()}}'s team">
                             {{$member->first_name}}
