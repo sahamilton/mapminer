@@ -107,16 +107,12 @@ class ActivityController extends Controller
         if (! ( $myBranches)  or ! in_array($branch->id, array_keys($myBranches))) {
             return redirect()->back()
                 ->withError('You are not assigned to that branch');
-        } else {
-            $data = $this->_getBranchActivities($branch, $from = true);
-      
-            $title= $branch->branchname . " upcoming follow up activities";
-    
-            return response()->view(
-                'activities.upcoming', 
-                compact('data', 'myBranches', 'title')
-            ); 
         }
+        return response()->view(
+            'activities.upcoming', 
+            compact('branch')
+        );
+     
     }
     /**
      * [branchActivities description]

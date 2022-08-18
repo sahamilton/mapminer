@@ -199,6 +199,17 @@ class ActivitiesTable extends Component
         );
     }
     /**
+     * [completed description]
+     * 
+     * @param Activity $activity [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function completed(Activity $activity)
+    {
+        $activity->update(['completed'=>'1', 'activity_date'=>now()->format('Y-m-d')]);
+    }
+    /**
      * [_setPeriod description]
      *
      * @return setPeriod
