@@ -164,9 +164,12 @@ class BranchDashboardSummary extends Component
             $this->manager = Person::findOrFail($manager); 
             $this->myBranches = $this->manager->myBranches();
         }
-        $this->setPeriod = $period['period'];
-       
-        @ray($period);
+        if ($period) {
+            $this->setPeriod = $period['period'];
+        }
+        
+        
+
         
        
 
@@ -180,7 +183,7 @@ class BranchDashboardSummary extends Component
     public function render()
     {
         $this->_setPeriod();
-        
+       
         return view(
             'livewire.dashboards.mgr-summary', [
                 'branches'=>$this->_getViewData(),
@@ -232,7 +235,7 @@ class BranchDashboardSummary extends Component
                 $this->branch_id != 'all', function ($q) {
                     $q->where('id', $this->branch_id);
                 }, function ($q) {
-                     $q->whereIn('id', $this->myBranches);
+                     $q->whereIn('id', array_keys($this->myBranches));
                 }
             )
             ->get();

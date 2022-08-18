@@ -49,7 +49,18 @@
             </tr>
         @endforeach
         </tbody>
+        <tfoot>
+            <th colspan=2>Period Total</th>
+            @foreach($displayFields as $value)
+                @if(isset($value) && strpos($value, 'value'))
+                    <td align='right'>${{number_format($branches->sum($value),0)}}</td>
+                @else
+                    <td align='center'>{{$branches->sum($value)}}</td>
+                @endif
+            @endforeach
 
+
+        </tfoot>
     </table>
     <div class="row">
         <div class="col">
