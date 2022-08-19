@@ -266,7 +266,7 @@ class Person extends NodeModel implements Auditable
     {
         
 
-        if ($this->userdetails->hasRole(['admin', 'sales_operations'])) {
+        if ($this->userdetails && $this->userdetails->hasRole(['admin', 'sales_operations'])) {
             return $this->_getAllBranches($servicelines);
         }        
         $branchMgrs = $this->descendantsAndSelf()->withRoles($this->branchroles);
