@@ -72,7 +72,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @return string formatted phone number
      */
-    public function getPhoneNumberAttribute()
+    public function getPhoneNumberAttribute() :string
     {
         $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);
         if (preg_match('/(\d{3})(\d{3})(\d{4})/', $cleaned, $matches)) {
@@ -265,10 +265,13 @@ class Person extends NodeModel implements Auditable
     public function getMyBranches(Array $servicelines=null) :array
     {
         
-
-        if ($this->userdetails && $this->userdetails->hasRole(['admin', 'sales_operations'])) {
+        if (auth()->user()->hasRole(['admin', 'sales_operations'])) {
             return $this->_getAllBranches($servicelines);
-        }        
+        }
+
+        /*if ($this->userdetails && $this->userdetails->hasRole(['admin', 'sales_operations'])) {
+            
+        }*/       
         $branchMgrs = $this->descendantsAndSelf()->withRoles($this->branchroles);
         
         $branches = $branchMgrs->with('branchesServiced')
@@ -420,7 +423,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @return [type]             [description]
      */
-    public function myBranchTeam(array $myBranches)
+    public function myBranchTeam(array $myBranches) :array
     {
         
         $branches = Branch::whereIn('id', $myBranches)->with('manager')->get();

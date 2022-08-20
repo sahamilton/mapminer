@@ -3,7 +3,15 @@ namespace App;
 
 use Baum\Node;
 
-class NodeModel extends Node {
+/**
+ * Class NodelModal
+ * 
+ * @package App
+ * @author  Stephen Hamilton <stephen@crescentcreative.com>
+ * 
+ */
+class NodeModel extends Node
+{
    
     protected $parentColumnName = 'parent_id';
 

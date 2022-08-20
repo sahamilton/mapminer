@@ -24,7 +24,7 @@ class Howtofield extends NodeModel {
 
     public function getParentIdName()
     {
-        return 'reports_to';
+        return 'parent_id';
     }
 
     // Specify parent id attribute mutator
