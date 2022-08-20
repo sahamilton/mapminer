@@ -265,13 +265,13 @@ class Person extends NodeModel implements Auditable
     public function getMyBranches(Array $servicelines=null) :array
     {
         
-        if (auth()->user()->hasRole(['admin', 'sales_operations'])) {
+        /*if (auth()->user()->hasRole(['admin', 'sales_operations'])) {
             return $this->_getAllBranches($servicelines);
-        }
+        }*/
 
-        /*if ($this->userdetails && $this->userdetails->hasRole(['admin', 'sales_operations'])) {
-            
-        }*/       
+        if ($this->userdetails && $this->userdetails->hasRole(['admin', 'sales_operations'])) {
+             return $this->_getAllBranches($servicelines);
+        }       
         $branchMgrs = $this->descendantsAndSelf()->withRoles($this->branchroles);
         
         $branches = $branchMgrs->with('branchesServiced')
