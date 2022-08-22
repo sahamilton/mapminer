@@ -76,14 +76,14 @@
                 
                 @if(! $showConfirmation)
                     @if($selectRole != 'All')
-                            <button wire:click='deleteSelected' class="btn btn-danger">
-                                Delete All {{$roles->where('id', $selectRole)->first()->display_name}}'s
-                            </button>
+                        <button wire:click='deleteSelected' class="btn btn-danger">
+                            Delete All {{$roles->where('id', $selectRole)->first()->display_name}}'s
+                        </button>
                     @endif
                 @else
 
                     <div class="alert alert-warning alert-block" >
-                        Are you sure you want to delete these users?
+                        Are you sure you want to delete these {{$roles->where('id', $selectRole)->first()->display_name}}'s?
                         <button wire:click.prevent='confirmDeleteUsers()' class="btn btn-danger">Confirm Delete</button>
                         <button wire:click.prevent='cancelDeleteUsers()' class="btn btn-secondary">Cancel</button>
 
