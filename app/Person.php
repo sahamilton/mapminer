@@ -54,7 +54,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @return string concatenated full name
      */
-    public function getCompleteNameAttribute() :string
+    public function getCompleteNameAttribute() : ?string
     {
         return $this->firstname . ' ' . $this->lastname;
     }
@@ -63,7 +63,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @return string concatenated name with lastname first
      */
-    public function getPostNameAttribute() :string
+    public function getPostNameAttribute() : ?string
     {
         return $this->lastname . ', ' . $this->firstname;
     }
@@ -72,12 +72,14 @@ class Person extends NodeModel implements Auditable
      * 
      * @return string formatted phone number
      */
-    public function getPhoneNumberAttribute() :string
+    public function getPhoneNumberAttribute() : ?string
     {
+        
         $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);
         if (preg_match('/(\d{3})(\d{3})(\d{4})/', $cleaned, $matches)) {
             return "({$matches[1]}) {$matches[2]}-{$matches[3]}";
         }
+        
         return $this->phone;
         
     }
