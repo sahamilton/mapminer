@@ -72,27 +72,27 @@
                     <option value='{{$id}}'>{{$text}}</option>
                 @endforeach
             </select>
-            <div>
-                
-                @if(! $showConfirmation)
-                    @if($selectRole != 'All')
-                        <button wire:click='deleteSelected' class="btn btn-danger">
-                            Delete All {{$roles->where('id', $selectRole)->first()->display_name}}'s
-                        </button>
+        
+                @if($users->count() > 0) 
+                    @if(! $showConfirmation)
+                        @if($selectRole != 'All')
+                            <button wire:click='deleteSelected' class="btn btn-danger">
+                                Delete All {{$roles->where('id', $selectRole)->first()->display_name}}'s
+                            </button>
+                        @endif
+                    @else
+
+                        <div class="alert alert-warning alert-block" >
+                            Are you Really, REALLY sure you want to delete these {{$countIds}} {{$roles->where('id', $selectRole)->first()->display_name}}'s?
+                            <button wire:click.prevent='confirmDeleteUsers()' class="btn btn-danger">Confirm Delete</button>
+                            <button wire:click.prevent='cancelDeleteUsers()' class="btn btn-secondary">Cancel</button>
+
+                        </div>
                     @endif
-                @else
-
-                    <div class="alert alert-warning alert-block" >
-                        Are you Really REALLY sure you want to delete these {{$roles->where('id', $selectRole)->first()->display_name}}'s?
-                        <button wire:click.prevent='confirmDeleteUsers()' class="btn btn-danger">Confirm Delete</button>
-                        <button wire:click.prevent='cancelDeleteUsers()' class="btn btn-secondary">Cancel</button>
-
-                    </div>
                 @endif
-            </div>
-        </div>
-
+            
     </div>
+
     @include('oracle.partials._matchtable')
     <div class="row">
         <div class="col">
