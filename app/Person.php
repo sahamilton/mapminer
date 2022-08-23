@@ -54,7 +54,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @return string concatenated full name
      */
-    public function getCompleteNameAttribute() :string
+    public function getCompleteNameAttribute() : ?string
     {
         return $this->firstname . ' ' . $this->lastname;
     }
@@ -63,7 +63,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @return string concatenated name with lastname first
      */
-    public function getPostNameAttribute() :string
+    public function getPostNameAttribute() : ?string
     {
         return $this->lastname . ', ' . $this->firstname;
     }
@@ -72,12 +72,14 @@ class Person extends NodeModel implements Auditable
      * 
      * @return string formatted phone number
      */
-    public function getPhoneNumberAttribute()
+    public function getPhoneNumberAttribute() : ?string
     {
+        
         $cleaned = preg_replace('/[^[:digit:]]/', '', $this->phone);
         if (preg_match('/(\d{3})(\d{3})(\d{4})/', $cleaned, $matches)) {
             return "({$matches[1]}) {$matches[2]}-{$matches[3]}";
         }
+        
         return $this->phone;
         
     }
@@ -267,10 +269,13 @@ class Person extends NodeModel implements Auditable
     public function getMyBranches(Array $servicelines=null) :array
     {
         
-
-        if ($this->userdetails->hasRole(['admin', 'sales_operations'])) {
+        /*if (auth()->user()->hasRole(['admin', 'sales_operations'])) {
             return $this->_getAllBranches($servicelines);
-        }        
+        }*/
+
+        if ($this->userdetails && $this->userdetails->hasRole(['admin', 'sales_operations'])) {
+             return $this->_getAllBranches($servicelines);
+        }       
         $branchMgrs = $this->descendantsAndSelf()->withRoles($this->branchroles);
         
         $branches = $branchMgrs->with('branchesServiced')
@@ -422,7 +427,7 @@ class Person extends NodeModel implements Auditable
      * 
      * @return [type]             [description]
      */
-    public function myBranchTeam(array $myBranches)
+    public function myBranchTeam(array $myBranches) :array
     {
         
         $branches = Branch::whereIn('id', $myBranches)->with('manager')->get();

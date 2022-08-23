@@ -211,9 +211,7 @@ class BranchesController extends BaseController
     public function show(Branch $branch)
     {
         
-        return response()->view(
-            'branches.detail', compact('branch')
-        );
+        return response()->view('branches.detail', compact('branch'));
     }
     /**
      * [showSalesTeam description]

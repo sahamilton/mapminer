@@ -36,11 +36,19 @@ class OracleTable extends Component
         'yes'=>'In Oracle'
     ];
 
+    public $confirmDelete = false;
+
     public function updatingSearch()
     {
         $this->resetPage();
     }
-
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -51,12 +59,22 @@ class OracleTable extends Component
 
         $this->sortField = $field;
     }
+    /**
+     * [mount description]
+     * 
+     * @return [type] [description]
+     */
     public function mount()
     {
         $this->roles = Role::orderBy('display_name')->get();
         $this->servicelines = Serviceline::pluck('serviceline', 'id');
 
     }
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         return view(
@@ -104,9 +122,14 @@ class OracleTable extends Component
                  
                  
              ]
-         );
+        );
    
     }
+    /**
+     * [export description]
+     * 
+     * @return [type] [description]
+     */
     public function export()
     {
                
@@ -117,10 +140,49 @@ class OracleTable extends Component
             ), 'oraclemapminerdata.csv'
         );
     }
-
+    /**
+     * [deleteSelected description]
+     * 
+     * @return [type] [description]
+     */
     public function deleteSelected()
     {
-        $ids = User::query()
+        
+        $this->showConfirmation = true;
+        
+            
+    }
+    /**
+     * [confirmDeleteUsers description]
+     * 
+     * @return [type] [description]
+     */
+    public function confirmDeleteUsers()
+    {
+        $this->showConfirmation = false;
+        $ids = $this->_getIdsToDelete();
+        
+        User::whereIn('id', $ids)->delete();
+        Person::whereIn('user_id', $ids)->delete();
+
+        session()->flash('message', count($ids) . " " . $this->roles->where('id', $this->selectRole)->first()->display_name."'s have been deleted");
+        $this->selectRole="All";
+
+        
+    }
+
+    public function cancelDeleteUsers()
+    {
+        $this->showConfirmation = false;
+    }
+    /**
+     * [_getIdsToDelete description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getIdsToDelete()
+    {
+        return User::query()
             ->whereHas(
                 'roles', function ($q) {
                     $q->when(
@@ -137,19 +199,7 @@ class OracleTable extends Component
             )
             ->doesntHave('oracleMatch')
             ->pluck('id')->toArray();
-            // get branch associations
-            // notify manager
-            User::whereIn('id', $ids)->delete();
-            Person::whereIn('user_id', $ids)->delete();
-
-            session()->flash('message', count($ids) . " " . $this->roles->where('id', $this->selectRole)->first()->display_name."'s have been deleted");
-            $this->selectRole="All";
     }
 }
-
-    
-
-    
-
 
     

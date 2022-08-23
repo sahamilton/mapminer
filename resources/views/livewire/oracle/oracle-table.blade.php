@@ -1,4 +1,5 @@
 <div>
+
     <h2>Comparing Mapminer Data to Oracle HR Data</h2>
       <h5>  
         @if($selectRole != 'All')
@@ -29,6 +30,10 @@
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             <i class="fas fa-search"></i> <input wire:model="search" class="form-control" type="text" placeholder="Search users...">
+        </div>
+        <div wire:loading>
+            <div class="spinner-border text-danger"></div>
+                    
         </div>
     </div>
     <div class="row mb-4">
@@ -68,15 +73,21 @@
                 @endforeach
             </select>
             <div>
-                <div wire:loading>
-                    <div class="spinner-border text-danger"></div>
-                    
-                </div>
                 
-                @if($selectRole != 'All')
+                @if(! $showConfirmation)
+                    @if($selectRole != 'All')
                         <button wire:click='deleteSelected' class="btn btn-danger">
                             Delete All {{$roles->where('id', $selectRole)->first()->display_name}}'s
                         </button>
+                    @endif
+                @else
+
+                    <div class="alert alert-warning alert-block" >
+                        Are you Really REALLY sure you want to delete these {{$roles->where('id', $selectRole)->first()->display_name}}'s?
+                        <button wire:click.prevent='confirmDeleteUsers()' class="btn btn-danger">Confirm Delete</button>
+                        <button wire:click.prevent='cancelDeleteUsers()' class="btn btn-secondary">Cancel</button>
+
+                    </div>
                 @endif
             </div>
         </div>
