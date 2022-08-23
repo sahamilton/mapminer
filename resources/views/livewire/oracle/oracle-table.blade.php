@@ -83,7 +83,7 @@
                 @else
 
                     <div class="alert alert-warning alert-block" >
-                        Are you sure you want to delete these {{$roles->where('id', $selectRole)->first()->display_name}}'s?
+                        Are you Really REALLY sure you want to delete these {{$roles->where('id', $selectRole)->first()->display_name}}'s?
                         <button wire:click.prevent='confirmDeleteUsers()' class="btn btn-danger">Confirm Delete</button>
                         <button wire:click.prevent='cancelDeleteUsers()' class="btn btn-secondary">Cancel</button>
 
