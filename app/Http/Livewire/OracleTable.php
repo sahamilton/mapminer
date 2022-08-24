@@ -35,9 +35,14 @@ class OracleTable extends Component
         'no'=>'Not In Oracle', 
         'yes'=>'In Oracle'
     ];
+    public $countIds;
 
     public $confirmDelete = false;
-
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
@@ -147,9 +152,9 @@ class OracleTable extends Component
      */
     public function deleteSelected()
     {
-        
+        $this->countIds = $this->_getCountOfIdsToDelete();
         $this->showConfirmation = true;
-        
+    
             
     }
     /**
@@ -199,6 +204,31 @@ class OracleTable extends Component
             )
             ->doesntHave('oracleMatch')
             ->pluck('id')->toArray();
+    }
+    /**
+     * [_getCountOfIdsToDelete description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getCountOfIdsToDelete()
+    {
+        return User::query()
+            ->whereHas(
+                'roles', function ($q) {
+                    $q->when(
+                        $this->selectRole, function ($q) {
+                            $q->where('roles.id', $this->selectRole);
+                        }
+                    );
+                }
+            )
+            ->whereHas(
+                'person', function ($q) {
+                    $q->doesntHave('directReports');
+                }
+            )
+            ->doesntHave('oracleMatch')
+            ->count();
     }
 }
 
