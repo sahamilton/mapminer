@@ -8,9 +8,7 @@
 </div>
 <!-- Report Short description -->
 <div class="form-group{{ $errors->has('report') ? ' has-error' : '' }}">
-    
-   
-        <x-form-input class="input-group input-group-lg" required name="description" label="Short description:" placeholder='Short description' />
+    <x-form-input class="input-group input-group-lg" required name="description" label="Short description:" placeholder='Short description' />
     
 </div>
 
