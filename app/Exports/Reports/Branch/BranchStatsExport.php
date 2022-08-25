@@ -32,7 +32,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'top25_opportunities'=>'# Open Top 25 Opportunities',
         'open_opportunities'=>'# All Open Opportunities Count',
         'open_value'=>'Sum All Open Opportunities Value',
-        'lost'=>'# Opportunities Lost',
+        'lost_opportunities'=>'# Opportunities Lost',
         'won_opportunities'=>'# Opportunities Won',
         'won_value'=>'Sum of Won Value',
         'activities_count'=>'# Completed Activities',
