@@ -28,12 +28,12 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'id'=>'ID',
         'manager'=>'Manager',
         'leads'=>'# Open Leads',
-        'opened'=>'# Opportunities Opened in Period',
-        'Top25'=>'# Open Top 25 Opportunities',
-        'open'=>'# All Open Opportunities Count',
-        'openvalue'=>'Sum All Open Opportunities Value',
+        'new_opportunities'=>'# Opportunities Opened in Period',
+        'top25_opportunities'=>'# Open Top 25 Opportunities',
+        'open_opportunities'=>'# All Open Opportunities Count',
+        'open_value'=>'Sum All Open Opportunities Value',
         'lost'=>'# Opportunities Lost',
-        'won'=>'# Opportunities Won',
+        'won_opportunities'=>'# Opportunities Won',
         'won_value'=>'Sum of Won Value',
         'activities_count'=>'# Completed Activities',
     ];
@@ -106,7 +106,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         return [
             'D'=>NumberFormat::FORMAT_TEXT,
             'I' => NumberFormat::FORMAT_CURRENCY_USD,
-            'K' => NumberFormat::FORMAT_CURRENCY_USD,
+            'L' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 
