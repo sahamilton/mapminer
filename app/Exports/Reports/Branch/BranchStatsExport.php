@@ -27,7 +27,14 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'country'=>'Country', 
         'id'=>'ID',
         'manager'=>'Manager',
-        'leads'=>'# Open Leads',
+    ];
+    public $leadFields = [
+      'leads'=>'# Open Leads',
+      'newleads'=>'# New Branch Leads Created'
+    ];
+
+    public $opportunityFields = [
+        
         'new_opportunities'=>'# Opportunities Opened in Period',
         'top25_opportunities'=>'# Open Top 25 Opportunities',
         'open_opportunities'=>'# All Open Opportunities Count',
@@ -35,7 +42,6 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'lost_opportunities'=>'# Opportunities Lost',
         'won_opportunities'=>'# Opportunities Won',
         'won_value'=>'Sum of Won Value',
-        'activities_count'=>'# Completed Activities',
     ];
     public $activityFields = [
         '4'=>'sales_appointment',
@@ -49,7 +55,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         $this->period = $period;
         $this->branches = $branches;
         $this->report = Report::where('export', class_basename($this))->firstOrFail();
-        $this->fields = array_replace($this->branchfields, $this->activityFields);
+        $this->fields = array_replace($this->branchfields, $this->leadFields, $this->opportunityFields, $this->activityFields);
         
     }
 
@@ -114,7 +120,8 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public function query()
     {
-        return Branch::summaryStats($this->period, array_keys($this->branchfields))
+        return Branch::summaryLeadStats($this->period, array_keys($this->leadFields))
+            ->summaryOpportunities($this->period, array_keys($this->opportunityFields))
             ->summaryActivities($this->period, $this->activityFields)
             ->with('manager:id,firstname,lastname')
             ->when(
