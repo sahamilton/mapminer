@@ -30,7 +30,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     ];
     public $leadFields = [
       'leads'=>'# Open Leads',
-      'newleads'=>'# New Branch Leads Created'
+      'newbranchleads'=>'# New Branch Leads Created'
     ];
 
     public $opportunityFields = [
@@ -38,10 +38,10 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'new_opportunities'=>'# Opportunities Opened in Period',
         'top25_opportunities'=>'# Open Top 25 Opportunities',
         'open_opportunities'=>'# All Open Opportunities Count',
-        'open_value'=>'Sum All Open Opportunities Value',
+        'open_value'=>'$ Sum All Open Opportunities Value',
         'lost_opportunities'=>'# Opportunities Lost',
         'won_opportunities'=>'# Opportunities Won',
-        'won_value'=>'Sum of Won Value',
+        'won_value'=>'$ Sum of Won Value',
     ];
     public $activityFields = [
         '4'=>'sales_appointment',
@@ -111,8 +111,8 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     {
         return [
             'D'=>NumberFormat::FORMAT_TEXT,
-            'I' => NumberFormat::FORMAT_CURRENCY_USD,
-            'L' => NumberFormat::FORMAT_CURRENCY_USD,
+            'K' => NumberFormat::FORMAT_CURRENCY_USD,
+            'N' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 
