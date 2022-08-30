@@ -46,6 +46,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     public $activityFields = [
         '4'=>'sales_appointment',
         '10'=>'site_visit',
+        'activities_count'=>'All Activities'
     ];
     public $fields;
 
