@@ -9,7 +9,9 @@
         id= "updateReport">
         @csrf
         @method("put")
+        @bind($report)
         @include('reports.partials._form')
+        @endbind
         <input type="submit" 
         class="btn btn-info" 
         value="Update Report" />

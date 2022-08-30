@@ -27,19 +27,26 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'country'=>'Country', 
         'id'=>'ID',
         'manager'=>'Manager',
-        'leads'=>'# Open Leads',
-        'opened'=>'# Opportunities Opened in Period',
-        'Top25'=>'# Open Top 25 Opportunities',
-        'open'=>'# All Open Opportunities Count',
-        'openvalue'=>'Sum All Open Opportunities Value',
-        'lost'=>'# Opportunities Lost',
-        'won'=>'# Opportunities Won',
-        'won_value'=>'Sum of Won Value',
-        'activities_count'=>'# Completed Activities',
+    ];
+    public $leadFields = [
+      'leads'=>'# Open Leads',
+      'newbranchleads'=>'# New Branch Leads Created'
+    ];
+
+    public $opportunityFields = [
+        
+        'new_opportunities'=>'# Opportunities Opened in Period',
+        'top25_opportunities'=>'# Open Top 25 Opportunities',
+        'open_opportunities'=>'# All Open Opportunities Count',
+        'open_value'=>'$ Sum All Open Opportunities Value',
+        'lost_opportunities'=>'# Opportunities Lost',
+        'won_opportunities'=>'# Opportunities Won',
+        'won_value'=>'$ Sum of Won Value',
     ];
     public $activityFields = [
         '4'=>'sales_appointment',
         '10'=>'site_visit',
+        'activities_count'=>'All Activities'
     ];
     public $fields;
 
@@ -49,7 +56,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         $this->period = $period;
         $this->branches = $branches;
         $this->report = Report::where('export', class_basename($this))->firstOrFail();
-        $this->fields = array_replace($this->branchfields, $this->activityFields);
+        $this->fields = array_replace($this->branchfields, $this->leadFields, $this->opportunityFields, $this->activityFields);
         
     }
 
@@ -105,8 +112,8 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     {
         return [
             'D'=>NumberFormat::FORMAT_TEXT,
-            'I' => NumberFormat::FORMAT_CURRENCY_USD,
             'K' => NumberFormat::FORMAT_CURRENCY_USD,
+            'N' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 
@@ -114,7 +121,8 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public function query()
     {
-        return Branch::summaryStats($this->period, array_keys($this->branchfields))
+        return Branch::summaryLeadStats($this->period, array_keys($this->leadFields))
+            ->summaryOpportunities($this->period, array_keys($this->opportunityFields))
             ->summaryActivities($this->period, $this->activityFields)
             ->with('manager:id,firstname,lastname')
             ->when(

@@ -149,6 +149,7 @@ class ReportsController extends Controller {
      */
     public function edit(Report $report)
     {
+       
         return response()->view('reports.edit', compact('report'));
     }
 
@@ -164,10 +165,10 @@ class ReportsController extends Controller {
     {
 
         
-        if (request()->filled('job') && ! $this->_checkValidJob(request('job'))) {
+        if (request()->filled('job') && ! $this->_checkValidJob($request)) {
             return redirect()->back()->withError('job does not exist');
         }
-        if (request()->filled('export') && ! $this->_checkValidJob(request('export'))) {
+        if (request()->filled('export') && ! $this->_checkValidJob($request)) {
             return redirect()->back()->withError('job does not exist');
         }
         $report->update(request()->all());
@@ -419,7 +420,7 @@ class ReportsController extends Controller {
      * 
      * @return [type]        [description]
      */
-    private function _checkValidJob(array $request)
+    private function _checkValidJob(Request $request)
     {
      
         $check = ['job', 'export'];
@@ -437,7 +438,8 @@ class ReportsController extends Controller {
      * @param  [type] $type  [description]
      * @return [type]        [description]
      */
-    private function _checkClassExists(array $request, $type) {
+    private function _checkClassExists(Request$request, $type) 
+    {
 
       
     
@@ -445,12 +447,12 @@ class ReportsController extends Controller {
 
         case "job":
              $dir = "\App\\Jobs\\";
-             $class= $request['job'];
+             $class= request('job');
             break;
 
         case "export":
             $dir = "\App\\Exports\\Reports\\". $request['object']. "\\";
-            $class= $request['export'];
+            $class= request('export');
             break;
         }
         
