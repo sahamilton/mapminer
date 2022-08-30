@@ -8,6 +8,7 @@
   'address-card' => 'App\\Http\\Livewire\\AddressCard',
   'address-contacts' => 'App\\Http\\Livewire\\AddressContacts',
   'address-detail' => 'App\\Http\\Livewire\\AddressDetail',
+  'address-duplicates' => 'App\\Http\\Livewire\\AddressDuplicates',
   'address-opportunities' => 'App\\Http\\Livewire\\AddressOpportunities',
   'address-ranking' => 'App\\Http\\Livewire\\AddressRanking',
   'assign-leads' => 'App\\Http\\Livewire\\AssignLeads',

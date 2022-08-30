@@ -117,7 +117,7 @@ class AddressCard extends Component
 
 
                 'address' =>Address::query()
-                    ->withCount('activities', 'contacts', 'opportunities')
+                    ->withCount('activities', 'contacts', 'opportunities', 'duplicates')
                     ->with('claimedByBranch', 'ranking')->find($this->address_id),  
                 
                 'leadStatuses' =>[1=>'Offered',2=>'Owned', 4=>'Rejected'],
@@ -128,7 +128,8 @@ class AddressCard extends Component
                     'summary'=>'Summary',
                     'contacts'=>'Contacts', 
                     'activities'=>'Activities', 
-                    'opportunities'=>'Opportunities'],
+                    'opportunities'=>'Opportunities',
+                    'duplicates'=>'Duplicates'],
 
             ]
         );
