@@ -15,7 +15,7 @@ class ManagerDashboard extends Component
     public $sortAsc = false;
     public $search ='';
     public $setPeriod='thisMonth';
-    public $view = 'summary';
+    public $view = 'dashboard';
     public $branch_id;
     
     public $manager;
@@ -184,7 +184,7 @@ class ManagerDashboard extends Component
                 $this->branch_id !=='all', function ($q) {
                     $q->where('id', $this->branch_id);
                 }, function ($q) {
-                    $q->where('id', 1822);
+                    $q->where('id', array_keys($this->_getMyBranches));
                 }
             )   
         ->first();
@@ -226,7 +226,7 @@ class ManagerDashboard extends Component
      * 
      * @return [type] [description]
      */
-    public function _getData()
+    private function _getData()
     {
 
         if ($this->view !== 'dashboard') {

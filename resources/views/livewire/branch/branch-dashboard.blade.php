@@ -9,7 +9,7 @@
             All Branches
         @endif
     </h2>
-
+    <p><a href="{{route('mgrdashboard.index')}}" >Return to manager dashboard</a></p>
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
             @include('livewire.partials._perpage')

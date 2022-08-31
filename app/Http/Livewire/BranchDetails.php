@@ -11,8 +11,24 @@ class BranchDetails extends Component
 
    
     public $branch_id;
+    public $myBranches;
+
+
     public $noheading=false;
-    
+    protected $listeners = ['refreshBranch'=>'changeBranch', 'refreshPeriod'=>'changePeriod'];
+    /**
+     * [changeBranch description]
+     * 
+     * @param [type] $branch_id [description]
+     * 
+     * @return [type]            [description]
+     */
+    public function changeBranch($branch_id)
+    {
+         
+         $this->branch_id = $branch_id;
+
+    }
     /**
      * [mount description]
      * 
@@ -25,6 +41,7 @@ class BranchDetails extends Component
     {
         $this->branch_id = $branch_id; 
         $this->noheading=$noheading;
+        $this->myBranches = auth()->user()->person->getMyBranches();
     }
     /**
      * [render description]
@@ -33,13 +50,19 @@ class BranchDetails extends Component
      */
     public function render()
     {
-       
+        @ray($this->myBranches);
         return view(
             'livewire.branch.branch-details',
             [
                 'branch'=>Branch::query()
                     ->with('branchteam.reportsto', 'oraclelocation.mapminerUser')
-                    ->findOrFail($this->branch_id),
+                    ->when(
+                        $this->branch_id !='all', function ($q) {
+                            $q->where('id', $this->branch_id);
+                        }, function ($q) {
+                            $q->whereIn('id', $this->myBranches);
+                        }
+                    )->get(),
                 
                 'branches'=>Branch::orderBy('branchname')->pluck('branchname', 'id')
                     ->toArray(),

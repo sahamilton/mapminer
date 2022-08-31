@@ -226,7 +226,7 @@ class BranchDashboardSummary extends Component
     private function _getViewData()
     {
         
-        
+       
         $this->_setPeriod();
         $this->displayFields = $this->fields[$this->summaryview];
         $branches =  Branch::query()
@@ -235,7 +235,7 @@ class BranchDashboardSummary extends Component
                 $this->branch_id != 'all', function ($q) {
                     $q->where('id', $this->branch_id);
                 }, function ($q) {
-                     $q->whereIn('id', array_keys($this->myBranches));
+                     $q->whereIn('id', $this->myBranches);
                 }
             )
             ->get();
