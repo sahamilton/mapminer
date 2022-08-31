@@ -51,16 +51,30 @@ class LeadTable extends Component
 
     public $contact_id=null;
 
- 
-    public function updatingSearch()
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatingSearch() :void
     {
         $this->resetPage();
     }
-    public function updatingLeadSourceId()
+    /**
+     * [updatingLeadSourceId description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatingLeadSourceId() :void
     {
         $this->resetPage();
     }
-    public function updatingBranchId()
+    /**
+     * [updatingBranchId description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatingBranchId() :void
     {
         $this->resetPage();
         $this->lead_source_id = 'All';
@@ -87,9 +101,12 @@ class LeadTable extends Component
     /**
      * [mount description]
      * 
+     * @param int    $branch [description]
+     * @param [type] $search [description]
+     * 
      * @return [type]         [description]
      */
-    public function mount($branch, $search = null)
+    public function mount(int $branch, $search = null) :void
     {
         $person = new Person();
         $this->myBranches = $person->myBranches();
@@ -113,6 +130,7 @@ class LeadTable extends Component
      */
     public function render()
     {
+        @ray($this->type);
         $this->_setPeriod();
         $this->_setBranchSession();
         return view(
@@ -125,17 +143,10 @@ class LeadTable extends Component
                             $this->type == 'Customers', function ($q) {
                                 $q->where('isCustomer', 1);
                             
-                            }
-                        )
-                        ->when(
-                            $this->type == 'Lead', function ($q) {
-                                $q->where('isCustomer', 1);
-                            
                             }, function ($q) {
                                 $q->whereNull('isCustomer');
                             }
                         );
-                        
                     }
                 )
                 ->when(

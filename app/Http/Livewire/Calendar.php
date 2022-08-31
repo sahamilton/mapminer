@@ -29,7 +29,13 @@ class Calendar extends Component
 
 
     protected $listeners = ['refreshBranch'=>'changeBranch', 'refreshPeriod'=>'changePeriod'];
-
+    /**
+     * [changeBranch description]
+     * 
+     * @param [type] $branch_id [description]
+     * 
+     * @return [type]            [description]
+     */
     public function changeBranch($branch_id)
     {
        

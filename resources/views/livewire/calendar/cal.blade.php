@@ -29,7 +29,24 @@
             |<a href="#" wire:click.prevent="changeStatus(1)">
             <span class="rounded mx-2" style="padding: 4px;background-color:#cccccc;border: {{$status == 1 ? '3px': '1px'}} solid #999999">Completed</span></a> |
             <a href="#" wire:click.prevent="changeStatus(2)">
-            <span class="rounded mx-2" style="padding: 4px;background-color:#cceecc;border: {{$status == 2 ? '3px': '1px'}} solid #999999"">Not Completed</span></a>
+            <span class="rounded mx-2" style="padding: 4px;background-color:#cceecc;border: {{$status == 2 ? '3px': '1px'}} solid #999999">Not Completed</span></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col offset-1">
+            
+                <a href="{{route('upcomingactivity.branch',$branch_id)}}">
+                    Upcoming Activities
+                </a>
+           </div>
+           <div class="col">
+            
+                <i class="fa-solid fa-calendar-check txt-success"></i>
+                <a href="{{route('ical', auth()->user()->id)}}">
+                    Download this weeks upcoming events to your Outlook calendar
+                </a>
+
+            </div>
         </div>
     </div>
     <div

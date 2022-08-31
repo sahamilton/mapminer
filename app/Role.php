@@ -49,7 +49,7 @@ class Role extends Model
         $query->where('display_name',  'like', "%{$search}%");
     }
 
-    public function scopeTYpe($query, $type)
+    public function scopeType($query, $type)
     {
         switch($type) {
         case 'sales':

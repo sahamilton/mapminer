@@ -22,20 +22,41 @@ class BranchLocationsTable extends Component
     
   
     
-
-    public function updatingSearch()
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatingSearch() :void
     {
         $this->resetPage();
     }
-    public function updatingDistance()
+    /**
+     * [updatingDistance description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatingDistance() :void
     {
         $this->resetPage();
     }
-    public function updatingBranch()
+    /**
+     * [updatingBranch description]
+     * 
+     * @return [type] [description]
+     */
+    public function updatingBranch() :void
     {
         $this->resetPage();
     }
-    public function sortBy($field)
+    /**
+     * [sortBy description]
+     * 
+     * @param [type] $field [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function sortBy($field) :void
     {
         if ($this->sortField === $field) {
             $this->sortAsc = ! $this->sortAsc;
@@ -45,7 +66,14 @@ class BranchLocationsTable extends Component
 
         $this->sortField = $field;
     }
-    public function mount(int $branch)
+    /**
+     * [mount description]
+     * 
+     * @param int $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function mount(int $branch) :void
     {
         
                
@@ -55,7 +83,11 @@ class BranchLocationsTable extends Component
     }
 
 
-
+    /**
+     * [render description]
+     * 
+     * @return [type] [description]
+     */
     public function render()
     {
         $this->_checkDistance();
@@ -76,12 +108,20 @@ class BranchLocationsTable extends Component
     }
 
     
-
+    /**
+     * [_getBranch description]
+     * 
+     * @return [type] [description]
+     */
     private function _getBranch()
     {
         $this->branch = Branch::findOrFail($this->branch_id);
     }
-
+    /**
+     * [_checkDistance description]
+     * 
+     * @return [type] [description]
+     */
     private function _checkDistance()
     {
         if (! $this->distance) {
