@@ -24,7 +24,7 @@
     <tbody>
         
         @foreach ($branch->branchteam as $manager)
-        @ray($manager->userdetails);
+     
         <tr>
             <td>
                 <a href="{{route('user.show', $manager->user_id)}}">
