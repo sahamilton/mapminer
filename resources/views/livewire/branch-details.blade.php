@@ -1,4 +1,5 @@
 <div>
+
     <h2>Branch {{$branch->branchname}}</h2>
     <p><a href="{{route('branches.index')}}">Return to All Branches</a></p>
     <p>{{$branch->fullAddress()}}</p>
@@ -21,8 +22,9 @@
         <th>Manager Email</th>
     </thead>
     <tbody>
+        
         @foreach ($branch->branchteam as $manager)
-
+        @ray($manager->userdetails);
         <tr>
             <td>
                 <a href="{{route('user.show', $manager->user_id)}}">
@@ -32,7 +34,8 @@
             <td>
                 
                     <ul style=" list-style-type: none;">
-                    @foreach ( $manager->userdetails->roles as $role)
+                    @foreach ($manager->userdetails->roles as $role)
+
                         <li>{{$role->display_name}}</li>
                     @endforeach
                     </ul>
@@ -54,7 +57,7 @@
         </tr>
         @endforeach
     
-    <tr>
+    <tr>       
         @if(auth()->user()->hasRole(['admin', 'sales_ops']))
         <thead><th colspan=5>Per Oracle Data</th></thead></tr>
     @foreach ($branch->oraclelocation as $location)
