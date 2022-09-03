@@ -14,7 +14,7 @@
 ,$company[0]->id)}}" >this link</a></p>
         Sincerely
         
-        <p>PeopleReady National Account Mapping Support</p>
+        <p>Mapminer Support</p>
 		</div>
 	</body>
 </html>

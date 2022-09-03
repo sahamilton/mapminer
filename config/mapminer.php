@@ -11,10 +11,10 @@ return [
     |
     */
     'author' => 'Stephen Hamilton',
-    'developer' => 'Okos Partners, LLC',
-    'developer_email' => 'hamilton@okospartners.com',
-    'website' => 'https://www.OkosPartners.com',
-    'client' => 'TrueBlue, Inc.',
+    'developer' => 'Mapminer Development Corp, LLC',
+    'developer_email' => 'hamilton@effneight.com',
+    'website' => 'https://www.EffnEight.com',
+    'client' => '',
 
 
     /*

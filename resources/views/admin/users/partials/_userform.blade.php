@@ -23,7 +23,7 @@
 		required
 		name="email"
 		label="Email:"
-		placeholder="email@peopleready.com"
+		placeholder="email@mapminer.com"
 		
 		autocomplete="off" />
 

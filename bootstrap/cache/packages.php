@@ -64,7 +64,6 @@
       'Agent' => 'Jenssegers\\Agent\\Facades\\Agent',
     ),
   ),
-  
   'lab404/laravel-impersonate' => 
   array (
     'providers' => 

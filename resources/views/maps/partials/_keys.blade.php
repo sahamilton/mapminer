@@ -4,7 +4,7 @@
 @if(! isset($data['type']) && isset($servicelines) or (isset($data['type']) && $data['type'] == 'branch' && isset($servicelines)))
   @foreach ($servicelines as $serviceline)
     
-    {{str_replace("PeopleReady: ","",$serviceline->ServiceLine)}} = &nbsp; <img src='{{asset('geocoding/markers/'.$serviceline->color.'-pin.png')}}' />&nbsp&nbsp&nbsp
+    {{str_replace("Mapminer: ","",$serviceline->ServiceLine)}} = &nbsp; <img src='{{asset('geocoding/markers/'.$serviceline->color.'-pin.png')}}' />&nbsp&nbsp&nbsp
 
 
   @endforeach
