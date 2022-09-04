@@ -533,9 +533,9 @@ trait Geocode
     public function setLocationAttribute($data)
     {
         
-        if (config('database.version') === '8.1') {
+        if (config('database.version') != '5.7') {
             $LngLat = $data['lat']." ".$data['lng'];
-            return \DB::raw("ST_SRID('POINT($LngLat)',4326)");
+            return \DB::raw("ST_SRID(POINT($LngLat),4326)");
         } else {
             $LngLat = $data['lng']." ".$data['lat'];
             return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
