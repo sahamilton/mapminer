@@ -138,7 +138,7 @@
 
 	    <div id="footer" >
 	      <div class="container">
-	        <p class="muted credit">&copy; <?php echo date("Y");?>  ELA Consulting Group, LLC / TrueBlue, Inc</a>.</p></div>
+	        <p class="muted credit">&copy; <?php echo date("Y");?>  Mapminer Development Corp, llc </a>.</p></div>
             	    </div>
           </div>
 

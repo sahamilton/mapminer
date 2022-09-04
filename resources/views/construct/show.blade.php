@@ -15,7 +15,7 @@
 <blockquote>{{$project['siteaddress']}}
 </blockquote>
 <div class="row">
-<p><strong>People Ready Status:</strong>
+<p><strong>Status:</strong>
 
 
 </div>

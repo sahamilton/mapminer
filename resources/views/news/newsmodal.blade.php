@@ -11,7 +11,7 @@
             <div class="modal-header">
             
             <h4 class="modal-title" 
-            id="myModalLabel">TrueBlue MapMiner Updates</h4>
+            id="myModalLabel">MapMiner Updates</h4>
             <button type="button" 
                 class="close" 
                 data-dismiss="modal" 

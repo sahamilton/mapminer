@@ -3,7 +3,7 @@
 
 <div class="jumbotron">
   <div class="container" style="position:relative;text-align:center">
-    <h4>Welcome to the TrueBlue&reg; Mapminer</h4>
+    <h4>Welcome to Mapminer&reg; </h4>
 <div id="welcome">
 
 

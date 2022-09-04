@@ -3,7 +3,7 @@
 {{$project->zip}}
 <br /><em>(Map accuracy: {{$project->accuracy}})</em>
 </blockquote>
-<p><strong>People Ready Status:</strong>
+<p><strong>Status:</strong>
 @can('manage_projects')
   @include('projects.partials._manageprojects')
 @else
