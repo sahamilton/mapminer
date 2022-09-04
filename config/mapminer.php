@@ -12,7 +12,7 @@ return [
     */
     'author' => 'Stephen Hamilton',
     'developer' => 'Mapminer Development Corp, LLC',
-    'developer_email' => 'hamilton@effneight.com',
+    'developer_email' => 'support@effneight.com',
     'website' => 'https://www.EffnEight.com',
     'client' => '',
 
@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'default_address'=>'1015 A St, Tacoma, WA 98402',
+    'default_address'=>'804 F St, Petaluma, CA 94952',
     'default_location'=>['lat'=>'39.8282','lng'=>'-98.5795'],
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     */
 
     'support'=>'Mapminer Support Operations',
-    'system_contact'=>env('MAPMINER_CONTACT', 'support@OKOSPartners.com'),
+    'system_contact'=>env('MAPMINER_CONTACT', 'support@EffnEight.com'),
 
     
     'timeframes'=>[

@@ -8,7 +8,7 @@
 
 			@if(auth()->check()) 
 
-				@include('maps.partials._form)
+				@include('maps.partials._form')
 				
 	
 			@else
