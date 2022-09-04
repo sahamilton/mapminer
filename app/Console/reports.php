@@ -16,7 +16,7 @@ foreach ($report_schedules as $report_schedule) {
                     )->get()->toArray()
                 )
             );
-            $users = \App\User::whereIn('email', $email_List)->get(['first_name', 'last_name', 'email']);
+            $users = \App\Models\User::whereIn('email', $email_List)->get(['first_name', 'last_name', 'email']);
             $users_to = [];
             $emails_to = [];
             foreach ($users as $user) {

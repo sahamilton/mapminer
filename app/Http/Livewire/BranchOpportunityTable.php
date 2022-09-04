@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Person;
-use App\Branch;
+use App\Models\Person;
+use App\Models\Branch;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 class BranchOpportunityTable extends Component
 {
     

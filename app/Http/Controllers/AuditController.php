@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 use \OwenIt\Auditing\Models\Audit;
 use Illuminate\Http\Request;
-use App\User;
-use App\Person; 
+use App\Models\User;
+use App\Models\Person; 
 
 class AuditController extends Controller
 {

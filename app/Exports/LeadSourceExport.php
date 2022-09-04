@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\LeadSource;
+use App\Models\LeadSource;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 

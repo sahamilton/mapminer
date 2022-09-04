@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Comments;
+use App\Models\Comments;
 use App\Http\Requests\CommentFormRequest;
 use App\Mail\NotifyCommentsAdded;
-use App\User;
+use App\Models\User;
 use Mail;
 
 class CommentsController extends BaseController

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Address;
+use App\Models\Address;
 use Livewire\Component;
 
 class AddressRanking extends Component

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Imports;
 
 use Illuminate\Http\Request;
-use App\Company;
-use App\LeadSource;
-use App\Branch;
-use App\LocationImport;
-use App\Serviceline;
+use App\Models\Company;
+use App\Models\LeadSource;
+use App\Models\Branch;
+use App\Models\LocationImport;
+use App\Models\Serviceline;
 use App\Http\Requests\LocationImportFormRequest;
 use Excel;
 

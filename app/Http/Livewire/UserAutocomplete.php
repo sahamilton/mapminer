@@ -2,7 +2,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Oracle;
+use App\Models\Oracle;
 class UserAutocomplete extends Autocomplete
 {
     protected $listeners = ['valueSelected'];

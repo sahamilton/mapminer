@@ -3,9 +3,9 @@
 namespace App\Exports\Reports\User;
 
 
-use App\Report;
-use App\User;
-use App\Person;
+use App\Models\Report;
+use App\Models\User;
+use App\Models\Person;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class UserLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting,ShouldAutoSize
+class UserLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
     use Exportable;
 

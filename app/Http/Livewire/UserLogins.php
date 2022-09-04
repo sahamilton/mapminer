@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\User;
-use App\Role;
-use App\Person;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 use App\Jobs\NotifyManagerOfNoLogins;
 

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Contact;
-use App\AddressBranch;
-use App\Branch;
-use App\Campaign;
-use App\Person;
-use App\Opportunity;
-use \App\Address;
+use App\Contact;
+use App\Models\AddressBranch;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Person;
+use App\Models\Opportunity;
+use App\Models\Address;
 use JeroenDesloovere\VCard\VCard;
 use App\Exports\BranchContacts;
 

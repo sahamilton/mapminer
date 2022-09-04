@@ -3,10 +3,10 @@
 namespace App\Jobs;
 
 
-use App\Report;
-use App\Person;
-use App\User;
-use App\Exports\DeadLeadsBySourceExport;
+use App\Models\Report;
+use App\Models\Person;
+use App\Models\User;
+use App\Models\Exports\DeadLeadsBySourceExport;
 
 use Illuminate\Support\Str;
 

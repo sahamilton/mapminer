@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Oracle;
-use App\User;
-use App\Person;
+use App\Models\Oracle;
+use App\Models\User;
+use App\Models\Person;
 
 class OracleController extends Controller
 {

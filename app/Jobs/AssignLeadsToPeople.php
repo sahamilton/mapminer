@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\AddressPerson;
+use App\Models\AddressPerson;
 use app\Person;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;

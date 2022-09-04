@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
+use App\Models\Branch;
 use App\Http\Requests\ProjectContactFormRequest;
 use App\Http\Requests\ProjectTransferRequest;
 use App\Mail\NotifyProjectTransfer;
-use App\Note;
-use App\Person;
-use App\Project;
-use App\ProjectSource;
+use App\Models\Note;
+use App\Models\Person;
+use App\Models\Project;
+use App\Models\ProjectContact;
+use App\Models\ProjectCompany;
+use App\Models\ProjectSource;
 use Excel;
 use Illuminate\Http\Request;
 use Mail;
@@ -228,7 +230,7 @@ class ProjectsController extends BaseController
     {
         $request->request->add(['user_id', auth()->user()->id]);
 
-        $contact = \App\ProjectContact::create(request()->all());
+        $contact = ProjectContact::create(request()->all());
 
         return redirect()->back();
     }
@@ -239,7 +241,7 @@ class ProjectsController extends BaseController
      */
     public function addProjectCompany(Request $request)
     {
-        $firm = \App\ProjectCompany::create(request()->all());
+        $firm = ProjectCompany::create(request()->all());
         $firm->project()->attach(request('project_id'));
 
         return redirect()->back();

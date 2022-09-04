@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Branch;
+use App\Models\User;
+use App\Models\Branch;
 use Excel;
 use App\Exports\UsersExport;
 use App\Http\Requests\UserProfileFormRequest;

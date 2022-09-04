@@ -3,9 +3,9 @@
 namespace App\Jobs;
 
 use Mail;
-use App\Report;
-use App\Person;
-use App\Exports\ActivityOpportunityExport;
+use App\Models\Report;
+use App\Models\Person;
+use App\Models\Exports\ActivityOpportunityExport;
 
 use Illuminate\Support\Str;
 

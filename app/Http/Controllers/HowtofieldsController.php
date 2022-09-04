@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Howtofield;
-use App\HowtofieldImport;
+use App\Models\Howtofield;
+use App\Models\HowtofieldImport;
 use App\Http\Requests\HowtofieldsFormRequest;
 use Carbon\Carbon;
-use App\Company;
+use App\Models\Company;
 use Illuminate\Http\Request;
 class HowtofieldsController extends BaseController
 {

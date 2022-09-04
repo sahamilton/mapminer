@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Address;
-use App\AddressBranch;
-use App\Branch;
-use App\Company;
-use App\SearchFilter;
-use App\Campaign;
-use App\Serviceline;
-use App\SalesOrg;
-use App\Addresses;
-use App\Person;
+use App\Models\Address;
+use App\Models\AddressBranch;
+use App\Models\Branch;
+use App\Models\Company;
+use App\Models\SearchFilter;
+use App\Models\Campaign;
+use App\Models\Serviceline;
+use App\Models\SalesOrg;
+use App\Models\Addresses;
+use App\Models\Person;
 use App\Jobs\AssignCampaignLeadsJob;
 use App\Jobs\AssignAddressesToCampaignJob; 
 use App\Jobs\AssignBranchesToCampaignJob;

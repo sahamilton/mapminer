@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
-use App\Company;
+use App\Models\Branch;
+use App\Models\Company;
 use App\Http\Requests\ServiceLineFormRequest;
-use App\Serviceline;
+use App\Models\Serviceline;
 use Illuminate\Http\Request;
 
 class ServicelinesController extends BaseController

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\EmailLog;
+use App\Models\EmailLog;
 use Illuminate\Http\Request;
 
 class EmailLogController extends Controller

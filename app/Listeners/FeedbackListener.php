@@ -2,14 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Events\FeedbackEvent;
+use App\Models\Events\FeedbackEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Mail\FeedbackClosed;
-use App\Mail\FeedbackComment;
-use App\Mail\FeedbackOpened;
-use App\Mail\FeedbackResponse;
-use App\Feedback;
+use App\Models\Mail\FeedbackClosed;
+use App\Models\Mail\FeedbackComment;
+use App\Models\Mail\FeedbackOpened;
+use App\Models\Mail\FeedbackResponse;
+use App\Models\Feedback;
 use Mail;
 class FeedbackListener
 {

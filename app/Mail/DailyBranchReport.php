@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Person;
+use App\Models\Person;
 use Carbon\Carbon;
 
 class DailyBranchReport extends Mailable

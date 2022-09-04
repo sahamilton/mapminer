@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Lead;
-use App\LeadStatus;
-use App\Note;
-use App\Person;
-use App\User;
+use App\Models\Lead;
+use App\Models\LeadStatus;
+use App\Models\Note;
+use App\Models\Person;
+use App\Models\User;
 use Excel;
 use Illuminate\Http\Request;
 

@@ -8,8 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Mail\NotifyManagersOfActivatableTeamMembers;
-use App\Oracle;
+use App\Models\Mail\NotifyManagersOfActivatableTeamMembers;
+use App\Models\Oracle;
 use Mail;
 
 class NotifyManagersOfActivatableTeamMembersJob implements ShouldQueue

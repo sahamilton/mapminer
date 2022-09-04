@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\OracleSource;
+use App\Models\OracleSource;
 use Illuminate\Http\Request;
 
 class OracleSourceController extends Controller

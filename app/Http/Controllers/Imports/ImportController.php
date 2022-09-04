@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Imports;
 
 use App\Http\Requests\ImportFormRequest;
-use App\Imports;
-use App\Model;
-use App\Project;
+use App\Models\Imports;
+use App\Models\Model;
+use App\Models\Project;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 

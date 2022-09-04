@@ -3,8 +3,8 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Opportunity;
-use App\Address;
+use App\Models\Opportunity;
+use App\Models\Address;
 use Livewire\WithPagination;
 use Carbon\Carbon;
 

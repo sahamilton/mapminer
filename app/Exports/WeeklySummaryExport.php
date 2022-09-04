@@ -1,8 +1,8 @@
 <?php
 namespace App\Exports;
 
-use App\Stats;
-use App\Person;
+use App\Models\Stats;
+use App\Models\Person;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
-use App\Address;
-use App\Branch;
-use App\Campaign;
-use App\Opportunity;
-use App\Person;
+use App\Models\Activity;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Opportunity;
+use App\Models\Person;
 use Illuminate\Http\Request;
 
 class BranchCampaignTrackingController extends Controller

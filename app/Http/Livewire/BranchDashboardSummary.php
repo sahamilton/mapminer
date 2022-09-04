@@ -4,9 +4,9 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Branch;
-use App\PeriodSelector;
-use App\Person;
+use App\Models\Branch;
+use App\Models\PeriodSelector;
+use App\Models\Person;
 
 
 class BranchDashboardSummary extends Component

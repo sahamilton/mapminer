@@ -5,7 +5,7 @@ namespace App\Observers;
 use App\Jobs\RebuildPeople;
 use App\Mail\PersonNotification;
 use App\Mail\NotifyManagerOfDeletedReport;
-use App\Person;
+use App\Models\Person;
 use Mail;
 
 class PersonObserver

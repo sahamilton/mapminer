@@ -4,9 +4,9 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\AddressBranch;
-use App\Branch;
-use App\Person;
+use App\Models\AddressBranch;
+use App\Models\Branch;
+use App\Models\Person;
 
 class LocationContacts extends Component
 {

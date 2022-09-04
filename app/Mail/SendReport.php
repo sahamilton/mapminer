@@ -7,8 +7,8 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Carbon\Carbon;
-use App\Report;
-use App\User;
+use App\Models\Report;
+use App\Models\User;
 
 class SendReport extends Mailable implements ShouldQueue
 {

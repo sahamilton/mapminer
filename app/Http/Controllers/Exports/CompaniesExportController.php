@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Exports;
 
 use Illuminate\Http\Request;
-use App\Company;
-use App\Address;
+use App\Models\Company;
+use App\Models\Address;
 use \Excel;
 use App\Http\Controllers\BaseController;
 use App\Exports\CompanyWithLocationsExport;

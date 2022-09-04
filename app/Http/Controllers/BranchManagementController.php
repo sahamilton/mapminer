@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
-use App\User;
-use App\Person;
-use App\Campaign;
+use App\Models\Branch;
+use App\Models\User;
+use App\Models\Person;
+use App\Models\Campaign;
 use Mail;
 use App\Mail\NotifyBranchAssignments;
-use App\BranchManagement;
+use App\Models\BranchManagement;
 use App\Http\Requests\BranchManagementRequest;
 use Illuminate\Http\Request;
 

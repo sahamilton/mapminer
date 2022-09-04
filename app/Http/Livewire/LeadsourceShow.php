@@ -2,10 +2,10 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\LeadSource;
+use App\Models\LeadSource;
 use Livewire\WithPagination;
-use App\PeriodSelector;
-use App\Branch;
+use App\Models\PeriodSelector;
+use App\Models\Branch;
 
 class LeadsourceShow extends Component
 {

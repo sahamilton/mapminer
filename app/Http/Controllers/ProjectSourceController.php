@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectSourceRequest;
-use App\Project;
-use App\ProjectSource;
+use App\Models\Project;
+use App\Models\ProjectSource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

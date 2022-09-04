@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Address;
-use App\Company;
-use App\Contact;
-use App\LocationPostImport;
+use App\Models\Address;
+use App\Models\Company;
+use App\Models\Contact;
+use App\Models\LocationPostImport;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;

@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use App\Branch;
+use App\Models\Branch;
 use Livewire\Component;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 use Livewire\WithPagination;
 
 

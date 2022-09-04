@@ -1,8 +1,8 @@
 <?php
 namespace App\Exports;
 
-use App\Company;
-use App\AccountType;
+use App\Models\Company;
+use App\Models\AccountType;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;

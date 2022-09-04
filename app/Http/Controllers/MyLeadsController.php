@@ -1,12 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Branch;
-use App\Campaign;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\Campaign;
 use Illuminate\Http\Request;
-use App\Person;
-use App\LeadStatus;
+use App\Models\Person;
+use App\Models\LeadStatus;
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use App\Http\Requests\MyLeadFormRequest;
 use App\Http\Requests\LeadReassignFormRequest;
@@ -173,7 +173,7 @@ class MyLeadsController extends BaseController
         // send this to a job
         if (request('notify')==1) {
             // 
-            $branches = \App\Branch::with('manager', 'manager.userdetails')
+            $branches = \App\Models\Branch::with('manager', 'manager.userdetails')
                 ->whereIn('id', array_keys($data['branch']))
                 ->get();
            

@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use Excel;
 use Carbon\Carbon;
-use App\Branch;
-use App\Report;
-use App\Role;
-use App\Company;
-use App\Person;
-use App\SalesOrg;
-use App\User;
+use App\Models\Branch;
+use App\Models\Report;
+use App\Models\Role;
+use App\Models\Company;
+use App\Models\Person;
+use App\Models\SalesOrg;
+use App\Models\User;
+
+use App\Jobs\BranchReportJob;
+use App\Jobs\CampaignReportJob;
+use App\Jobs\UserReportJob;
+use App\Jobs\CompanyReportJob;
+
 use Illuminate\Support\Str;
 use App\Http\Requests\ReportFormRequest;
 use App\Http\Requests\RunReportFormRequest;
@@ -18,7 +24,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
 use \App\Exports\OpenTop25BranchOpportunitiesExport;
 
-class ReportsController extends Controller {
+class ReportsController extends Controller
+{
     public $branch;
     public $company;
     public $person;
@@ -143,7 +150,7 @@ class ReportsController extends Controller {
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Report  $report
+     * @param \App\Report  $report
      * 
      * @return \Illuminate\Http\Response
      */
@@ -214,7 +221,7 @@ class ReportsController extends Controller {
     public function removeRecipient(Request $request, Report $report)
     {
         
-        $user = \App\User::where('id', request('user'))->first();
+        $user = User::where('id', request('user'))->first();
         $report->distribution()->detach($user);
         return redirect()->route('reports.show', $report->id);
     }
@@ -264,22 +271,22 @@ class ReportsController extends Controller {
         switch($report->object) {
         case 'Branch':
 
-            return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
+            return BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;
 
         case 'Campaign':
-            return \App\Jobs\CampaignReportJob::dispatch($report, $distribution, $manager)->onQueue('reports');
+            return CampaignReportJob::dispatch($report, $distribution, $manager)->onQueue('reports');
             break;
         
         case 'User':
-            return \App\Jobs\UserReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
+            return UserReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;   
         case 'Company':
             $company = request('company');
-            return \App\Jobs\CompanyReportJob::dispatch($report, $period, $distribution, $company)->onQueue('reports');
+            return CompanyReportJob::dispatch($report, $period, $distribution, $company)->onQueue('reports');
             break;
         default:
-            return \App\Jobs\BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
+            return BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break; 
 
         }

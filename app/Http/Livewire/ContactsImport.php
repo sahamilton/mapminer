@@ -3,7 +3,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\ContactImport;
+use App\Models\ContactImport;
 
 
 class ContactsImport extends Component

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SalesProcessStepRequest;
-use App\SalesProcess;
+use App\Models\SalesProcess;
 use Illuminate\Http\Request;
 
 class SalesProcessController extends Controller

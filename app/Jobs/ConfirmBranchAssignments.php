@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Mail\EmailConfirmBranchAssignments;
+use App\Models\Mail\EmailConfirmBranchAssignments;
 use Illuminate\Database\Eloquent\Collection;
 use Mail;
 class ConfirmBranchAssignments implements ShouldQueue

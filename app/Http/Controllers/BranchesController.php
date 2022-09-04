@@ -2,17 +2,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Branch;
-use App\Serviceline;
-use App\Location;
-use App\User;
-use App\Activity;
-use App\Address;
-use App\AddressBranch;
-use App\State;
-use App\Opportunity;
-use App\Person;
-use App\Role;
+use App\Models\Branch;
+use App\Models\Serviceline;
+use App\Models\Location;
+use App\Models\User;
+use App\Models\Activity;
+use App\Models\Address;
+use App\Models\AddressBranch;
+use App\Models\State;
+use App\Models\Opportunity;
+use App\Models\Person;
+use App\Models\Role;
 use Excel;
 use App\Http\Requests\BranchFormRequest;
 use App\Http\Requests\BranchReassignFormRequest;
@@ -467,7 +467,7 @@ class BranchesController extends BaseController
                 ->withWarning('You are not associated with these branches');
         }
     
-        $leads = \App\AddressBranch::whereDoesnthave('opportunities')
+        $leads = AddressBranch::whereDoesnthave('opportunities')
             ->with('branch', 'address', 'address.leadsource')
             ->whereIn('branch_id', [$branch->id])
             ->get();
@@ -635,7 +635,7 @@ class BranchesController extends BaseController
             ->where('state', '=', $statecode)
             ->orderBy('id')
             ->get();   
-        $state = \App\State::where('statecode', '=', $statecode)->first();
+        $state = State::where('statecode', '=', $statecode)->first();
         $allstates = $this->branch->allStates();
         return response()->view(
             'branches.state', 

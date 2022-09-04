@@ -1,8 +1,8 @@
 <?php
 
 namespace App\DataQuality;
-use App\Branch;
-use App\Activity;
+use App\Models\Branch;
+use App\Models\Activity;
 use Illuminate\Database\Eloquent\Model;
 
 class DQMissedActivities implements DataQualityInterface

@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Activity;
-use App\AddressBranch;
+use App\Models\Activity;
+use App\Models\AddressBranch;
 
 class ActivityObserver
 {

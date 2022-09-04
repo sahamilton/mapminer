@@ -1,8 +1,8 @@
 <?php
 namespace App\Exports\Reports\Branch;
 
-use App\Branch;
-use App\Report;
+use App\Models\Branch;
+use App\Models\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Carbon\Carbon;
-use App\Person;
+use App\Models\Person;
 
 class BranchOpenOpportunitiesDetailExport implements FromQuery, ShouldQueue, WithHeadings,WithColumnFormatting, WithMapping, ShouldAutoSize
 {

@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
-use App\Person;
-use App\Branch;
-use App\LeadSource;
+use App\Models\Person;
+use App\Models\Branch;
+use App\Models\LeadSource;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

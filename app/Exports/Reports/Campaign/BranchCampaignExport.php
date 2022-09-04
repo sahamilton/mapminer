@@ -2,9 +2,9 @@
 
 namespace App\Exports\Reports\Campaign;
 
-use App\Branch;
-use App\Campaign;
-use App\Role;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Role;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 

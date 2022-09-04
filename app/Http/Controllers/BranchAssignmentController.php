@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Person;
+use App\Models\Person;
 class BranchAssignmentController extends Controller
 {
     public function __construct(Person $person)

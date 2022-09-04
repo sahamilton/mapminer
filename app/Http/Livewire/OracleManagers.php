@@ -3,8 +3,8 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Oracle;
-use App\User;
+use App\Models\Oracle;
+use App\Models\User;
 use Livewire\WithPagination;
 use PhpOffice\PhpSpreadsheet\Style\Conditional;
 

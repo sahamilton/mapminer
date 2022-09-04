@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Address;
-use App\Company;
+use App\Models\Address;
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;

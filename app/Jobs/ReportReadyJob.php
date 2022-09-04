@@ -3,9 +3,9 @@
 namespace App\Jobs;
 
 use Mail;
-use App\Mail\SendReport;
-use App\User;
-use App\Report;
+use App\Models\Mail\SendReport;
+use App\Models\User;
+use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

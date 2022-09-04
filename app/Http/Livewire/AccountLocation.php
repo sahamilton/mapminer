@@ -3,9 +3,9 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Company;
-use App\Address;
-use App\AccountType;
+use App\Models\Company;
+use App\Models\Address;
+use App\Models\AccountType;
 use Livewire\WithPagination;
 use Excel;
 use App\Exports\ExportCompanyLocationCount;

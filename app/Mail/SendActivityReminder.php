@@ -6,8 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\User;
-use App\Ical;
+use App\Models\User;
+use App\Models\Ical;
 use Spatie\IcalendarGenerator\Components\Calendar;
 class SendActivityReminder extends Mailable implements ShouldQueue
 {

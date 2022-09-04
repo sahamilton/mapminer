@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Oracle;
-use App\User;
-use App\Role;
+use App\Models\Oracle;
+use App\Models\User;
+use App\Models\Role;
 use Livewire\Component;
 use Livewire\WithPagination;
 use DB;

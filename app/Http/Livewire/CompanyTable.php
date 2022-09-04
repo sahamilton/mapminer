@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Model;
-use App\Company;
-use App\Person;
-use App\AccountType;
-use App\SearchFilter;
+use App\Models\Model;
+use App\Models\Company;
+use App\Models\Person;
+use App\Models\AccountType;
+use App\Models\SearchFilter;
 use Livewire\Component;
 use Livewire\WithPagination;
 

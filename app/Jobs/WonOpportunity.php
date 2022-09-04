@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Mail\WonOpportunityNotification;
-use App\Opportunity;
+use App\Models\Mail\WonOpportunityNotification;
+use App\Models\Opportunity;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

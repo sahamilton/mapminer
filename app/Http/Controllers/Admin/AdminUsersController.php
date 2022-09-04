@@ -1,21 +1,21 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use App\User;
-use App\Role;
-use App\Person;
-use App\Company;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Person;
+use App\Models\Company;
 use Mail;
 use App\Mail\ManagerNotification;
-use App\Permission;
+use App\Models\Permission;
 use App\Http\Requests\UserFormRequest;
 use App\Http\Requests\UserBulkImportForm;
-use App\Branch;
-use App\Track;
+use App\Models\Branch;
+use App\Models\Track;
 use Carbon\Carbon;
-use App\Serviceline;
+use App\Models\Serviceline;
 use Illuminate\Http\Request;
-use App\SearchFilter;
+use App\Models\SearchFilter;
 use App\Http\Controllers\BaseController;
 
 class AdminUsersController extends BaseController

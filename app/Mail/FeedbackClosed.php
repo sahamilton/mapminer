@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
-use App\Feedback;
-use App\User;
+use App\Models\Feedback;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;

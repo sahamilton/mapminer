@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Company;
+use App\Models\Company;
 use Livewire\Component;
-use App\SearchFilter;
+use App\Models\SearchFilter;
 
 class CompanySelector extends Component
 {

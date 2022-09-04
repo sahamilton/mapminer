@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Branch;
+use App\Models\Branch;
 use Livewire\Component;
 
 class BranchReassign extends Component

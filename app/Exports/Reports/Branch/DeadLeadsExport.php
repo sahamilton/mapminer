@@ -2,8 +2,8 @@
 
 namespace App\Exports\Reports\Branch;
 
-use App\Branch;
-use App\Report;
+use App\Models\Branch;
+use App\Models\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Carbon\Carbon;
-use App\Person;
+use App\Models\Person;
 
 class DeadLeadsExport implements FromQuery, ShouldQueue, WithHeadings,WithMapping, ShouldAutoSize
 {

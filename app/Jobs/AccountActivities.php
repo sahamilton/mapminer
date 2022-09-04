@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 
-use App\Address;
-use App\Company;
-use App\Exports\AccountActivitiesExport;
-use App\Mail\AccountActivitiesReport;
+use App\Models\Address;
+use App\Models\Company;
+use App\Models\Exports\AccountActivitiesExport;
+use App\Models\Mail\AccountActivitiesReport;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Bus\Queueable;

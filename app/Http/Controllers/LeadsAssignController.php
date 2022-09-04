@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\LeadSource;
-use App\Branch;
-use App\Address;
-use App\AddressBranch;
-use App\AddressPerson;
-use App\Lead;
-use App\Person;
-use App\Role;
-use App\Permission;
+use App\Models\LeadSource;
+use App\Models\Branch;
+use App\Models\Address;
+use App\Models\AddressBranch;
+use App\Models\AddressPerson;
+use App\Models\Lead;
+use App\Models\Person;
+use App\Models\Role;
+use App\Models\Permission;
 use Carbon\Carbon;;
 use App\Jobs\AssignLeadsToPeople;
 use App\Mail\NotifyWebLeadsBranchAssignment;

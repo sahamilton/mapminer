@@ -6,11 +6,11 @@ use Livewire\Component;
 
 use Livewire\WithPagination;
 
-use App\Oracle;
-use App\User;
-use App\Person;
-use App\Role;
-use App\Serviceline;
+use App\Models\Oracle;
+use App\Models\User;
+use App\Models\Person;
+use App\Models\Role;
+use App\Models\Serviceline;
 use Excel;
 use App\Exports\ExportOracleData;
 

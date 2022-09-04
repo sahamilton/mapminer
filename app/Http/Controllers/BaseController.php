@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\Model;
-use App\Person;
-use App\Role;
-use App\SearchFilter;
-use App\Serviceline;
-use App\State;
-use App\User;
+use App\Models\Company;
+use App\Models\Model;
+use App\Models\Person;
+use App\Models\Role;
+use App\Models\SearchFilter;
+use App\Models\Serviceline;
+use App\Models\State;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

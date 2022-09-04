@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Person;
+use App\Models\Person;
 use Livewire\WithPagination;
 class ChangeReporting extends Component
 {

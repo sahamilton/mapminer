@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Lead;
-use App\Address;
-use App\Person;
-use App\Branch;
-use App\Note;
-use App\BranchLead;
+use App\Models\Lead;
+use App\Models\Address;
+use App\Models\Person;
+use App\Models\Branch;
+use App\Models\Note;
+use App\Models\BranchLead;
 use Illuminate\Http\Request;
 
 class BranchLeadController extends Controller

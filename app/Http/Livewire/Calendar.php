@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Activity;
-use App\ActivityType;
+use App\Models\Activity;
+use App\Models\ActivityType;
 use Livewire\Component;
-use App\Branch;
+use App\Models\Branch;
 use Carbon\Carbon;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 use App\Transformers\EventTransformer;
 
 class Calendar extends Component

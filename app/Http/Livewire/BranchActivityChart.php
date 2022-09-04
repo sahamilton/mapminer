@@ -3,11 +3,11 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Activity;
-use App\ActivityType;
-use App\Branch;
-use App\PeriodSelector;
-use App\Person;
+use App\Models\Activity;
+use App\Models\ActivityType;
+use App\Models\Branch;
+use App\Models\PeriodSelector;
+use App\Models\Person;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection; 

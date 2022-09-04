@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Person;
-use App\User;
-use App\Branch;
-use App\Track;
+use App\Models\Person;
+use App\Models\User;
+use App\Models\Branch;
+use App\Models\Track;
 use Mail;
 use App\Mail\PersonNotification;
 use Illuminate\Http\Request;

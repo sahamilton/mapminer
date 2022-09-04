@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Person;
-use App\Role;
+use App\Models\Person;
+use App\Models\Role;
 use Livewire\Component;
 use Livewire\WithPagination;
 

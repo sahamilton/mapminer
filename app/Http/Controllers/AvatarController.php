@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Avatar;
+use App\Models\Avatar;
 use App\Http\Requests\AvatarFormRequest;
-use App\Person;
+use App\Models\Person;
 use Illuminate\Http\Request;
 use Image;
 

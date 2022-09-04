@@ -5,8 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Excel;
-use App\GitVersion;
-use App\PeriodSelector;
+use App\Models\GitVersion;
+use App\Models\PeriodSelector;
 use App\Exports\GitHistoryExport;
 
 

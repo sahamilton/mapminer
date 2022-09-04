@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
-use App\Branch;
-use App\Person;
+use App\Models\Activity;
+use App\Models\Branch;
+use App\Models\Person;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

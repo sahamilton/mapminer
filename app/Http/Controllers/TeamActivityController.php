@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Person;
+use App\Models\Person;
 use Illuminate\Http\Request;
 use Excel;
 use App\Exports\MyTeamLoginsExport;

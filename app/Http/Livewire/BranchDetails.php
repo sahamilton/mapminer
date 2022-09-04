@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-use App\Branch;
+use App\Models\Branch;
 class BranchDetails extends Component
 {
     

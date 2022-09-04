@@ -3,9 +3,9 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Activity;
-use App\ActivityType;
-use App\Address;
+use App\Models\Activity;
+use App\Models\ActivityType;
+use App\Models\Address;
 use Livewire\WithPagination;
 use Carbon\Carbon;
 

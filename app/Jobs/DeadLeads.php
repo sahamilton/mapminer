@@ -3,11 +3,11 @@
 namespace App\Jobs;
 
 
-use App\Report;
-use App\Person;
-use App\User;
+use App\Models\Report;
+use App\Models\Person;
+use App\Models\User;
 
-use App\Exports\Reports\Branch\DeadLeadsExport;
+use App\Models\Exports\Reports\Branch\DeadLeadsExport;
 
 use Illuminate\Support\Str;
 

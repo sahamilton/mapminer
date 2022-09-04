@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Branch;
-use App\Person;
-use App\Address;
-use App\Serviceline;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\Address;
+use App\Models\Serviceline;
 use Excel;
 use App\Http\Requests\LeadAddressFormRequest;
 use Illuminate\Http\Request;

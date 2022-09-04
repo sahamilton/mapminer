@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Person;
-use App\Address;
+use App\Models\Person;
+use App\Models\Address;
 use Livewire\Component;
 
 class MapsTemplate extends Component

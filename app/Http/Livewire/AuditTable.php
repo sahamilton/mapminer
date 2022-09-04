@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use \OwenIt\Auditing\Models\Audit;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 class AuditTable extends Component
 {

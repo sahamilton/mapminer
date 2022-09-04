@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Person;
-use App\UserImport;
+use App\Models\Person;
+use App\Models\UserImport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

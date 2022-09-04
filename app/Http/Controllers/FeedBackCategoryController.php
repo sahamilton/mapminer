@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FeedBackCategory;
+use App\Models\FeedBackCategory;
 use Illuminate\Http\Request;
 
 class FeedBackCategoryController extends Controller

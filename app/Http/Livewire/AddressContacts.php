@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Contact;
+use App\Models\Contact;
 use Livewire\WithPagination;
 class AddressContacts extends Component
 {

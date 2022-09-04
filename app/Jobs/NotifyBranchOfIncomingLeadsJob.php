@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-use App\Branch;
+use App\Models\Branch;
 
 class NotifyBranchOfIncomingLeadsJob implements ShouldQueue
 {

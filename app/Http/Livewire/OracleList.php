@@ -6,7 +6,7 @@ use Livewire\Component;
 
 use Livewire\WithPagination;
 use App\Exports\ExportOracleListData;
-use App\Oracle;
+use App\Models\Oracle;
 use Excel;
 
 

@@ -4,8 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Role;
-use App\Permission;
+use App\Models\Role;
+use App\Models\Permission;
 
 class RolesTable extends Component
 {

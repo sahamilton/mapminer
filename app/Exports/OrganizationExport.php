@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Person;
-use App\Report;
+use App\Models\Person;
+use App\Models\Report;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;

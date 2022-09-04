@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\EmailLog;
-use App\Inbound;
-use App\InboundMail;
-use App\Person;
-use App\User;
+use App\Models\EmailLog;
+use App\Models\Inbound;
+use App\Models\InboundMail;
+use App\Models\Person;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InboundMailController extends Controller

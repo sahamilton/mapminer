@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NoteFormRequest;
-use App\Location;
-use App\Note;
-use App\User;
+use App\Models\Location;
+use App\Models\Note;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class NotesController extends BaseController
@@ -176,7 +176,7 @@ class NotesController extends BaseController
      */
     public function companynotes($companyid)
     {
-        $company = \App\Company::findOrFail($companyid);
+        $company = \App\Models\Company::findOrFail($companyid);
         $notes = $this->notes
             ->where('type', '=', 'location')
             ->with('relatesTo', 'relatesTo.company', 'writtenBy')

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Branch;
-use App\Person;
-use App\Campaign;
-use App\Role;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\Campaign;
+use App\Models\Role;
 use Carbon\Carbon;
-use App\Serviceline;
+use App\Models\Serviceline;
 use App\Http\Controllers\BaseController;
-use App\BranchManagement;
+use App\Models\BranchManagement;
 use App\Http\Requests\BranchAssignmentRequest;
 use Mail;
 use Excel;

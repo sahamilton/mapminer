@@ -1,6 +1,6 @@
 <?php
 namespace App\DataQuality;
-use App\Branch;
+use App\Models\Branch;
 
 interface DataQualityInterface {
     

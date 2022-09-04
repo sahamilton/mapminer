@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Company;
-use App\Activity;
-use App\Address;
-use App\Branch;
-use App\Campaign;
-use App\Opportunity;
-use App\Person;
+use App\Models\Company;
+use App\Models\Activity;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Opportunity;
+use App\Models\Person;
 class AccountManagerCampaignController extends Controller
 {
     public $activity;

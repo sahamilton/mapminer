@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountType;
-use App\Company;
+use App\Models\AccountType;
+use App\Models\Company;
 use App\Http\Requests\AccountTypeRequest;
 
 class AccounttypesController extends BaseController

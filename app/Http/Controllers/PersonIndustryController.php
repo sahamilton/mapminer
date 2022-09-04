@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Person;
-use App\PersonIndustry;
-use App\SearchFilter;
+use App\Models\Person;
+use App\Models\PersonIndustry;
+use App\Models\SearchFilter;
 use Illuminate\Http\Request;
 
 class PersonIndustryController extends Controller
@@ -61,7 +61,7 @@ class PersonIndustryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\PersonIndustry  $personIndustry
+     * @param  \App\Models\PersonIndustry  $personIndustry
      * @return \Illuminate\Http\Response
      */
     public function show(PersonIndustry $personIndustry)
@@ -72,7 +72,7 @@ class PersonIndustryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\PersonIndustry  $personIndustry
+     * @param  \App\Models\PersonIndustry  $personIndustry
      * @return \Illuminate\Http\Response
      */
     public function edit(PersonIndustry $personIndustry)
@@ -84,7 +84,7 @@ class PersonIndustryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\PersonIndustry  $personIndustry
+     * @param  \App\Models\PersonIndustry  $personIndustry
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -94,7 +94,7 @@ class PersonIndustryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\PersonIndustry  $personIndustry
+     * @param  \App\Models\PersonIndustry  $personIndustry
      * @return \Illuminate\Http\Response
      */
     public function destroy(PersonIndustry $personIndustry)

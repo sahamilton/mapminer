@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\User;
-use App\Role;
-use App\Serviceline;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Serviceline;
 use Livewire\Component;
 use Livewire\WithPagination;
 

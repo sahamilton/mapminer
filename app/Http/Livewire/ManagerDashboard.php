@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Person;
+use App\Models\Person;
 use Livewire\Component;
-use App\Branch;
-use App\PeriodSelector;
+use App\Models\Branch;
+use App\Models\PeriodSelector;
 use Livewire\WithPagination;
 class ManagerDashboard extends Component
 {

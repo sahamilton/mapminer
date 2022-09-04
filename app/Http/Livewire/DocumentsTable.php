@@ -5,9 +5,9 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use App\Campaign;
-use App\Document;
-use App\Person; 
+use App\Models\Campaign;
+use App\Models\Document;
+use App\Models\Person; 
 class DocumentsTable extends Component
 {
 

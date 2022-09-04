@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchFiltersFormRequest;
-use App\SearchFilter;
+use App\Models\SearchFilter;
 use Excel;
 use Illuminate\Http\Request;
 use App\Exports\IndustryAnalysisExport;
@@ -252,7 +252,7 @@ class SearchFiltersController extends BaseController
      */
     public function getAccountSegments(Request $request)
     {
-        $vertical = \App\Company::where('id', '=', request('id'))->pluck('vertical');
+        $vertical = \App\Models\Company::where('id', '=', request('id'))->pluck('vertical');
         $segments = $this->filter->where('parent_id', '=', $vertical)
             ->orderBy('filter', 'asc')
             ->pluck('filter', 'id');

@@ -3,13 +3,13 @@
 namespace App\Jobs;
 
 
-use App\Report;
-use App\Person;
-use App\User;
+use App\Models\Report;
+use App\Models\Person;
+use App\Models\User;
 
 use Illuminate\Support\Str;
 
-use App\Exports\TeamLoginsExport;
+use App\Models\Exports\TeamLoginsExport;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;

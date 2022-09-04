@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Branch;
-use App\Person;
-use App\Campaign;
-use App\Company;
-use App\ActivityType;
-use App\Chart;
-use App\Activity;
-use App\PeriodSelector;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\Campaign;
+use App\Models\Company;
+use App\Models\ActivityType;
+use App\Models\Chart;
+use App\Models\Activity;
+use App\Models\PeriodSelector;
 use Illuminate\Http\Request;
 
 class NewDashboardController extends Controller

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Address;
-use App\OrderImport;
+use App\Models\Address;
+use App\Models\OrderImport;
 use Illuminate\Http\Request;
 
 class OrderImportController extends ImportController

@@ -10,12 +10,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
 
-use App\Exports\Reports\Campaign\CampaignSummaryExport;
-use App\Mail\SendCampaignSummaryReport;
-use App\Campaign;
-use App\Report;
-use App\User;
-use App\Job\ReportReadyJob;
+use App\Models\Exports\Reports\Campaign\CampaignSummaryExport;
+use App\Models\Mail\SendCampaignSummaryReport;
+use App\Models\Campaign;
+use App\Models\Report;
+use App\Models\User;
+use App\Models\Job\ReportReadyJob;
 
 
 class CampaignSummary implements ShouldQueue

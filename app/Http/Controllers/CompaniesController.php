@@ -1,19 +1,20 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\User;
-use App\State;
-use App\Person;
-use App\Company;
-use App\Location;
-use App\Address;
+use App\Models\User;
+
+use App\Models\State;
+use App\Models\Person;
+use App\Models\Company;
+use App\Models\Location;
+use App\Models\Address;
 use Excel;
-use App\Pagination;
-use App\SearchFilter;
-use App\Salesnote;
-use App\Howtofield;
-use App\Serviceline;
-use App\AccountType;
+use App\Models\Pagination;
+use App\Models\SearchFilter;
+use App\Models\Salesnote;
+use App\Models\Howtofield;
+use App\Models\Serviceline;
+use App\Models\AccountType;
 use Illuminate\Http\Request;
 use App\Exports\CompaniesExport;
 use App\Http\Requests\CompanyFormRequest;
@@ -132,7 +133,7 @@ class CompaniesController extends BaseController
         $filters = $this->_getFilters();
 
         $servicelines = Serviceline::pluck('ServiceLine', 'id');
-        $types = \App\AccountType::all();    
+        $types = AccountType::all();    
         return response()->view(
             'companies.create', 
             compact('managers', 'filters', 'servicelines', 'types')
@@ -194,7 +195,7 @@ class CompaniesController extends BaseController
             ->pluck('ServiceLine', 'id');
 
         $filters = $this->_getFilters();
-        $types = \App\AccountType::all();
+        $types = AccountType::all();
         //$verticals = $this->searchfilter->industrysegments();
         return response()->view(
             'companies.edit', 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exports;
-use App\GitVersion;
+use App\Models\GitVersion;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 

@@ -3,12 +3,12 @@
 namespace App\Jobs;
 
 
-use App\Report;
-use App\Person;
-use App\User;
+use App\Models\Report;
+use App\Models\Person;
+use App\Models\User;
 
 
-use App\Exports\Reports\Branch\BranchOpenOpportunitiesDetailExport;
+use App\Models\Exports\Reports\Branch\BranchOpenOpportunitiesDetailExport;
 
 use Illuminate\Support\Str;
 

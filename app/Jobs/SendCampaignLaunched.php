@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Campaign;
-use App\Mail\SendCampaignLaunchedMail;
-use App\User;
+use App\Models\Campaign;
+use App\Models\Mail\SendCampaignLaunchedMail;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

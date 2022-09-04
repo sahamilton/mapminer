@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\User;
-use App\Document;
+use App\Models\User;
+use App\Models\Document;
 use Carbon\Carbon;
-use App\DocumentReader;
-use App\SalesProcess;
-use App\Campaign;
-use App\SearchFilter;
+use App\Models\DocumentReader;
+use App\Models\SalesProcess;
+use App\Models\Campaign;
+use App\Models\SearchFilter;
 use App\Http\Requests\DocumentFormRequest;
 
 class DocumentsController extends BaseController

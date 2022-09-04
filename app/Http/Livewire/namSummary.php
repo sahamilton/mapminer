@@ -4,10 +4,10 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
-use App\Branch;
-use App\Person;
-use App\Company;
+use App\Models\PeriodSelector;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\Company;
 
 class namSummary extends Component
 {

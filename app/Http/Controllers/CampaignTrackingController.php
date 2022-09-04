@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Activity;
-use App\Address;
-use App\Branch;
-use App\Campaign;
-USE App\Company;
-use App\Opportunity;
+use App\Models\Activity;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Company;
+use App\Models\Opportunity;
 use Excel;
 use App\Exports\Reports\Campaign\CampaignSummaryExport;
 use App\Exports\CampaignCompanyExport;

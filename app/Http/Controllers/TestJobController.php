@@ -6,8 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Campaign;
-use App\Person;
+use App\Models\Campaign;
+use App\Models\Person;
 class TestJobController extends Controller
 {
     /**

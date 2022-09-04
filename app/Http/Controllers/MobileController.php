@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Branch;
-use App\Person;
-use App\Address;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\Address;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;

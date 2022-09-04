@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Report;
+use App\Models\Report;
 use Livewire\Component;
 use Livewire\WithPagination;
 class ReportTable extends Component

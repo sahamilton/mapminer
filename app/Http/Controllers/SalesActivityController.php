@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Company;
-use App\Campaign;
-use App\Document;
+use App\Models\Address;
+use App\Models\Company;
+use App\Models\Campaign;
+use App\Models\Document;
 use App\Http\Requests\SalesActivityFormRequest;
-use App\Lead;
-use App\LeadStatus;
-use App\Location;
-use App\Person;
-use App\Salesactivity;
-use App\SalesOrg;
-use App\SalesProcess;
-use App\SearchFilter;
-use App\State;
+use App\Models\Lead;
+use App\Models\LeadStatus;
+use App\Models\Location;
+use App\Models\Person;
+use App\Models\Salesactivity;
+use App\Models\SalesOrg;
+use App\Models\SalesProcess;
+use App\Models\SearchFilter;
+use App\Models\State;
 use Illuminate\Http\Request;
 
 class SalesActivityController extends BaseController

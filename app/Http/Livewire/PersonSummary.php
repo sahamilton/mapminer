@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 
 class PersonSummary extends Component

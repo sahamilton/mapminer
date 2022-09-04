@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use Mail;
-use App\User;
+use App\Models\User;
 use App\Mail\UserChanges;
 use App\Mail\UserNotification;
 use App\Notifications\UserUpdate;

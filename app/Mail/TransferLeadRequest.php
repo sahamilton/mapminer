@@ -6,8 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Address;
-use App\User;
+use App\Models\Address;
+use App\Models\User;
 
 class TransferLeadRequest extends Mailable
 {

@@ -1,12 +1,12 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use App\Address;
-use App\Note;
-use App\Track;
-use App\User;
-use App\Person;
-use App\Company;
+use App\Models\Address;
+use App\Models\Note;
+use App\Models\Track;
+use App\Models\User;
+use App\Models\Person;
+use App\Models\Company;
 use Excel;
 use App\Exports\UsersExport;
 use Carbon\Carbon;
@@ -557,7 +557,7 @@ class AdminDashboardController extends BaseController
     private function _getDuplicateAddresses()
     {
         //Query to get duplicate addresses
-        return \App\Address::with('company')
+        return \App\Models\Address::with('company')
             ->selectRaw(
                 "company_id,addresses.id as address_id,
                         concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress,

@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Comments;
+use App\Models\Comments;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;

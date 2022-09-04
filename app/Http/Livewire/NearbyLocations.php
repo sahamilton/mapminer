@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Location;
+use App\Models\Location;
 use Livewire\Component;
-use App\Address;
-use App\AccountType;
-use App\Company;
+use App\Models\Address;
+use App\Models\AccountType;
+use App\Models\Company;
 use Livewire\WithPagination;
 use App\Exports\ExportNearbyLocations;
 use Excel;

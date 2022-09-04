@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Company;
+use App\Models\Company;
 use App\Http\Requests\UsersImportFormRequest;
-use App\Person;
-use App\Serviceline;
-use App\User;
-use App\UserImport;
+use App\Models\Person;
+use App\Models\Serviceline;
+use App\Models\User;
+use App\Models\UserImport;
 use Illuminate\Http\Request;
 
 class UsersImportController extends ImportController

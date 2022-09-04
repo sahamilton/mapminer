@@ -4,16 +4,16 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
-use App\Address;
-use App\Company;
+use App\Models\Address;
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Exports\AccountOpportunitiesExport;
-use App\Mail\AccountOpportunitiesReport;
+use App\Models\Exports\AccountOpportunitiesExport;
+use App\Models\Mail\AccountOpportunitiesReport;
 
 class AccountOpportunities implements ShouldQueue
 {

@@ -1,9 +1,9 @@
 <?php
 namespace App\Exports\Reports\Branch;
 
-use App\Branch;
-use App\Report;
-use App\Person;
+use App\Models\Branch;
+use App\Models\Report;
+use App\Models\Person;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;

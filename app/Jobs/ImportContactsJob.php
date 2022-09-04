@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\ContactImport;
-use App\Contact;
-use App\User;
+use App\Models\ContactImport;
+use App\Models\Contact;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;

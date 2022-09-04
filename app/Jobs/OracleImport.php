@@ -8,9 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Mail\OracleImportComplete;
-use App\OracleSource;
-use App\User;
+use App\Models\Mail\OracleImportComplete;
+use App\Models\OracleSource;
+use App\Models\User;
 use Mail;
 
 class OracleImport implements ShouldQueue

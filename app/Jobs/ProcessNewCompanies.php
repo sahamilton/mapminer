@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Company;
-use App\OrderImport;
+use App\Models\Company;
+use App\Models\OrderImport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonFormRequest;
-use App\Permission;
-use App\Person;
+use App\Models\Permission;
+use App\Models\Person;
 
 class AdminPersonsController extends BaseController
 {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Company;
-use App\CompanyImport;
+use App\Models\Company;
+use App\Models\CompanyImport;
 use Illuminate\Http\Request;
 
 class CompaniesImportController extends ImportController

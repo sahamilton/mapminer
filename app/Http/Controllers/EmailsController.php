@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Email;
+use App\Models\Email;
 use App\Http\Requests\EmailFormRequest;
 use App\Mail\MassConfirmation;
 use App\Mail\SendEmail;
-use App\Person;
-use App\Role;
-use App\Salesactivity;
-use App\SearchFilter;
+use App\Models\Person;
+use App\Models\Role;
+use App\Models\Salesactivity;
+use App\Models\SearchFilter;
 use Illuminate\Http\Request;
 use Mail;
 

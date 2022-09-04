@@ -4,9 +4,9 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Branch;
-use App\Region;
-use App\Location;
+use App\Models\Branch;
+use App\Models\Region;
+use App\Models\Location;
 
 class BranchTable extends Component
 {

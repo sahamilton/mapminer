@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Person;
-use App\User;
-use App\Activity;
-use App\Address;
-use App\Opportunity;
-use App\Model;
-use App\Track;
+use App\Models\Person;
+use App\Models\User;
+use App\Models\Activity;
+use App\Models\Address;
+use App\Models\Opportunity;
+use App\Models\Model;
+use App\Models\Track;
 
 class UserTrackingController extends Controller
 {

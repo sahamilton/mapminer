@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Branch;
-use App\Mail\SendWeeklyOpportunityReminder;
+use App\Models\Branch;
+use App\Models\Mail\SendWeeklyOpportunityReminder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

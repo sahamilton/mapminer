@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Branch;
-use App\BranchLeadImport;
+use App\Models\Branch;
+use App\Models\BranchLeadImport;
 use App\Http\Requests\BranchImportFormRequest;
-use App\Imports;
+use App\Models\Imports;
 use Illuminate\Http\Request;
 
 class BranchLeadImportController extends ImportController
@@ -57,7 +57,7 @@ class BranchLeadImportController extends ImportController
     /**
      * Display the specified resource.
      *
-     * @param  \App\BranchLeadImport  $branchLeadImport
+     * @param  \App\Models\BranchLeadImport  $branchLeadImport
      * @return \Illuminate\Http\Response
      */
     public function show(BranchLeadImport $branchLeadImport)
@@ -68,7 +68,7 @@ class BranchLeadImportController extends ImportController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\BranchLeadImport  $branchLeadImport
+     * @param  \App\Models\BranchLeadImport  $branchLeadImport
      * @return \Illuminate\Http\Response
      */
     public function edit(BranchLeadImport $branchLeadImport)
@@ -80,7 +80,7 @@ class BranchLeadImportController extends ImportController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\BranchLeadImport  $branchLeadImport
+     * @param  \App\Models\BranchLeadImport  $branchLeadImport
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, BranchLeadImport $branchLeadImport)
@@ -91,7 +91,7 @@ class BranchLeadImportController extends ImportController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\BranchLeadImport  $branchLeadImport
+     * @param  \App\Models\BranchLeadImport  $branchLeadImport
      * @return \Illuminate\Http\Response
      */
     public function destroy(BranchLeadImport $branchLeadImport)

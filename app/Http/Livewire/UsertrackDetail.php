@@ -4,10 +4,10 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Person;
-use App\PeriodSelector;
-use App\Activity;
-use App\ActivityType;
+use App\Models\Person;
+use App\Models\PeriodSelector;
+use App\Models\Activity;
+use App\Models\ActivityType;
 
 class UsertrackDetail extends Component
 {

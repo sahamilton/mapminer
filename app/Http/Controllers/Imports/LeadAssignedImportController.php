@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Imports;
 
 use App\Http\Requests\LeadImportFormRequest;
-use App\Lead;
-use App\LeadImport;
-use App\LeadSource;
+use App\Models\Lead;
+use App\Models\LeadImport;
+use App\Models\LeadSource;
 use Illuminate\Http\Request;
 
 class LeadAssignedImportController extends ImportController

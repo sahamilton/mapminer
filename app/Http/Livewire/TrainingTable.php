@@ -4,8 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Training;
-use App\Role;
+use App\Models\Training;
+use App\Models\Role;
 
 class TrainingTable extends Component
 {

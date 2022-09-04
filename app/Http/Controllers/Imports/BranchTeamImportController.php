@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Branch;
-use App\BranchTeamImport;
+use App\Models\Branch;
+use App\Models\BranchTeamImport;
 use App\Http\Requests\BranchTeamImportFormRequest;
-use App\Person;
+use App\Models\Person;
 use Illuminate\Http\Request;
 
 class BranchTeamImportController extends ImportController

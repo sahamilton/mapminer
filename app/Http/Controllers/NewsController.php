@@ -1,13 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\News;
+use App\Models\News;
 use Carbon\Carbon;
-use App\User;
-use App\Serviceline;
-use App\Person;
-use App\Role;
-use App\SearchFilter;
+use App\Models\User;
+use App\Models\Serviceline;
+use App\Models\Person;
+use App\Models\Role;
+use App\Models\SearchFilter;
 use App\Http\Requests\NewsFormRequest;
 use Illuminate\Support\Str;
 

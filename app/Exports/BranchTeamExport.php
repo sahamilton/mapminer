@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Branch;
-use App\Role;
+use App\Models\Branch;
+use App\Models\Role;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 

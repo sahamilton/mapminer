@@ -1,8 +1,8 @@
 <?php
 
 namespace App\DataQuality;
-use App\Branch;
-use App\AddressBranch;
+use App\Models\Branch;
+use App\Models\AddressBranch;
 use Illuminate\Database\Eloquent\Model;
 
 class DQStaleLeads implements DataQualityInterface

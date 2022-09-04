@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Document;
+use App\Models\Address;
+use App\Models\Document;
 use App\Exports\CompanyWatchExport;
 use App\Exports\UsersExport;
 use App\Exports\WatchListExport;
-use App\Location;
-use App\User;
-use App\Watch;
+use App\Models\Location;
+use App\Models\User;
+use App\Models\Watch;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 

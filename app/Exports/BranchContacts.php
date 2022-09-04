@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\AddressBranch;
-use App\Branch;
+use App\Models\AddressBranch;
+use App\Models\Branch;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithMapping;

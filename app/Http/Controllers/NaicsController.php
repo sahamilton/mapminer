@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Naics;
+use App\Models\Naics;
 use Illuminate\Http\Request;
 
 class NaicsController extends Controller

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Observers;
-use App\OracleSource;
+use App\Models\OracleSource;
 use App\Jobs\OracleImport;
 class OracleSourceObserver
 {

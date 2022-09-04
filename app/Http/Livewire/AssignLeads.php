@@ -4,10 +4,10 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Location;
-use App\Branch;
-use App\Address;
-use App\Person;
+use App\Models\Location;
+use App\Models\Branch;
+use App\Models\Address;
+use App\Models\Person;
 class AssignLeads extends Component
 {
     use WithPagination, NearbyGeocoder;

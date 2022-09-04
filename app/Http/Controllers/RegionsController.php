@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegionFormRequest;
-use App\Region;
+use App\Models\Region;
 
 class RegionsController extends BaseController
 {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
-use App\DataQuality;
+use App\Models\Branch;
+use App\Models\DataQuality;
 
 use Illuminate\Http\Request;
 

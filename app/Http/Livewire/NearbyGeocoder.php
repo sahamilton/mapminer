@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Location;
+use App\Models\Location;
 Trait NearbyGeocoder {
 	
 	

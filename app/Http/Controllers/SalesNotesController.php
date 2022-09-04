@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\Salesnote;
-use App\Howtofield;
+use App\Models\Company;
+use App\Models\Salesnote;
+use App\Models\Howtofield;
 use App\Http\Requests\SalesNotesFormRequest;
 use Illuminate\Http\Request;
 

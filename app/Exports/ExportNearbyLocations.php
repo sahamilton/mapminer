@@ -1,10 +1,10 @@
 <?php
 namespace App\Exports;
 
-use App\Company;
-use App\Location;
-use App\Address;
-use App\AccountType;
+use App\Models\Company;
+use App\Models\Location;
+use App\Models\Address;
+use App\Models\AccountType;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;

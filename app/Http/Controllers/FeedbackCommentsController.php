@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\FeedbackEvent;
-use App\Feedback;
-use App\FeedbackComments;
+use App\Models\Feedback;
+use App\Models\FeedbackComments;
 use App\Mail\FeedbackClosed;
 use App\Mail\FeedbackComment;
 use Illuminate\Http\Request;

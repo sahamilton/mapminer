@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Address;
-use App\Branch;
+use App\Models\Address;
+use App\Models\Branch;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Transformers\AddressMapTransformer;

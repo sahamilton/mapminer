@@ -8,11 +8,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Mail\SendActivityReminder;
+use App\Models\Mail\SendActivityReminder;
 use Mail;
-use App\Ical;
-use App\User;
-use App\Activity;
+use App\Models\Ical;
+use App\Models\User;
+use App\Models\Activity;
 
 class SendActivityReminderJob implements ShouldQueue
 {

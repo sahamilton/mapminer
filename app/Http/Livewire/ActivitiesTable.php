@@ -3,13 +3,13 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\ActivityType;
-use App\Branch;
-use App\Campaign;
-use App\Activity;
-use App\User;
+use App\Models\ActivityType;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Activity;
+use App\Models\User;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 class ActivitiesTable extends Component
 {

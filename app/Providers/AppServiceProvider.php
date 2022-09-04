@@ -17,17 +17,17 @@ use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 
-use App\Activity;
-use App\Branch;
-use App\Feedback;
-use App\Lead;
-use App\Location;
-use App\Opportunity;
-use App\OracleSource;
-use App\Person;
-use App\Project;
+use App\Models\Activity;
+use App\Models\Branch;
+use App\Models\Feedback;
+use App\Models\Lead;
+use App\Models\Location;
+use App\Models\Opportunity;
+use App\Models\OracleSource;
+use App\Models\Person;
+use App\Models\Project;
 
-use App\User;
+use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
 {

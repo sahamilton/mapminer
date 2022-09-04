@@ -7,10 +7,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Campaign;
-use App\Company;
-use App\Address;
-use App\AddressCampaign;
+use App\Models\Campaign;
+use App\Models\Company;
+use App\Models\Address;
+use App\Models\AddressCampaign;
 
 
 class AssignAddressesToCampaignJob implements ShouldQueue

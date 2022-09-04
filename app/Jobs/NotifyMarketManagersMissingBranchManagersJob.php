@@ -8,8 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Oracle;
-use App\Mail\NotifyMarketManagersMissingBranchManagersMail;
+use App\Models\Oracle;
+use App\Models\Mail\NotifyMarketManagersMissingBranchManagersMail;
 use Mail;
 
 class NotifyMarketManagersMissingBranchManagersJob implements ShouldQueue

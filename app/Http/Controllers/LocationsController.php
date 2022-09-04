@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Branch;
-use App\Company;
-use App\AddressBranch;
-use App\Person;
-use App\User;
-use App\Watch;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\Company;
+use App\Models\AddressBranch;
+use App\Models\Person;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Watch;
 
 use App\Http\Requests\LocationFormRequest;
 use App\Http\Requests\LocationImportFormRequest;
-use App\SearchFilter;
-use App\Serviceline;
+use App\Models\SearchFilter;
+use App\Models\Serviceline;
 
 use Excel;
 use Illuminate\Http\Request;
@@ -237,7 +238,7 @@ class LocationsController extends BaseController
     public function listNearbyLocations($branch)
     {
         $filtered = $this->location->isFiltered(['companies'], ['vertical']);
-        $roles = \App\Role::pluck('display_name', 'id');
+        $roles = Role::pluck('display_name', 'id');
         $mywatchlist = [];
         $locations = null;
         $data['branch'] = $branch->load('manager');

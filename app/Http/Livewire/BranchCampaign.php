@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire;
 
-use App\Campaign;
-use App\Branch;
-use App\Address;
-use App\Activity;
-use App\Opportunity;
+use App\Models\Campaign;
+use App\Models\Branch;
+use App\Models\Address;
+use App\Models\Activity;
+use App\Models\Opportunity;
 use Livewire\Component;
 use Livewire\WithPagination;
 class BranchCampaign extends Component

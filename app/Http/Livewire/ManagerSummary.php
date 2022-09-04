@@ -4,8 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
-use App\Branch;
+use App\Models\PeriodSelector;
+use App\Models\Branch;
 
 class ManagerSummary extends Component
 {

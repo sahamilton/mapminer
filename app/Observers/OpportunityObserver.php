@@ -4,8 +4,8 @@ namespace App\Observers;
 
 use App\Jobs\WonOpportunity;
 use App\Jobs\NewOpportunity;
-use App\Opportunity;
-use App\Address;
+use App\Models\Opportunity;
+use App\Models\Address;
 
 
 class OpportunityObserver

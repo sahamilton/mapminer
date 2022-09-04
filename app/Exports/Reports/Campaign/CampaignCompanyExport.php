@@ -3,7 +3,7 @@
 namespace App\Exports\Reports\Campaign;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use App\Campaign;
+use App\Models\Campaign;
 class CampaignCompanyExport implements FromView
 {
     public $companies;

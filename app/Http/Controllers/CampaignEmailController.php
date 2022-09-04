@@ -7,12 +7,12 @@ use App\Mail\SendManagersCampaignMail;
 use App\Mail\SendSenderCampaignMail;
 
 use App\Jobs\NotifyBranchesOfCampaign;
-use App\Person;
-use App\Salesactivity;
-use App\SearchFilter;
+use App\Models\Person;
+use App\Models\Salesactivity;
+use App\Models\SearchFilter;
 use Illuminate\Http\Request;
 use Mail;
-use App\Campaign;
+use App\Models\Campaign;
 
 class CampaignEmailController extends Controller
 {

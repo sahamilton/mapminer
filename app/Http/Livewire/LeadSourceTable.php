@@ -4,9 +4,9 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Leadsource;
+use App\Models\Leadsource;
 
-use App\Branch;
+use App\Models\Branch;
 
 
 class LeadSourceTable extends Component

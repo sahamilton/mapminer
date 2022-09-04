@@ -2,7 +2,7 @@
 
 namespace App\Exports\Reports\Branch;
 
-use App\Branch;
+use App\Models\Branch;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;

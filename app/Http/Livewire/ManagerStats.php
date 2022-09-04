@@ -4,13 +4,13 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
-use App\Activity;
-use App\AddressBranch;
-use App\Branch;
-use App\Opportunity;
-use App\Person;
-use App\Role;
+use App\Models\PeriodSelector;
+use App\Models\Activity;
+use App\Models\AddressBranch;
+use App\Models\Branch;
+use App\Models\Opportunity;
+use App\Models\Person;
+use App\Models\Role;
 
 class ManagerStats extends Component
 {

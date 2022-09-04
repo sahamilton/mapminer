@@ -4,10 +4,10 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Address;
-use App\Person;
-use App\Company;
-use App\Branch;
+use App\Models\Address;
+use App\Models\Person;
+use App\Models\Company;
+use App\Models\Branch;
 
 
 class CompanyLocationTable extends Component

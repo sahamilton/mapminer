@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\MyLead;
-use App\MyLeadContacts;
+use App\Models\MyLead;
+use App\Models\MyLeadContacts;
 use Illuminate\Http\Request;
 
 class MyLeadsContactController extends Controller

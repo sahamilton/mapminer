@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Company;
-use App\Note;
+use App\Models\Company;
+use App\Models\Note;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 

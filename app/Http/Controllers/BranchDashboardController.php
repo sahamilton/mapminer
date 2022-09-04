@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
-use App\ActivityType;
-use App\Address;
-use App\AddressBranch;
-use App\Branch;
-use App\Chart;
-use App\Company;
-use App\Campaign;
-use App\Contact;
-use App\Track;
+use App\Models\Activity;
+use App\Models\ActivityType;
+use App\Models\Address;
+use App\Models\AddressBranch;
+use App\Models\Branch;
+use App\Models\Chart;
+use App\Models\Company;
+use App\Models\Campaign;
+use App\Models\Contact;
+use App\Models\Track;
 
-use App\Note;
+use App\Models\Note;
 use App\Http\Requests\OpportunityFormRequest;
-use App\Opportunity;
-use App\Person;
+use App\Models\Opportunity;
+use App\Models\Person;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
 

@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Address;
-use App\Activity;
-use App\Company;
-use App\Person;
-use App\PeriodSelector;
-use App\ActivityType;
+use App\Models\Address;
+use App\Models\Activity;
+use App\Models\Company;
+use App\Models\Person;
+use App\Models\PeriodSelector;
+use App\Models\ActivityType;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\AddressBranch;
+use App\Models\AddressBranch;
 
 class Namdetail extends Component
 {

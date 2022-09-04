@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Activity;
-use App\ActivityType;
-use App\Chart;
-use App\Contact;
-use App\Branch;
+use App\Models\Address;
+use App\Models\Activity;
+use App\Models\ActivityType;
+use App\Models\Chart;
+use App\Models\Contact;
+use App\Models\Branch;
 use Excel;
 use App\Exports\MyActivities;
-use App\Person;
+use App\Models\Person;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ActivityFormRequest;

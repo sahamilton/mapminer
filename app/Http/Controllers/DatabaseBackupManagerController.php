@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DatabaseBackupManager;
+use App\Models\DatabaseBackupManager;
 use Illuminate\Http\Request;
 
 class DatabaseBackupManagerController extends Controller

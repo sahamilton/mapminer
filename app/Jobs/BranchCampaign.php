@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Branch;
-use App\Campaign;
-use App\Mail\BranchCampaignReport;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Mail\BranchCampaignReport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
-use App\Campaign;
-use App\Person;
-use App\User;
+use App\Models\Campaign;
+use App\Models\Person;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

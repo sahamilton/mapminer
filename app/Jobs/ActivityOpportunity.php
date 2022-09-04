@@ -3,10 +3,10 @@
 namespace App\Jobs;
 
 
-use App\Report;
-use App\Person;
-use App\User;
-use App\Exports\Reports\Branch\ActivityOpportunityExport;
+use App\Models\Report;
+use App\Models\Person;
+use App\Models\User;
+use App\Models\Exports\Reports\Branch\ActivityOpportunityExport;
 
 use Illuminate\Support\Str;
 

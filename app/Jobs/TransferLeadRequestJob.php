@@ -10,9 +10,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mail;
 
-use App\Address;
-use App\User;
-use App\Mail\TransferLeadRequest;
+use App\Models\Address;
+use App\Models\User;
+use App\Models\Mail\TransferLeadRequest;
 
 class TransferLeadRequestJob implements ShouldQueue
 {

@@ -4,8 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Feedback;
-use App\FeedbackCategory;
+use App\Models\Feedback;
+use App\Models\FeedbackCategory;
 use Excel;
 use App\Exports\FeedbackExport;
 

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Branch;
-use App\BranchImport;
+use App\Models\Branch;
+use App\Models\BranchImport;
 use App\Http\Requests\BranchImportFormRequest;
-use App\Imports;
-use App\Serviceline;
+use App\Models\Imports;
+use App\Models\Serviceline;
 use Illuminate\Http\Request;
 
 class BranchesImportController extends ImportController

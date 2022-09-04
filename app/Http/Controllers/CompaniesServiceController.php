@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
-use App\Company;
-use App\CompanyService;
-use App\Location;
-use App\Person;
+use App\Models\Branch;
+use App\Models\Company;
+use App\Models\CompanyService;
+use App\Models\Location;
+use App\Models\Person;
 use Excel;
 use Illuminate\Http\Request;
 

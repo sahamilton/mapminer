@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Mail\ConfirmFileTransfer;
+use App\Models\Mail\ConfirmFileTransfer;
 
 
 class TransferFileJob implements ShouldQueue

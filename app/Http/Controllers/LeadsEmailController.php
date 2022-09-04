@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Mail;
-use App\LeadSource;
-use App\Lead;
-use App\Branch;
-use App\Person;
-use App\LeadStatus;
+use App\Models\LeadSource;
+use App\Models\Lead;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\LeadStatus;
 use App\Mail\NotifyLeadsAssignment;
 use App\Mail\NotifyManagersLeadsAssignment;
 use App\Mail\NotifySenderLeadsAssignment;
@@ -36,7 +36,7 @@ class LeadsEmailController extends Controller
         
         $data['branches'] = $this->branch->whereIn('id', array_keys($data))->with('manager', 'manager.userdetails', 'manager.reportsTo')->get();
         $data['people'] = $this->_getBranchManagers($data['branches']);
-        $message = $this->createMessage($source);
+        $message = $this->_createMessage($source);
         return response()->view('leadsource.salesteam', compact('source',  'data', 'message'));
     }
 
@@ -58,30 +58,54 @@ class LeadsEmailController extends Controller
         // data [ 'branch_id'=>number of leads]
         return $data;
     }
-    private function _getBranchManagers($branches)
+    /**
+     * [_getBranchManagers description]
+     * 
+     * @param [type] $branches [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getBranchManagers($branches) :array
     {
-        return $branches->map(function ($branch) {
-            return $branch->manager;
+        return $branches->map(
+            function ($branch) {
+                return $branch->manager;
             }
         );
         
     }
-    public function branches($leads)
+    /**
+     * [branches description]
+     * 
+     * @param [type] $leads [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function branches($leads) :array
     {
         
 
-        $branches =  $leads->map(function ($lead) {
-            return $lead->assignedToBranch->pluck('id');
-        })->flatten();
-        $branchManagers = \App\Branch::whereIn('id', array_unique($branches->toArray()))->with('manager')->get();
-        $managers = $branchManagers->map(function ($branch) {
-            return $branch->manager->load('userdetails');
-        });
+        $branches =  $leads->map(
+            function ($lead) {
+                return $lead->assignedToBranch->pluck('id');
+            }
+        )->flatten();
+        $branchManagers = Branch::whereIn('id', array_unique($branches->toArray()))->with('manager')->get();
+        $managers = $branchManagers->map(
+            function ($branch) {
+                return $branch->manager->load('userdetails');
+            }
+        );
         return $managers;
     }
-    // This should be in a mailable.
-    
-    private function createMessage($source)
+    /**
+     * [_createMessage description]
+     * 
+     * @param [type] $source [description]
+     * 
+     * @return [type]         [description]
+     */
+    private function _createMessage($source) : string
     {
         $message = "You have new leads offered to you in the " . $source->source." lead campaign. ";
         $message .= $source->description;
@@ -97,7 +121,14 @@ class LeadsEmailController extends Controller
         $message .="Check out <strong><a href=\"".route('salesleads.index'). "\">MapMiner</a></strong> to accept these leads and for other resources to help you with these leads.";
         return $message;
     }
-
+    /**
+     * [email description]
+     * 
+     * @param Request $request    [description]
+     * @param [type]  $leadsource [description]
+     * 
+     * @return [type]              [description]
+     */
     public function email(Request $request, $leadsource)
     {
 
@@ -117,11 +148,19 @@ class LeadsEmailController extends Controller
             $this->_notifyManagers($data, $branches, $leadsource);
         }
         
-        $this->notifySender($data, $leadsource);
+        $this->_notifySender($data, $leadsource);
    
         return response()->view('leadsource.senderleads', compact('data', 'leadsource'));
     }
-
+    /**
+     * [_notifyBranchTeam description]
+     * 
+     * @param [type] $data       [description]
+     * @param [type] $branches   [description]
+     * @param [type] $leadsource [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _notifyBranchTeam($data, $branches, $leadsource)
     {
         if (isset($data['test'])) {
@@ -140,14 +179,24 @@ class LeadsEmailController extends Controller
             }
         }
     }
-
+    /**
+     * [_notifyManagers description]
+     * 
+     * @param [type] $data       [description]
+     * @param [type] $branches   [description]
+     * @param [type] $leadsource [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _notifyManagers($data, $branches, $leadsource)
     {
-       // we need to get the unique reports to
+      
 
-        $managers = $branches->map(function ($branch) {
-            return $branch->manager->first()->reportsTo;
-        });
+        $managers = $branches->map(
+            function ($branch) {
+                return $branch->manager->first()->reportsTo;
+            }
+        );
         
         if (isset($data['test'])) {
             foreach ($managers as $manager) {
@@ -161,41 +210,19 @@ class LeadsEmailController extends Controller
             }
         }
     }
-   /* private function notifySalesTeam($data,$salesteam) {
-        
-        foreach ($salesteam as $team) {
-            
-            
-                Mail::queue(new NotifyLeadsAssignment($data,$team));
-            
-        }
-    }*/
-
-    private function notifySender($data, LeadSource $leadsource)
+    /**
+     * [_notifySender description]
+     * 
+     * @param [type]     $data       [description]
+     * @param LeadSource $leadsource [description]
+     * 
+     * @return [type]                 [description]
+     */
+    private function _notifySender($data, LeadSource $leadsource)
     {
        
        
         Mail::to(auth()->user()->email)->queue(new NotifySenderLeadsAssignment($data, $leadsource));
     }
-   /* private function _notifyManagers($data,$salesteam) {
 
-       $data['managers']=array();
-        foreach ($salesteam as $salesrep) {
-           
-            if ($salesrep['details']->reportsTo) {
-                $data['managers'][$salesrep['details']->reportsTo->id]['team'][]=$salesrep['details']->postName();
-                $data['managers'][$salesrep['details']->reportsTo->id]['email']=$salesrep['details']->reportsTo->userdetails->email;
-                $data['managers'][$salesrep['details']->reportsTo->id]['firstname']=$salesrep['details']->reportsTo->firstname;
-                $data['managers'][$salesrep['details']->reportsTo->id]['lastname']= $salesrep['details']->reportsTo->lastname;
-            }
-        }
-        
-        foreach ($data['managers'] as $manager) {
-           
-                Mail::queue(new NotifyManagersLeadsAssignment($data,$manager));
-          
-            
-        }
-
-    }*/
 }

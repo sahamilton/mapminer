@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Watch;
+use App\Models\Watch;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 

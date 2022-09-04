@@ -4,8 +4,8 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use App\Role;
-use App\Branch;
+use App\Models\Role;
+use App\Models\Branch;
  
 class BranchExport implements FromView
 {   

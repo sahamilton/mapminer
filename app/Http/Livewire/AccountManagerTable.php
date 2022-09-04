@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire;
 
-use App\AccountType;
-use App\ActivityType;
-use App\Company;
-use App\Person;
+use App\Models\AccountType;
+use App\Models\ActivityType;
+use App\Models\Company;
+use App\Models\Person;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 class AccountManagerTable extends Component
 {

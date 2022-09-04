@@ -8,8 +8,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 use Mail;
-use App\Branch;
-use App\Campaign;
+use App\Models\Branch;
+use App\Models\Campaign;
 
 class BranchCampaignReport extends Mailable
 {

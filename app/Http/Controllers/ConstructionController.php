@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
-use App\Construction;
+use App\Models\Branch;
+use App\Models\Construction;
 use GuzzleHttp;
 use Illuminate\Http\Request;
 

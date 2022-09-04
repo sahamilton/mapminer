@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\ActivityType;
-use App\Person;
+use App\Models\ActivityType;
+use App\Models\Person;
 use Illuminate\Http\Request;
 
 class ActivityTypeController extends Controller

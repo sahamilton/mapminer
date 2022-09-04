@@ -2,7 +2,7 @@
 namespace App\Exports\Reports\Campaign;
 
 
-use App\Campaign;
+use App\Models\Campaign;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Carbon\Carbon;
-use App\Branch;
+use App\Models\Branch;
 
 
 class CampaignSummaryExport implements FromQuery, WithHeadings,WithColumnFormatting, WithMapping, ShouldAutoSize

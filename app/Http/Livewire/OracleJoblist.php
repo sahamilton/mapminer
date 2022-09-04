@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 use Livewire\WithPagination;
 use Livewire\Component;
-use App\OracleJobs;
+use App\Models\OracleJobs;
 class OracleJoblist extends Component
 {
     use WithPagination;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\LeadStatus;
+use App\Models\LeadStatus;
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadStatusFormRequest;
 

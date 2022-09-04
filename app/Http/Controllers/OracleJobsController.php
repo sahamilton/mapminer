@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\OracleJobs;
+use App\Models\OracleJobs;
 
 class OracleJobsController extends Controller
 {

@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Address;
-use App\Activity;
-use App\Opportunity;
-use App\Branch;
-use App\Contact;
-use App\Note;
-use App\Person;
-use App\Howtofield;
-use App\ActivityType;
-use App\Campaign;
+use App\Models\Address;
+use App\Models\Activity;
+use App\Models\Opportunity;
+use App\Models\Branch;
+use App\Models\Contact;
+use App\Models\Note;
+use App\Models\Person;
+use App\Models\Howtofield;
+use App\Models\ActivityType;
+use App\Models\Campaign;
 use \Fractal;
 use App\Transformers\AddressMapTransformer;
 use App\Http\Requests\MergeAddressFormRequest;

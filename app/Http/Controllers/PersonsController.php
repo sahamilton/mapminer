@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Person;
-use App\Branch;
-use App\Company;
-use App\SearchFilter;
+use App\Models\User;
+use App\Models\Person;
+use App\Models\Branch;
+use App\Models\Company;
+use App\Models\SearchFilter;
 use Excel;
 use App\Exports\PeopleExport;
 use Illuminate\Http\Request;

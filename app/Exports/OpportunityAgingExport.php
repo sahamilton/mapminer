@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Branch;
-use App\Opportunity;
+use App\Models\Branch;
+use App\Models\Opportunity;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\AddressBranch;
+use App\Models\AddressBranch;
 use Carbon\Carbon;
-use App\MyLeadActivity;
+use App\Models\MyLeadActivity;
 use Illuminate\Http\Request;
 
 class MyLeadsActivityController extends Controller

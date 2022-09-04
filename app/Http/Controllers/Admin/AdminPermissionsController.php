@@ -2,10 +2,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
-use App\User;
-use App\Role;
+use App\Models\User;
+use App\Models\Role;
 use App\Http\Requests\PermissionFormRequest;
-use App\Permission;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 
 class AdminPermissionsController extends BaseController

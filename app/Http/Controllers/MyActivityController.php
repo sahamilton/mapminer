@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Contact;
-use App\Watch;
+use App\Models\Address;
+use App\Models\Contact;
+use App\Models\Watch;
 use Illuminate\Http\Request;
 
 class MyActivityController extends Controller

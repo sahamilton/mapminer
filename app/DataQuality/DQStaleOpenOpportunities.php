@@ -1,8 +1,8 @@
 <?php
 
 namespace App\DataQuality;
-use App\Branch;
-use App\Opportunity;
+use App\Models\Branch;
+use App\Models\Opportunity;
 use Illuminate\Database\Eloquent\Model;
 
 class DQStaleOpenOpportunities implements DataQualityInterface

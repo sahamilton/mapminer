@@ -4,16 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Address;
-use App\Branch;
-use App\AddressBranch;
-use App\Company;
-use App\Lead;
-use App\LeadSource;
-use App\LeadStatus;
-use App\Person;
-use App\SearchFilter;
-use App\Serviceline;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\AddressBranch;
+use App\Models\Company;
+use App\Models\Lead;
+use App\Models\LeadSource;
+use App\Models\LeadStatus;
+use App\Models\Person;
+use App\Models\SearchFilter;
+use App\Models\Serviceline;
 
 
 use Excel;

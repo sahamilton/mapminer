@@ -4,9 +4,9 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Role;
-use App\Location;
-use App\Person;
+use App\Models\Role;
+use App\Models\Location;
+use App\Models\Person;
 class NearbyPeople extends Component
 {
     use WithPagination, NearbyGeocoder;

@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Exports\OpenTop25BranchOpportunitiesExport;
-use App\Mail\SendTop25WeeklyReport;
-use App\Report;
+use App\Models\Exports\OpenTop25BranchOpportunitiesExport;
+use App\Models\Mail\SendTop25WeeklyReport;
+use App\Models\Report;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Bus\Queueable;

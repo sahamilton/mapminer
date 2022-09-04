@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Address;
-use App\Activity;
-use App\Branch;
-use App\Campaign;
-use App\Person;
-use App\ActivityType;
+use App\Models\Address;
+use App\Models\Activity;
+use App\Models\Branch;
+use App\Models\Campaign;
+use App\Models\Person;
+use App\Models\ActivityType;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\AddressBranch;
-use App\PeriodSelector;
+use App\Models\AddressBranch;
+use App\Models\PeriodSelector;
 use Carbon\Carbon;
 
 class LeadTable extends Component

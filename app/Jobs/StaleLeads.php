@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Exports\StaleLeadsExport;
-use App\Person;
+use App\Models\Exports\StaleLeadsExport;
+use App\Models\Person;
 use Excel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

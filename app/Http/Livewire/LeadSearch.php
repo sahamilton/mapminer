@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Address;
-use App\ActivityType;
-use App\activity;
+use App\Models\Address;
+use App\Models\ActivityType;
+use App\Models\activity;
 use Livewire\Component;
 
 class LeadSearch extends Component

@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Person;
+use App\Models\Person;
 use Livewire\WithPagination;
 use Livewire\Component;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 class UsertrackTable extends Component
 {

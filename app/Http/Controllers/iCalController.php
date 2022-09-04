@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Activity;
+use App\Models\Activity;
 use Carbon\Carbon;
-use App\User;
-use App\Ical;
+use App\Models\User;
+use App\Models\Ical;
 use Mail;
 use App\Mail\SendActivityIcal;
 use Spatie\IcalendarGenerator\Components\Calendar;

@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Opportunity;
-use App\Branch;
-use App\Person;
-use App\Campaign;
+use App\Models\Opportunity;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\Campaign;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 class OpportunityTable extends Component
 {

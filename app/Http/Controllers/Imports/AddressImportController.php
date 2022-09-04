@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Imports;
 
 use Illuminate\Http\Request;
-use App\Branch;
-use App\Address;
-use App\LeadImport;
-use App\LeadSource;
+use App\Models\Branch;
+use App\Models\Address;
+use App\Models\LeadImport;
+use App\Models\LeadSource;
 
 use App\Http\Requests\LeadImportFormRequest;
 

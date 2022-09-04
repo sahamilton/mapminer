@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Dashboard;
-use App\Person;
-use App\Branch;
-use App\Role;
-use App\User;
+use App\Models\Dashboard;
+use App\Models\Person;
+use App\Models\Branch;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller

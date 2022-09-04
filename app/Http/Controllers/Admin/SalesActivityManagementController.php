@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Salesactivity;
-use App\State;
-use App\SearchFilter;
-use App\SalesProcess;
-use App\SalesOrg;
-use App\Document;
-use App\Location;
-use App\Address;
-use App\Company;
-use App\Lead;
-use App\LeadStatus;
-use App\Person;
+use App\Models\Salesactivity;
+use App\Models\State;
+use App\Models\SearchFilter;
+use App\Models\SalesProcess;
+use App\Models\SalesOrg;
+use App\Models\Document;
+use App\Models\Location;
+use App\Models\Address;
+use App\Models\Company;
+use App\Models\Lead;
+use App\Models\LeadStatus;
+use App\Models\Person;
 use App\Http\Controllers\BaseController;
 
 use App\Http\Requests\SalesActivityFormRequest;

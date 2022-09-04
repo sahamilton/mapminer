@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 use Mail;
-use App\Mail\WeeklySummaryStatsReport;
-use App\Stats;
-use App\Report;
-use App\Person;
+use App\Models\Mail\WeeklySummaryStatsReport;
+use App\Models\Stats;
+use App\Models\Report;
+use App\Models\Person;
 
 
 use Illuminate\Bus\Queueable;

@@ -3,9 +3,9 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\ActivityType;
-use App\Branch;
-use App\Activity;
+use App\Models\ActivityType;
+use App\Models\Branch;
+use App\Models\Activity;
 use Livewire\WithPagination;
 
 class UsertrackActivities extends Component

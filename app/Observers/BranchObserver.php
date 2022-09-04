@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Branch;
+use App\Models\Branch;
 use App\Jobs\RebuildBranchesXMLJob;
 
 class BranchObserver

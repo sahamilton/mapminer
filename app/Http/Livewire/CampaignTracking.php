@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\Campaign;
-use App\Company;
-use App\Branch;
+use App\Models\Campaign;
+use App\Models\Company;
+use App\Models\Branch;
 use Livewire\Component;
 use Livewire\WithPagination;
 

@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Carbon\Carbon;
-use App\Person;
+use App\Models\Person;
 
 class PeopleDataExport implements FromQuery, ShouldQueue, WithHeadings,WithMapping, ShouldAutoSize
 {

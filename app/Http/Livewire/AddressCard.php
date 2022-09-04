@@ -4,14 +4,14 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Address;
-use App\Contact;
-use App\State;
-use App\Activity;
-use App\Opportunity;
-use App\ActivityType;
-use App\Campaign;
-use App\Branch;
+use App\Models\Address;
+use App\Models\Contact;
+use App\Models\State;
+use App\Models\Activity;
+use App\Models\Opportunity;
+use App\Models\ActivityType;
+use App\Models\Campaign;
+use App\Models\Branch;
 use App\Jobs\TransferLeadRequestJob;
 
 

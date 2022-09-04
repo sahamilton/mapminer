@@ -1,15 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Serviceline;
-use App\Address;
-use App\Location;
-use App\Company;
-use App\Project;
-use App\Branch;
-use App\Watch;
-use App\Lead;
-use App\Person;
+use App\Models\Serviceline;
+use App\Models\Address;
+use App\Models\Location;
+use App\Models\Company;
+use App\Models\Project;
+use App\Models\Branch;
+use App\Models\Watch;
+use App\Models\Lead;
+use App\Models\Person;
 use App\Http\Requests\FindMeFormRequest;
 use Illuminate\Http\Request;
 

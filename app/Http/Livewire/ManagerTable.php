@@ -3,10 +3,10 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Person;
-use App\Role;
+use App\Models\Person;
+use App\Models\Role;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
 class ManagerTable extends Component
 {

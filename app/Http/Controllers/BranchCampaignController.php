@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Campaign;
-use App\Branch;
-use App\Person;
-use App\Address;
-use App\AddressCampaign;
+use App\Models\Campaign;
+use App\Models\Branch;
+use App\Models\Person;
+use App\Models\Address;
+use App\Models\AddressCampaign;
 use Carbon\Carbon;
 
 class BranchCampaignController extends Controller

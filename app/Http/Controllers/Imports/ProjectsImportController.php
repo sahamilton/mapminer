@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Imports;
 
 use App\Http\Requests\ProjectsImportFormRequest;
-use App\Project;
-use App\ProjectImport;
-use App\ProjectSource;
+use App\Models\Project;
+use App\Models\ProjectImport;
+use App\Models\ProjectSource;
 use Illuminate\Http\Request;
 
 class ProjectsImportController extends ImportController

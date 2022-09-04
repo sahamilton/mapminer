@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
-use App\Orders;
-use App\Person;
+use App\Models\Branch;
+use App\Models\Orders;
+use App\Models\Person;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller

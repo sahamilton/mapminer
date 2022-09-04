@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
-use App\Address;
-use App\Branch;
-use App\Person;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\Person;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;

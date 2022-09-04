@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Exports;
 
-use App\Person;
+use App\Models\Person;
 use Illuminate\Http\Request;
 use App\Exports\PeopleDataExport;
 use App\Http\Controllers\Controller;

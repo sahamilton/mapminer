@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Address;
-use App\Branch;
+use App\Models\Address;
+use App\Models\Branch;
 use App\Http\Requests\WebLeadFormRequest;
-use App\Lead;
-use App\LeadSource;
-use App\MapFields;
-use App\Person;
-use App\WebLeadImport;
+use App\Models\Lead;
+use App\Models\LeadSource;
+use App\Models\MapFields;
+use App\Models\Person;
+use App\Models\WebLeadImport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

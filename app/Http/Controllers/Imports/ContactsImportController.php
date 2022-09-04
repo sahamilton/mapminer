@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Imports;
 
-use App\Contact;
-use App\Company;
-use App\ContactImport;
-use App\LeadSource;
-use App\Serviceline;
-use App\Address;
+use App\Models\Contact;
+use App\Models\Company;
+use App\Models\ContactImport;
+use App\Models\LeadSource;
+use App\Models\Serviceline;
+use App\Models\Address;
 use App\Jobs\ImportContactsJob;
 use Illuminate\Http\Request;
 

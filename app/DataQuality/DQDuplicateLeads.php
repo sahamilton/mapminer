@@ -1,7 +1,7 @@
 <?php
 
 namespace App\DataQuality;
-use App\Branch;
+use App\Models\Branch;
 use Illuminate\Database\Eloquent\Model;
 
 class DQDuplicateLeads implements DataQualityInterface

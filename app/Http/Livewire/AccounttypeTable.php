@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Livewire;
-use App\AccountType;
-use App\Company;
-use App\Person;
+use App\Models\AccountType;
+use App\Models\Company;
+use App\Models\Person;
 use Livewire\WithPagination;
 use Livewire\Component;
 

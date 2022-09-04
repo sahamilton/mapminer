@@ -4,11 +4,11 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
-use App\Report;
+use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use App\Exports\Reports\Branch\BranchOpportunitiesExport;
-use App\Mail\BranchOpportunitiesReport;
+use App\Models\Exports\Reports\Branch\BranchOpportunitiesExport;
+use App\Models\Mail\BranchOpportunitiesReport;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;

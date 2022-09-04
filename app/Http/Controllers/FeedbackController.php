@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\FeedbackExport;
-use App\Feedback;
+use App\Models\Feedback;
 use App\Http\Requests\FeedbackFormRequest;
 use App\Mail\FeedbackClosed;
 use App\Mail\FeedbackOpened;

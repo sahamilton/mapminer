@@ -2,10 +2,10 @@
 
 namespace App\Exports\Reports\Company;
 
-use App\Address;
-use App\Company;
-use App\Report;
-use App\ActivityType;
+use App\Models\Address;
+use App\Models\Company;
+use App\Models\Report;
+use App\Models\ActivityType;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;

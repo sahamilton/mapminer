@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\RoleFormRequest;
-use App\Permission;
-use App\Role;
-use App\User;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 
 class AdminRolesController extends BaseController
 {

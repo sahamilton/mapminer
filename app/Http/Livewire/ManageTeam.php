@@ -4,8 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Oracle;
-use App\User;
+use App\Models\Oracle;
+use App\Models\User;
 
 class ManageTeam extends Component
 {

@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Branch;
+use App\Models\Address;
+use App\Models\Branch;
 use App\Http\Requests\BatchLeadImportFormRequest;
 use App\Http\Requests\LeadAddressFormRequest;
 use App\Http\Requests\LeadFormRequest;
 use App\Http\Requests\LeadInputAddressFormRequest;
-use App\Lead;
-use App\LeadSource;
-use App\LeadStatus;
+use App\Models\Lead;
+use App\Models\LeadSource;
+use App\Models\LeadStatus;
 use App\Mail\NotifyWebLeadsAssignment;
 use App\Mail\NotifyWebLeadsBranchAssignment;
-use App\MapFields;
-use App\Note;
-use App\Person;
-use App\SearchFilter;
+use App\Models\MapFields;
+use App\Models\Note;
+use App\Models\Person;
+use App\Models\SearchFilter;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\Request;
@@ -465,7 +465,7 @@ class LeadsController extends BaseController
             $data['number'] = 5;
         }
 
-        return \App\Branch::whereHas(
+        return Branch::whereHas(
             'servicelines', function ($q) {
                 $q->whereIn('servicelines.id', $this->userServiceLines);
             }
@@ -844,7 +844,7 @@ class LeadsController extends BaseController
      */
     private function _getExtraFields($type)
     {
-        $fields = \App\MapFields::whereType($type)
+        $fields = MapFields::whereType($type)
             ->whereDestination('extra')
             ->whereNotNull('fieldname')
             ->pluck('fieldname')->toArray();
@@ -862,7 +862,7 @@ class LeadsController extends BaseController
      */
     private function _getExtraFieldData($newdata, $type = 'webleads')
     {
-        $extraFields = \App\MapFields::whereType($type)
+        $extraFields = MapFields::whereType($type)
             ->whereDestination('extra')
             ->whereNotNull('fieldname')
             ->pluck('fieldname')->toArray();

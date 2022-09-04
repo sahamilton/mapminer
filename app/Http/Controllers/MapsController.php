@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Branch;
-use App\Lead;
-use App\Location;
-use App\News;
-use App\Person;
-use App\User;
+use App\Models\Address;
+use App\Models\Branch;
+use App\Models\Lead;
+use App\Models\Location;
+use App\Models\News;
+use App\Models\Person;
+use App\Models\User;
 use Carbon\Carbon;
 
 class MapsController extends BaseController

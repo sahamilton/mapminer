@@ -2,8 +2,8 @@
 
 namespace App\Listeners\Users;
 
-use App\Track;
-use App\User;
+use App\Models\Track;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Queue\ShouldQueue;

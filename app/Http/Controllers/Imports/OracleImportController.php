@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Imports;
 
 use Illuminate\Http\Request;
-use App\Oracle;
-use App\OracleImport;
+use App\Models\Oracle;
+use App\Models\OracleImport;
 
 use App\Http\Requests\OracleImportFormRequest;
 

@@ -34,19 +34,19 @@ class RouteServiceProvider extends ServiceProvider
         // we should be able to delete all these as Laravel now 
         // does implicit route model binding.
 
-        Route::model('branchdashboard', \App\Branch::class);
+        Route::model('branchdashboard', \App\Models\Branch::class);
 
-        Route::model('dashboard', \App\Branch::class);
+        Route::model('dashboard', \App\Models\Branch::class);
        
-        Route::model('branchsummary', \App\Branch::class);
+        Route::model('branchsummary', \App\Models\Branch::class);
         
        
-        Route::model('mobile', \App\Address::class);
-        Route::model('mgrdashboard', \App\Person::class);
+        Route::model('mobile', \App\Models\Address::class);
+        Route::model('mgrdashboard', \App\Models\Person::class);
         
-        Route::model('salesnote', \App\Company::class);
-        Route::model('salesorg', \App\Person::class);
-        Route::model('team', \App\Person::class);
+        Route::model('salesnote', \App\Models\Company::class);
+        Route::model('salesorg', \App\Models\Person::class);
+        Route::model('team', \App\Models\Person::class);
         
     }
 

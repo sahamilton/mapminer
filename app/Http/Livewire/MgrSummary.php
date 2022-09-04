@@ -4,14 +4,14 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\PeriodSelector;
+use App\Models\PeriodSelector;
 
-use App\Branch;
-use App\Address;
-use App\Activity;
-use App\ActivityType;
-use App\Opportunity;
-Use App\Person;
+use App\Models\Branch;
+use App\Models\Address;
+use App\Models\Activity;
+use App\Models\ActivityType;
+use App\Models\Opportunity;
+use App\Models\Person;
 
 class MgrSummary extends Component
 {

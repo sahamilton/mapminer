@@ -2,12 +2,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Person;
-use App\Branch;
-use App\Role;
-use App\Company;
-use App\Address;
+use App\Models\User;
+use App\Models\Person;
+use App\Models\Branch;
+use App\Models\Role;
+use App\Models\Company;
+use App\Models\Address;
 
 class SearchController extends Controller
 {
