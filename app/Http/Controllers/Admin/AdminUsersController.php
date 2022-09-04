@@ -132,7 +132,7 @@ class AdminUsersController extends BaseController
     public function create(Request $request)
     {
         // All roles
-        if(! request()->has('view') || request('view') != 'new') {
+        if (! request()->has('view') || request('view') != 'new') {
             $roles = $this->role->orderBy('display_name')->get();
 
             // Get all the available permissions

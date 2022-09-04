@@ -212,7 +212,14 @@ class Imports extends Model
      */
     private function _createPositon()
     {
-        return $this->_executeQuery("update ".$this->tempTable." set position = ST_GeomFromText(ST_AsText(POINT(lng, lat)), 4326)");
+        if (config('database.version') === '8.1') {
+            
+            $query="update ".$this->tempTable." set position = ST_SRID(POINT(lat,lng), 4326)";
+        } else {
+            $query="update ".$this->tempTable." set position = ST_GeomFromText(ST_AsText(POINT(lng, lat)), 4326)";
+        }
+
+        return $this->_executeQuery($query);
 
     }
     /**

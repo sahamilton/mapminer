@@ -532,8 +532,17 @@ trait Geocode
      */
     public function setLocationAttribute($data)
     {
-        $LngLat = $data['lng']." ".$data['lat'];
-        return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
+        
+        if (config('database.version') === '8.1') {
+            $LngLat = $data['lat']." ".$data['lng'];
+            return \DB::raw("ST_SRID('POINT($LngLat)',4326)");
+        } else {
+            $LngLat = $data['lng']." ".$data['lat'];
+            return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
+        }
+
+
+
     }
     /**
      * GetLocationAttribute [description]

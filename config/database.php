@@ -14,7 +14,7 @@ return [
     */
 
     'default' => env('DB_CONNECTION', 'mysql'),
-
+    'version' => env('DB_VERSION', '5.7'),
     /*
     |--------------------------------------------------------------------------
     | Database Connections
