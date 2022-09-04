@@ -535,7 +535,8 @@ trait Geocode
         
         if (config('database.version') != '5.7') {
             $LngLat = $data['lat']." ".$data['lng'];
-            return \DB::raw("ST_SRID(POINT($LngLat),4326)");
+            return \DB::raw("ST_SRID(Point(3.880696482497261, 102.1893310546875), 4326)");
+            //return \DB::raw("ST_SRID(POINT($LngLat),4326)");
         } else {
             $LngLat = $data['lng']." ".$data['lat'];
             return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
