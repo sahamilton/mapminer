@@ -5,7 +5,7 @@
 
 <p><a href="{{route('branchdashboard.show', $data['branches']->first()->id)}}">Return To Branch Dashboard</a></p>
 @include('dashboards.partials._periodselector')
-@php $activityTypes = \App\ActivityType::all(); @endphp
+@php $activityTypes = \App\Models\ActivityType::all(); @endphp
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">

@@ -2,7 +2,7 @@
 
 .activity_date, .followup_date{z-index:1151 !important;}
 </style>
-@php $activityTypes = \App\ActivityType::all(); @endphp
+@php $activityTypes = \App\Models\ActivityType::all(); @endphp
 <!-- Modal -->
 <div class="modal fade" 
       id="add-activity" 

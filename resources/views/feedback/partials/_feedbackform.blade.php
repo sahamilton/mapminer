@@ -1,5 +1,5 @@
 @php
-$types = $types = \App\FeedbackCategory::orderBy('category')->get();
+$types = $types = \App\Models\FeedbackCategory::orderBy('category')->get();
 @endphp
 
 <div class="form-group">

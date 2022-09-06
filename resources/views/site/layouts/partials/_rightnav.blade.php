@@ -2,7 +2,7 @@
       <ul class="navbar-nav ml-auto justify-content-end" style="margin-right:60px"> 
               
                
-                @php $news = new \App\News;@endphp
+                @php $news = new \App\Models\News;@endphp
                 <li class="nav-item">
                   
                   @if($news->currentNews()->count()>0)

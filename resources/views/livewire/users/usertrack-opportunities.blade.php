@@ -1,6 +1,6 @@
 <div>
  <p class="bg-warning">For the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</p>
-@php $activityTypes = \App\ActivityType::all(); @endphp
+@php $activityTypes = \App\Models\ActivityType::all(); @endphp
  
 <div class="row mb-4">
         

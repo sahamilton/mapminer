@@ -1,4 +1,4 @@
-@php $activities = \App\ActivityType::orderBy('sequence')->pluck('activity','id')->toArray(); @endphp
+@php $activities = \App\Models\ActivityType::orderBy('sequence')->pluck('activity','id')->toArray(); @endphp
   <style>
 body.modal-open .activity_date, .followup_date {
     z-index: 1200 !important;

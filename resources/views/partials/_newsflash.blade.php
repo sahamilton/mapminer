@@ -1,5 +1,5 @@
 @auth()
-    @php $newstand = new \App\News;
+    @php $newstand = new \App\Models\News;
         $news= $newstand->currentNews();
     @endphp
     @if($news->count() >0 )

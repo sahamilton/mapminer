@@ -217,10 +217,12 @@ trait Geocode
             $query->select('*');
         }
        
-        $query->selectRaw('ST_Distance(
-                ST_SRID(POINT(lng, lat), 4236),
-                ST_SRID(POINT(? , ?), 4236)
-                ) / 1609.344 as distance', ['lng'=>$location->lng, 'lat'=>$location->lat]);
+        $query->selectRaw(
+            'ST_Distance(
+            ST_SRID(POINT(lng, lat), 4236),
+            ST_SRID(POINT(? , ?), 4236)
+            ) / 1609.344 as distance', ['lng'=>$location->lng, 'lat'=>$location->lat]
+        );
 
     
     }
@@ -234,10 +236,12 @@ trait Geocode
     public function scopeWithinDistance($query, $location, int $radius)
     {
 
-         $query->whereRaw('ST_Distance(
-                ST_SRID(POINT(lng, lat), 4236),
-                ST_SRID(POINT(? , ?), 4236)
-                ) / 1609.344 < ' .$radius, ['lng'=>$location->lng, 'lat'=>$location->lat]);
+        $query->whereRaw(
+            'ST_Distance(
+            ST_SRID(POINT(lng, lat), 4236),
+            ST_SRID(POINT(? , ?), 4236)
+            ) / 1609.344 < ' .$radius, ['lng'=>$location->lng, 'lat'=>$location->lat]
+        );
 
 
 

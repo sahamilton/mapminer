@@ -81,7 +81,7 @@
                             <li><a href="{{route('branchmanager.newleads')}}">
                             <i class="far fa-envelope" aria-hidden="true"> </i> Branch Leads</a></li>
                         @endif
-                        @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager')'))
+                        @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager'))
                         <li class="divider"></li>
                          <li><a href="{{route('managers.view')}}">
                          <i class="far fa-eye" aria-hidden="true"> </i> Account Managers View</a></li>
@@ -105,7 +105,7 @@
 					</ul>
                 
 					<ul class="nav navbar-nav float-right">
- 						<?php $news = new \App\News;?>
+ 						<?php $news = new \App\Models\News;?>
                         @if($news->currentNews()->count()>0)
                         <li>
                             <a href="{{route('currentnews')}}">
