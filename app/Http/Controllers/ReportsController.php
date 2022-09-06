@@ -150,7 +150,7 @@ class ReportsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Report  $report
+     * @param \App\Models\Report  $report
      * 
      * @return \Illuminate\Http\Response
      */

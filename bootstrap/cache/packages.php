@@ -24,17 +24,6 @@
       0 => 'Baum\\BaumServiceProvider',
     ),
   ),
-  'facade/ignition' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Facade\\Ignition\\IgnitionServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Flare' => 'Facade\\Ignition\\Facades\\Flare',
-    ),
-  ),
   'fideloper/proxy' => 
   array (
     'providers' => 
@@ -165,33 +154,18 @@
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
+  'nunomaduro/termwind' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    ),
+  ),
   'owen-it/laravel-auditing' => 
   array (
     'providers' => 
     array (
       0 => 'OwenIt\\Auditing\\AuditingServiceProvider',
-    ),
-  ),
-  'pragmarx/version' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'PragmaRX\\Version\\Package\\ServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Version' => 'PragmaRX\\Version\\Package\\Facade',
-    ),
-  ),
-  'pragmarx/yaml' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'PragmaRX\\Yaml\\Package\\ServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Yaml' => 'PragmaRX\\Yaml\\Package\\Facade',
     ),
   ),
   'protonemedia/laravel-form-components' => 
@@ -209,7 +183,18 @@
     ),
     'aliases' => 
     array (
-      'Fractal' => 'Spatie\\Fractal\\FractalFacade',
+      'Fractal' => 'Spatie\\Fractal\\Facades\\Fractal',
+    ),
+  ),
+  'spatie/laravel-ignition' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
     ),
   ),
   'spatie/laravel-ray' => 
@@ -245,13 +230,6 @@
     'providers' => 
     array (
       0 => 'Geocoder\\Laravel\\Providers\\GeocoderService',
-    ),
-  ),
-  'wire-elements/modal' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'LivewireUI\\Modal\\LivewireModalServiceProvider',
     ),
   ),
 );
