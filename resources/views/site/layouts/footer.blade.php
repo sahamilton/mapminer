@@ -12,7 +12,7 @@
                    &nbsp; Env:{{ucwords(App::environment())}} | 
                     Branch:{!!ucwords(exec('git rev-parse --abbrev-ref HEAD'))!!} |
                     Commit::{!! ucwords(exec('git describe --tags'))!!} |
-                    Version:@version
+                    
                     {!!ucwords(exec('git rev-parse --abbrev-ref HEAD'))!!} |
                     Framework {{app()::VERSION}}|
                     OS {{ phpversion() }}
