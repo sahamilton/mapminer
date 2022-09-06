@@ -1,7 +1,7 @@
 
 @php
 
-$statelist = App\State::has('branches')->orderBy('statecode')->pluck('fullstate', 'statecode')->toArray();
+$statelist = App\Models\State::has('branches')->orderBy('statecode')->pluck('fullstate', 'statecode')->toArray();
 $add['All'] = 'All Branches';
 $statelist = array_merge($add , $statelist);
 asort($statelist);
