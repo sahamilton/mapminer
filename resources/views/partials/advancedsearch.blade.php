@@ -2,7 +2,7 @@
    data-target="#advancedSearch">Advanced Search Options
    @if(isset($filtered) && (null!=$filtered)) : <span class="filtered">Filtered </span>@endif</a>
 <?php 
-	$filters = new App\SearchFilter();
+	$filters = new App\Models\SearchFilter();
 	if (! Session::has('Search')){
 		$filters->setSearch();
 	}

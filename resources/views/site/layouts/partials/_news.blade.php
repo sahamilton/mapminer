@@ -1,6 +1,6 @@
-@php $news = new App\News;
+@php
 
-$news = new App\News;
+$news = new App\Models\News;
 @endphp
 
 @if($news->currentNews()->count() >0)

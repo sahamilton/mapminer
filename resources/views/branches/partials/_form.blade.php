@@ -1,5 +1,5 @@
 @php
-$state = new App\State;
+$state = new App\Models\State;
 $states = $state->getStates();
 
 $regions = [ '1'=>'Western' ,'2'=>'CLP','3'=>'Eastern','4'=>'Mid-America & Canada

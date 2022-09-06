@@ -2,11 +2,11 @@
 @section('content')
     <div class="container">
         @switch(get_class($model))
-            @case('App\User')
+            @case('App\Models\User')
                 <h2><a href="{{route('person.details', $model->person->id)}}">{{$model->person->fullName()}}</a></h2>
             @break
 
-            @case ("App\Person")
+            @case ("App\Models\Person")
                 <h2><a href="{{route('person.details', $model->id)}}">{{$model->fullName()}}</a></h2>
             @break
         @endswitch

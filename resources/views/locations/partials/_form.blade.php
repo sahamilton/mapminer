@@ -1,27 +1,27 @@
 <?php 
 
 // get segment and business type options
-$state = new App\State;
+$state = new App\Models\State;
    $states = $state->getStates();
 
 if(isset($location->company->vertical)){
-$segments = App\SearchFilter::where('parent_id','=',$location->company->vertical)
+$segments = App\Models\SearchFilter::where('parent_id','=',$location->company->vertical)
 			->orWhere(function($query){ 
 					$query->where('searchcolumn','=','segment')
 					->where('canbenull','=',1);})
 			->pluck('filter','id');
 }
-$nullSegment = App\SearchFilter::where('searchtable','=','locations')
+$nullSegment = App\Models\SearchFilter::where('searchtable','=','locations')
 			->where('searchcolumn','=','segment')
 			->where('canbenull','=',1)
 			->pluck('id');
 
-$businesstypes = App\SearchFilter::where('searchtable','=','locations')
+$businesstypes = App\Models\SearchFilter::where('searchtable','=','locations')
 			->where('searchcolumn','=','businesstype')
 			->where('type','!=','group')
 			->pluck('filter','id');
 			
-$nullBusinesstype = App\SearchFilter::where('searchtable','=','locations')
+$nullBusinesstype = App\Models\SearchFilter::where('searchtable','=','locations')
 			->where('searchcolumn','=','businesstype')
 			->where('canbenull','=',1)
 			->pluck('id');

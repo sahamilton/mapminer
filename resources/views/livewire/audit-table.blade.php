@@ -17,8 +17,8 @@
             <select wire:model="model" 
             class="form-control">
                 <option value="All">All</options>
-                <option value='App\Person'>Person</options>
-                <option value='App\User'>User</options>
+                <option value='App\Models\Person'>Person</options>
+                <option value='App\Models\User'>User</options>
                 
             </select>
         </div>
