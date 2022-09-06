@@ -91,6 +91,8 @@ class ManageTeam extends Component
     public function deleteUser(User $user)
     {
        
+        
+        $user->person->delete();
         $user->delete();
         session()->flash('Warning', 'User has been deactivated in Mapminer');
     }

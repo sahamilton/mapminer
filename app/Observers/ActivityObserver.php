@@ -10,7 +10,8 @@ class ActivityObserver
     /**
      * Handle the Activity "created" event.
      *
-     * @param  \App\Activity  $activity
+     * @param \App\Activity  $activity
+     * 
      * @return void
      */
     public function created(Activity $activity)
@@ -18,7 +19,7 @@ class ActivityObserver
         if ($activity->completed ==1) {
             $addressBranch = AddressBranch::where('branch_id', $activity->branch_id)
                 ->where('address_id', $activity->address_id)->first();
-            if($addressBranch->last_activity < $activity->activity_date) {
+            if ($addressBranch->last_activity < $activity->activity_date) {
                 $addressBranch->update(['last_activity'=>$activity->activity_date]);
             }
              
@@ -30,7 +31,8 @@ class ActivityObserver
     /**
      * Handle the Activity "updated" event.
      *
-     * @param  \App\Activity  $activity
+     * @param \App\Activity  $activity
+     * 
      * @return void
      */
     public function updated(Activity $activity)
