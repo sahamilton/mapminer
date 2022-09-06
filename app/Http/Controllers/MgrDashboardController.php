@@ -274,7 +274,7 @@ class MgrDashboardController
         $data = $this->_getDashBoardData();
 
         if ($data['branches']->count() > 1) { 
-            $reports = \App\Report::publicReports()->get();
+            $reports = \App\Models\Report::publicReports()->get();
             $managers = $data['team'];
             
             return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));

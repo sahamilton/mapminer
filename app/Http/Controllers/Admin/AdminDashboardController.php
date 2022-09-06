@@ -98,7 +98,7 @@ class AdminDashboardController extends BaseController
         */
         
         $color = $this->_getChartColors();
-        $reports=\App\Report::withCount('distribution')->get();
+        $reports=\App\Models\Report::withCount('distribution')->get();
         $managers=$this->_getManagers();
         return response()->view('admin.dashboard', compact('data', 'color', 'reports', 'managers'));
     }

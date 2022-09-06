@@ -13,7 +13,7 @@ use App\Jobs\BranchStats;
 use App\Jobs\DailyBranch;
 */
 use App\Jobs\BranchCampaign;
-use App\Report;
+
 use App\Jobs\BranchReportJob;
 
 use App\Jobs\RebuildPeople;
@@ -24,9 +24,9 @@ use App\Jobs\WeeklySummary;
 use App\Jobs\NotifyMarketManagersMissingBranchManagersJob;
 
 
-use App\Campaign;
-
-use App\Company;
+use App\Models\Campaign;
+use App\Models\Report;
+use App\Models\Company;
 use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
