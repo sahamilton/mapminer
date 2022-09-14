@@ -38,8 +38,9 @@ class BranchesImportController extends ImportController
         $title = 'Map the branches import file fields';
 
         $data = $this->uploadfile(request()->file('upload'));
-
+        $data['dontCreateTemp']=1;
         $data['table'] = $this->importtable;
+        $data['tempTable'] = $data['table'];
         $data['type'] = 'branches';
         $data['route'] = 'branches.mapfields';
         $data['additionaldata']['servicelines'] = implode(',', request('serviceline'));
@@ -47,7 +48,7 @@ class BranchesImportController extends ImportController
         $columns = $this->branch->getTableColumns($data['table']);
         $requiredFields = $this->import->requiredFields;
         $skip = ['created_at', 'updated_at', 'region_id'];
-
+        $company_id = null;
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'skip', 'title', 'requiredFields'));
     }
 

@@ -23,7 +23,7 @@ class Imports extends Model
      */
     public function setFields($data)
     {
-        
+       
         if (isset($data['additionaldata'])) {
 
             $this->additionaldata = $data['additionaldata'];
@@ -40,17 +40,20 @@ class Imports extends Model
         $this->fields = implode(",", $data['fields']);  
        
         $this->table = $data['table'];
-        
-        if (isset($data['dontCreateTemp'])) {
+
+        /*if (isset($data['dontCreateTemp'])) {
+            
             if (! $data['dontCreateTemp']) {
                 $this->tempTable = $this->table . "_import";
             } else {
                 $this->tempTable = $data['tempTable'];
+                $this->dontCreateTemp = true;
             }
-        }else{
+        } else {
             $this->tempTable = 'oracle';
-        }
- 
+        }*/
+
+        $this->tempTable = 'branchesimport';
         
 
             
@@ -106,12 +109,12 @@ class Imports extends Model
             $this->importfilename = str_replace("\\", "/", LeadSource::findOrFail(request('lead_source_id'))->filename);
         }
         
-       
-        if (! $this->dontCreateTemp) {
+        
+        /*if (! $this->dontCreateTemp) {
             $this->tempTable = "temp_".$this->table;
            
             $this->_createTemporaryImportTable();
-        } 
+        } */
         
         $this->_truncateTempTable();
         $this->_importCSV();
