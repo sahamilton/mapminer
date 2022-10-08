@@ -31,6 +31,17 @@
       0 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
     ),
   ),
+  'geocodio/geocodio-library-php' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Geocodio\\GeocodioServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Geocodio' => 'Geocodio\\GeocodioFacade',
+    ),
+  ),
   'intervention/image' => 
   array (
     'providers' => 

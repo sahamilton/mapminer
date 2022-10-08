@@ -50,7 +50,8 @@
         "spatie/laravel-sluggable": "^3.4.0",
         "spatie/icalendar-generator": "^2.3",
         "tightenco/quicksand": "^2.5",
-        "lab404/laravel-impersonate": "^1.7"
+        "lab404/laravel-impersonate": "^1.7",
+        "geocodio/geocodio-library-php": "^1.5"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",
