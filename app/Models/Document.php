@@ -13,7 +13,9 @@ class Document extends Model
     public $dates =['datefrom','dateto'];
 
     public $fillable=['title','summary','description','plaintext','location','doctype','user_id','datefrom','dateto'];
+    
     const TYPES = ['docx'=>'word','pdf'=>'pdf','html'=>'webpage'];
+    
     public $doctypes =['docx'=>'word','pdf'=>'pdf','html'=>'webpage'];
 
     public function author()
@@ -66,7 +68,7 @@ class Document extends Model
     Rank documents
 
      */
-    public function rankings()
+    /*public function rankings()
     {
         return $this->belongsToMany(User::class)->withPivot('rank');
     }
@@ -82,6 +84,7 @@ class Document extends Model
             ->selectRaw('document_id, avg(rank) as rank')
             ->groupBy('document_id');
     }
+
     public function score()
     {
         return $this->rankings()
@@ -104,7 +107,7 @@ class Document extends Model
             $document->save();
         }
     }
-
+   */
 
 
     private function cleanse($data)

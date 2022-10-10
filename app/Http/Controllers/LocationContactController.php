@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Contact;
+use App\Models\Contact;
 use App\Models\AddressBranch;
 use App\Models\Branch;
 use App\Models\Campaign;

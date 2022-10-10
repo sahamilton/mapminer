@@ -399,9 +399,10 @@ class AdminDashboardController extends BaseController
             $data[$value->name][$value->week]=$value->login;
         }
         $chartdata=[];
-        $exclude = ['admin','sales_operations'];
+        $exclude = [];
         $colors = $this->_createColors(count($data)-count($exclude));
         $n=0;
+      
         foreach ($data as $key => $value) {
             if (! in_array($key, $exclude)) {
                 $chartdata[$key]['color'] = $colors[$n];
