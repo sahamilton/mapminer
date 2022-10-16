@@ -3,7 +3,7 @@
 namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use App\Address;
+use App\Models\Address;
 class AddressMapTransformer extends TransformerAbstract
 {
     /**
