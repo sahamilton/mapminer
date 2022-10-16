@@ -79,7 +79,7 @@
                     {{$contact->fullname ? $contact->fullname : $contact->firstname ." " . $contact->lastname}}
                 </td>
                 <td>{{$contact->title}}</td>
-                <td>{{$contact->contactphone}}</td>
+                <td>{{$contact->phoneNumber}}</td>
                 <td>{{$contact->email}}</td>
             </tr>
             @endforeach

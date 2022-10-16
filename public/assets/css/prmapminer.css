@@ -62,7 +62,7 @@ body {
 	.navbar-inverse,
 	.navbar-fixed-top {
 		background-color:#fff;
-		border-bottom:4px solid #ec122e;
+		border-bottom:4px solid #2fa6de;
 		background-image:none;
 
 		min-height:40px;
@@ -105,7 +105,7 @@ body {
 }
 .sorttable thead {
   cursor: pointer;
-  background-color:#ec122e;
+  background-color:#2fa6de;
   color:#fff;
  
 
@@ -128,7 +128,7 @@ body {
 
 [id^=sorttable] thead {
   cursor: pointer;
-  background-color:#ec122e;
+  background-color:#2fa6de;
   color:#fff;
  
 
@@ -172,7 +172,7 @@ body {
 					color:#888;
 			}
 			a{
-				color:#ec122e;
+				color:#2fa6de;
 				font-variant: bold;
 			}
 			a:hover{
@@ -183,16 +183,16 @@ body {
 			.nav > li:hover,
 			.nav > .active > a:hover {
 				background-image:none;
-			  background-color:#ec122e;
+			  background-color:#2fa6de;
 			  
 			}
 			.nav > li > a:hover {
-			  background-color:#ec122e;
+			  background-color:#2fa6de;
 			  
 			}
  			ul.dropdown-menu > li.active > a
  			{
- 				background-color:#ec122e;
+ 				background-color:#2fa6de;
  				background-image:none;
  			}
 			.nav-tabs{
@@ -240,7 +240,7 @@ body {
  
 			.nav-tabs > li > a:hover {
 			  border-color: #eeeeee #eeeeee #dddddd;
-			  background-color:#ec122e;
+			  background-color:#2fa6de;
 			  color:#000;
 			}
  
@@ -248,7 +248,7 @@ body {
 			.nav-tabs > .active > a:hover {
 			  color: #555555;
 			  cursor: default;
-			  background-color: ##ec122e;
+			  background-color: ##2fa6de;
 			  border: 1px solid #ddd;
 			  border-bottom-color: transparent;
 			}
@@ -269,7 +269,7 @@ body {
 				text-shadow:none;
 			}
 			.navbar-toggle{
-				background-color:#ec122e;
+				background-color:#2fa6de;
 			}
 .divlink {
 
