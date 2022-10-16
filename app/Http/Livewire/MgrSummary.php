@@ -85,7 +85,7 @@ class MgrSummary extends Component
     }
     public function mount($manager=null)
     {
-        
+     
         if (! $manager) {
             $this->myBranches = auth()->user()->person->myBranches($this->manager);
         } else {

@@ -1236,6 +1236,24 @@ class Branch extends Model
 
     }
     /**
+     * 
+     */
+    public function scopePeriodOpportunities($query, array $period, array $status=[1,2]) 
+    {
+
+        return $query->with(
+            [
+                'opportunities'=>function ($q) use ($period, $status) {
+                    $q->where('est_start', '<=', $period['to'])
+                        ->where('est_end', '>=', $period['from'])
+                        ->whereIn('closed', $status);
+                }
+            ]
+        );
+              
+      
+    }
+    /**
      * [scopeBranchOpportunities description]
      * 
      * @param [type] $query  [description]

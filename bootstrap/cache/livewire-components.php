@@ -22,6 +22,7 @@
   'branch-locations-table' => 'App\\Http\\Livewire\\BranchLocationsTable',
   'branch-opportunity-table' => 'App\\Http\\Livewire\\BranchOpportunityTable',
   'branch-reassign' => 'App\\Http\\Livewire\\BranchReassign',
+  'branch-requirements' => 'App\\Http\\Livewire\\BranchRequirements',
   'branch-table' => 'App\\Http\\Livewire\\BranchTable',
   'branch-team' => 'App\\Http\\Livewire\\BranchTeam',
   'calendar' => 'App\\Http\\Livewire\\Calendar',

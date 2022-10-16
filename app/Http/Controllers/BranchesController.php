@@ -643,7 +643,15 @@ class BranchesController extends BaseController
         );
         
     }
-        
+    /**
+     * [requirements description]
+     * 
+     * @return [type] [description]
+     */
+    public function requirements()
+    {
+        return response()->view('branches.requirements');
+    }  
     /**
      * [export description]
      * 

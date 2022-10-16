@@ -117,7 +117,7 @@ class BranchDashboardController extends DashboardController
     }
     public function summary()
     {
-
+       
         return response()->view('dashboards.managersummary');
     }
 
