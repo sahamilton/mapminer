@@ -199,7 +199,7 @@ class AddressController extends BaseController
                         }   
                     )->when(
                         in_array('lead', $types), function ($q) {
-                            $q->orDoesntHave('assignedTobranch');
+                            $q->orDoesntHave('assignedTobranch')->whereNull('isCustomer');
                         }   
                     );
                 }

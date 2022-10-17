@@ -55,8 +55,6 @@ class AddressMapTransformer extends TransformerAbstract
             $type =  "customer";
         } elseif ($address->assignedToBranch->count() > 0) {
              $type =  "branchlead";
-        } elseif (! $address->assignedToBranch) {
-            $type =  "lead";
         } else {
             $type =  "lead";
         }

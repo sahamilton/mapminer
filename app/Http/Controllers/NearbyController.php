@@ -55,7 +55,8 @@ class NearbyController extends Controller
 
             return response()->view('companies.nearby');
             break;
-         case 'branch':
+        
+        case 'branch':
 
             return response()->view('branches.index');
             break;
