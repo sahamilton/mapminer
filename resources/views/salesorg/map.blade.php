@@ -2,7 +2,13 @@
 @section('content')
 <h1>{{$salesorg->fullName()}}</h1>
 <h4>{{$salesorg->userdetails->roles[0]->display_name}}</h4>
-
+@canImpersonate
+  <div class="float-right mb-4">
+      <a href="{{route('impersonate', $salesorg->user_id)}}" class="btn btn-warning">
+        Login As {{$salesorg->fullName()}}
+      </a>
+    </div>
+@endCanImpersonate
 <p><strong><i class="fas fa-phone" aria-hidden="true"></i> Phone:</strong> {{$salesorg->phone}}</p>
 <p><strong><i class="far fa-envelope" aria-hidden="true"></i> Email:</strong> 
 

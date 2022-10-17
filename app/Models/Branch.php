@@ -629,7 +629,7 @@ class Branch extends Model
      */
     public function getBranchemailAttribute()
     {
-        return $this->id ."br@peopleready.com";
+        return "branch-".$this->id ."@example.com";
     }
 
     

@@ -89,14 +89,17 @@ class AddressCard extends Component
     public function mount(int $address_id, string $view=null)
     {
        
+        $this->address = Address::query()
+            ->withCount('activities', 'contacts', 'opportunities', 'duplicates')
+            ->with('claimedByBranch', 'ranking')->find($address_id);
         
-        
+        $this->branch_id = $this->address->claimedByBranch->first()->id;
         $this->myBranches = $this->_getMyBranches();
        
         
         $this->branches = Branch::has('manager')->pluck('branchname', 'id')->toArray();           
         
-        
+        $this->ranked =$this->_getAddressRating();
         isset($view) ? $this->view = $view : $this->view = 'summary';
         
       
@@ -116,9 +119,7 @@ class AddressCard extends Component
             [
 
 
-                'address' =>Address::query()
-                    ->withCount('activities', 'contacts', 'opportunities', 'duplicates')
-                    ->with('claimedByBranch', 'ranking')->find($this->address_id),  
+                  
                 
                 'leadStatuses' =>[1=>'Offered',2=>'Owned', 4=>'Rejected'],
                 
@@ -134,7 +135,10 @@ class AddressCard extends Component
             ]
         );
     }
-    
+    private function _getAddressRating()
+    {
+            $this->ranking = $this->address->claimedBybranch->first()->pivot->rating;
+    }
     /**
      * [changeview description]
      * 
@@ -197,7 +201,8 @@ class AddressCard extends Component
     public function updateRating($ranked)
     {
         
-        $this->address->ranking()->sync(auth()->user()->person->id, ['ranking'=>$ranked]);
+        $this->location->claimedByBranch()->updateExistingPivot($this->branch_id, ['rating'=>$ranked + 1]);
+        $this->_getAddressRating();
     }
     
     /**

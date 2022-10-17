@@ -17,7 +17,8 @@ class AddressDetail extends Component
 
     public function render()
     {
-        return view('livewire.address-detail', [
+        return view(
+            'livewire.address-detail', [
 
             'address'=>$this->_getAddressDetails(),
             'views'=>[
@@ -29,7 +30,11 @@ class AddressDetail extends Component
             ]
         );
     }
-
+    /**
+     * [convert description]
+     * 
+     * @return [type] [description]
+     */
     public function convert()
     {
         if ($this->address->isCustomer) {
@@ -38,7 +43,11 @@ class AddressDetail extends Component
              $this->address->update(['isCustomer'=>true]);
         }
     }
-
+    /**
+     * [_getAddressDetails description]
+     * 
+     * @return [type] [description]
+     */
     private function _getAddressDetails()
     {
         switch($this->view) {
