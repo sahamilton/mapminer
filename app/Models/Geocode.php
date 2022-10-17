@@ -543,7 +543,7 @@ trait Geocode
             return \DB::raw("ST_SRID(POINT($LngLat),4326)");
         } else {
             $LngLat = $data['lng']." ".$data['lat'];
-            return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
+            return \DB::raw("ST_GeomFromText('POINT($LngLat)')");
         }
 
 

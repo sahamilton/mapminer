@@ -137,9 +137,9 @@ class MyLeadsController extends BaseController
         }
        
         $data['branch'] = $this->branch->findOrFail(request('branch'));
-      
-        $address = $this->lead->create($data['lead']);
         
+        $address = $this->lead->create($data['lead']);
+
         $address->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
 
         if (request()->filled('campaign')) {

@@ -2,7 +2,7 @@
 
 namespace App\Transformers;
 
-use App\Activity;
+use App\Models\Activity;
 use League\Fractal\TransformerAbstract;
 
 class EventTransformer extends TransformerAbstract
