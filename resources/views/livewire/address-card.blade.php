@@ -54,6 +54,10 @@
         @case('duplicates')
             <livewire:address-duplicates :address="$address" :owned="$owned" />
         @break
+
+        @case('relatedNotes')
+            <livewire:address-notes :address="$address" :owned="$owned" />
+        @break
     @endswitch
 
 

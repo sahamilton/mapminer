@@ -93,13 +93,17 @@ class AddressCard extends Component
             ->withCount('activities', 'contacts', 'opportunities', 'duplicates')
             ->with('claimedByBranch', 'ranking')->find($address_id);
         
-        $this->branch_id = $this->address->claimedByBranch->first()->id;
+        if ($this->address->claimedByBranch->count() > 0) {
+            $this->ranked =$this->_getAddressRating(); 
+            $this->branch_id = $this->address->claimedByBranch->first()->id;
+        }
+       
         $this->myBranches = $this->_getMyBranches();
        
         
         $this->branches = Branch::has('manager')->pluck('branchname', 'id')->toArray();           
+
         
-        $this->ranked =$this->_getAddressRating();
         isset($view) ? $this->view = $view : $this->view = 'summary';
         
       
@@ -130,7 +134,8 @@ class AddressCard extends Component
                     'contacts'=>'Contacts', 
                     'activities'=>'Activities', 
                     'opportunities'=>'Opportunities',
-                    'duplicates'=>'Duplicates'],
+                    'duplicates'=>'Duplicates',
+                    'relatedNotes'=>'Notes'],
 
             ]
         );
