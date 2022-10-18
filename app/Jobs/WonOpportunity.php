@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Mail\WonOpportunityNotification;
+use App\Mail\WonOpportunityNotification;
 use App\Models\Opportunity;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -36,12 +36,13 @@ class WonOpportunity implements ShouldQueue
     {
         $this->opportunity->load('location', 'branch.branch.manager');
         $distribution = $this->_getDistribution();
-        
+        @ray($distribution);
         Mail::to($distribution)->send(new WonOpportunityNotification($this->opportunity));
     }
 
     private function _getDistribution()
     {
+        @ray('disty', $this->opportunity->branch->branch->manager);;
         $managers = $this->opportunity->branch->branch->manager->map(
             function ($mgr) {
                 return $mgr->ancestorsAndSelf()->with('userdetails')->get();
@@ -51,9 +52,9 @@ class WonOpportunity implements ShouldQueue
         $list = [];
         foreach ($managers as $manager) {
             foreach ($manager as $mgr) {
-                if (in_array($mgr->business_title, ['Market Manager', 'RVP'])) {
+                
                     $list[] = ['name'=>$mgr->fullName(), 'email'=>$mgr->userdetails->email];
-                }
+                
             }
         }
 

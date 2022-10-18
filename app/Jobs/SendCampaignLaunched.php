@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Campaign;
-use App\Models\Mail\SendCampaignLaunchedMail;
+use App\Mail\SendCampaignLaunchedMail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

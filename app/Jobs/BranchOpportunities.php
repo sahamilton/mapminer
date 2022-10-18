@@ -8,7 +8,7 @@ use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use App\Models\Exports\Reports\Branch\BranchOpportunitiesExport;
-use App\Models\Mail\BranchOpportunitiesReport;
+use App\Mail\BranchOpportunitiesReport;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;

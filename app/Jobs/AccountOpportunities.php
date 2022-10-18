@@ -13,7 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Exports\AccountOpportunitiesExport;
-use App\Models\Mail\AccountOpportunitiesReport;
+use App\Mail\AccountOpportunitiesReport;
 
 class AccountOpportunities implements ShouldQueue
 {

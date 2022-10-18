@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Database\Eloquent\Collection;
 use Mail;
-use App\Models\Mail\NotifyManagerOfNoLoginsMail;
+use App\Mail\NotifyManagerOfNoLoginsMail;
 use App\Models\Role;
 use App\Models\User;
 

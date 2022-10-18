@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
 
 use App\Models\Exports\Reports\Campaign\CampaignSummaryExport;
-use App\Models\Mail\SendCampaignSummaryReport;
+use App\Mail\SendCampaignSummaryReport;
 use App\Models\Campaign;
 use App\Models\Report;
 use App\Models\User;

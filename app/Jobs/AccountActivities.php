@@ -5,7 +5,7 @@ namespace App\Jobs;
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\Exports\AccountActivitiesExport;
-use App\Models\Mail\AccountActivitiesReport;
+use App\Mail\AccountActivitiesReport;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Bus\Queueable;

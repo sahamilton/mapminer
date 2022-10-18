@@ -246,15 +246,33 @@ class OpportunityTable extends Component
     public function closeOpportunity()
     {
         
-        @ray('closing', $this->opportunity);
-        $this->validate();
         
+        $this->validate();
+        $this->opportunity->save();
         $this->doClose('closeOpportunityModal');
         
         $this->opportunity->update(['actual_close' => Carbon::parse($this->opportunity->actual_close)]);
+        $this->_setEstStartEndDates();
 
     }
-    
+    private function _setEstStartEndDates()
+    {
+
+        if ($this->opportunity->closed == 1) {
+            $data['est_start'] = $this->opportunity->actual_close;
+            $data['est_end'] = $this->opportunity->actual_close->addMonths($this->opportunity->duration);
+        } elseif ($this->opportunity->closed == 0) {
+            $data['est_start'] = $this->opportunity->expected_close;
+            $data['est_end'] = $this->opportunity->expected_close->addMonths($this->opportunity->duration);
+        } else {
+            $data['est_start'] = null;
+            $data['est_end'] = null;
+
+        }
+     
+        $this->opportunity->update($data);
+
+    }
     /**
      * [doShow description]
      * 
@@ -298,6 +316,9 @@ class OpportunityTable extends Component
             
             'opportunity.closed'=>'in:1,2',
             'opportunity.actual_close' => 'required|date|before:tomorrow',
+            'opportunity.est_start' =>'sometimes|date',
+            'opportunity.est_end' =>'sometimes|date',
+
             
 
         ] ;

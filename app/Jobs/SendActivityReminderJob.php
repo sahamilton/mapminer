@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Mail\SendActivityReminder;
+use App\Mail\SendActivityReminder;
 use Mail;
 use App\Models\Ical;
 use App\Models\User;

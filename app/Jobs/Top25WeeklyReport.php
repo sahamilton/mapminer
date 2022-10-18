@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Exports\Reports\Branch\OpenTop25BranchOpportunitiesExport;
 use App\Models\Exports\Reports\Branch\Top25WeekReportExport;
-use App\Models\Mail\SendTop25WeeklyReport;
+use App\Mail\SendTop25WeeklyReport;
 use App\Models\Opportunity;
 use App\Models\Report;
 use Carbon\Carbon;

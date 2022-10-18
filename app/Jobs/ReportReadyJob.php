@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use Mail;
-use App\Models\Mail\SendReport;
+use App\Mail\SendReport;
 use App\Models\User;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;

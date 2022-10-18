@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Mail\NewOpportunityNotification;
+use App\Mail\NewOpportunityNotification;
 use App\Models\Opportunity;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

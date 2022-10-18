@@ -23,7 +23,9 @@ class Opportunity extends Model
                         'user_id',
                         'comments',
                         'expected_close',
-                        'actual_close'
+                        'actual_close',
+                        'est_start',
+                        'est_end'
                     ];
                     
     

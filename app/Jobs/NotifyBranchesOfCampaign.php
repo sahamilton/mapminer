@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Mail\SendCampaignMail;
+use App\Mail\SendCampaignMail;
 use App\Models\Campaign;
 use App\Models\Branch;
 use Mail;

@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Exports\OpenTop25BranchOpportunitiesExport;
-use App\Models\Mail\SendTop25WeeklyReport;
+use App\Mail\SendTop25WeeklyReport;
 use App\Models\Report;
 use Carbon\Carbon;
 use Excel;

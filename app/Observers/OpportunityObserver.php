@@ -23,7 +23,7 @@ class OpportunityObserver
         if ($opportunity->value > 50000 && $opportunity->closed ==0) {
             
                 NewOpportunity::dispatch($opportunity);
-            }
+        }
     }
 
     /**

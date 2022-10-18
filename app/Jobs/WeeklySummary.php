@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 use Mail;
-use App\Models\Mail\WeeklySummaryStatsReport;
+use App\Mail\WeeklySummaryStatsReport;
 use App\Models\Stats;
 use App\Models\Report;
 use App\Models\Person;

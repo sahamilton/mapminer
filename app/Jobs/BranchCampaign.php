@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Branch;
 use App\Models\Campaign;
-use App\Models\Mail\BranchCampaignReport;
+use App\Mail\BranchCampaignReport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

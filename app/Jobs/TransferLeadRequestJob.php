@@ -12,7 +12,7 @@ use Mail;
 
 use App\Models\Address;
 use App\Models\User;
-use App\Models\Mail\TransferLeadRequest;
+use App\Mail\TransferLeadRequest;
 
 class TransferLeadRequestJob implements ShouldQueue
 {
