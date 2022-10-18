@@ -254,12 +254,36 @@ class AddressOpportunities extends Component
      */
     public function closeOpportunity(Opportunity $opportunity)
     {
-        @ray('closing', $this->opportunity);
+        
         $this->validate(['opportunity.actual_close' => 'required|date|before:tomorrow', 'opportunity.comments'=>'required|filled', 'opportunity.closed'=>'required|in:1,2']);
-        
+       
+
         $this->doClose('closeOpportunityModal');
-        
+         $this->opportunity->save();
+         $this->_setEstStartEndDates();
         $this->opportunity->update(['actual_close' => Carbon::parse($this->opportunity->actual_close)]);
+
+    }
+    /**
+     * [_setEstStartEndDates description]
+     * 
+     */
+    private function _setEstStartEndDates()
+    {
+
+        if ($this->opportunity->closed == 1) {
+            $data['est_start'] = $this->opportunity->actual_close;
+            $data['est_end'] = $this->opportunity->actual_close->addMonths($this->opportunity->duration);
+        } elseif ($this->opportunity->closed == 0) {
+            $data['est_start'] = $this->opportunity->expected_close;
+            $data['est_end'] = $this->opportunity->expected_close->addMonths($this->opportunity->duration);
+        } else {
+            $data['est_start'] = null;
+            $data['est_end'] = null;
+
+        }
+     
+        $this->opportunity->update($data);
 
     }
     /**
@@ -272,7 +296,7 @@ class AddressOpportunities extends Component
     public function doShow($form=null)
     {
       
-        $this->$form =true;
+        $this->$form = true;
         
     }
     /**
@@ -284,7 +308,7 @@ class AddressOpportunities extends Component
      */
     public function doClose($form=null)
     {
-        $this->$form= false;
+        $this->$form = false;
                
         
     }
