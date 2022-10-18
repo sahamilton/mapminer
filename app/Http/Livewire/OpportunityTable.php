@@ -9,6 +9,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\PeriodSelector;
 
+use Carbon\Carbon;
+
 class OpportunityTable extends Component
 {
     use WithPagination, PeriodSelector;
@@ -26,6 +28,9 @@ class OpportunityTable extends Component
     public $expected = 'all';
     public Array $expectedRange = [];
 
+
+    public $closeOpportunityModal = false;
+    public Opportunity $opportunity;
 
     public function updatingSearch()
     {
@@ -86,7 +91,7 @@ class OpportunityTable extends Component
         $this->_getExpectedDatesRange();
         
         return view(
-            'livewire.opportunity-table', 
+            'livewire.opportunities.opportunity-table', 
             [
                 'opportunities' => Opportunity::query()
                     ->select('opportunities.*', 'businessname')
@@ -209,5 +214,92 @@ class OpportunityTable extends Component
 
         }
 
+    }
+    /**
+     * [editOpportunity description]
+     * 
+     * @param Opportunity $opportunity [description]
+     * @param [type]      $action      [description]
+     * 
+     * @return [type]                   [description]
+     */
+    public function editOpportunity(Opportunity $opportunity, $action)
+    {
+        if ($action === 'close') {
+
+            
+            $this->opportunity = $opportunity;
+            $this->opportunity->closed = null;
+            $this->opportunity->actual_close = @now()->format('Y-m-d');
+            $this->opportunity->comments = null;
+            $this->doShow('closeOpportunityModal');
+        }
+       
+    }
+    /**
+     * [closeOpportunity description]
+     * 
+     * @param Opportunity $opportunity [description]
+     * 
+     * @return [type]                   [description]
+     */
+    public function closeOpportunity()
+    {
+        
+        @ray('closing', $this->opportunity);
+        $this->validate();
+        
+        $this->doClose('closeOpportunityModal');
+        
+        $this->opportunity->update(['actual_close' => Carbon::parse($this->opportunity->actual_close)]);
+
+    }
+    
+    /**
+     * [doShow description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function doShow($form=null)
+    {
+      
+        $this->$form =true;
+        
+    }
+    /**
+     * [doClose description]
+     * 
+     * @param [type] $form [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function doClose($form=null)
+    {
+        $this->$form= false;
+               
+        
+    }
+
+    /**
+     * [rules description]
+     * 
+     * @return [type] [description]
+     */
+    public function rules()
+    {
+        
+
+
+        return [
+
+            'opportunity.comments'=>'required',
+            
+            'opportunity.closed'=>'in:1,2',
+            'opportunity.actual_close' => 'required|date|before:tomorrow',
+            
+
+        ] ;
     }
 }

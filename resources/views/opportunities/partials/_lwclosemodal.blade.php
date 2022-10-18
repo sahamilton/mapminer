@@ -1,16 +1,16 @@
-  <div class="modal fade @if($closeOpportunityModal) show @endif"
-         id="closeOpportunityModal"
+<div class="modal fade @if($closeOpportunityModal) show @endif"
+   id="closeOpportunityModal"
 
-         style="display: @if($closeOpportunityModal === true)
-                 block
-         @else
-                 none
-         @endif;"
+   style="display: @if($closeOpportunityModal === true)
+           block
+   @else
+           none
+   @endif;"
 
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="modal-title"
-         aria-hidden="true">
+   tabindex="-1"
+   role="dialog"
+   aria-labelledby="modal-title"
+   aria-hidden="true">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -22,7 +22,7 @@
       </div>
       <div class="modal-body">
 
-        <form wire:submit.prevent="closeOpportunity({{$opportunity->id}})">
+        <form wire:submit.prevent="closeOpportunity({{isset($opportunity) ? $opportunity->id : ''}})">
           <div class="form-group-inline mb-4">
 
             @php $options = [1=>'Closed - Won', 2=>'Closed - Lost'];@endphp

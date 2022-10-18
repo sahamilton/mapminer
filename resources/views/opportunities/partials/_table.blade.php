@@ -23,12 +23,11 @@
       <td>
 
         {{ucwords($statuses[$opportunity->closed])}}
-        @if($opportunity->closed == 0 && auth()->user()->hasRole('branch_manager'))
-        <button class="btn btn-danger" 
-                data-href="{{route('opportunity.close',$opportunity->id)}}"
-                data-toggle="modal" 
-                data-target="#closeopportunity">Close</button>
-        @endif
+          @if($opportunity->closed == 0 && auth()->user()->hasRole('branch_manager'))
+            <button class="btn btn-danger" wire:click="editOpportunity({{$opportunity->id}}, 'close')" >
+                    Close
+            </button>
+          @endif
       </td>
       <td>
         <a href= "{{route('address.show',$opportunity->address->address->id)}}">{{$opportunity->address->address->businessname}}</a>
