@@ -212,6 +212,7 @@ class AddressOpportunities extends Component
         $this->opportunity->expected_close = Carbon::parse($this->opportunity->expected_close);
         
         $this->opportunity->save();
+        $this->_setEstStartEndDates();
 
     }
     /**

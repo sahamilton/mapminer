@@ -255,6 +255,10 @@ class OpportunityTable extends Component
         $this->_setEstStartEndDates();
 
     }
+    /**
+     * [_setEstStartEndDates description]
+     * 
+     */
     private function _setEstStartEndDates()
     {
 
