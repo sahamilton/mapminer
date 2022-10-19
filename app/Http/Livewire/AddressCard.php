@@ -12,6 +12,8 @@ use App\Models\Opportunity;
 use App\Models\ActivityType;
 use App\Models\Campaign;
 use App\Models\Branch;
+use App\Models\Note;
+
 use App\Jobs\TransferLeadRequestJob;
 
 
@@ -29,7 +31,7 @@ class AddressCard extends Component
     public array $branches;
     
     public $view = 'summary';
-    public $owned;
+    public array $owned;
     public Address $location;
 
 
@@ -232,21 +234,34 @@ class AddressCard extends Component
     {
         $this->validate();
         $geocode = app('geocoder')->geocode($this->location->fullAddress())->get();
-       
+        
         if (count($geocode) > 0) {
              $this->location->lat = $geocode->first()->getCoordinates()->getLatitude();
              $this->location->lng = $geocode->first()->getCoordinates()->getLongitude();
             
         }
-
+        
         if (isset($this->location->customer_id)) {
-            @ray($this->location);
+        
             $this->location->isCustomer =1;
         }
         $this->doClose('addressModal');
+
         $this->location->save();
+        $this->_setPosition();
         $this->resetPage();
 
+    }
+    /**
+     * [_getPosition description]
+     * 
+     * @return [type] [description]
+     */
+    private function _setPosition()
+    {
+        $lngLat = $this->location->lng . " " . $this->location->lat;
+
+        \DB::statement("UPDATE addresses SET position = ST_GeomFromText('POINT(".$lngLat .")') WHERE id = " . $this->location->id. "");
     }
     /**
      * [rules description]
@@ -293,14 +308,33 @@ class AddressCard extends Component
      */
     public function destroyAddress(Address $address)
     {
-       
-        $address = Address::with('claimedByBranch')->findOrFail($address->id);
         
+        $address = $address->load('claimedByBranch');
+        $branch = $address->claimedByBranch->first();
+        $this->_createNote($address, $branch);
         $address->claimedByBranch()->detach();
+        
         $this->owned = $this->_checkIfOwned();
         //$this->address = null;
         $this->doClose('confirmModal');
 
+    }
+    /**
+     * [_createNote description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _createNote(Address $address, Branch $branch)
+    {
+        
+        
+        $data['note'] = auth()->user()->person->fullName() . " removed this lead from branch " . $branch->branchname ." on " .now()->format('Y-m-d') . ' with the comment ';
+        $data['user_id'] = auth()->user()->id;
+        $data['address_id'] = $address->id;
+        return Note::create($data);
+        
     }
     /**
      * [claimLead description]
