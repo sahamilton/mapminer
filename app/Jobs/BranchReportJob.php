@@ -27,7 +27,14 @@ class BranchReportJob implements ShouldQueue
     public $person;
     public $report; 
     public $user;
-    
+    /**
+     * [__construct description]
+     * 
+     * @param Report      $report       [description]
+     * @param Array|null  $period       [description]
+     * @param [type]      $distribution [description]
+     * @param Person|null $manager      [description]
+     */
     public function __construct(
         Report $report, 
         Array $period = null, 
@@ -58,6 +65,7 @@ class BranchReportJob implements ShouldQueue
        
         /// what do we do if there is no distribution?
         foreach ($this->distribution as $recipient) {
+            
             $this->user = $recipient;
             $this->file = $this->_makeFileName($recipient);
             $branches = $this->_getReportBranches($recipient);
@@ -79,7 +87,7 @@ class BranchReportJob implements ShouldQueue
         }
     }
 
-     /**
+    /**
      * [_makeFileName description]
      * 
      * @return string filename
@@ -98,7 +106,11 @@ class BranchReportJob implements ShouldQueue
     }
 
     
-
+    /**
+     * [_getDistribution description]
+     * 
+     * @return [type] [description]
+     */
     private function _getDistribution()
     {
         if ($this->manager) {
@@ -112,7 +124,12 @@ class BranchReportJob implements ShouldQueue
         }
     }
 
-
+    /**
+     * [_getReportBranches description]
+     * 
+     * @param  [type] $recipient [description]
+     * @return [type]            [description]
+     */
     private function _getReportBranches($recipient)
     {
         if ($this->manager) {
@@ -121,7 +138,10 @@ class BranchReportJob implements ShouldQueue
         }
         return $recipient->person->getMyBranches();
     }
-
+    /**
+     * [_getExportClass description]
+     * @return [type] [description]
+     */
     private function _getExportClass()
     {
         switch(strtolower($this->report->object)) {

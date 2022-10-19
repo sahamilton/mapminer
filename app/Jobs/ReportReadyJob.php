@@ -34,6 +34,7 @@ class ReportReadyJob implements ShouldQueue
         $this->period = $period;
         $this->file = $file;
         $this->report = $report;
+        
     }
     
     /**
@@ -47,8 +48,8 @@ class ReportReadyJob implements ShouldQueue
             $this->distribution = User::findOrFail(1);
             Mail::to([$this->distribution->getFormattedEmail()])->send($email);
         } 
-        if (is_a($this->distribution, 'App\User')) {
-
+        if (is_a($this->distribution, 'App\Models\User')) {
+            //String $file, Array $period, Report $report, User $user
             $email = new SendReport($this->file, $this->period, $this->report, $this->distribution);
                 Mail::to([$this->distribution->getFormattedEmail()])->send($email);
         } else {

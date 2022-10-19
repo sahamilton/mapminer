@@ -82,7 +82,7 @@ class UserReportJob implements ShouldQueue
 
     private function _makeFileName()
     {
-        if (! is_a($this->user, 'App\User')) {
+        if (! is_a($this->user, 'App\Models\User')) {
             $this->user = User::with('person')->first();          
         }
 

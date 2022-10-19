@@ -58,7 +58,8 @@ class ReportsController extends Controller
     {
         $reports = $this->report->query()
             ->withCount('distribution')
-            ->when(! auth()->user()->hasRole(['admin', 'sales_ops']), function ($q) {
+            ->when(
+                ! auth()->user()->hasRole(['admin', 'sales_ops']), function ($q) {
                     $q->publicReports();
                 }
             )
@@ -68,7 +69,12 @@ class ReportsController extends Controller
         return response()->view('reports.index', compact('reports'));
     }
 
-
+    /**
+     * [review description]
+     * 
+     * @param  [type] $filename [description]
+     * @return [type]           [description]
+     */
     public function review($filename = null)
     {
         $files = $files = \Storage::disk('public')->allFiles('reports');
@@ -102,7 +108,7 @@ class ReportsController extends Controller
         
 
 
-        if ( ! $this->_checkValidJob(request(['job', 'object', 'export']))) {
+        if (! $this->_checkValidJob(request(['job', 'object', 'export']))) {
             return redirect()->back()->withError('job does not exist');
         }
         
@@ -256,7 +262,15 @@ class ReportsController extends Controller
        
 
     }
-
+    /**
+     * [_dispatchJob description]
+     * 
+     * @param  Report                                   $report       [description]
+     * @param  Request                                  $request      [description]
+     * @param  \Illuminate\Database\Eloquent\Collection $distribution [description]
+     * @return [type]                                                 [description]
+     * 
+     */
     private function _dispatchJob(
         Report $report, 
         Request $request, 
@@ -270,7 +284,7 @@ class ReportsController extends Controller
         
         switch($report->object) {
         case 'Branch':
-
+        
             return BranchReportJob::dispatch($report, $period, $distribution, $manager)->onQueue('reports');
             break;
 
