@@ -2,7 +2,11 @@
 @section('content')
 
 <h2> {{$salesperson->fullName()}}'s Sales Team</h2>
-
+  @if (auth()->user()->canImpersonate() && $salesperson->userdetails->canBeImpersonated())
+    <a href="{{route('impersonate', $salesperson->user_id)}}" title="Login as {{$salesperson->fullName()}}">
+        <i class=" text-danger fa-duotone fa-key"></i>
+    </a>
+  @endif
 
 
   @foreach ($salesperson->userdetails->roles as $role)

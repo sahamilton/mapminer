@@ -314,8 +314,9 @@ class AddressCard extends Component
     {
         
          $address->claimedByBranch()->attach($branch->id, ['status_id'=>2]);
+         $this->ranking = 0;
          $this->owned = $this->_checkIfOwned();
-         @ray($this->owned, $branch->id);
+
 
     }
     /**
