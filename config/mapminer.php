@@ -12,8 +12,8 @@ return [
     */
     'author' => 'Stephen Hamilton',
     'developer' => 'Mapminer Development Corp, LLC',
-    'developer_email' => 'support@effneight.com',
-    'website' => 'https://www.EffnEight.com',
+    'developer_email' => 'support@mapminer.co',
+    'website' => 'https://www.Mapminer.co',
     'client' => '',
 
 
@@ -52,7 +52,7 @@ return [
     */
 
     'support'=>'Mapminer Support Operations',
-    'system_contact'=>env('MAPMINER_CONTACT', 'support@EffnEight.com'),
+    'system_contact'=>env('MAPMINER_CONTACT', 'support@Mapminer.co'),
 
     
     'timeframes'=>[

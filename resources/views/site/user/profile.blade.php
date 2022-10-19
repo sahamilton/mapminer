@@ -6,6 +6,12 @@
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h2 class="panel-title pull-left"><strong>{{$user->person->fullName()}}</strong></h2>
+				@if(auth()->user()->canImpersonate() && $user->canBeImpersonated())
+					  <a href="{{route('impersonate', $user->id)}}" title="Login as {{$user->person->completeName}}" >
+					      <i class=" text-danger fa-duotone fa-key"></i>
+					  </a>
+					    
+				@endif
 				<h4 class="panel-title pull-left">
 					<strong>
 						{{

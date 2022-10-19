@@ -49,6 +49,11 @@ title= "See {{$salesperson->reportsTo->fullName()}}'s sales team"> {{$salesperso
     <tr>  
 
     <td>
+      @if (auth()->user()->canImpersonate() && $reports->userdetails->canBeImpersonated())
+        <a href="{{route('impersonate', $reports->user_id)}}" title="Login as {{$reports->fullName()}}">
+            <i class=" text-danger fa-duotone fa-key"></i>
+        </a>
+        @endif
     {!!str_repeat ( '&nbsp;' , ($reports->depth - $salesperson->depth) * 3 )!!} 
         @if($reports->isLeaf())
         <a href="{{route('salesorg.show',$reports->id)}}"
@@ -61,7 +66,8 @@ title= "See {{$salesperson->reportsTo->fullName()}}'s sales team"> {{$salesperso
         {{$reports->fullName()}}
         </a>
         @endif
-
+        
+       
    </td>
 
    <td>
