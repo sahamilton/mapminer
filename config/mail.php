@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'info@tbmapminer.com'),
-        'name' => env('MAIL_FROM_NAME', 'TrueBlue Mapminer')
+        'address' => env('MAIL_FROM_ADDRESS', 'info@mapminer.co'),
+        'name' => env('MAIL_FROM_NAME', 'Mapminer')
         ],
 
     /*
