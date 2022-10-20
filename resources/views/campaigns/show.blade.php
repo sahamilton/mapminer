@@ -3,9 +3,9 @@
 <div class="container">
 	
 	@if($campaign->status == 'planned')
-		<livewire:campaign-summary :campaign_id='$campaign->id' />
+		<livewire:campaign-summary :campaign='$campaign' />
 	@else
-		<livewire:campaign-tracking :campaign_id='$campaign->id' />
+		<livewire:campaign-tracking :campaign='$campaign' />
 	@endif
 </div>
 @endsection()

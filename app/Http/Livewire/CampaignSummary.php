@@ -13,8 +13,11 @@ class CampaignSummary extends Component
     use WithPagination;
     
     public $campaigns;
-    public $campaign;
+    public Campaign $campaign;
     public $campaign_id;
+    public $company_ids;
+    public $vertical_ids;
+    public $branch_ids;
     public $type = 'company';
     public $perPage = 10;
     public $sortField = 'name';
@@ -43,18 +46,14 @@ class CampaignSummary extends Component
         $this->sortField = $field;
     }
 
-    public function mount($campaign_id=null)
+    public function mount(Campaign $campaign)
     {
         
-        $this->campaigns = Campaign::where('status', 'planned')->orderBy('id', 'desc')->get();
-        if ($campaign_id) {
-             $this->campaign = Campaign::find($campaign_id);
-        } else {
-            $this->campaign = $this->campaigns->first();
-        }
-        //$this->_getCampaignType();
+        $this->campaign = $campaign;
         $this->campaign_id = $this->campaign->id;
-
+        $this->branch_ids = $this->campaign->branches->pluck('id')->toArray();
+        $this->company_ids =$this->campaign->companies->pluck('id')->toArray();
+        $this->vertical_ids = $this->campaign->vertical->pluck('id')->toArray();
     }
 
     public function render()
@@ -70,7 +69,7 @@ class CampaignSummary extends Component
                 ->paginate($this->perPage),
                 'summarycount'=>$this->_summaryCounts(),
                 'assignable'=>$this->_assignable(),
-                'campaign' => Campaign::findOrFail($this->campaign_id),
+               
             ]
         );
     }
@@ -81,7 +80,7 @@ class CampaignSummary extends Component
         switch($this->type) {
         case 'company':
             return Company::withCount('assigned', 'unassigned')
-                ->whereIn('id', $this->campaign->companies->pluck('id')->toArray());
+                ->whereIn('id', $this->company_ids);
             break;    
 
 
@@ -91,13 +90,13 @@ class CampaignSummary extends Component
                     'addresses as assigned_count'=>function ($q) {
                         $q->where(
                             function ($q) {
-                                $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
-                                    ->orWhereIn('industry_id', $this->campaign->vertical->pluck('id')->toArray());
+                                $q->whereIn('company_id', $this->company_ids)
+                                    ->orWhereIn('industry_id', $this->vertical_ids);
                             }
                         )->where('address_branch.created_at', '<=', $this->campaign->dateto);
                     }
                 ]
-            )->whereIn('id', $this->campaign->branches->pluck('id')->toArray());
+            )->whereIn('id', $this->branch_ids);
             break;    
         }
 
@@ -115,22 +114,26 @@ class CampaignSummary extends Component
 
     private function _assignable()
     {
+        $branches = Branch::whereIn('id', $this->branch_ids)->get();
         
-        if ($this->type == 'branch') {
-            $addresses = Address::doesntHave('assignedToBranch')
-                ->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
-                ->pluck('id')->toArray();
-            return collect($this->campaign->getAssignableLocationsofCampaign($addresses, true));
+        foreach ($branches as $branch) {
+              $assignable[$branch->id] = Address::nearby($branch, 15)
+                    ->doesntHave('assignedToBranch')
+                    ->where(
+                        function ($q) {
+                            $q->whereIn('industry_id', $this->vertical_ids)
+                                ->orWhere('company_id', $this->company_ids);
+                        }
+                    )->count();
         }
-        return [];
+        return $assignable;
        
     }
     private function _getCurrentCampaign()
     {
         
-        $this->campaign = Campaign::findOrFail($this->campaign_id);
 
-        $this->branches = array_intersect(auth()->user()->person->getMyBranches(), $this->campaign->branches->pluck('id')->toArray());
+        $this->branches = array_intersect(auth()->user()->person->getMyBranches(), $this->branch_ids);
     }
     private function _summaryCounts()
     {

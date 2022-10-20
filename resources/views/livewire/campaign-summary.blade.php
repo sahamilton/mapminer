@@ -68,13 +68,13 @@
             @foreach ($data as $item)
             <tr>
                 <td>{{$type=='company' ? $item->companyname : $item->branchname}}</td>
-                <td>{{$item->assigned_count}}</td>
-                <td>
+                <td align="center">{{$item->assigned_count}}</td>
+                <td align="center">
                     @if($type == 'company')
                         {{$item->unassigned_count}}
                     @else
                 
-                        {{ $assignable->where('branchname', $item->branchname)->sum('assignable') }}
+                        {{ $assignable[$item->id] }}
                     @endif
                 </td>
             </tr>
@@ -85,7 +85,7 @@
                     <th></th>
                     
                     <th>{{$summarycount['assigned']}}</th>
-                    <th>{{$type=='branch' ?  $assignable->sum('assignable') : $summarycount['unassigned']}}</th>
+                    <th>{{$type=='branch' ?  array_sum($assignable) : $summarycount['unassigned']}}</th>
 
                 </tr>
 

@@ -154,6 +154,7 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
+       
         return response()->view('campaigns.show', compact('campaign'));
         
         
