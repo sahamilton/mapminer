@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Role;
 use App\Models\Company;
 use App\Models\Address;
+use App\Models\AddressBranch;
 
 class SearchController extends Controller
 {
@@ -86,8 +87,8 @@ class SearchController extends Controller
 
         $branches = auth()->user()->person->myBranches();
         
-        return Address::query()
-            ->join('address_branch', 'address_id', '=', 'addresses.id')
+        return AddressBranch::query()
+            ->join('addresses', 'address_id', '=', 'addresses.id')
             ->select('addresses.id', 'businessname', 'city')
             ->whereIn('branch_id', array_keys($branches))
             ->search(request('q'))
