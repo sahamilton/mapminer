@@ -289,7 +289,7 @@ class Address extends Model
      */
     public function industryVertical()
     {
-        return $this->hasOne(SearchFilter::class, 'id', 'vertical');
+        return $this->hasOne(SearchFilter::class, 'id', 'industry_id');
     }
     /**
      * [scopeFiltered description]

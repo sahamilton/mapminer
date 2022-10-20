@@ -106,6 +106,7 @@ class SearchFilter extends NodeModel
         return $this->where('searchColumn', '=', 'vertical')
             ->where('canbenull', '=', 0)
             ->where('type', '!=', 'group')
+            ->where('depth', 2)
             ->orderBy('filter', 'asc')
             ->pluck('filter', 'id')
             ->toArray();

@@ -88,25 +88,36 @@ class CampaignController extends Controller
     public function create()
     {
 
-
-        $servicelines = $this->serviceline->all();
+        
+        $servicelines = $this->_getServicelines();
         $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
         // refactor to Person model
-        $managers = $this->person
+        $managers =Person::query()
             ->withRoles(array_keys($roles))
             ->with('userdetails.roles')
             ->orderBy('lastname')
-            ->orderBy('firstname')->get();
-        $campaignmanagers = $this->person
+            ->orderBy('firstname')
+            ->get()
+            ->pluck('fullName', 'id')
+            ->prepend('All', 'all')
+            ->toArray();
+        $campaignmanagers = Person::query()
             ->selectRaw("id, concat_ws(' ',firstname, lastname) as name")
             ->withRoles([4])
             ->orderBy('lastname')
             ->orderBy('firstname')
             ->pluck('name', 'id')
             ->toArray();
-        $companies = Company::orderBy('companyname')->pluck('companyname', 'id')->toArray();
+        
+
+        $companies = Company::query()
+            ->orderBy('companyname')
+            ->pluck('companyname', 'id')
+            ->toArray();
+        $industries = $this->vertical->vertical();
+        
        
-        return response()->view('campaigns.create', compact('managers', 'servicelines', 'companies', 'campaignmanagers'));
+        return response()->view('campaigns.create', compact('managers', 'servicelines', 'companies', 'campaignmanagers', 'industries'));
     }
     /**
      * [store description]
@@ -117,13 +128,20 @@ class CampaignController extends Controller
      */
     public function store(CampaignFormRequest $request)
     {
-    
+        
         $data = $this->_transformRequest($request);
 
         $campaign = $this->campaign->create($data);
         $campaign->servicelines()->sync($data['serviceline']);
-        $campaign->companies()->sync($data['companies']);
-        $this->_assignBranchesToCampaigns($campaign);
+        if ($data['industries']) {
+            $campaign->vertical()->sync($data['industries']);
+        }
+        if ($data['companies']) {
+            $campaign->companies()->sync($data['companies']); 
+        }
+        
+        
+        //$this->_assignBranchesToCampaigns($campaign);
         
         return redirect()->route('campaigns.show', $campaign->id);
     }
@@ -151,23 +169,27 @@ class CampaignController extends Controller
     {
         $verticals = $this->vertical->industrysegments();
         $companies = Company::orderBy('companyname')->pluck('companyname', 'id')->toArray();
-        $servicelines = $this->serviceline->all();
+        $servicelines = $this->_getServicelines();
         $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
-        $managers = $this->person
+        $managers =Person::query()
             ->withRoles(array_keys($roles))
             ->with('userdetails.roles')
             ->orderBy('lastname')
             ->orderBy('firstname')
-            ->get();
-        $campaignmanagers = $this->person
+            ->get()
+            ->pluck('fullName', 'id')
+            ->prepend('All', 'all')
+            ->toArray();
+        $campaignmanagers = Person::query()
             ->selectRaw("id, concat_ws(' ',firstname, lastname) as name")
             ->withRoles([4])
             ->orderBy('lastname')
             ->orderBy('firstname')
             ->pluck('name', 'id')
             ->toArray();
-        $campaign->load('vertical', 'servicelines',  'manager'); 
-        return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines', 'campaignmanagers'));
+        $campaign->load('vertical', 'servicelines',  'manager');
+        $industries = $this->vertical->vertical(); 
+        return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines', 'campaignmanagers', 'industries'));
     }
     /**
      * [update description]
@@ -202,6 +224,17 @@ class CampaignController extends Controller
         return redirect()->back()->withMessage("Campaign Deleted");
     }
 
+
+    private function _getServicelines()
+    {
+        if ($this->serviceline->count() > 1) {
+            return $servicelines = $this->serviceline
+                ->pluck('ServiceLine', 'id')
+                ->toArray();
+        } else {
+            return $servicelines = $this->serviceline->first()->id;
+        }
+    }
     /**
      * [launch description]
      * 
@@ -246,16 +279,22 @@ class CampaignController extends Controller
         }
         
     }
-
+    /**
+     * [_assignBranchesToCampaigns description]
+     * @param  Campaign $campaign [description]
+     * @return [type]             [description]
+     */
     private function _assignBranchesToCampaigns(Campaign $campaign)
     {
         $manager = $campaign->manager;
+
         $servicelines = $campaign->servicelines->pluck('id')->toArray();
+       
         $activebranches = Branch::inServiceLines($servicelines)
-            ->active()
+            
             ->pluck('id')
             ->toArray();
-        $branches = array_intersect(array_values($manager->getMyBranches($servicelines)), $activebranches);
+        $branches = array_intersect($manager->getMyBranches(), $activebranches);
         return $campaign->branches()->sync($branches);
     }
     /**
@@ -347,28 +386,6 @@ class CampaignController extends Controller
     public function export(Request $request, Campaign $campaign)
     {
         
-        /*$servicelines = $this->_getCampaignServicelines($campaign);
-        if (! request('manager_id')) {
-            $manager_id = $campaign->manager_id;
-        } else {
-            $manager_id = request('manager_id');
-        }
-        $servicelines = $campaign->getServicelines();
-        
-
-        $manager = $this->person->with('reportsTo')->findOrFail($manager_id);
-
-        $branches = array_keys($manager->myBranches($manager));
-       
-        $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
-
-        $team = $this->campaign->getSalesTeamFromManager($manager_id, $servicelines);
-        return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager', 'team'));
-
-        // get summaryStats from campaign with branches
-        // 
-        // Export report*/
-
         CampaignSummary::dispatch($campaign);
         return redirect()->back()->withMessage('Job has been dispatched. Check your email shortly');
     }
@@ -445,7 +462,15 @@ class CampaignController extends Controller
         
         return $result;
     }
-    private function _getBranchAssignableSummary(Campaign $campaign, $result)
+    /**
+     * [_getBranchAssignableSummary description]
+     * 
+     * @param Campaign $campaign [description]
+     * @param [type]   $result   [description]
+     * 
+     * @return array             [description]
+     */
+    private function _getBranchAssignableSummary(Campaign $campaign, $result) : array
     {
         $data = [];
         $addresses = $result->flatten()->pluck('id')->toArray();
@@ -462,7 +487,7 @@ class CampaignController extends Controller
      * 
      * @return [type]             [description]
      */
-    private function _getCampaignData(Campaign $campaign)
+    private function _getCampaignData(Campaign $campaign) :array
     {
         
        
@@ -478,7 +503,7 @@ class CampaignController extends Controller
      * 
      * @return [type]           [description]
      */
-    private function _transformRequest(Request $request)
+    private function _transformRequest(Request $request) :array
     {
        
         $data = request()->except(['_token']);
@@ -491,7 +516,7 @@ class CampaignController extends Controller
         }
 
         $data['created_by'] = auth()->user()->id;
-        if (! $data['manager_id']) {
+        if (! $data['manager_id'] or $data['manager_id']=='all') {
             
             $data['manager_id'] = $this->salesorg->getCapoDiCapo()->id;
         }
@@ -506,7 +531,7 @@ class CampaignController extends Controller
      * 
      * @return [type]           [description]
      */
-    private function _getCompaniesInVertical(Request $request)
+    private function _getCompaniesInVertical(Request $request) :array
     {
         return $this->company->whereIn('vertical', request('vertical'))->pluck('id')->toArray();
     }
@@ -519,7 +544,7 @@ class CampaignController extends Controller
      * 
      * @return [type]            [description]
      */
-    private function _getAllLocations($companies)
+    private function _getAllLocations($companies) :array
     {
         $data['assigned'] = $companies->map(
             function ($company) {

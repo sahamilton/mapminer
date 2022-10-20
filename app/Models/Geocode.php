@@ -104,11 +104,11 @@ trait Geocode
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-        if(is_null($query->getQuery()->columns)) {
+        if (is_null($query->getQuery()->columns)) {
             $query->select('*');
         }
 
-        $query
+        return $query
             ->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon])
             ->selectRaw("{$this->_haversine($location)} AS distance")
@@ -117,7 +117,7 @@ trait Geocode
            
             ->when(
                 $limit, function ($q) use ($limit) {
-                   $q->limit($limit);
+                    $q->limit($limit);
                 }
             );
     }
@@ -165,15 +165,17 @@ trait Geocode
             
             ->when(
                 $limit, function ($q) use ($limit) {
-                   $q->limit($limit);
+                    $q->limit($limit);
                 }
             );
     }
     /**
      * return Bounding box for spatial queries
-     * @param  [type] $query    [description]
-     * @param  [type] $location [description]
-     * @param  [type] $radius   [description]
+     * 
+     * @param [type] $query    [description]
+     * @param [type] $location [description]
+     * @param [type] $radius   [description]
+     * 
      * @return [type]           [description]
      */
     public function scopeBounding($query, $location, int $radius=25) 
@@ -196,11 +198,11 @@ trait Geocode
     {
 
      
-        if(is_null($query->getQuery()->columns)) {
+        if (is_null($query->getQuery()->columns)) {
             $query->select('*');
         }
        
-       $query->selectRaw("{$this->_haversine($location)} AS distance");
+        $query->selectRaw("{$this->_haversine($location)} AS distance");
 
     
     }
@@ -226,6 +228,14 @@ trait Geocode
 
     
     }
+
+    public function scopeNearbyAddressesToBranch($query, Campaign $campaign)
+    {
+
+
+
+
+    }
     /**
      * [scopeWithinDistance description]
      * @param  [type] $query    [description]
@@ -238,8 +248,8 @@ trait Geocode
 
         $query->whereRaw(
             'ST_Distance(
-            ST_SRID(POINT(lng, lat), 4236),
-            ST_SRID(POINT(? , ?), 4236)
+            POINT(lng, lat),
+            POINT(? , ?)
             ) / 1609.344 < ' .$radius, ['lng'=>$location->lng, 'lat'=>$location->lat]
         );
 

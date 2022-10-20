@@ -52,7 +52,7 @@ class CampaignSummary extends Component
         } else {
             $this->campaign = $this->campaigns->first();
         }
-        
+        //$this->_getCampaignType();
         $this->campaign_id = $this->campaign->id;
 
     }
@@ -89,8 +89,12 @@ class CampaignSummary extends Component
             return Branch::withCount(       
                 [ 
                     'addresses as assigned_count'=>function ($q) {
-                        $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
-                            ->where('address_branch.created_at', '<=', $this->campaign->dateto);
+                        $q->where(
+                            function ($q) {
+                                $q->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
+                                    ->orWhereIn('industry_id', $this->campaign->vertical->pluck('id')->toArray());
+                            }
+                        )->where('address_branch.created_at', '<=', $this->campaign->dateto);
                     }
                 ]
             )->whereIn('id', $this->campaign->branches->pluck('id')->toArray());
@@ -111,6 +115,7 @@ class CampaignSummary extends Component
 
     private function _assignable()
     {
+        
         if ($this->type == 'branch') {
             $addresses = Address::doesntHave('assignedToBranch')
                 ->whereIn('company_id', $this->campaign->companies->pluck('id')->toArray())
