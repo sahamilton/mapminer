@@ -39,7 +39,9 @@ class LeadTable extends Component
 
     public $addActivityModal = true;
     public array $activityTypes;
-    public Address $address;
+    public $address;
+
+    public $activity;
     public $address_id;
     public $activitytype_id;
     public $activity_date;
@@ -48,8 +50,15 @@ class LeadTable extends Component
     public $followup_date;
     public $followup_activity;
     public $activityModalShow = false;
-
-    public $contact_id=null;
+    public $address_branch_id;
+    
+    public $contact_id = null;
+    public $followupactivitydate;
+    public $followupactivitytype;
+    public $user_id;
+    public $title = 'Record';
+    public $method ='storeActivity';
+   
 
     /**
      * [updatingSearch description]
@@ -121,7 +130,7 @@ class LeadTable extends Component
             ->branchTeam->pluck('full_name', 'user_id')
             ->toArray();
         $this->activityTypes = ActivityType::pluck('activity', 'id')->toArray();
-            
+        $this->user_id = auth()->user()->id;    
     }
     /**
      * [render description]
@@ -130,21 +139,24 @@ class LeadTable extends Component
      */
     public function render()
     {
-        @ray($this->type);
+
         $this->_setPeriod();
         $this->_setBranchSession();
         return view(
             'livewire.lead-table', [
             'leads' => Address::query()
                 ->search($this->search)
+                
                 ->when(
                     $this->type != 'Either', function ($q) {
+                       
                         $q->when(
                             $this->type == 'Customers', function ($q) {
-                                $q->where('isCustomer', 1);
+                                $q->whereNotNull('isCustomer');
                             
                             }, function ($q) {
                                 $q->whereNull('isCustomer');
+                            
                             }
                         );
                     }
@@ -211,8 +223,16 @@ class LeadTable extends Component
                             );
                     }
                 )
-            
-                ->with('assignedToBranch')
+                ->whereHas(
+                    'claimedByBranch', function ($q) {
+                        $q->whereIn('branch_id', [$this->branch_id])
+                            ->when(
+                                $this->setPeriod != 'All', function ($q) {
+                                    $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                                }
+                            );
+                    }
+                )->with('claimedByBranch')
                 ->when(
                     $this->lead_source_id != 'All', function ($q) {
                         $q->where('lead_source_id', $this->lead_source_id);
@@ -295,113 +315,170 @@ class LeadTable extends Component
     */
     public function addActivity(Address $address)
     {
-        // get contacts;
-        $this->resetActivities();
-        $this->doShow();
        
         $this->address = $address;
         $this->address_id = $this->address->id;
+        $this->_resetActivities('create');
+        $this->title='Record';
+        $this->method='storeActivity';
+        $this->doShow('activityModalShow');
        
-       
-        
 
     }
+    /**
+     * [rules description]
+     * 
+     * @return [type] [description]
+     */
     public function rules()
     {
        
         $activityDateRules = 'date|required';
-        if ($this->completed) {
+        if (isset($this->activity) && $this->activity->completed) {
             $activityDateRules.='|before:tomorrow';
         }
 
         return [
-            'activity_date'=> $activityDateRules,
-            'activitytype_id'=>'required',
-            'note'=>'required',
-            'followup_date'=>'date|nullable|after:activity_date',
-            'followup_activity'=>'required_with:followup_date',
-            'address_id' => 'required',
-            'branch_id'=>'required',
+            'activity.activity_date'=> $activityDateRules,
+            'activity.activitytype_id'=>'required|regex:/^\d*(\.\d{2})?$/',
+            'activity.note'=>'required',
+           
+            'activity.address_id' => 'required',
+            'activity.branch_id' => 'required',
+            'activity.user_id' => 'required',
+            'activity.completed'=>'sometimes',
+   
+            'activity.followup_date'=>'sometimes|date|nullable|after_or_equal:activity.activity_date|after:yesterday',
+            'followupactivitytype' =>'sometimes|regex:/^\d*(\.\d{2})?$/',
+            'followupactivitytype' => 'required_with:activity.followup_date',
+            'contact_id' => 'sometimes',
+            
         ];
     }
-
+    /**
+     * [$messages description]
+     * 
+     * @var [type]
+     */
     protected $messages = [
-        'activity_date.before' => 'Completed activities cannot be in the future',
-        
+        'activity.activity_date.before' => 'Completed activities cannot be in the future',
+        'activity.followup_date.after_or_equal' =>'Follow up date cannot be before original activity date',
+        'activity.activitytype_id.regex' => 'Select a valid activity type',
+        'activity.activitytype_id:' =>'Select an activity type',
+        'followupactivitytype.numeric' => 'Select a valid activity type',
+        'followupactivitytype.required_with' => 'Select a valid follow up activity type',
     ];
-    public function doShow() {
+    /**
+     * [doShow description]
+     * @return [type] [description]
+     */
+    public function doShow()
+    {
+        $this->resetErrorBag();
         $this->activityModalShow = true;
+
     }
 
-    public function doClose() {
+    public function doClose() 
+    {
         
         $this->activityModalShow = false;
+        $this->resetErrorBag();
     }
 
-    private function resetActivities()
+    /**
+     * [_resetActivities description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _resetActivities($type='create')
     {
-        $this->note=null;
-        $this->completed = null;
-        $this->activity_date = now()->format('Y-m-d');
-        $this->followup_date=null;
-        $this->activitytype_id = 13;
-        $this->followup_activity = 13;
-        $this->contact_id = null;
- 
-    }
-
-    public function store()
-    {
-        $this->validate();
-        $new = $this->_recordActivity();
-        $message =  ($this->completed ? 'Completed ' : 'To do ') . $this->activityTypes[$this->activitytype_id] .' activity added at '. $this->address->businessname;
-        session()->flash('message', $message);
-        if ($this->followup_date) {
-            $followup = $this->_recordFollowUpactivity();
-            $new->update(['relatedActivity'=>$followup->id]);
+        if ($type == 'create') {
+            $this->activity = Activity::make(
+                [
+                    'branch_id'=>$this->branch_id,
+                    'activity_date' => now(), 
+                    'address_id'=> $this->address->id,
+                    'completed' => null,
+                    'user_id' => $this->user_id,
+                    'address_branch_id'=>$this->address_branch_id,
+                    'followup_date'=>null,
+                ]
+            );
         }
-        $this->resetActivities();
-        $this->show = false;
+       
+        $this->followupactivitytype = null;
+        $this->contact_id = null;
+
+       
+    }
+
+    /**
+     * [store description]
+     * 
+     * @return [type] [description]
+     */
+    public function storeActivity()
+    {
+        
+        $this->validate();
+        if ($this->activity->followup_date < $this->activity->activity_date) {
+            $this->activity->followup_date = null;
+        } 
+        $this->doClose('activityModalShow');
+       
+        $this->activity->save();
+        if ($this->contact_id && $this->contact_id !== 0) {
+            $this->activity->relatedContact()->attach($this->contact_id);
+        }
+        $message =  ($this->activity->completed ? 'Completed ' : 'To do ') . ' activity added at '. $this->address->businessname;
+        session()->flash('message', $message);
+        if ($this->activity->followup_date) {
+            $followup = $this->_recordFollowUpactivity();
+            
+            $this->activity->update(['relatedActivity'=>$followup->id]);
+           
+        }
+        $this->_resetActivities();
+       
     }
    
     
-    private function _recordFollowUpactivity() {
-
-        $activity = [
-            'address_id' => $this->address_id,
-            'activity_date' => $this->followup_date,
-            'activitytype_id'=> $this->followup_activity,
-            'branch_id' => $this->branch_id,
-            'completed' => null,
-            'note'=> "Follow up to prior " . $this->activityTypes[$this->activitytype_id] . " on " . Carbon::parse($this->activity_date)->format('m/d/y') . " (". $this->note . ")",
-            'user_id' => auth()->user()->id,
-        ];
-       
-        
-        return Activity::create($activity);
-        
-    }
-
-    private function _recordActivity()
+    /**
+     * [_recordFollowUpactivity description]
+     * 
+     * @return [type] [description]
+     */
+    private function _recordFollowUpactivity()
     {
-         $activity = [
-            'address_id' => $this->address_id,
-            'activitytype_id'=> $this->activitytype_id,
-            'branch_id' => $this->branch_id,
-            'completed' => $this->completed,
-            'note'=>$this->note,
-            'user_id' => auth()->user()->id,
-            'activity_date' => $this->activity_date,
-            'followup_date'=> $this->followup_date,
-        ];
+        if ($this->activity->relatedActivity) {
+
+            $activity = Activity::findOrFail($this->activity->relatedActivity);
+            $followup = ['activity_date'=>$this->activity->followup_date, 'activitytype_id'=>$this->followupactivitytype];
+            $activity->update($followup);
+            return $activity;
+
+        } else {
+
+
+
+            
+            $activity = [
+                'address_id' => $this->activity->address_id,
+                'activity_date' => $this->activity->followup_date,
+                'activitytype_id'=> $this->followupactivitytype,
+                'branch_id' => $this->branch_id,
+                'completed' => null,
+                'user_id' =>auth()->user()->id,
+                'note'=> "Follow up to prior  on " . Carbon::parse($this->activity->activity_date)->format('m/d/y') . " (". $this->activity->note . ")",
+                'user_id' => auth()->user()->id,
+            ];
+
         
-        
-         $activity = Activity::create($activity);
-      
-         if($this->contact_id && $this->contact_id !==0) {
-            $activity->relatedContact()->attach($this->contact_id);
-         }
-        return $activity;
+            return Activity::create($activity);
+        }
     }
     
     

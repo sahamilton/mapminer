@@ -54,6 +54,9 @@ class CampaignSummary extends Component
         $this->branch_ids = $this->campaign->branches->pluck('id')->toArray();
         $this->company_ids =$this->campaign->companies->pluck('id')->toArray();
         $this->vertical_ids = $this->campaign->vertical->pluck('id')->toArray();
+        if (count($this->company_ids) ==0) {
+            $this->type='branch';
+        }
     }
 
     public function render()

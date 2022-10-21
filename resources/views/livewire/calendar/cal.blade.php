@@ -1,6 +1,6 @@
 <div>
     @include('notifications')
-
+ 
     <div class="row m-4">
         <div class="col form-inline">
             @if(count($team) > 1)
@@ -97,12 +97,14 @@
                     }
                 })
 
-                this.calendar.render()
+                
 
                 @this.on(`refreshCalendar`, () => {
                     
                     this.calendar.refetchEvents()
                 })
+
+                this.calendar.render()
             },
             getEventIndex(info) {
                 return this.events.findIndex((event) => event.id == info.event.id)

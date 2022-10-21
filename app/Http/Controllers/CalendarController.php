@@ -30,7 +30,7 @@ class CalendarController extends Controller
      */
     public function index(Request $request)
     {
-        
+       
         
         if (request()->has('start') && request()->has('end')) {
             $period['from'] = Carbon::parse(request('start'));

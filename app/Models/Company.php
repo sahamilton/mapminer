@@ -510,7 +510,7 @@ class Company extends NodeModel
 
     public function scopeCompanyCampaignSummaryStats($query, Campaign $campaign, $fields = null)
     {
-        if ($campaign->campaignmanager->id === auth()->user()->person->id) {
+        if ($campaign->campaignmanager && $campaign->campaignmanager->id=== auth()->user()->person->id) {
             $this->branches = $campaign->branches->pluck('id')->toArray();
         } else {
             $this->branches = auth()->user()->person->getMyBranches();
