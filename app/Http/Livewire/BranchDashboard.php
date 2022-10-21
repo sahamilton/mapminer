@@ -22,7 +22,7 @@ class BranchDashboard extends Component
     public $branch_id;
 
     public $paginationTheme = 'bootstrap';
-    //protected $listeners = ['changeBranch'];
+    protected $listeners = ['changeBranch'];
     
 
     /**

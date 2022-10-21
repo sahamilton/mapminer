@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\AddressBranch;
 use App\Models\Branch;
 use App\Models\Person;
+use App\Models\Contact;
 
 class LocationContacts extends Component
 {
@@ -48,22 +49,10 @@ class LocationContacts extends Component
     {
         $this->_getInitialBranchId();
        
-        @ray($this->branch_id);    
+       
         return view(
             'livewire.location-contacts', [
-                'contacts'=>AddressBranch::query()
-                    ->where('address_branch.branch_id', $this->branch_id)
-                    ->join('addresses', 'address_branch.address_id', '=', 'addresses.id')
-                    ->join('contacts', 'address_branch.address_id', '=', 'contacts.address_id')
-                    ->when(
-                        $this->filter !='All', function ($q) {
-                            $q->whereNotNull($this->filter);
-                        }
-                    )
-                    ->select('addresses.id', 'branch_id', 'businessname', 'city', 'state', 'firstname', 'lastname', 'fullname', 'title', 'contactphone', 'email')
-                    ->search($this->search)
-                    ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                    ->paginate($this->perPage),
+                'contacts'=>$this->_getContacts(),
                 'myBranches' => $this->person->myBranches(),
                 'branch'=>Branch::findOrFail($this->branch_id),
             ]
@@ -81,4 +70,43 @@ class LocationContacts extends Component
 
         }
     }
+
+    private function _getContacts()
+    {
+
+        /*return AddressBranch::query()
+            ->where('address_branch.branch_id', $this->branch_id)
+            ->join('addresses', 'address_branch.address_id', '=', 'addresses.id')
+            ->join('contacts', 'address_branch.address_id', '=', 'contacts.address_id')
+            ->when(
+                $this->filter !='All', function ($q) {
+                    $q->whereNotNull($this->filter);
+                }
+            )
+            ->select('addresses.id', 'branch_id', 'businessname', 'city', 'state', 'firstname', 'lastname', 'fullname', 'title', 'contactphone', 'email')
+            ->search($this->search)
+            ->orderByColumn($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->paginate($this->perPage);
+        */
+        return Contact::query()
+            ->join('addresses', 'contacts.address_id', '=', 'addresses.id')
+            ->whereHas(
+                'addressBranch', function ($q) {
+
+                    $q->where('branch_id', $this->branch_id);
+                }
+            )
+            ->with('location')
+            ->when(
+                $this->filter !='All', function ($q) {
+                    $q->whereNotNull($this->filter);
+                }
+            )
+            ->search($this->search)
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->paginate($this->perPage);
+
+
+               
+    }   
 }

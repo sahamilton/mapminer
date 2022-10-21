@@ -26,9 +26,9 @@
 					Phone:
 				</b>
 				@if(isset($address->phone))
-					{{$address->phone}}
+					<a href="tel:{{$address->phone}}">{{$address->phoneNumber}}</a>
 				@elseif ($address->primaryContact->count() > 0)
-					{{$address->primaryContact->first()->contactphone}}
+					<a href="tel:{{$address->primaryContact->first()->contactphone}}">{{$address->primaryContact->first()->contactphone}}</a>
 				
 				@endif
 				

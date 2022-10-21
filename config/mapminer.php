@@ -76,6 +76,38 @@ return [
     ],
 
     'topdog'=>env('TOP_DOG', 2280),
+
+    /*
+    |--------------------------------------------------------------------------
+    |Valdis email domains
+    |--------------------------------------------------------------------------
+    |
+    | Used to validate new users and inbound email.
+    | This should be extracted from the tenant
+    |
+    */ 
+     'valid_domains'=>[
+
+        'actionlabor.com',
+        'laborready.com',
+        'labourready.com',
+        'trueblue.com',
+
+
+     ],
+
+
+     /* 
+    |--------------------------------------------------------------------------
+    | activity address
+    |--------------------------------------------------------------------------
+    |
+    | addres for recoring emails as activity
+    |
+    */
+    'activity_email_address' => env('ACTIVITY_EMAIL_ADDRESS'),
+
+      /*
      /*
     |--------------------------------------------------------------------------
     | Old Configs

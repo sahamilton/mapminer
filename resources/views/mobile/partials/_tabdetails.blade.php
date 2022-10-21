@@ -13,7 +13,9 @@
 			<p>
 			<i class="fas fa-map-marker" aria-hidden="true"></i>
 			 <b>Address:</b><br/>{{$location->fullAddress()}}</p>
-			<p><b><i class="fas fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
+			<p><b><i class="fas fa-phone" aria-hidden="true"></i> Phone:</b>
+				<a href="tel:{{$location->phone}}">{{$location->phoneNumber}}</a>
+			</p>
 			
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
 		 </fieldset>

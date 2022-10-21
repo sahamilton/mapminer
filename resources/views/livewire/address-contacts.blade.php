@@ -31,10 +31,10 @@
                 <tr>
                     <td>
                         <a href="{{route('contacts.show', $person->id)}}">{{$person->complete_name}}</a>
-                        @if($owned)
-                            <a wire:click="addContact({{$person->id}})" /><i class="fa-light fa-pen-to-square text-info"></i></a>
-                            <a wire:click="deleteContact({{$person->id}})" /><i class="fa-solid fa-trash-can text-danger"></i></a>
-                        @endif
+                            @if($owned)
+                                <a wire:click="addContact({{$person->id}})" /><i class="fa-light fa-pen-to-square text-info"></i></a>
+                                <a wire:click="deleteContact({{$person->id}})" /><i class="fa-solid fa-trash-can text-danger"></i></a>
+                            @endif
                     </td>
                     <td>{{$person->title}}</td>
                     <td>

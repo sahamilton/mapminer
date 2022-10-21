@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Contact extends Model
 {
+    use SoftDeletes;
     public $fillable=[
         'address_id',
         'contactphone',
@@ -74,8 +75,18 @@ class Contact extends Model
     public function scopeSearch($query, $search)
     {
         return  $query->where('firstname', 'like', "%{$search}%")
-            ->Orwhere('lastname', 'like', "%{$search}%")
-            ->Orwhere('fullname', 'like', "%{$search}%");
+            ->orWhere('lastname', 'like', "%{$search}%")
+            ->orWhere('fullname', 'like', "%{$search}%")
+            ->orWhereHas(
+                'location', function ($q) use ($search) {
+                    $q->where('businessname', 'like', "%{$search}%")
+                        ->orWhere('street', 'like', "%{$search}%")
+                        ->orWhere('state', 'like', "%{$search}%")
+                        ->orWhere('zip', 'like', "%{$search}%")
+                        ->orWhere('city', 'like', "%{$search}%");
+                }
+            );
+
 
     }
     /**
@@ -122,6 +133,4 @@ class Contact extends Model
             return $this->fullname;
         }
     }
-
-    
 }

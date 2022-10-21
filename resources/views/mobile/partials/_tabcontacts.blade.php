@@ -43,8 +43,8 @@
 
                 </td>
                 <td>{{$contact->title}}</td>
-                <td>{{$contact->email}}</td>
-                <td>{{$contact->contactphone}}</td>
+                <td>{!! {$contact->fullEmail !!}</td>
+                <td><a href="tel:{{$contact->phoneNumber}}">{{$contact->phoneNumber}}</a></td>
                 <td>{{$contact->comments}}</td>
             </tr>
            @endforeach
