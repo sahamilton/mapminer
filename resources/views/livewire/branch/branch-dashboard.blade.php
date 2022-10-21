@@ -1,10 +1,8 @@
 <div>
-    @if($view=='activities')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
-    @endif
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    @if($view !== 'activities')
+
     <h2>
         @if ($branch_id !== 'all')
             {{$branch->branchname}}
@@ -12,22 +10,28 @@
             All Branches
         @endif
     </h2>
-    <p><a href="{{route('mgrdashboard.index')}}" >Return to manager dashboard</a></p>
+
+    @if(auth()->user()->hasRole(['market_manager']))
+    <p>
+
+        <a href="{{route('mgrdashboard.index')}}" >Return to Manager Dashboard</a>
+    </p>
+    @endif
     <div class="row mb4" style="padding-bottom: 10px"> 
-        
         <div class="col form-inline">
+            @if ($view != 'activities')
             @include('livewire.partials._perpage')
+            @endif
             @include('livewire.partials._branchselector')
-            @include('livewire.partials._periodselector')
+            @if ($view != 'activities')
+                @include('livewire.partials._periodselector')
+            @endif
 
             <div  wire:loading>
             <div class="col spinner-border text-danger"></div>
             </div>
         </div>
-
-        
     </div>
-    @endif
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
 
@@ -38,7 +42,17 @@
                     <strong>{{$v}} {{isset($address->$key) ? "(" . $address->$key->count() . ")" : ''}}</strong>
                 </a>
             @endforeach
+            @php 
 
+            $agent = new \Jenssegers\Agent\Agent();
+            @endphp
+            @if($agent->isMobile() || $agent->isTablet())
+                <a href="{{route('mobile.index')}}" 
+                    class="nav-link nav-item">
+
+                    <strong>Mobile View</strong>
+                </a>
+            @endif
 
         </div>
     </nav>
@@ -59,11 +73,12 @@
                 <livewire:branch-activity-chart :branch_id='$branch->id' :period='$period'  />
             @break;
 
-             @case('team')
+            @case('team')
                 <livewire:branch-details :branch_id='$branch->id' :noheading='true' />
             @break;
 
         @endswitch
+        
     </div>
     <div class="m-4 clear" /></div>
 

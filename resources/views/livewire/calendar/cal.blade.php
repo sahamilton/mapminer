@@ -1,13 +1,6 @@
 <div>
     @include('notifications')
-     <h2>
-        @if ($branch_id !== 'all')
-            {{$branch->branchname}}
-        @else
-            All Branches
-        @endif
-    </h2>
-    <p><a href="{{route('mgrdashboard.index')}}" >Return to manager dashboard</a></p>
+
     <div class="row m-4">
         <div class="col form-inline">
             @if(count($team) > 1)
@@ -18,7 +11,7 @@
                 :options="$team" />
             @endif
         </div>
-        @include('livewire.partials._branchselector')
+        
 
 
     </div>
@@ -42,25 +35,25 @@
     <div class="row">
         <div class="col offset-1">
             
-                <a href="{{route('upcomingactivity.branch',$branch_id)}}">
-                    Upcoming Activities
-                </a>
-           </div>
-           <div class="col">
-            
-                <i class="fa-solid fa-calendar-check txt-success"></i>
-                <a href="{{route('ical', auth()->user()->id)}}">
-                    Download this weeks upcoming events to your Outlook calendar
-                </a>
+            <a href="{{route('upcomingactivity.branch',$branch_id)}}">
+                Upcoming Activities
+            </a>
+       </div>
+       <div class="col">
+        
+            <i class="fa-solid fa-calendar-check txt-success"></i>
+            <a href="{{route('ical', auth()->user()->id)}}">
+                Download this weeks upcoming events to your Outlook calendar
+            </a>
 
-            </div>
         </div>
     </div>
+    
     <div
         x-data="{
             calendar: null,
             
-            startdate: '{{$startdate}}',
+            startdate: '{{isset($startdate) ? $startdate : now()->startOfMonth()}}',
             newEventTitle: null,
             newEventStart: null,
             newEventEnd: null,
@@ -104,14 +97,12 @@
                     }
                 })
 
-                
+                this.calendar.render()
 
                 @this.on(`refreshCalendar`, () => {
                     
                     this.calendar.refetchEvents()
                 })
-
-                this.calendar.render()
             },
             getEventIndex(info) {
                 return this.events.findIndex((event) => event.id == info.event.id)
