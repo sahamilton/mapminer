@@ -22,7 +22,7 @@ class Calendar extends Component
     public $activityModalShow = false;
     public $companyname;
     public $myBranches;
-    public Branch $branch;
+    
     public $statuses = ['All'=>'All',
                         '1'=>'Completed',
                         '2'=>'Not Completed',];
@@ -36,13 +36,22 @@ class Calendar extends Component
      * 
      * @return [type]            [description]
      */
+    
+
+    public function updatedBranchId()
+    {
+        $this->emit('refreshCalendar');
+    }
     public function changeBranch($branch_id)
     {
        
         $this->branch_id = $branch_id;
+        @ray('changing branch to '. $this->branch_id);
         $this->emit("refreshCalendar");
 
     }
+
+   
     /**
      * [changePeriod description]
      * 
@@ -139,7 +148,7 @@ class Calendar extends Component
     public function mount($branch_id)
     {
     
-        $this->myBranches = auth()->user()->person->getMyBranches();
+        $this->myBranches = auth()->user()->person->myBranches();
         
         
     }
@@ -203,6 +212,7 @@ class Calendar extends Component
                 'team'=>$this->_getBranchTeam(),
                 'activitytypes'=>ActivityType::all(),
                 'types' => ActivityType::all()->pluck('activity', 'id')->prepend('All', 'All')->toArray(),
+                'branch'=>Branch::find($this->branch_id),
 
             ]
         );

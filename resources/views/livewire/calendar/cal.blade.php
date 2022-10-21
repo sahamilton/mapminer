@@ -1,6 +1,13 @@
 <div>
     @include('notifications')
- 
+     <h2>
+        @if ($branch_id !== 'all')
+            {{$branch->branchname}}
+        @else
+            All Branches
+        @endif
+    </h2>
+    <p><a href="{{route('mgrdashboard.index')}}" >Return to manager dashboard</a></p>
     <div class="row m-4">
         <div class="col form-inline">
             @if(count($team) > 1)
@@ -11,7 +18,7 @@
                 :options="$team" />
             @endif
         </div>
-        
+        @include('livewire.partials._branchselector')
 
 
     </div>

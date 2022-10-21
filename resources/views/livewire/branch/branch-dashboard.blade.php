@@ -1,7 +1,10 @@
 <div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+    @if($view=='activities')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+    @endif
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    @if($view !== 'activities')
     <h2>
         @if ($branch_id !== 'all')
             {{$branch->branchname}}
@@ -11,6 +14,7 @@
     </h2>
     <p><a href="{{route('mgrdashboard.index')}}" >Return to manager dashboard</a></p>
     <div class="row mb4" style="padding-bottom: 10px"> 
+        
         <div class="col form-inline">
             @include('livewire.partials._perpage')
             @include('livewire.partials._branchselector')
@@ -20,7 +24,10 @@
             <div class="col spinner-border text-danger"></div>
             </div>
         </div>
+
+        
     </div>
+    @endif
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
 

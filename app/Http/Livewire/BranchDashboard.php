@@ -22,7 +22,7 @@ class BranchDashboard extends Component
     public $branch_id;
 
     public $paginationTheme = 'bootstrap';
-    protected $listeners = ['changeBranch'];
+    //protected $listeners = ['changeBranch'];
     
 
     /**
@@ -32,10 +32,10 @@ class BranchDashboard extends Component
      * 
      * @return [type]            [description]
      */
-    public function changeBranch($branch_id)
+    public function changeBranch()
     {
          
-         $this->branch_id = $branch_id;
+        
          $this->emit('changeBranch', $this->branch_id);
 
     }
