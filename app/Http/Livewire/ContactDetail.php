@@ -396,7 +396,10 @@ class ContactDetail extends Component
         $this->_resetActivities();
         $this->doClose('confirmModal');
     }
-
+    /**
+     * [_setPeriod description]
+     * 
+     */
     private function _setPeriod()
     {
         $this->livewirePeriod($this->setPeriod);

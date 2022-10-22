@@ -100,6 +100,18 @@ class LocationContactController extends Controller
     }
 
     /**
+     * [show description]
+     * 
+     * @param Contact $contact [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function show(Contact $contact)
+    {
+        
+        return response()->view('contacts.show', compact('contact'));
+    }
+    /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request 

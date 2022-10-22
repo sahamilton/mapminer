@@ -8,7 +8,7 @@
         </div>
     
     </div>
-
+    
     <div class="row mb-4 ">
         <div class="col form-inline">
 
@@ -67,21 +67,22 @@
         </thead>
         <tbody>
             @foreach($contacts as $contact)
+           
             <tr>
                 <td>
-                    <a href="{{route('address.show', $contact->id)}}">
-                        {{$contact->businessname}}
+                    @if($contact->location)
+                    <a href="{{route('address.show', $contact->address_id)}}">
+                        {{$contact->location->businessname}}
                     </a>
+                    @endif
                 </td>
-                <td>{{$contact->city}}</td>
-                <td>{{$contact->state}}</td>
+                <td>{{$contact->location->city}}</td>
+                <td>{{$contact->location->state}}</td>
                 <td>
-                    {{$contact->fullname ? $contact->fullname : $contact->firstname ." " . $contact->lastname}}
+                   <a href="{{route('contacts.show', $contact->id)}}"> {{$contact->completeName}}</a>
                 </td>
                 <td>{{$contact->title}}</td>
-                <td>
-                    <a href="tel:{{$contact->phoneNumber}}">{{$contact->phoneNumber}}</a>
-                </td>
+                <td><a href="tel:{{$contact->phoneNumber}}">{{$contact->phoneNumber}}</a></td>
                 <td>{!! $contact->fullEmail !!}</td>
             </tr>
             @endforeach

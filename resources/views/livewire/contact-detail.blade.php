@@ -16,6 +16,7 @@
         </div>
     @endif
     <h4>Activities with {{$contact->completeName}}:</h4>
+
     <p><strong></strong></p>
     <div class="row mb4" style="padding-bottom: 10px"> 
         <div class="col form-inline">
@@ -42,21 +43,7 @@
             </select>
 
         </div>
-        @if($branch->branchteam->count() >1)
-            <div class="col form-inline">
-                <label for="selectuser">Team:</label>
-                <select wire:model="selectuser" 
-                class="form-control">
-                    <option value="All">All</option>
-                    
-                    @foreach ($branch->branchteam as $team)
-                        <option value="{{$team->user_id}}">{{$team->CompleteName}}</option>
-                    @endforeach
-                </select>
-
-                
-            </div>
-        @endif
+       
     </div>
     <div class="row">
         <table class='table table-striped table-bordered table-condensed table-hover'>
