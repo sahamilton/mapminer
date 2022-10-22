@@ -108,6 +108,6 @@
             </div>
         </div>
         @include('activities.partials._modal')
-        @include('activities.partials._editmodal')
+        @include('livewire.activities._confirmmodal')
 
 </div>

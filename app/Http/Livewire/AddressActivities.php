@@ -23,12 +23,21 @@ class AddressActivities extends Component
     public $completed = 'all';
     public $followup_date;
     // activities
-    public Activity $activity;
+    public $activity;
     public $view;
     public $branch_id;
     public $activityModalShow = false;
-    public $activityEditModal =false;
+
     public $address_branch_id;
+    public $contact_id = null;
+    public $followupactivitydate;
+    public $followupactivitytype;
+    public $user_id;
+    public array $activityTypes;
+    public $title = 'Record';
+    public $method ='storeActivity';
+
+    public $confirmModal = false;
     /**
      * [updatingSearch description]
      * 
@@ -60,14 +69,17 @@ class AddressActivities extends Component
      */
     public function mount(Address $address, array $owned=null)
     {
-        $this->address = $address;
+        $this->address = $address->load('claimedByBranch');
         $this->owned = $owned;
-        if ($branch = Address::with('claimedByBranch')->findOrFail($address->id)->claimedByBranch->first()) {
+        
+        if ($branch = $address->claimedByBranch->first()) {
+
             $this->branch_id = $branch->id; 
             $this->address_branch_id = $branch->pivot->id;
             
         }
-      
+        $this->user_id = auth()->user()->id;
+        $this->_getActivityTypes();
     }
     /**
      * [render description]
@@ -76,8 +88,10 @@ class AddressActivities extends Component
      */
     public function render()
     {
+        $this->_getActivityTypes();
         return view(
             'livewire.address-activities', [
+
             'activities' => Activity::where('address_id', $this->address->id)
                 ->when(
                     $this->activitytype_id !='all', function ($q) {
@@ -103,17 +117,23 @@ class AddressActivities extends Component
                 ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                 ->paginate($this->perPage),
             
-            'activityTypes' =>ActivityType::query()
-                ->orderBy('activity')
-                ->pluck('activity', 'id')
-                ->prepend('All', 'all')
-                ->toArray(),
+            
 
             ]
         );
     }
-
-    
+    /**
+     * [_getActivityTypes description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getActivityTypes()
+    {
+        $this->activityTypes = ActivityType::query()
+            ->orderBy('activity')
+            ->pluck('activity', 'id')
+            ->toArray();
+    }
     /*
 
         Adding activities
@@ -121,14 +141,14 @@ class AddressActivities extends Component
 
 
     */
-    public function addActivity(Address $address)
+    public function addActivity()
     {
-     
-        // get contacts;
-        $this->_resetActivities($address);
-        $this->doShow('activityModalShow');
        
-        $this->address = $address;
+        
+        $this->_resetActivities('create');
+        $this->title='Record';
+        $this->method='storeActivity';
+        $this->doShow('activityModalShow');
        
 
     }
@@ -147,14 +167,19 @@ class AddressActivities extends Component
 
         return [
             'activity.activity_date'=> $activityDateRules,
-            'activity.activitytype_id'=>'required',
+            'activity.activitytype_id'=>'required|regex:/^\d*(\.\d{2})?$/',
             'activity.note'=>'required',
            
             'activity.address_id' => 'required',
+            'activity.branch_id' => 'required',
+            'activity.user_id' => 'required',
             'activity.completed'=>'sometimes',
-            'activity.contact_id'=>'sometimes',
-            'activity.followup_date'=>'sometimes|date|nullable|after:activity_date',
-            'activity.followup_activity' => 'required_with:activity.followup_date',
+   
+            'activity.followup_date'=>'sometimes|date|nullable|after_or_equal:activity.activity_date|after:yesterday',
+            'followupactivitytype' =>'sometimes|regex:/^\d*(\.\d{2})?$/',
+            'followupactivitytype' => 'required_with:activity.followup_date',
+            'contact_id' => 'sometimes',
+            
         ];
     }
     /**
@@ -163,8 +188,12 @@ class AddressActivities extends Component
      * @var [type]
      */
     protected $messages = [
-        'activity_date.before' => 'Completed activities cannot be in the future',
-        
+        'activity.activity_date.before' => 'Completed activities cannot be in the future',
+        'activity.followup_date.after_or_equal' =>'Follow up date cannot be before original activity date',
+        'activity.activitytype_id.regex' => 'Select a valid activity type',
+        'activity.activitytype_id:' =>'Select an activity type',
+        'followupactivitytype.numeric' => 'Select a valid activity type',
+        'followupactivitytype.required_with' => 'Select a valid follow up activity type',
     ];
     
     /**
@@ -174,41 +203,54 @@ class AddressActivities extends Component
      * 
      * @return [type]           [description]
      */
-    private function _resetActivities(Address $address)
+    private function _resetActivities($type='create')
     {
-        $this->activity = Activity::make(
-            [
-              
-                'completed' => 1,
-                'activity_date' =>now(),
-                'branch_id' => $this->branch_id,
-                'user_id' => auth()->user()->id,
-                'address_id'=>$address->id,
-            ]
-        );
+        if ($type == 'create') {
+            $this->activity = Activity::make(
+                [
+                    'branch_id'=>$this->branch_id,
+                    'activity_date' => now(), 
+                    'address_id'=> $this->address->id,
+                    'completed' => null,
+                    'user_id' => $this->user_id,
+                    'address_branch_id'=>$this->address_branch_id,
+                    'followup_date'=>null,
+                ]
+            );
+        }
+       
+        $this->followupactivitytype = null;
+        $this->contact_id = null;
 
        
     }
     /**
-     * [store description]
+     * [storeActivity description]
      * 
      * @return [type] [description]
      */
     public function storeActivity()
     {
-        $this->validate();
-        $new = $this->_recordActivity();
-        if ($this->activity->contact_id && $this->activity->contact_id !== 0) {
-            $new->relatedContact()->attach($this->activity->contact_id);
+       
+        $this->validate(); 
+        $this->doClose('activityModalShow');
+        if ($this->activity->followup_date < $this->activity->activity_date) {
+            $this->activity->followup_date = null;
+        }
+        $this->activity->save();
+        if ($this->contact_id && $this->contact_id !== 0) {
+            $this->activity->relatedContact()->sync($this->contact_id);
         }
         $message =  ($this->activity->completed ? 'Completed ' : 'To do ') . ' activity added at '. $this->address->businessname;
         session()->flash('message', $message);
         if ($this->activity->followup_date) {
             $followup = $this->_recordFollowUpactivity();
-            $new->update(['relatedActivity'=>$followup->id]);
+            
+            $this->activity->update(['relatedActivity'=>$followup->id]);
+           
         }
-        $this->_resetActivities($this->address);
-        $this->doClose('activityModalShow');
+        $this->_resetActivities();
+       
     }
    
     /**
@@ -218,43 +260,35 @@ class AddressActivities extends Component
      */
     private function _recordFollowUpactivity()
     {
+        if ($this->activity->relatedActivity) {
 
-        $activity = [
-            'address_id' => $this->address->id,
-            'activity_date' => $this->activity->followup_date,
-            'activitytype_id'=> $this->activity->followup_activity,
-            'branch_id' => $this->branch_id,
-            'completed' => null,
-            'note'=> "Follow up to prior  on " . Carbon::parse($this->activity->activity_date)->format('m/d/y') . " (". $this->activity->note . ")",
-            'user_id' => auth()->user()->id,
-        ];
+            $activity = Activity::findOrFail($this->activity->relatedActivity);
+            $followup = ['activity_date'=>$this->activity->followup_date, 'activitytype_id'=>$this->followupactivitytype];
+            $activity->update($followup);
+            $activity->relatedContact()->sync($this->contact_id);
+            return $activity;
 
-        
-        return Activity::create($activity);
-        
-    }
-    /**
-     * [_recordActivity description]
-     * 
-     * @return [type] [description]
-     */
-    private function _recordActivity()
-    {
-       
-        $data = [
-                'activity_date'=>$this->activity->activity_date,
-                'activitytype_id'=>$this->activity->activitytype_id,
-                'address_id'=>$this->address->id,
-                'branch_id'=>$this->branch_id,
+        } else {
+
+
+
+            
+            $activity = [
+                'address_id' => $this->activity->address_id,
+                'activity_date' => $this->activity->followup_date,
+                'activitytype_id'=> $this->followupactivitytype,
+                'branch_id' => $this->branch_id,
+                'completed' => null,
                 'user_id' =>auth()->user()->id,
-                'note'=>$this->activity->note,
-                'completed'=>$this->activity->completed,
-                'address_branch_id'=>$this->address_branch_id,
+                'note'=> "Follow up to prior  on " . Carbon::parse($this->activity->activity_date)->format('m/d/y') . " (". $this->activity->note . ")",
+                'user_id' => auth()->user()->id,
             ];
 
-        return Activity::create($data);
         
+            return Activity::create($activity);
+        }
     }
+    
     /**
      * [editActivity description]
      * 
@@ -264,9 +298,14 @@ class AddressActivities extends Component
      */
     public function editActivity(Activity $activity)
     {
-        @ray($activity);
-        $this->activity = $activity;
-        $this->doShow('activityEditModal');
+        $this->title='Edit';
+        $this->method = 'updateActivity';
+        $this->_resetActivities('edit');
+        $this->activity = $activity->load('relatesToAddress.contacts', 'followupActivity');
+        if ($this->activity->followupActivity) {
+            $this->followupactivitytype = $activity->followupActivity->activitytype_id;
+        }
+        $this->doShow('activityModalShow');
     }
 
     /**
@@ -276,24 +315,21 @@ class AddressActivities extends Component
      * 
      * @return [type]             [description]
      */
-    public function updateActivity(Activity $activity)
+    public function updateActivity()
     {
-        @ray($activity, $this->activity);
 
-        $data = [
-                'activity_date'=>$this->activity->activity_date,
-                'activitytype_id'=>$this->activity->activitytype_id,
-               
-                'note'=>$this->activity->note,
-                'completed'=>$this->activity->completed,
-                
-            ];
-        $activity->update($data);
-
-        if ($this->activity->contact_id && $this->activity->contact_id !== 0) {
-            $activity->relatedContact()->sync($this->activity->contact_id);
+        $this->validate();     
+        $this->activity->update();
+        if ($this->activity->followup_date) {
+            $followup = $this->_recordFollowUpactivity();
+            
+            $this->activity->update(['relatedActivity'=>$followup->id]);
+           
         }
-        $this->doClose('activityEditModal');
+        if ($this->contact_id ) {
+            $this->activity->relatedContact()->sync($this->contact_id);
+        }
+        $this->doClose('activityModalShow');
     }
     /**
      * [doClose description]
@@ -305,6 +341,7 @@ class AddressActivities extends Component
     public function doClose($form)
     {
         $this->$form = false;
+        $this->resetErrorBag();
     }
     /**
      * [doShow description]
@@ -316,6 +353,13 @@ class AddressActivities extends Component
     public function doShow($form)
     {
         $this->$form = true;
+        $this->resetErrorBag();
+    }
+
+    public function deleteActivity(Activity $activity)
+    {
+        $this->activity = $activity->load('relatesToAddress');
+        $this->doShow('confirmModal');
     }
     /**
      * [delete description]
@@ -324,11 +368,12 @@ class AddressActivities extends Component
      * 
      * @return [type]             [description]
      */
-    public function delete(Activity $activity)
+    public function confirmDelete(Activity $activity)
     {
 
         $activity->delete();
-        $this->doClose('confirmationModal');
+        $this->_resetActivities();
+        $this->doClose('confirmModal');
     }
 
 }
