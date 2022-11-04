@@ -13,20 +13,16 @@ use App\Models\AddressBranch;
 class AssignCampaignLeadsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $campaign;
+  
 
   
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param Campaign $campaign [description]
      */
-    public function __construct($campaign_id)
-    {
-        $this->campaign = Campaign::with('companies.unassigned')->find($campaign_id);
-        
-        
-        
+    public function __construct(public Campaign $campaign)
+    {   
     }
 
     /**
@@ -36,6 +32,8 @@ class AssignCampaignLeadsJob implements ShouldQueue
      */
     public function handle()
     {
+        $this->campaign->loadCount('companies', 'verticals');
+
         foreach ($this->campaign->companies as $company) {
             
             $addresses = $company->unassigned->flatten()->pluck('id')->toArray();

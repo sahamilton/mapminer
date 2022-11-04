@@ -88,10 +88,7 @@ return [
     */ 
      'valid_domains'=>[
 
-        'actionlabor.com',
-        'laborready.com',
-        'labourready.com',
-        'trueblue.com',
+        
 
 
      ],

@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Builder;
 use App\Model;
+
 trait Geocode
 {
       /**
@@ -104,11 +107,12 @@ trait Geocode
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
         
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
+       
         if (is_null($query->getQuery()->columns)) {
             $query->select('*');
         }
 
-        return $query
+        $query
             ->whereBetween('lat', [$bounding['min']->degLat, $bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon, $bounding['max']->degLon])
             ->selectRaw("{$this->_haversine($location)} AS distance")

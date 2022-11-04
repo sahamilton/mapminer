@@ -47,7 +47,7 @@ class AccountActivities implements ShouldQueue
         Excel::store(new AccountActivitiesExport($company, $this->period), $file, 'reports');
         $company->load('managedBy', 'managedBy.userdetails');
 
-        //$distribution = ['athompson4@trueblue.com'=>'Amy Thompson'];
+        
 
         Mail::to([['email'=>$company->managedBy->userdetails->email, 'name'=>$company->managedBy->fullName()]])
 

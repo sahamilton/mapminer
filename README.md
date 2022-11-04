@@ -1,7 +1,7 @@
-## About TBMapminer
+## About Mapminer
 
-TBMapminer is a proprietary web application developed for TrueBlue. It is based on the Laravel framework.
-The application was intially designed to provide information on nearby National Account locations.  Its focus is on supporting the branch sellig activities.
+Mapminer is a proprietary web application developed for Staffing Companies. It is based on the Laravel framework.
+The application's focus is on supporting the branch selling activities.
 The application is geocentric in that all locations, branches and people have an associated latitude and longitude that facilitates 'nearest' searches.
 
 ## Prerequisites

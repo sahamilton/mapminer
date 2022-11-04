@@ -58,7 +58,7 @@ class GeoCodingController extends BaseController
         
         
         $geocode = app('geocoder')->geocode(request('search'))->get();
-        
+       
         if (request()->filled('search')) {
             $address = trim(request('search'));
         }
@@ -77,6 +77,7 @@ class GeoCodingController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('search'));
         
         }
+
         if (! request()->has('addressType') or count(request('addressType'))==0) {
             $data['addressType'] = ['customer', 'lead', 'opportunity', 'branchlocation'];
         }
@@ -327,7 +328,7 @@ class GeoCodingController extends BaseController
         $location = new Location;
         $location->lat = $data['lat'];
         $location->lng = $data['lng'];
-        // dd(method_exists($this, '_get'.ucwords($data['type']).'ListData'), '_get'.ucwords($data['type']).'ListData');
+        //dd(method_exists($this, '_get'.ucwords($data['type']).'ListData'), '_get'.ucwords($data['type']).'ListData');
         if (method_exists($this, '_get'.ucwords($data['type']).'ListData')) {
             $method = '_get'.ucwords($data['type']).'ListData';
             return $this->$method($location, $data, $company);

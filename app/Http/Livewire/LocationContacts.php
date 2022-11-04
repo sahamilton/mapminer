@@ -20,11 +20,21 @@ class LocationContacts extends Component
     public $sortAsc=true;
     public $search ='';
     public $filter = 'All';
-   
+    /**
+     * [updatingSearch description]
+     * 
+     * @return [type] [description]
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
+    /**
+     * [sortBy description]
+     * 
+     * @param  [type] $field [description]
+     * @return [type]        [description]
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -35,7 +45,11 @@ class LocationContacts extends Component
 
         $this->sortField = $field;
     }
-    
+    /**
+     * [mount description]
+     * 
+     * @return [type] [description]
+     */
     public function mount()
     {
         
@@ -58,7 +72,11 @@ class LocationContacts extends Component
             ]
         );
     }
-    
+    /**
+     * [_getInitialBranchId description]
+     * 
+     * @return [type] [description]
+     */
     private function _getInitialBranchId()
     {
         
@@ -70,17 +88,21 @@ class LocationContacts extends Component
 
         }
     }
-
-    private function _getContacts()
+    /**
+     * [_getContacts description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getContacts() 
     {
-
         return Contact::query()
-            ->whereHas(
-                'addressBranch', function ($q) {
-                    $q->where('branch_id', $this->branch_id);
-                }
-            )
-            ->with('location')
+            ->select('contacts.id', 'contacts.firstname', 'contacts.lastname', 'contacts.fullname', 'contacts.email', 'contacts.contactphone', 'contacts.title', 'businessname', 'city', 'state', 'zip', 'contacts.address_id')
+            ->join('address_branch', 'contacts.address_id', '=', 'address_branch.address_id')
+            ->join('addresses', 'address_branch.address_id', '=', 'addresses.id')
+            ->whereNotNull('email')
+            
+            ->where('address_branch.branch_id', $this->branch_id)
+            
             ->when(
                 $this->filter !='All', function ($q) {
                     $q->whereNotNull($this->filter);

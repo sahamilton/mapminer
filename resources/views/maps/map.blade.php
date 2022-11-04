@@ -20,14 +20,14 @@
    </div>
 
 <div id="store-locator-container">
-	<div id="map-container">
+    <div id="map-container">
         <div id="loc-list"><p></p>
 
             <ul id="list"></ul>
         </div>
         <div id="map"></div>
-      </div>
     </div>
+</div>
 <script>
 	  $(function() {
           $('#map-container').storeLocator({'slideMap' : false, 

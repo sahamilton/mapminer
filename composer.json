@@ -1,9 +1,10 @@
 {
-    "name": "sahamilton/mapminerv25",
-    "description": "People Ready Mapminer.",
+    "name": "sahamilton/mapminerpro",
+    "description": "Mapminer.",
     "keywords": [
-        "trueblue",
-        "people ready",
+        "staffing",
+        "branch selling",
+        "customer management",
         "mapminer"
     ],
     "license": "MIT",
@@ -60,7 +61,8 @@
         "nunomaduro/collision": "^6.0",
         "phpunit/phpunit": "^9.0",
         "barryvdh/laravel-debugbar": "^3.2",
-        "laracasts/generators": "^2.0"
+        "laracasts/generators": "^2.0",
+        "kitloong/laravel-migrations-generator": "^6.4"
     },
     "autoload": {
         

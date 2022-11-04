@@ -67,17 +67,17 @@
         </thead>
         <tbody>
             @foreach($contacts as $contact)
-           
+          
             <tr>
                 <td>
-                    @if($contact->location)
+                    
                     <a href="{{route('address.show', $contact->address_id)}}">
-                        {{$contact->location->businessname}}
+                        {{$contact->businessname}}
                     </a>
-                    @endif
+                   
                 </td>
-                <td>{{$contact->location->city}}</td>
-                <td>{{$contact->location->state}}</td>
+                <td>{{$contact->city}}</td>
+                <td>{{$contact->state}}</td>
                 <td>
                    <a href="{{route('contacts.show', $contact->id)}}"> {{$contact->completeName}}</a>
                 </td>
