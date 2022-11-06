@@ -61,8 +61,7 @@
         "nunomaduro/collision": "^6.0",
         "phpunit/phpunit": "^9.0",
         "barryvdh/laravel-debugbar": "^3.2",
-        "laracasts/generators": "^2.0",
-        "kitloong/laravel-migrations-generator": "^6.4"
+        "laracasts/generators": "^2.0"
     },
     "autoload": {
         
