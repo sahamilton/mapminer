@@ -42,6 +42,7 @@
                     Company
                     @include('includes._sort-icon', ['field' => 'businessname'])
                 </a>
+                    
             </th>
             <th>
                 <a wire:click.prevent="sortBy('city')" role="button" href="#">

@@ -1,5 +1,7 @@
 <?php
-use Illuminate\Http\Request;   
+use Illuminate\Http\Request; 
+
+
 /** 
  *  Sales Ops  Routes
  *  ------------------------------------------
@@ -88,6 +90,7 @@ use Illuminate\Http\Request;
         Route::post('/importprojectcompany/mapfields', ['as'=>'projectcompany.mapfields', 'uses'=>'Imports\ProjectsCompanyImportController@mapfields']);
         Route::post('/importbranches/mapfields', ['as'=>'branches.mapfields', 'uses'=>'Imports\BranchesImportController@mapfields']);
         Route::post('/importbranchteams/mapfields', ['as'=>'branchteam.mapfields', 'uses'=>'Imports\BranchTeamImportController@mapfields']);
+
 
         //     Locations
         Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'Imports\LocationsImportController@getfile']);

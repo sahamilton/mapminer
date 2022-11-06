@@ -93,7 +93,7 @@
 		</main>		
 
 		<div class="clear"></div>
-@include('site.layouts.footer')
+	@include('site.layouts.footer')
 </div>	</div>
 		
 @livewireScripts
