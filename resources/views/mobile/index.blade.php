@@ -28,7 +28,7 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
                     value="activities"
                     @if(isset($type) && $type=='activities') selected @endif
                 >
-                    Open Activities ({{$branch->openactivities}})
+                    Open Activities ({{$branch->openactivities->count()}})
                 </option>
                 
                 <option 
