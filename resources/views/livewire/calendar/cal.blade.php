@@ -26,10 +26,11 @@
                 </span> 
                 </a> |
             @endforeach
+            
             |<a href="#" wire:click.prevent="changeStatus(1)">
-            <span class="rounded mx-2" style="padding: 4px;background-color:#cccccc;border: {{$status == 1 ? '3px': '1px'}} solid #999999">Completed</span></a> |
+            <span class="rounded mx-2" style="padding: 4px;background-color:#aceeca;border: {{$status == 1 ? '3px': '1px'}} solid #999999">Completed</span></a> |
             <a href="#" wire:click.prevent="changeStatus(2)">
-            <span class="rounded mx-2" style="padding: 4px;background-color:#cceecc;border: {{$status == 2 ? '3px': '1px'}} solid #999999">Not Completed</span></a>
+            <span class="rounded mx-2" style="padding: 4px;background-color:#ffc04d;border: {{$status == 2 ? '3px': '1px'}} solid #999999">To Do</span></a>
         </div>
     </div>
     <div class="row">

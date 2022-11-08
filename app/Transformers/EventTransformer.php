@@ -53,7 +53,7 @@ class EventTransformer extends TransformerAbstract
             'url' => route('address.show', $activity->address_id),
             'type'    => $activity->type ? $activity->type->activity : 'Unknown',
             'borderColor' => '#'.$activity->type->color,
-            'color'=> $activity->completed ? '#cccccc' : '#cceecc',
+            'color'=> $activity->completed ? '#aceeca' : '#ffc04d',
             'textColor'=>'#000000',
             'start'   => $start,
             'end'   => $end,
