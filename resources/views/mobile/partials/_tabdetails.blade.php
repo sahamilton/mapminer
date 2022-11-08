@@ -8,7 +8,7 @@
 			<p>
 
 			<i class="far fa-user" aria-hidden="true"></i>
-			 <b>Primary Contact:</b> {{$location->contacts->count() >0 ? $location->contacts->first()->fullName(): ''}}
+			 <b>Primary Contact:</b> {{$location->contacts->count() >0 ? $location->contacts->first()->completeName : ''}}
 			 </p>
 			<p>
 			<i class="fas fa-map-marker" aria-hidden="true"></i>
@@ -21,19 +21,19 @@
 		 </fieldset>
 
 		@if(auth()->user()->hasRole('admin') or $location->user_id == auth()->user()->id)
-		<a class="text text-info" href="{{route('address.edit',$location->id)}}" 
-		title="Edit this location">
-		<i class="far fa-edit"></i>
-		Edit Location</a>
-		@if($location->activities->count()==0)
-		<a data-href="{{route('address.destroy',$location->id)}}" 
-			data-toggle="modal" 
-			data-target="#confirm-delete" 
-			data-title = "This address and all its associations" href="#">
-			<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-		Delete Locaton</a>
-	
-		@endif
+			<a class="text text-info" href="{{route('address.edit',$location->id)}}" 
+			title="Edit this location">
+			<i class="far fa-edit"></i>
+			Edit Location</a>
+			@if($location->activities->count()==0)
+				<a data-href="{{route('address.destroy',$location->id)}}" 
+					data-toggle="modal" 
+					data-target="#confirm-delete" 
+					data-title = "This address and all its associations" href="#">
+					<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+				Delete Locaton</a>
+			
+			@endif
 		@endif
 		
 	</div>
