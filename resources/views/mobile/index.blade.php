@@ -5,8 +5,27 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
 
 @endphp
 
-<div class="container" style="margin-bottom:40px">
-    <div class="col-md-5">
+
+
+    <div class="row">
+        <div class="col-3 d-none d-lg-block">
+            <div class="ava-block border">
+                3
+            </div>
+        </div>
+        <div class="col">
+            <div class="ava-block border">
+                6-9
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="ava-block border">
+                3
+            </div>
+        </div>
+    </div>
+    
+<div class="col-md-8">
         <h2><a href="{{route('mobile.index')}}">Branch View</a></h2>
         <h4>{{$branch->branchname}}</h4>
 

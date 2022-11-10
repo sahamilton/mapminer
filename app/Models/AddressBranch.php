@@ -140,9 +140,9 @@ class AddressBranch extends Model
      * [scopeStaleLeads description]
      * 
      * @param [type] $query      [description]
-     * @param [type] $leadsource [description]
-     * @param [type] $branches   [description]
-     * @param [type] $before     [description]
+     * @param array  $leadsource [description]
+     * @param array  $branches   [description]
+     * @param Carbon $before     [description]
      * 
      * @return [type]             [description]
      */
@@ -165,10 +165,13 @@ class AddressBranch extends Model
     }
     /**
      * [scopeStaleBranchLeads description]
-     * @param  [type] $query [description]
-     * @return [type]        [description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]       [description]
      */
-    public function scopeStaleBranchLeads($query) {
+    public function scopeStaleBranchLeads($query)
+    {
         return $query
             
             ->where('created_at', '<=', now()->subMonths(3))
@@ -183,18 +186,38 @@ class AddressBranch extends Model
                 }
             )->doesntHave('opportunities');
     }
-    public function scopeOrderByColumn($query, $field, $dir) 
+    /**
+     * [scopeOrderByColumn description]
+     * 
+     * @param [type] $query [description]
+     * @param string $field [description]
+     * @param string $dir   [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeOrderByColumn($query, str $field,str $dir) 
     {
         
          return $query->orderBy($field, $dir);
 
     }
-
-    public function scopeSearch($query, $search)
+    /**
+     * [scopeSearch description]
+     * 
+     * @param [type] $query  [description]
+     * @param string $search [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSearch($query, str $search)
     {
-        return $query->where('businessname', 'like', "%{$search}%")
-            ->orWhere('fullname', 'like', "%{$search}%")
-            ->orWhere('firstname', 'like', "%{$search}%")
-            ->orWhere('lastname', 'like', "%{$search}%");
+        return $query->whereHas(
+            'address', function ($q) use ($search) {
+                $q->where('businessname', 'like', "%{$search}%")
+                    ->orWhere('street', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('zip', 'like', "%{$search}%");
+            }
+        );
     }
 }
