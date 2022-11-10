@@ -45,7 +45,7 @@
                 <th>Activity</th>
                 <th>Contact</th>
                 <th>Notes</th>
-                <th>Completed</th>
+                <th><span style='color:#1aff1a;'> Completed </span><br />/ <span style='color:#ffc04d;'>To Do</span></th>
             </thead>
             <tbody>
                  @foreach($activities as $acts)
@@ -80,17 +80,15 @@
                                 {!! $acts->note !!}
                             @endif
                         </td>
-                        <td>
-                            @if($acts->completed)
-                             Completed
-
-                             @else
+                        <td  style='background-color:{{$acts->completed ? '#aceeca;' :'#ffc04d;'}}'>
+                            
+                             
                              @if($owned)
                              <a wire:click="editActivity({{$acts->id}})" 
                                 title="Edit activity"
                                 class="fa-light fa-calendar-lines-pen text-info"></a>
                              @endif
-                             @endif
+                         
 
                          </td>
                     </tr>
