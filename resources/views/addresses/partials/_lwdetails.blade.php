@@ -1,6 +1,5 @@
 <div id="map-container">
 	<div style="float:left;width:300px">
-
 	
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			@if($address->assignedToBranch)
@@ -43,18 +42,18 @@
 			    @endif
 			</p>
 			@if($owned && $address->leadsource->id !=4)
-			
+				@php $ranked = 5; @endphp
 				<div>
 				    
-					@ray($ranking)
+
 				    <div class="flex items-center mt-0">
 				        <span class="text-sm">Your rating:</span>
 				        <div class="flex items-center ml-2">
-				            @for ($i = 1; $i < $ranking; $i++)
+				            @for ($i = 0; $i < $ranked; $i++)
 				                <i wire:click="updateRating({{$i}})" class="fa-solid fa-star text-warning"></i>
 				            @endfor
 
-				            @for ($i = $ranking; $i < 6; $i++)
+				            @for ($i = $ranked; $i < 5; $i++)
 				                <i wire:click="updateRating({{$i}})" class="fa-thin fa-star"></i>
 				            @endfor
 				        </div>

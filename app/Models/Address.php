@@ -181,7 +181,7 @@ class Address extends Model
      */
     public function relatedNotes()
     {
-        return $this->hasMany(Note::class, 'related_id', 'addressable_id')
+        return $this->hasMany(Note::class)
             ->with('writtenBy');
     }
     /** 

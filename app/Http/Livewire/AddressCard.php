@@ -35,7 +35,7 @@ class AddressCard extends Component
     public Address $location;
 
 
-
+    public $note;
 
     public $branch_id;
     public $addressModal = false;
@@ -91,22 +91,15 @@ class AddressCard extends Component
     public function mount(int $address_id, string $view=null)
     {
        
-        $this->address = Address::query()
-            ->withCount('activities', 'contacts', 'opportunities', 'duplicates')
-            ->with('claimedByBranch', 'ranking')->find($address_id);
         
-        if ($this->address->claimedByBranch->count() > 0) {
-            $this->ranked =$this->_getAddressRating(); 
-            $this->branch_id = $this->address->claimedByBranch->first()->id;
-        }
-       
+        
         $this->myBranches = $this->_getMyBranches();
        
         
         $this->branches = Branch::has('manager')->pluck('branchname', 'id')->toArray();           
-
         
-        isset($view) ? $this->view = $view : $this->view = 'summary';
+        
+        $this->view = 'summary';
         
       
     }
@@ -125,7 +118,10 @@ class AddressCard extends Component
             [
 
 
-                  
+                'address' =>Address::query()
+                    ->withCount('activities', 'contacts', 'opportunities', 'duplicates', 'relatedNotes')
+                    ->with('claimedByBranch', 'ranking')
+                    ->find($this->address_id),  
                 
                 'leadStatuses' =>[1=>'Offered',2=>'Owned', 4=>'Rejected'],
                 
@@ -133,19 +129,17 @@ class AddressCard extends Component
                 'states'=>State::pluck('fullstate', 'statecode')->toArray(),
                 'viewtypes'=>[
                     'summary'=>'Summary',
-                    'contacts'=>'Contacts', 
-                    'activities'=>'Activities', 
-                    'opportunities'=>'Opportunities',
-                    'duplicates'=>'Duplicates',
-                    'relatedNotes'=>'Notes'],
+                    'contacts_count'=>'Contacts', 
+                    'activities_count'=>'Activities', 
+                    'opportunities_count'=>'Opportunities',
+                    'duplicates_count'=>'Duplicates',
+                   
+                    'related_notes_count'=>'Notes'],
 
             ]
         );
     }
-    private function _getAddressRating()
-    {
-            $this->ranking = $this->address->claimedBybranch->first()->pivot->rating;
-    }
+    
     /**
      * [changeview description]
      * 
@@ -164,12 +158,13 @@ class AddressCard extends Component
      * @return [type] [description]
      */
     private function _checkIfOwned()
-    {
+    {   
+
         
-        if (auth()->user()->hasRole(['branch_manager', 'staffing_specialst'])) {
+        if (auth()->user()->hasRole(['branch_manager', 'staffing_specialist', 'market_manager', 'sales_rep'])) {
             return array_intersect($this->location->claimedByBranch->pluck('id')->toArray(), $this->myBranches); 
         }
-        return $owned =[];
+        return [];
 
     }
     /**
@@ -208,8 +203,7 @@ class AddressCard extends Component
     public function updateRating($ranked)
     {
         
-        $this->location->claimedByBranch()->updateExistingPivot($this->branch_id, ['rating'=>$ranked + 1]);
-        $this->_getAddressRating();
+        $this->address->ranking()->sync(auth()->user()->person->id, ['ranking'=>$ranked]);
     }
     
     /**
@@ -279,6 +273,7 @@ class AddressCard extends Component
             'location.phone'=>'sometimes',
             'location.customer_id'=>'sometimes',
             'location.isCustomer'=>'sometimes',
+          
 
         ];
     }
@@ -295,6 +290,7 @@ class AddressCard extends Component
         if ($address->open_opportunities_count > 0) {
             session()->flash('error', 'You must close all open opportunities before removing this lead from your branch');
         } else {
+            $this->note=null;
             $this->doShow('confirmModal');
         }
         
@@ -308,7 +304,7 @@ class AddressCard extends Component
      */
     public function destroyAddress(Address $address)
     {
-        
+        $this->validate(['note'=>'required']);
         $address = $address->load('claimedByBranch');
         $branch = $address->claimedByBranch->first();
         $this->_createNote($address, $branch);
@@ -330,7 +326,7 @@ class AddressCard extends Component
     {
         
         
-        $data['note'] = auth()->user()->person->fullName() . " removed this lead from branch " . $branch->branchname ." on " .now()->format('Y-m-d') . ' with the comment ';
+        $data['note'] = auth()->user()->person->fullName() . " removed this lead from branch " . $branch->branchname ." on " .now()->format('Y-m-d') . ' with the comment '. $this->note;
         $data['user_id'] = auth()->user()->id;
         $data['address_id'] = $address->id;
         return Note::create($data);
@@ -346,11 +342,11 @@ class AddressCard extends Component
      */
     public function claimLead(Branch $branch, Address $address)
     {
+            
+        $address->assignedToBranch()->detach();
+        $address->claimedByBranch()->attach($branch->id, ['status_id'=>2]);
+        $this->owned = $this->_checkIfOwned();
         
-         $address->claimedByBranch()->attach($branch->id, ['status_id'=>2]);
-         $this->ranking = 0;
-         $this->owned = $this->_checkIfOwned();
-
 
     }
     /**

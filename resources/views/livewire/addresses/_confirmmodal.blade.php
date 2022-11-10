@@ -3,7 +3,7 @@
     <div class="modal fade @if($confirmModal) show @endif"
          id="confirmModal"
 
-         style="display: @if($confirmModal === true)
+         style="overflow-y:auto;display: @if($confirmModal === true)
                  block
          @else
                  none
@@ -21,7 +21,15 @@
                 </div>
                 <div class="modal-body">
                     <p>You are about to remove {{$address->businessname}} from your branches leads.</p>
-                   
+                    <div class="row m-4">
+                        <div class="form-group">
+                            <x-form-textarea required
+                                name='note'
+                                label="Reason to delete:"
+                                wire:model.defer='note'
+                                />
+                        </div>
+                    </div>
                     
                       <div class="float-right">
                         <button class="btn btn-secondary"

@@ -19,11 +19,12 @@
    @endif
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
-
+        
         @foreach ($viewtypes as $key=>$v)
+
             <a wire:click="changeView('{{$key}}')" 
             class="nav-link nav-item @if($key === $view) active @endif " >
-                <strong>{{$v}} {{isset($address->$key) ? "(" . $address->$key->count() . ")" : ''}}</strong>
+                <strong>{{$v}} {{isset($address->$key) && $address->$key >0 ? "(" . $address->$key. ")" : ''}}</strong>
             </a>
         @endforeach
 
@@ -42,20 +43,20 @@
         @case('summary')
             @include('addresses.partials._lwdetails')
         @break;
-        @case('contacts')
+        @case('contacts_count')
             <livewire:address-contacts :address_id="$address_id" :owned="$owned" />
         @break;
-        @case('activities')
+        @case('activities_count')
             <livewire:address-activities :address="$address" :owned="$owned" />
         @break;
-        @case('opportunities')
+        @case('opportunities_count')
             <livewire:address-opportunities :address="$address" :owned="$owned" />
         @break;
-        @case('duplicates')
+        @case('duplicates_count')
             <livewire:address-duplicates :address="$address" :owned="$owned" />
         @break
 
-        @case('relatedNotes')
+        @case('related_notes_count')
             <livewire:address-notes :address="$address" :owned="$owned" />
         @break
     @endswitch
