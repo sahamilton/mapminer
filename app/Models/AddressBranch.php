@@ -195,7 +195,7 @@ class AddressBranch extends Model
      * 
      * @return [type]        [description]
      */
-    public function scopeOrderByColumn($query, str $field,str $dir) 
+    public function scopeOrderByColumn($query, string  $field,string  $dir) 
     {
         
          return $query->orderBy($field, $dir);
@@ -209,7 +209,7 @@ class AddressBranch extends Model
      * 
      * @return [type]         [description]
      */
-    public function scopeSearch($query, str $search)
+    public function scopeSearch($query, string  $search)
     {
         return $query->whereHas(
             'address', function ($q) use ($search) {
