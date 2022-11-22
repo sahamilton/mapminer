@@ -73,7 +73,12 @@ return [
             'visibility' => 'public',
         ],
 
-
+        'imports' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/imports'),
+            'url' => env('APP_URL').'/storage/imports',
+            'visibility' => 'public',
+        ],
 
         's3' => [
             'driver' => 's3',

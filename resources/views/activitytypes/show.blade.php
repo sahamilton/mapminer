@@ -2,6 +2,7 @@
 @section('content')
 <div class="container">
 	<h2>{{$activityType->activity}} Activity</h2>
+
 	<p><a href="{{route('activitytype.index')}}">Return to all Activity Types</a></p>
 	<div class="float-right">
 		<a href="{{route('activitytype.edit',$activityType->slug)}}" class="btn btn-info">Edit {{$activityType->activity}} Activity Type</a>

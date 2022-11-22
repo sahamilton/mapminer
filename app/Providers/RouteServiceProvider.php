@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
+
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -39,7 +40,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('dashboard', \App\Models\Branch::class);
        
         Route::model('branchsummary', \App\Models\Branch::class);
-        
+        Route::model('activitytype', \App\Models\ActivityType::class);
        
         Route::model('mobile', \App\Models\Address::class);
         Route::model('mgrdashboard', \App\Models\Person::class);
@@ -64,6 +65,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapAdminRoutes();
 
         $this->mapOpsRoutes();
+
+        $this->mapLwRoutes();
 
         //
     }
@@ -125,5 +128,20 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware(['web', 'ops'])
             ->namespace($this->namespace)
             ->group(base_path('routes/ops.php'));
+    }
+
+    /**
+     * Define the "livewire" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapLwRoutes()
+    {
+        Route::prefix('lw')
+            ->middleware(['web', 'ops'])
+            
+            ->group(base_path('routes/lw.php'));
     }
 }

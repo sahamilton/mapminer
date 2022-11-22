@@ -58,16 +58,20 @@ class ActivityTypeController extends Controller
      * @param  \App\ActivityType  $activityType
      * @return \Illuminate\Http\Response
      */
-    public function show(ActivityType $activitytype)
+    public function show(ActivityType $activityType)
     {
-        
-        $activitytype->load('activities');
+     
+        $activityType->load('activities');
         $users = $activityType->activities->pluck('id', 'user_id')->toArray();
-        $people = $this->person->whereIn('user_id', array_keys($users))->with(['activities'=>function ($q) use ($activityType) {
-            $q->where('activitytype_id', '=', $activityType->id);
-        }])->with('userdetails', 'userdetails.roles')->get();
-
-        return response()->view('activitytypes.show', compact('activitytype', 'people'));
+        $people = $this->person->whereIn('user_id', array_keys($users))->with(
+            [
+                'activities'=>function ($q) use ($activityType) {
+                    $q->where('activitytype_id', '=', $activityType->id);
+                }
+            ]
+        )->with('userdetails', 'userdetails.roles')->get();
+       
+        return response()->view('activitytypes.show', compact('activityType', 'people'));
     }
 
     /**
