@@ -66,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapOpsRoutes();
 
-        $this->mapLwRoutes();
+
 
         //
     }
@@ -130,18 +130,5 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/ops.php'));
     }
 
-    /**
-     * Define the "livewire" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
-    protected function mapLwRoutes()
-    {
-        Route::prefix('lw')
-            ->middleware(['web', 'ops'])
-            
-            ->group(base_path('routes/lw.php'));
-    }
+    
 }
