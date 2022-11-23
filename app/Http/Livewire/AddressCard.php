@@ -120,7 +120,7 @@ class AddressCard extends Component
 
                 'address' =>Address::query()
                     ->withCount('activities', 'contacts', 'opportunities', 'duplicates', 'relatedNotes')
-                    ->with('claimedByBranch', 'ranking')
+                    ->with('claimedByBranch')
                     ->find($this->address_id),  
                 
                 'leadStatuses' =>[1=>'Offered',2=>'Owned', 4=>'Rejected'],
@@ -202,7 +202,17 @@ class AddressCard extends Component
      */
     public function updateRating(Address $address, $ranked)
     {
-        $address->ranking()->sync([auth()->user()->person->id=>['ranking'=>$ranked+1]]);
+        
+        $data = collect($address->claimedByBranch->first()->pivot)->only(
+            'comments',
+            'status_id',
+            'branch_id'
+        )->toArray();
+        $data['person_id']=auth()->user()->person->id;
+        $data['rating'] = $ranked+1;
+      
+        $address->claimedByBranch()->sync([$this->branch_id=>$data]);
+
     }
     
     /**

@@ -42,7 +42,8 @@
 			    @endif
 			</p>
 			@if($owned && $address->leadsource->id !=4)
-				@php $ranked = $address->ranking->first()->pivot->ranking; @endphp
+				
+				@php $ranked = $address->claimedByBranch->first()->pivot->rating ; @endphp
 				<div>
 				    
 
