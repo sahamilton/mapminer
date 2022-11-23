@@ -1,7 +1,7 @@
 <div>
     
     <h1>{{$branch->branchname}}</h1>
-    
+
     <h4>
         {{($type=='Customers' ? ' Customers ' : ' Leads ')}}
         @if ($campaign_id != 'All')
@@ -64,28 +64,26 @@
     <div class="row mb-4">
         <div class="col form-inline">
             <label><i class="fas fa-filter text-danger"></i>&nbsp;&nbsp;Filter&nbsp;&nbsp;</label>
-            <label>Customer / Lead: </label>
-            <select wire:model="type" class="form-control" title="With or Without Opportunities">
-                @foreach ($types as $key)
-                    <option value="{{$key}}">{{$key}}</option>
-                @endforeach
-            </select>
-
             
+            <x-form-select
+                name='type'
+                wire:model='type'
+                :options='$types'
+                label='Customer / Lead'
+                />
+            <x-form-select
+                name='lead_source_id'
+                wire:model='lead_source_id'
+                label="Source"
+                :options='$leadsources'
+            />
+            <x-form-select
+                name="withOps"
+                wire:model="withOps"
+                label="With / Without Opportunities"
+                :options='$opstatus'
+                />
 
-    
-            <label>With / Without Opportunities</label>
-             <div class="input-group-prepend">
-                <span class="input-group-text" title="With or Without Opportunities">
-                    <i class="fas fa-funnel-dollar"></i>
-                </span>
-            
-                 <select wire:model="withOps" class="form-control" title="With or Without Opportunities">
-                    @foreach ($opstatus as $key)
-                        <option value="{{$key}}">{{$key}}</option>
-                    @endforeach
-                </select>
-            </div>
         </div>
     </div>
     <div class="row" style="margin-bottom:10px">

@@ -286,6 +286,7 @@ class LeadTable extends Component
         )
             ->sortBy('source')
             ->pluck('source', 'id')
+            ->prepend('All', 'All')
             ->toarray();
         
     }
