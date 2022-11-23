@@ -42,19 +42,19 @@
 			    @endif
 			</p>
 			@if($owned && $address->leadsource->id !=4)
-				@php $ranked = 5; @endphp
+				@php $ranked = $address->ranking->first()->pivot->ranking; @endphp
 				<div>
 				    
 
 				    <div class="flex items-center mt-0">
-				        <span class="text-sm">Your rating:</span>
+				        <span class="text-sm">Your rating: {{ $ranked }}</span>
 				        <div class="flex items-center ml-2">
 				            @for ($i = 0; $i < $ranked; $i++)
-				                <i wire:click="updateRating({{$i}})" class="fa-solid fa-star text-warning"></i>
+				                <i wire:click="updateRating({{$address->id}}, '{{ $i }}')" class="fa-solid fa-star text-warning"></i>
 				            @endfor
 
 				            @for ($i = $ranked; $i < 5; $i++)
-				                <i wire:click="updateRating({{$i}})" class="fa-thin fa-star"></i>
+				                <i wire:click="updateRating({{$address->id}}, '{{ $i }}')" class="fa-thin fa-star"></i>
 				            @endfor
 				        </div>
 				    </div>

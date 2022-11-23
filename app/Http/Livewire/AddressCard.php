@@ -200,10 +200,9 @@ class AddressCard extends Component
      * 
      * @return [type]         [description]
      */
-    public function updateRating($ranked)
+    public function updateRating(Address $address, $ranked)
     {
-        
-        $this->address->ranking()->sync(auth()->user()->person->id, ['ranking'=>$ranked]);
+        $address->ranking()->sync([auth()->user()->person->id=>['ranking'=>$ranked+1]]);
     }
     
     /**

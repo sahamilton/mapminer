@@ -9,7 +9,7 @@ class AddressPerson extends Model
 {
     public $table = 'address_person';
     public $timestamps = true;
-    public $fillable = ['person_id', 'address_id', 'status_id', 'created_at', 'updated_at'];
+    public $fillable = ['person_id', 'address_id', 'status_id', 'created_at', 'updated_at', 'ranking'];
     /**
      * [orders description].
      *
